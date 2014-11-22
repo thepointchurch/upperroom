@@ -1,18 +1,31 @@
 from django.db import models
 
+from datetime import date, timedelta
+
 from directory.models import Person
 
+def next_meeting():
+    max = Meeting.objects.latest().date
+    if not max: max = date.today()
+    if max.weekday() == 6: return max + timedelta(7)
+    return max + timedelta(6 - max.weekday())
+
 class Meeting(models.Model):
-    date = models.DateField()
+    date = models.DateField(unique=True, default=next_meeting)
 
     class Meta:
         ordering = ['date']
+        get_latest_by = 'date'
         verbose_name_plural = 'meetings'
 
     def __str__(self):
         return str(self.date)
 
-class Roster(models.Model):
+    def clean(self):
+        if self.date.weekday() != 6:
+            self.date = self.date + timedelta(6 - self.date.weekday())
+
+class Role(models.Model):
     ANNOUNCE =   'ANN'
     LSUP =       'LSU'
     LSUPASSIST = 'LSA'
@@ -57,7 +70,7 @@ class Roster(models.Model):
 
     class Meta:
         ordering = ['role', 'person__name']
-        verbose_name_plural = 'rosters'
+        verbose_name_plural = 'roles'
 
     def __str__(self):
         return '%s %s' % (self.get_role_display(), self.name)
@@ -73,4 +86,4 @@ class Roster(models.Model):
 
     def save(self, *args, **kwargs):
         self.revision += 1
-        super(Roster, self).save(*args, **kwargs)
+        super(Role, self).save(*args, **kwargs)

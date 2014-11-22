@@ -1,14 +1,14 @@
 from django.contrib import admin
 
-from roster.models import Meeting, Roster
+from roster.models import Meeting, Role
 
-class RosterInline(admin.TabularInline):
-    model = Roster
+class RoleInline(admin.TabularInline):
+    model = Role
     extra = 8
     exclude = ('revision',)
 
 class MeetingAdmin(admin.ModelAdmin):
-    inlines = [RosterInline]
+    inlines = [RoleInline]
     list_filter = ('date',)
     search_fields = ['date', 'roles__person__name', 'roles__person__family__name']
 
