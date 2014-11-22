@@ -1,0 +1,5 @@
+<form method="get" action="{% url 'directory:search' %}">
+<input type="text" name="query" value="{{view.search_query}}" size="32" />
+<input type="submit" name="type" value="By Name" />
+<input type="submit" name="type" value="By Location" />
+</form>

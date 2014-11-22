@@ -1,0 +1,37 @@
+{% extends "directory/base.html" %}
+
+{% block heading %}Members Directory{% endblock heading %}
+
+{% block content %}
+
+<p>This directory of family and friends of The Point is intended to facilitate the spiritual growth of our relationships and spiritual service toward God and one another. May the Lord bless our endeavours to become a church of His intent and design to His glory and honour.</p>
+
+<p>Please direct all feedback and enquiries regarding the directory to <a href="mailto:directory@thepoint.org.au">directory@thepoint.org.au</a>.</p>
+
+<h3>Addresses</h3>
+
+<p>Browse entries, by surname:</p>
+
+{% regroup family_list by first_letter as index_list %}
+
+<p class="links">[ {% for letter in index_list %}{% if not forloop.first %} | {% endif %}<a href="{% url 'directory:letter' letter.grouper %}">{{ letter.grouper|upper }}</a>{% endfor %} ]</p>
+
+<h3>Search</h3>
+
+<p>You can search the directory by name or location:</p>
+
+{% include "directory/search_form.html" %}
+
+<h3>Download</h3>
+
+<p>You can download the latest copy of the directory for printing or browsing <a href="/directory?format=pdf">here</a>.</p>
+
+<h3>Birthdays and Anniversaries</h3>
+
+<p>You can view a list of <a href="{% url 'directory:birthdays' %}">birthdays</a> or a list of <a href="{% url 'directory:anniversaries' %}">anniversaries</a> in chronological order.</p>
+
+<h3>Updates</h3>
+
+<p>If you would like to update your details in any way, you can do so by browsing to your family's entry and clicking the "Edit" link.</p>
+
+{% endblock content %}

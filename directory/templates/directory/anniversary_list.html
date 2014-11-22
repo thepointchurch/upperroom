@@ -1,0 +1,21 @@
+{% extends "directory/base.html" %}
+
+{% block heading %}{{ block.super }}: Anniversaries{% endblock heading %}
+
+{% block content %}
+
+{% regroup family_list by anniversary|date:"F" as anniversary_by_month %}
+
+{% for month in anniversary_by_month %}
+    <h3>{{ month.grouper }}</h3>
+    {% regroup month.list by anniversary.day as anniversary_by_month_day %}
+    <ul>
+    {% for day in anniversary_by_month_day %}
+        <li><strong>{{ day.grouper }}</strong>{% for family in day.list %} {{ family.marriage }}{% if not forloop.last %},{% endif %}{% endfor %}</li>
+    {% endfor %}
+    </ul>
+{% empty %}
+    <p>No anniversaries were found.</p>
+{% endfor %}
+
+{% endblock content %}

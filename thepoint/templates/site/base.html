@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+        "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+{% load staticfiles %}
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<meta name="description" content="The Point Church, Wellington Point, Brisbane, Queensland, Australia" />
+<meta name="keywords" content="The Point Church, Wellington Point, Brisbane, Queensland, Australia, Church, Church of Christ, Christian, Bible" />
+<title>{% block title %}The Point Church{% endblock title %}</title>
+<link rel="stylesheet" type="text/css" href="{% static 'style/default.css' %}" title="Default" />
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ledger" />
+<link rel="stylesheet" type="text/css" href="{% static 'style/print.css' %}" media="print" />
+{% block stylesheets %}{% endblock stylesheets %}
+<link rel="shortcut icon" href="{% static 'style/icon.png' %}" />
+<link rel="home" href="/public_html/" />
+<link rel="index" href="/public_html/resources.php" />
+</head>
+<body>
+
+<div id="header">
+<div>
+<h1>The Point Church</h1>
+<h2>a church of Christ meeting at Wellington Point, Brisbane, Australia</h2>
+<blockquote>
+<p>Thus says the LORD:</p>
+<p>&quot;Stand by the roads, and look,</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;and ask for the ancient paths,</p>
+<p>where the good way is; and walk in it,</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;and find rest for your souls.</p>
+<p>But they said, &apos;We will not walk in it.&apos;&quot;</p>
+<footer>Jeremiah 6:16 ESV</footer>
+</blockquote>
+</div>
+</div>
+
+<div id="nav">
+<p><a href="/public_html/">Home</a>
+<a href="/public_html/about" title="Aquaint yourself with The Point and what we belive.">About Us</a>
+<a href="/public_html/resources" title="Publications from The Point on various Biblical topics.">Resources</a>
+<a href="/public_html/theophilus" title="Theophilus' Quest is an attempt to convey the basics of Christianity in a simple and straight-forward way.">Theophilus' Quest</a>
+<a href="">Letters From Theophilus</a>
+<a href="/public_html/contact" title="Would you like to know more about The Point? Get our contact details and meeting times here.">Contact Us</a>
+{% if not user.is_authenticated %}<a href="/public_html/members" title="Login to the Member's area.">Login</a>{% endif %}
+<a href="">Copyright</a>
+</p>
+{% if user.is_authenticated %}
+<p><a href="/public_html/members">Member's Home</a>
+<a href="{% url 'directory:index' %}" title="A directory of Members and Friends of The Point.">Directory</a>
+<a href="/public_html/calendar" title="A calendar of Events at The Point.">Calendar</a>
+<a href="/public_html/roster" title="The Sunday Assembly Roster.">Roster</a>
+<a href="/public_html/library" title="Search the The Point's Library.">Library</a>
+<a href="/public_html/poi" title="Read past issues of Points of Interest">POI</a>
+<a href="/public_html/logout" title="Log out of the Member's Area.">Logout</a></p>
+
+<p class="logon">You are logged in as<br />{{ user.get_full_name }}</p>
+{% endif %}
+</div>
+
+<div id="main">
+
+<h2>{% block heading %}Welcome to The Point's website{% endblock heading %}</h2>
+
+{% block content %}{% endblock content %}
+
+</div>
+
+</body>
+</html>

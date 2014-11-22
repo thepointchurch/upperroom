@@ -1,0 +1,9 @@
+{% extends "directory/base.html" %}
+
+{% block title %}{{ block.super }}: {{ family.name }}{% endblock title %}
+
+{% block heading %}{{ block.super }}: {{ family.name }}{% endblock heading %}
+
+{% block content %}
+{% include "directory/family.html" %}
+{% endblock content %}

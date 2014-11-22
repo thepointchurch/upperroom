@@ -1,0 +1,17 @@
+p#author {
+        text-align: right;
+}
+
+p.option {
+        color: rgb(150,150,150);
+        padding-left: 2em;
+}
+
+p.intro {
+        border-top: 1px solid;
+        border-bottom: 1px solid;
+        padding: 5px;
+        text-align: justify;
+        margin-top: 2em;
+        margin-bottom: 2em;
+}
