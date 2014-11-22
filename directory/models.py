@@ -90,7 +90,7 @@ class Person(models.Model):
         verbose_name_plural = 'people'
 
     def __str__(self):
-        return self.name
+        return self.fullname
 
     @property
     def fullname(self):
