@@ -4,7 +4,7 @@
 
 {% block content %}
 
-{% regroup person_list by birthday|date:"F" as birthday_by_month %}
+{% regroup person_list|dictsort:"birthdate" by birthday|date:"F" as birthday_by_month %}
 
 {% for month in birthday_by_month %}
     <h3>{{ month.grouper }}</h3>

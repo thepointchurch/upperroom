@@ -47,6 +47,10 @@ class Family(models.Model):
         return self.members.exclude(id__in=self.spouse_ids())
 
     @property
+    def anniversarydate(self):
+        return self.anniversary.replace(year=2000)
+
+    @property
     def first_letter(self):
         return self.name[0].lower()
 
@@ -94,7 +98,13 @@ class Person(models.Model):
 
     @property
     def fullname(self):
+        if self.suffix:
+            return '%s %s (%s)' % (self.name, self.family.name, self.suffix)
         return '%s %s' % (self.name, self.family.name)
+
+    @property
+    def birthdate(self):
+        return self.birthday.replace(year=2000)
 
     def save(self, *args, **kwargs):
         super(Person, self).save(*args, **kwargs)

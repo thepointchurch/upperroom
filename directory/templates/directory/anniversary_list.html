@@ -4,7 +4,7 @@
 
 {% block content %}
 
-{% regroup family_list by anniversary|date:"F" as anniversary_by_month %}
+{% regroup family_list|dictsort:"anniversarydate" by anniversary|date:"F" as anniversary_by_month %}
 
 {% for month in anniversary_by_month %}
     <h3>{{ month.grouper }}</h3>
