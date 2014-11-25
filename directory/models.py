@@ -103,6 +103,12 @@ class Person(models.Model):
         return '%s %s' % (self.name, self.family.name)
 
     @property
+    def name_with_suffix(self):
+        if self.suffix:
+            return '%s (%s)' % (self.name, self.suffix)
+        return self.name
+
+    @property
     def birthdate(self):
         return self.birthday.replace(year=2000)
 
