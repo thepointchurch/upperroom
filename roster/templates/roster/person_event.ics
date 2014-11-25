@@ -1,0 +1,22 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//The Point Church//Website//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH{% regroup role_list|dictsort:"date" by date as role_date %}{% for date in role_date %}{% for role in date.list %}
+BEGIN:VEVENT
+SUMMARY:{{ role.get_role_display }}{% if role.location %}
+LOCATION:{{ role.get_location_display }}{% endif %}{% if role.description %}
+DESCRIPTION:Your topic is {{ role.description }}{% endif %}
+DTSTART:{{ role.starttime|date:"Ymd\THis\Z" }}
+DTEND:{{ role.endtime|date:"Ymd\THis\Z" }}
+DTSTAMP:{{ role.timestamp|date:"Ymd\THis\Z" }}
+UID:roster.{{ role.id }}@thepoint.org.au
+SEQUENCE:{{ role.revision }}
+TRANSP:TRANSPARENT
+BEGIN:VALARM
+TRIGGER:-P2D
+ACTION:DISPLAY
+DESCRIPTION:Reminder
+END:VALARM
+END:VEVENT{% endfor %}{% endfor %}
+END:VCALENDAR

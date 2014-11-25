@@ -106,6 +106,11 @@ class Person(models.Model):
     def birthdate(self):
         return self.birthday.replace(year=2000)
 
+    @property
+    def has_roster(self):
+        if self.roles.count() > 0: return True
+        return False
+
     def save(self, *args, **kwargs):
         super(Person, self).save(*args, **kwargs)
         if self.user:

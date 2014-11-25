@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//The Point Church//Website//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH{% regroup role_list|dictsort:"date" by date as role_date %}{% for date in role_date %}{% for role in date.list %}
+BEGIN:VTODO
+SUMMARY:{{ role.get_role_display }}{% if role.location %}
+LOCATION:{{ role.get_location_display }}{% endif %}{% if role.description %}
+DESCRIPTION:Your topic is {{ role.description }}{% endif %}
+DUE;VALUE=DATE:{{ role.date|date:"Ymd" }}
+DTSTAMP:{{ role.timestamp|date:"Ymd\THis\Z" }}
+UID:roster.{{ role.id }}@thepoint.org.au
+SEQUENCE:{{ role.revision }}
+END:VTODO{% endfor %}{% endfor %}
+END:VCALENDAR
