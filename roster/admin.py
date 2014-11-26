@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from roster.models import Meeting, Role
+from roster.models import Location, Meeting, Role, RoleType
 
 class RoleInline(admin.TabularInline):
     model = Role
@@ -27,3 +27,5 @@ class MeetingAdmin(admin.ModelAdmin):
         return qs
 
 admin.site.register(Meeting, MeetingAdmin)
+admin.site.register(Location)
+admin.site.register(RoleType)

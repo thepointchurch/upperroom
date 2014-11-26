@@ -5,7 +5,10 @@ from datetime import date, datetime, timedelta
 from directory.models import Person
 
 def next_meeting():
-    max = Meeting.objects.latest().date
+    try:
+        max = Meeting.objects.latest().date
+    except:
+        max = None
     if not max: max = date.today()
     if max.weekday() == 6: return max + timedelta(7)
     return max + timedelta(6 - max.weekday())
@@ -32,41 +35,33 @@ class Meeting(models.Model):
         if self.date.weekday() != 6:
             self.date = self.date + timedelta(6 - self.date.weekday())
 
+class Location(models.Model):
+    name = models.CharField(max_length=30)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name_plural = 'locations'
+
+    def __str__(self):
+        return self.name
+
+class RoleType(models.Model):
+    name = models.CharField(max_length=30)
+    verb = models.CharField(max_length=30)
+    order = models.PositiveSmallIntegerField(default=100)
+
+    class Meta:
+        ordering = ['order']
+        verbose_name_plural = 'roletypes'
+
+    def __str__(self):
+        return self.name
+
 class CurrentRoleManager(models.Manager):
     def get_queryset(self):
         return super(CurrentRoleManager, self).get_queryset().filter(meeting__date__gte=date.today())
 
 class Role(models.Model):
-    ANNOUNCE =   'ANN'
-    LSUP =       'LSU'
-    LSUPASSIST = 'LSA'
-    SERMON =     'SER'
-    SONGS =      'SON'
-    PRAISE =     'PRA'
-    KIDS =       'KID'
-    GUESTTEACH = 'GUE'
-    BENEDICT =   'BEN'
-    ROLES = (
-        (ANNOUNCE,   'News Sharing'),
-        (LSUP,       'Communion'),
-        (LSUPASSIST, 'Assisting Communion'),
-        (SERMON,     'Lesson'),
-        (SONGS,      'Singing'),
-        (PRAISE,     'Focus Theme'),
-        (KIDS,       "Kid's Time"),
-        (GUESTTEACH, 'Guest Teaching'),
-        (BENEDICT,   'Benediction'),
-    )
-
-    LOCATIONS = (
-        ('GC', 'Gold Coast'),
-        ('MA', 'Maryborough'),
-        ('MO', 'Morayfield'),
-        ('SC', 'Sunshine Coast'),
-        ('WA', 'Warwick'),
-        ('WY', 'Wynnum'),
-    )
-
     timestamp = models.DateTimeField(auto_now=True)
     revision = models.PositiveIntegerField(default=0)
 
@@ -75,9 +70,9 @@ class Role(models.Model):
     person = models.ForeignKey(Person, null=True, blank=True, limit_choices_to={'is_current': True, 'is_member': True, 'gender': 'M'}, related_name='roles')
     guest = models.CharField(max_length=30, null=True, blank=True)
     models.CharField(max_length=1, choices=(('M', 'Male'), ('F', 'Female')), null=True, blank=True)
-    role = models.CharField(max_length=3, choices=ROLES)
+    role = models.ForeignKey(RoleType, related_name='roles')
     description = models.CharField(max_length=64, null=True, blank=True)
-    location = models.CharField(max_length=2, choices=LOCATIONS, null=True, blank=True)
+    location = models.ForeignKey(Location, null=True, blank=True, related_name='roles')
 
     current_objects = CurrentRoleManager()
     objects = models.Manager()
@@ -87,7 +82,7 @@ class Role(models.Model):
         verbose_name_plural = 'roles'
 
     def __str__(self):
-        return '%s %s' % (self.get_role_display(), self.name)
+        return '%s %s' % (self.role, self.name)
 
     @property
     def name(self):

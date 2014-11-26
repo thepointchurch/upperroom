@@ -1,8 +1,8 @@
 <h3>{{ meeting.date|date:"jS F, Y" }}</h3>
 
-{% regroup meeting.roles.all by get_role_display as roles %}
+{% regroup meeting.roles.all by role as roles %}
 {% for role_type in roles %}
-{% regroup role_type.list by get_location_display as role_location %}
+{% regroup role_type.list by location as role_location %}
 {% for location in role_location %}
 {% regroup location.list by description as role_description %}
 {% for description in role_description %}

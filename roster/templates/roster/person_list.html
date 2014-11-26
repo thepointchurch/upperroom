@@ -8,13 +8,12 @@
 
 {% regroup role_list|dictsort:"date" by date as role_date %}
 {% for date in role_date %}
-<p>
 {% for role in date.list %}
-<strong>{{ role.date|date:"jS F, Y" }}:</strong> {{ role.get_role_display }}
-{% if role.location %} at {{ role.get_location_display }}{% endif %}
-{% if role.description %} <cite>({{ role.description }})</cite>{% endif %}
+{% if forloop.first %}<h3>{{ role.date|date:"jS F, Y" }}</h3>{% endif %}
+<p>{{ role.role }}{% if role.location %}
+at {{ role.location }}{% endif %}{% if role.description %}
+<cite>({{ role.description }})</cite>{% endif %}</p>
 {% endfor %}
-</p>
 {% endfor %}
 
 <p class="links">[ <a href="{% url 'roster:event' person.id %}">iCalendar</a> ]</p>
