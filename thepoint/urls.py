@@ -4,6 +4,7 @@ from django.contrib import admin
 
 urlpatterns = patterns('',
     url(r'^directory/', include('directory.urls', namespace='directory')),
+    url(r'^library/', include('library.urls', namespace='library')),
     url(r'^roster/', include('roster.urls', namespace='roster')),
 
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
