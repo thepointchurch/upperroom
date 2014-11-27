@@ -4,7 +4,12 @@ from datetime import date, datetime, timedelta
 
 from directory.models import Person
 
-def next_meeting():
+def next_meeting_date():
+    d = date.today()
+    if d.weekday() == 6: return d + timedelta(7)
+    return d + timedelta(6 - d.weekday())
+
+def next_empty_meeting_date():
     try:
         max = Meeting.objects.latest().date
     except:
@@ -18,7 +23,7 @@ class CurrentManager(models.Manager):
         return super(CurrentManager, self).get_queryset().filter(date__gte=date.today())
 
 class Meeting(models.Model):
-    date = models.DateField(unique=True, default=next_meeting)
+    date = models.DateField(unique=True, default=next_empty_meeting_date)
 
     current_objects = CurrentManager()
     objects = models.Manager()

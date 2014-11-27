@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
             name='Meeting',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('date', models.DateField(default=roster.models.next_meeting, unique=True)),
+                ('date', models.DateField(default=roster.models.next_empty_meeting_date, unique=True)),
             ],
             options={
                 'ordering': ['date'],

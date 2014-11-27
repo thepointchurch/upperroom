@@ -117,6 +117,10 @@ class Person(models.Model):
         if self.roles.count() > 0: return True
         return False
 
+    def find_email(self):
+        if self.email: return self.email
+        if self.family.email: return self.family.email
+
     def save(self, *args, **kwargs):
         super(Person, self).save(*args, **kwargs)
         if self.user:
