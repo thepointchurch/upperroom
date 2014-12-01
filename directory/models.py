@@ -71,7 +71,7 @@ class Family(models.Model):
             member.save()
     
 class Person(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, null=True, blank=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL)
     family = models.ForeignKey(Family, related_name='members')
 
     order = models.SmallIntegerField(null=True, blank=True)

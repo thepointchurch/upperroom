@@ -1,0 +1,8 @@
+<h3>Operations</h3>
+
+<p>Click here to perform an operation:</p>
+
+<ul>
+{% if user.is_staff %}<li><a href="{% url 'admin:index' %}">Admin site</a></li>{% endif %}
+<li><a href="{% url "members:password_change" %}">Change your password</a></li>
+</ul>

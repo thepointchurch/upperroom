@@ -24,21 +24,25 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
+# testing only
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 ALLOWED_HOSTS = []
 
 
 # Application definition
 
 INSTALLED_APPS = (
+    'directory',
+    'library',
+    'members',
+    'roster',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'directory',
-    'library',
-    'roster',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -78,6 +82,9 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+LOGIN_URL = '/members/login'
+LOGIN_REDIRECT_URL = '/members/'
 
 
 # Static files (CSS, JavaScript, Images)

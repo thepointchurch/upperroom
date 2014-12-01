@@ -41,23 +41,31 @@
 <a href="/public_html/theophilus" title="Theophilus' Quest is an attempt to convey the basics of Christianity in a simple and straight-forward way.">Theophilus' Quest</a>
 <a href="">Letters From Theophilus</a>
 <a href="/public_html/contact" title="Would you like to know more about The Point? Get our contact details and meeting times here.">Contact Us</a>
-{% if not user.is_authenticated %}<a href="/public_html/members" title="Login to the Member's area.">Login</a>{% endif %}
+{% if not user.is_authenticated %}<a href="{% url 'members:index' %}" title="Login to the Member's area.">Login</a>{% endif %}
 <a href="">Copyright</a>
 </p>
 {% if user.is_authenticated %}
-<p><a href="/public_html/members">Member's Home</a>
+<p><a href="{% url 'members:index' %}">Member's Home</a>
 <a href="{% url 'directory:index' %}" title="A directory of Members and Friends of The Point.">Directory</a>
 <a href="/public_html/calendar" title="A calendar of Events at The Point.">Calendar</a>
 <a href="{% url 'roster:index' %}" title="The Sunday Assembly Roster.">Roster</a>
 <a href="{% url 'library:index' %}" title="Search the The Point's Library.">Library</a>
 <a href="/public_html/poi" title="Read past issues of Points of Interest">POI</a>
-<a href="/public_html/logout" title="Log out of the Member's Area.">Logout</a></p>
+<a href="{% url 'members:logout' %}" title="Log out of the Member's Area.">Logout</a></p>
 
 <p class="logon">You are logged in as<br />{{ user.get_full_name }}</p>
 {% endif %}
 </div>
 
 <div id="main">
+
+{% if messages %}
+<div class="messages">
+{% for message in messages %}
+<p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+{% endfor %}
+</div>
+{% endif %}
 
 <h2>{% block heading %}Welcome to The Point's website{% endblock heading %}</h2>
 

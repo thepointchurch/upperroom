@@ -93,7 +93,7 @@ hr {
     border-bottom: 1px solid;
 }
 
-p, blockquote, footer, ul, ol {
+p, blockquote, footer, ul, ol, dl {
     margin: 10px;
     font-size: 10px;
     text-align: justify;
@@ -119,6 +119,14 @@ code {
 td {
     vertical-align: top;
     padding: 5px;
+}
+
+dt {
+    font-weight: bold;
+}
+
+dt:after {
+    content: ":";
 }
 
 p.links {
@@ -324,7 +332,7 @@ form table tr {
     height: auto;
 }
 
-form table td {
+form table th,td {
     padding: 0;
     vertical-align: top;
 }
@@ -342,4 +350,52 @@ form table td input[type=submit], form table td input[type=reset] {
 form table.passwd {
     width: auto;
     margin: auto;
+}
+
+form table.passwd label {
+    display: block;
+    margin: 0;
+    padding: 5px;
+    text-align: right;
+}
+
+form table.passwd ul.errorlist, p.error {
+    color: red;
+    list-style-type: none;
+    padding: 0;
+}
+
+form table.passwd .helptext {
+    font-style: normal;
+    font-size: 10px;
+    color: rgb(128,128,128);
+}
+
+div.messages p.debug {
+    padding: 5px;
+    color: rgb(160,160,160);
+}
+
+div.messages p.info {
+    padding: 5px;
+    border: 1px solid black;
+    background: rgb(224,224,224);
+}
+
+div.messages p.success {
+    padding: 5px;
+    border: 1px solid rgb(0,128,0);
+    background: rgb(208,256,208);
+}
+
+div.messages p.warning {
+    padding: 5px;
+    border: 1px solid rgb(208,208,0);
+    background: rgb(256,256,160);
+}
+
+div.messages p.error {
+    padding: 5px;
+    border: 1px solid rgb(128,0,0);
+    background: rgb(256,208,208);
 }
