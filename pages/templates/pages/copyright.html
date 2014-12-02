@@ -1,0 +1,10 @@
+{% extends "flatpages/default.html" %}
+{% load staticfiles %}
+
+{% block content %}
+{% if flatpage.content %}
+{{ flatpage.content }}
+{% else %}
+<p>Copyright</p>
+{% endif %}
+{% endblock content %}

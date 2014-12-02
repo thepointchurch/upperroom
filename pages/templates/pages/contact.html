@@ -1,0 +1,46 @@
+{% extends "flatpages/default.html" %}
+{% load staticfiles %}
+
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="{% static 'style/contact.css' %}" />
+{% endblock stylesheets %}
+
+{% block content %}
+{% if flatpage.content %}
+{{ flatpage.content }}
+{% else %}
+<div id="contact">
+
+<img src="{% static 'style/building.jpg' %}"/>
+
+<p>For more information, please email <a href="mailto:leaders@thepoint.org.au">the leaders</a>, or:</p>
+
+<p>Email <a href="mailto:shepherds@thepoint.org.au">all shepherds/elders</a>, or:</p>
+
+<p class="sub"><a>David Clark</a> - (07) 3390 2971<br />
+<a href="mailto:michaele@thepoint.org.au">Michael Evans</a> - (07) 3206 2568<br />
+<a href="mailto:peters@thepoint.org.au">Peter Searson</a> - (07) 3245 4811</p>
+
+<p>Email <a href="mailto:stewards@thepoint.org.au">all stewards/deacons</a>, or:</p>
+
+<p class="sub"><a href="mailto:petera@thepoint.org.au">Peter Amos</a> - (07) 3822 9674<br />
+<a href="mailto:arthurb@thepoint.org.au">Arthur Bowell</a> - (07) 3207 2732<br />
+<a href="mailto:stevew@thepoint.org.au">Steve Wilson</a> - (07) 3206 9510</p>
+
+<p>Or send mail to:</p>
+
+<p class="sub">PO Box 1270<br />
+Capalaba, QLD<br />
+4157</p>
+
+<p>We meet every Sunday at 9:15am at the Wellington Point Community Hall:</p>
+
+<p class="sub">Birkdale Road, Wellington Point<br />
+Brisbane, QLD, Australia<br />
+<a href="https://plus.google.com/108761109064998340178/about?gl=au&hl=en">Google Maps</a></p>
+
+<p>Please direct any feedback on this website to the <a href="mailto:webmaster@thepoint.org.au">webmaster</a>.</p>
+
+</div>
+{% endif %}
+{% endblock content %}
