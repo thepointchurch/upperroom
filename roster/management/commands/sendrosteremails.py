@@ -1,24 +1,27 @@
 from datetime import date, datetime
+from optparse import make_option
+
 from django.core import mail
 from django.core.management.base import BaseCommand, CommandError
-from django.template.loader import get_template
 from django.template import Context
-from optparse import make_option
-from roster.models import Meeting, Role, next_meeting_date
+from django.template.loader import get_template
+
+from roster.models import Role, next_meeting_date
+
 
 class Command(BaseCommand):
     help = '''Send notification emails for a coming meeting.'''
 
     option_list = BaseCommand.option_list + (
         make_option('-d', '--date',
-            dest='date',
-            default=next_meeting_date(),
-            help='The meeting date to send notifications for'),
+                    dest='date',
+                    default=next_meeting_date(),
+                    help='The meeting date to send notifications for'),
         make_option('--test',
-            action='store_true',
-            dest='test',
-            default=True, ## should be False
-            help='Do not send any emails, only show what would have been sent'),
+                    action='store_true',
+                    dest='test',
+                    default=False,
+                    help='Send emails to the console only'),
         )
 
     def handle(self, *args, **options):
@@ -28,12 +31,14 @@ class Command(BaseCommand):
             try:
                 d = datetime.strptime(d, '%Y-%m-%d').date()
             except:
-                raise CommandError('Badly formatted date: %s' % options['date'])
+                raise CommandError('Badly formatted date: %s' %
+                                   options['date'])
 
         roles = Role.objects.filter(meeting__date=d).exclude(person__isnull=True)
         role_map = {}
         for role in roles:
-            if not role.person.find_email(): continue
+            if not role.person.find_email():
+                continue
 
             if role.person not in role_map.keys():
                 role_map[role.person] = []
@@ -60,9 +65,11 @@ class Command(BaseCommand):
                     else:
                         role_string += ' '
                 role_string += role.role.verb
-                if role.location: role_string += ' at ' + str(role.location)
+                if role.location:
+                    role_string += ' at ' + str(role.location)
 
-            messages.append(mail.EmailMessage('The Point Roster Notification',
+            messages.append(mail.EmailMessage(
+                'The Point Roster Notification',
                 get_template('roster/reminder.txt').render(Context({
                     'person': person,
                     'date': d,

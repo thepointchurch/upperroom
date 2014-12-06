@@ -1,6 +1,8 @@
 from django import forms
-from directory.models import Person, Family
 from django.contrib import admin
+
+from directory.models import Family, Person
+
 
 class PersonInline(admin.TabularInline):
     model = Person
@@ -13,11 +15,15 @@ class PersonInline(admin.TabularInline):
             qs = qs.order_by(*ordering)
         return qs
 
+
 class FamilyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(FamilyForm, self).__init__(*args, **kwargs)
-        self.fields['husband'].queryset = Person.objects.filter(family__exact=self.instance.id).filter(gender__exact='M')
-        self.fields['wife'].queryset = Person.objects.filter(family__exact=self.instance.id).filter(gender__exact='F')
+        self.fields['husband'].queryset = \
+            Person.objects.filter(family__exact=self.instance.id).filter(gender__exact='M')
+        self.fields['wife'].queryset = \
+            Person.objects.filter(family__exact=self.instance.id).filter(gender__exact='F')
+
 
 class FamilyAdmin(admin.ModelAdmin):
     inlines = [PersonInline]

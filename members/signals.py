@@ -1,7 +1,8 @@
+from django.apps import apps
 from django.contrib.auth.models import Group, Permission, User
 from django.contrib.contenttypes.models import ContentType
 from django.db.models.signals import post_migrate
-from django.apps import apps
+
 
 def add_permissions(sender, **kwargs):
     g, created = Group.objects.get_or_create(name='Guests')

@@ -1,7 +1,8 @@
 from django.views import generic
 
-from roster.models import Meeting, Role
 from directory.models import Person
+from roster.models import Meeting, Role
+
 
 class MeetingIndex(generic.ListView):
     model = Meeting
@@ -11,11 +12,13 @@ class MeetingIndex(generic.ListView):
     def get_queryset(self):
         return Meeting.current_objects.all()[:5]
 
+
 class MonthlyMeetingView(generic.MonthArchiveView):
     model = Meeting
     allow_future = True
     date_field = 'date'
     make_object_list = True
+
 
 class PersonList(generic.ListView):
     model = Role
@@ -30,9 +33,11 @@ class PersonList(generic.ListView):
         context['person'] = Person.objects.get(id=self.person)
         return context
 
+
 class PersonTaskList(PersonList):
     template_name = 'roster/person_task.ics'
     content_type = 'text/calendar'
+
 
 class PersonEventList(PersonList):
     template_name = 'roster/person_event.ics'

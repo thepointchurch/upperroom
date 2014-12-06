@@ -1,26 +1,34 @@
-from django.db import models
-
 from datetime import date, datetime, timedelta
+
+from django.db import models
 
 from directory.models import Person
 
+
 def next_meeting_date():
     d = date.today()
-    if d.weekday() == 6: return d + timedelta(7)
+    if d.weekday() == 6:
+        return d + timedelta(7)
     return d + timedelta(6 - d.weekday())
+
 
 def next_empty_meeting_date():
     try:
         max = Meeting.objects.latest().date
     except:
         max = None
-    if not max: max = date.today()
-    if max.weekday() == 6: return max + timedelta(7)
+    if not max:
+        max = date.today()
+    if max.weekday() == 6:
+        return max + timedelta(7)
     return max + timedelta(6 - max.weekday())
+
 
 class CurrentManager(models.Manager):
     def get_queryset(self):
-        return super(CurrentManager, self).get_queryset().filter(date__gte=date.today())
+        return super(CurrentManager,
+                     self).get_queryset().filter(date__gte=date.today())
+
 
 class Meeting(models.Model):
     date = models.DateField(primary_key=True, default=next_empty_meeting_date)
@@ -40,6 +48,7 @@ class Meeting(models.Model):
         if self.date.weekday() != 6:
             self.date = self.date + timedelta(6 - self.date.weekday())
 
+
 class Location(models.Model):
     name = models.CharField(max_length=30)
 
@@ -49,6 +58,7 @@ class Location(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class RoleType(models.Model):
     name = models.CharField(max_length=30)
@@ -62,9 +72,12 @@ class RoleType(models.Model):
     def __str__(self):
         return self.name
 
+
 class CurrentRoleManager(models.Manager):
     def get_queryset(self):
-        return super(CurrentRoleManager, self).get_queryset().filter(meeting__date__gte=date.today())
+        return super(CurrentRoleManager,
+                     self).get_queryset().filter(meeting__date__gte=date.today())
+
 
 class Role(models.Model):
     timestamp = models.DateTimeField(auto_now=True)
@@ -72,12 +85,16 @@ class Role(models.Model):
 
     meeting = models.ForeignKey(Meeting, related_name='roles')
 
-    person = models.ForeignKey(Person, null=True, blank=True, limit_choices_to={'is_current': True, 'is_member': True, 'gender': 'M'}, related_name='roles')
+    person = models.ForeignKey(Person, null=True, blank=True,
+                               limit_choices_to={'is_current': True,
+                                                 'is_member': True,
+                                                 'gender': 'M'},
+                               related_name='roles')
     guest = models.CharField(max_length=30, null=True, blank=True)
-    models.CharField(max_length=1, choices=(('M', 'Male'), ('F', 'Female')), null=True, blank=True)
     role = models.ForeignKey(RoleType, related_name='roles')
     description = models.CharField(max_length=64, null=True, blank=True)
-    location = models.ForeignKey(Location, null=True, blank=True, related_name='roles')
+    location = models.ForeignKey(Location, null=True, blank=True,
+                                 related_name='roles')
 
     current_objects = CurrentRoleManager()
     objects = models.Manager()
@@ -91,12 +108,15 @@ class Role(models.Model):
 
     @property
     def name(self):
-        if self.person: return self.person.fullname
-        if self.guest: return self.guest
+        if self.person:
+            return self.person.fullname
+        if self.guest:
+            return self.guest
 
     @property
     def is_guest(self):
-        if self.guest: return True
+        if self.guest:
+            return True
         return False
 
     @property
@@ -105,11 +125,15 @@ class Role(models.Model):
 
     @property
     def starttime(self):
-        return datetime(self.meeting.date.year, self.meeting.date.month, self.meeting.date.day, 9, 30) - timedelta(hours=10)
+        return datetime(self.meeting.date.year,
+                        self.meeting.date.month,
+                        self.meeting.date.day, 9, 30) - timedelta(hours=10)
 
     @property
     def endtime(self):
-        return datetime(self.meeting.date.year, self.meeting.date.month, self.meeting.date.day, 12, 0) - timedelta(hours=10)
+        return datetime(self.meeting.date.year,
+                        self.meeting.date.month,
+                        self.meeting.date.day, 12, 0) - timedelta(hours=10)
 
     def save(self, *args, **kwargs):
         self.revision += 1

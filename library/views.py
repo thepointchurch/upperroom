@@ -1,11 +1,13 @@
+from django.db.models import Q
 from django.shortcuts import render
 from django.views import generic
-from django.db.models import Q
 
 from library.models import Book
 
+
 def index(request):
     return render(request, 'library/index.html')
+
 
 class SearchView(generic.ListView):
     model = Book
@@ -38,4 +40,10 @@ class SearchView(generic.ListView):
         elif self.search_field == 'location':
             return Book.objects.filter(q_location).distinct()
         else:
-            return Book.objects.filter(q_title | q_subtitle | q_description | q_type | q_author | q_isbn | q_location).distinct()
+            return Book.objects.filter(q_title |
+                                       q_subtitle |
+                                       q_description |
+                                       q_type |
+                                       q_author |
+                                       q_isbn |
+                                       q_location).distinct()

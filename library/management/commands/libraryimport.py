@@ -1,8 +1,11 @@
 import csv
 import sys
-from django.core.management.base import BaseCommand, CommandError
 from optparse import make_option
+
+from django.core.management.base import BaseCommand, CommandError
+
 from library.models import Book
+
 
 class Command(BaseCommand):
     args = '< books.csv'
@@ -10,14 +13,14 @@ class Command(BaseCommand):
 
     option_list = BaseCommand.option_list + (
         make_option('--refresh',
-            action='store_true',
-            dest='refresh',
-            default=True,
-            help='Delete all books before importing the supplied set'),
+                    action='store_true',
+                    dest='refresh',
+                    default=True,
+                    help='Delete all books before importing'),
         make_option('--no-refresh',
-            action='store_false',
-            dest='refresh',
-            help='Keep existing books when importing the supplied set'),
+                    action='store_false',
+                    dest='refresh',
+                    help='Keep existing books when importing'),
         )
 
     def handle(self, *args, **options):
@@ -32,5 +35,11 @@ class Command(BaseCommand):
                 self.stderr.write('WARNING: Book has no title: ' % line)
                 continue
 
-            book = Book(title=line[0], subtitle=line[1], description=line[2], type=line[3], author=line[4], isbn=line[5], location=line[6])
+            book = Book(title=line[0],
+                        subtitle=line[1],
+                        description=line[2],
+                        type=line[3],
+                        author=line[4],
+                        isbn=line[5],
+                        location=line[6])
             book.save()
