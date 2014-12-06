@@ -38,8 +38,10 @@ INSTALLED_APPS = (
     'directory',
     'library',
     'members',
+    'newsletter',
     'pages',
     'roster',
+    'django_markwhat',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -91,6 +93,9 @@ USE_TZ = True
 
 LOGIN_URL = '/members/login'
 LOGIN_REDIRECT_URL = '/members/'
+
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # Static files (CSS, JavaScript, Images)

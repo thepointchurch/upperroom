@@ -50,7 +50,7 @@
 <a href="{% url 'pages:calendar' %}" title="A calendar of Events at The Point.">Calendar</a>
 <a href="{% url 'roster:index' %}" title="The Sunday Assembly Roster.">Roster</a>
 <a href="{% url 'library:index' %}" title="Search the The Point's Library.">Library</a>
-<a href="/public_html/poi" title="Read past issues of Points of Interest">POI</a>
+<a href="{% url 'poi:index' %}" title="Read past issues of Points of Interest">POI</a>
 <a href="{% url 'members:logout' %}" title="Log out of the Member's Area.">Logout</a></p>
 
 <p class="logon">You are logged in as<br />{{ user.get_full_name }}</p>

@@ -1,0 +1,4 @@
+Django==1.7.1
+python-magic==0.4.6
+Markdown==2.5.2
+django-markwhat==2014.9.20
