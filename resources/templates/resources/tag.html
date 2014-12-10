@@ -1,0 +1,9 @@
+{% extends "resources/base.html" %}
+
+{% block title %}{{ block.super }}: Tag: {{ tag.name }}{% endblock title %}
+
+{% block heading %}{{ block.super }}: Tag: {{ tag.name }}{% endblock heading %}
+
+{% block content %}
+{% include "resources/resource_list.html" %}
+{% endblock content %}

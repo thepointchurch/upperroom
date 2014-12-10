@@ -36,9 +36,9 @@
 
 <div id="nav">
 <p><a href="{% url 'pages:home' %}">Home</a>
-<a href="/public_html/about" title="Aquaint yourself with The Point and what we belive.">About Us</a>
-<a href="/public_html/resources" title="Publications from The Point on various Biblical topics.">Resources</a>
-<a href="/public_html/theophilus" title="Theophilus' Quest is an attempt to convey the basics of Christianity in a simple and straight-forward way.">Theophilus' Quest</a>
+<a href="{% url 'hilight:about' %}" title="Aquaint yourself with The Point and what we belive.">About Us</a>
+<a href="{% url 'resources:index' %}" title="Publications from The Point on various Biblical topics.">Resources</a>
+<a href="{% url 'hilight:theophilus' %}" title="Theophilus' Quest is an attempt to convey the basics of Christianity in a simple and straight-forward way.">Theophilus' Quest</a>
 <a href="">Letters From Theophilus</a>
 <a href="{% url 'pages:contact' %}" title="Would you like to know more about The Point? Get our contact details and meeting times here.">Contact Us</a>
 {% if not user.is_authenticated %}<a href="{% url 'members:index' %}" title="Login to the Member's area.">Login</a>{% endif %}

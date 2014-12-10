@@ -1,0 +1,28 @@
+{% extends "resources/base.html" %}
+{% load markup %}
+
+{% block title %}{{ block.super }}: {{ resource.title }}{% endblock title %}
+
+{% block heading %}{{ resource.title }}{% endblock heading %}
+
+{% block content %}
+
+{% if resource.author and resource.show_author %}
+<p id="author">
+{% if resource.author.email %}<a href="mailto:{{resource.author.email}}">{% endif %}
+{{ resource.author.fullname }}
+{% if resource.author.email %}</a>{% endif %}
+</p>
+{% endif %}
+
+{% if resource.attachments.count > 0 %}
+{% for attachment in resource.attachments.all %}
+{% if forloop.first %}<ul>{% endif %}
+<li><a href="{% url "resources:attachment" attachment.id %}">{{ attachment.title }}</a></li>
+{% if forloop.last %}</ul>{% endif %}
+{% endfor %}
+{% endif %}
+
+{{ resource.body|markdown:"safe" }}
+
+{% endblock content %}

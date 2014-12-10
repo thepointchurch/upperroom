@@ -1,0 +1,21 @@
+{% load markup %}
+{% for resource in resource_list %}
+{% if forloop.first %}<ul>{% endif %}
+<li><strong><a href="{% url "resources:detail" resource.slug %}">{{ resource.title }}</a></strong> ({{ resource.created|date:"j/n/Y" }})
+{% if resource.description %}{{ resource.description|markdown:"safe" }}{% endif %}</li>
+{% if forloop.last %}</ul>{% endif %}
+{% empty %}
+<p>There were no resources found.</p>
+{% endfor %}
+
+{% if is_paginated %}
+<p class="links">[
+{% if page_obj.has_previous %}
+<a href="?page={{ page_obj.previous_page_number }}">Previous</a> |
+{% endif %}
+Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+{% if page_obj.has_next %}
+| <a href="?page={{ page_obj.next_page_number }}">Next</a>
+{% endif %}
+]</p>
+{% endif %}

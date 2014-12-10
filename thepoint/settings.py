@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'members',
     'newsletter',
     'pages',
+    'resources',
     'roster',
     'django_markwhat',
     'django.contrib.admin',
