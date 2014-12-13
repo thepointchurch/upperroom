@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.views import generic
 
 from resources.models import Attachment, Resource, Tag
@@ -47,6 +47,12 @@ class PermissionRequired(Exception):
     pass
 
 
+class RedirectToAttachment(Exception):
+    def __init__(self, attachment):
+        super(RedirectToAttachment, self).__init__(str(attachment))
+        self.attachment = attachment
+
+
 class ResourceDetail(generic.DetailView):
     model = Resource
 
@@ -54,6 +60,8 @@ class ResourceDetail(generic.DetailView):
         obj = super(ResourceDetail, self).get_object(**kwargs)
         if obj.is_private and not self.request.user.is_authenticated():
             raise PermissionRequired('Resource is private')
+        if not obj.body and obj.attachments.count() == 1:
+            raise RedirectToAttachment(obj.attachments.first())
         return obj
 
     def dispatch(self, *args, **kwargs):
@@ -62,6 +70,8 @@ class ResourceDetail(generic.DetailView):
         except PermissionRequired:
             from django.contrib.auth.views import redirect_to_login
             return redirect_to_login(self.request.path)
+        except RedirectToAttachment as e:
+            return redirect('resources:attachment', pk=e.attachment.id)
 
 
 class AttachmentView(generic.DetailView):

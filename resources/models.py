@@ -1,6 +1,7 @@
 import magic
 import mimetypes
 
+from django.core.urlresolvers import reverse
 from django.db import models
 
 from directory.models import Person
@@ -63,15 +64,40 @@ class Resource(models.Model):
     def __str__(self):
         return self.title
 
+    @property
+    def alternates(self):
+        return self.attachments.filter(kind=Attachment.KIND_ALTERNATE)
+
+    @property
+    def inlines(self):
+        return self.attachments.filter(kind=Attachment.KIND_INLINE)
+
+    @property
+    def content(self):
+        content = self.body
+        content += '\n'
+        for attachment in self.inlines:
+            content += '\n%s' % attachment.markdown_link()
+        return content
+
 
 def get_attachment_filename(instance, filename):
     return 'resource/attachment/%d/%s' % (instance.resource.id, instance.title)
 
 
 class Attachment(models.Model):
+    KIND_ALTERNATE = 'A'
+    KIND_INLINE = 'I'
+    KIND_CHOICES = (
+        (KIND_ALTERNATE, 'Alternate'),
+        (KIND_INLINE, 'Inline'),
+    )
+
     title = models.CharField(max_length=64)
     file = models.FileField(upload_to=get_attachment_filename)
     mime_type = models.CharField(max_length=64, editable=False)
+    kind = models.CharField(max_length=1, choices=KIND_CHOICES,
+                            null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     resource = models.ForeignKey(Resource, related_name='attachments')
 
@@ -99,10 +125,26 @@ class Attachment(models.Model):
     def extension(self):
         try:
             return [t for t in mimetypes.guess_all_extensions(self.mime_type)
-                    if t not in ['.jpe']][0]
+                    if t not in ['.jpe', '.pwz']][0]
         except IndexError:
             return None
 
     @property
+    def format(self):
+        if self.extension:
+            return self.extension.lstrip('.').upper()
+        else:
+            return 'Unknown'
+
+    @property
     def is_private(self):
         return self.resource.is_private
+
+    def markdown_link(self):
+        if self.mime_type.startswith('image/'):
+            link = '!'
+        else:
+            link = ''
+        link += '[%s]: %s' % (self.title, reverse('resources:attachment',
+                                                  kwargs={'pk': self.id}))
+        return link

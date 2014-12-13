@@ -15,6 +15,7 @@ class TagAdmin(admin.ModelAdmin):
 class AttachmentInline(admin.TabularInline):
     model = Attachment
     extra = 0
+    readonly_fields = ('mime_type',)
     formfield_overrides = {
         models.TextField: {'widget': Textarea(
                            attrs={'rows': 3,
