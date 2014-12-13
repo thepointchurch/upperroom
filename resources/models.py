@@ -141,10 +141,5 @@ class Attachment(models.Model):
         return self.resource.is_private
 
     def markdown_link(self):
-        if self.mime_type.startswith('image/'):
-            link = '!'
-        else:
-            link = ''
-        link += '[%s]: %s' % (self.title, reverse('resources:attachment',
+        return '[%s]: %s' % (self.title, reverse('resources:attachment',
                                                   kwargs={'pk': self.id}))
-        return link
