@@ -1,6 +1,7 @@
 from django.apps import apps
-from newsletter.models import Publication
 from django.db.models.signals import post_migrate
+
+from newsletter.models import Publication
 
 
 def default_publications(sender, **kwargs):
