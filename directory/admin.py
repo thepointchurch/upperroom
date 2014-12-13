@@ -31,6 +31,15 @@ class FamilyAdmin(admin.ModelAdmin):
     search_fields = ['name', 'members__name']
     form = FamilyForm
 
+    fieldsets = (
+        (None, {'fields': ('name',)}),
+        ('Address', {'fields': ('street', 'suburb', 'postcode')}),
+        ('Contact', {'fields': ('email', 'phone_home', 'phone_mobile')}),
+        ('Marriage', {'fields': ('anniversary', 'husband', 'wife')}),
+        ('Advanced options', {'classes': ('collapse',),
+                              'fields': ('is_current',)}),
+    )
+
     def get_queryset(self, request):
         qs = self.model.objects.get_queryset()
         ordering = self.get_ordering(request)
