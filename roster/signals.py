@@ -12,6 +12,7 @@ def default_locations(sender, **kwargs):
     Location.objects.get_or_create(name='Warwick')
     Location.objects.get_or_create(name='Wynnum')
 
+
 def default_roletypes(sender, **kwargs):
     r, created = RoleType.objects.get_or_create(name='Lesson')
     if created:

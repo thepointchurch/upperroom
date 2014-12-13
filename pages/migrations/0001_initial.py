@@ -6,7 +6,8 @@ from django.db import migrations
 
 def setup_site(apps, schema_editor):
     Site = apps.get_model('sites', 'Site')
-    s = Site.objects.create(pk=1, domain='thepoint.org.au', name='thepoint')
+    s = Site.objects.create(pk=1, domain='thepoint.org.au',
+                            name='The Point Church')
 
     FlatPage = apps.get_model('flatpages', 'FlatPage')
 

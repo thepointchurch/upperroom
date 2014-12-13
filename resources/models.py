@@ -142,4 +142,4 @@ class Attachment(models.Model):
 
     def markdown_link(self):
         return '[%s]: %s' % (self.title, reverse('resources:attachment',
-                                                  kwargs={'pk': self.id}))
+                                                 kwargs={'pk': self.id}))
