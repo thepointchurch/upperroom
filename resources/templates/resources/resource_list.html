@@ -1,7 +1,13 @@
 {% load markup %}
 {% for resource in resource_list %}
 {% if forloop.first %}<ul>{% endif %}
-<li><strong><a href="{% url "resources:detail" resource.slug %}">{{ resource.title }}</a></strong> ({{ resource.created|date:"j/n/Y" }})
+<li><strong><a href="{% url "resources:detail" resource.slug %}">{{ resource.title }}</a></strong>
+{% if resource.alternates.count > 0 %}[
+{% for attachment in resource.alternates %}
+<a href="{% url 'resources:attachment' attachment.id %}">{{ attachment.format }}</a>{% if not forloop.last %},{% endif %}
+{% endfor %}
+]{% endif %}
+({{ resource.created|date:"j/n/Y" }})
 {% if resource.description %}{{ resource.description|markdown:"safe" }}{% endif %}</li>
 {% if forloop.last %}</ul>{% endif %}
 {% empty %}
