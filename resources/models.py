@@ -97,7 +97,7 @@ class Attachment(models.Model):
     file = models.FileField(upload_to=get_attachment_filename)
     mime_type = models.CharField(max_length=64, editable=False)
     kind = models.CharField(max_length=1, choices=KIND_CHOICES,
-                            null=True, blank=True)
+                            default=KIND_INLINE)
     description = models.TextField(null=True, blank=True)
     resource = models.ForeignKey(Resource, related_name='attachments')
 
