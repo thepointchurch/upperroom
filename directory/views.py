@@ -32,12 +32,16 @@ class SearchView(generic.ListView):
 
         q = self.search_query
         if self.search_type == 'By Location':
-            return Family.current_objects.filter(Q(street__icontains=q) |
-                                                 Q(suburb__icontains=q) |
-                                                 Q(postcode__icontains=q)).distinct()
+            return Family.current_objects.filter(
+                Q(street__icontains=q) |
+                Q(suburb__icontains=q) |
+                Q(postcode__icontains=q)).distinct()
         else:
-            return Family.current_objects.filter(Q(name__icontains=q) |
-                                                 Q(members__name__icontains=q)).distinct()
+            return Family.current_objects.filter(
+                Q(name__icontains=q) |
+                (Q(members__name__icontains=q) &
+                 Q(members__is_current=True))
+                ).distinct()
 
 
 class BirthdayView(generic.ListView):
@@ -47,4 +51,5 @@ class BirthdayView(generic.ListView):
 
 class AnniversaryView(generic.ListView):
     template_name = 'directory/anniversary_list.html'
-    queryset = Family.current_objects.filter(husband__isnull=False).filter(husband__isnull=False)
+    queryset = Family.current_objects.filter(husband__isnull=False)\
+        .filter(husband__isnull=False)

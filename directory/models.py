@@ -27,8 +27,8 @@ class Family(models.Model):
                              related_name='+')
     anniversary = models.DateField(null=True, blank=True)
 
-    current_objects = CurrentManager()
     objects = models.Manager()
+    current_objects = CurrentManager()
 
     class Meta:
         ordering = ['name']
@@ -46,12 +46,16 @@ class Family(models.Model):
         return ids
 
     @property
+    def current_members(self):
+        return self.members.filter(is_current=True)
+
+    @property
     def spouses(self):
-        return self.members.filter(id__in=self.spouse_ids())
+        return self.current_members.filter(id__in=self.spouse_ids())
 
     @property
     def siblings(self):
-        return self.members.exclude(id__in=self.spouse_ids())
+        return self.current_members.exclude(id__in=self.spouse_ids())
 
     @property
     def anniversarydate(self):
@@ -74,8 +78,7 @@ class Family(models.Model):
                 member.user.last_name = self.name
                 if self.email and not member.email:
                     member.user.email = self.email
-            if not self.is_current:
-                member.is_current = False
+            member.is_current = self.is_current
             member.save()
 
 
@@ -101,8 +104,8 @@ class Person(models.Model):
     is_member = models.BooleanField(default=True, verbose_name='Member')
     is_current = models.BooleanField(default=True, verbose_name='Current')
 
-    current_objects = CurrentManager()
     objects = models.Manager()
+    current_objects = CurrentManager()
 
     class Meta:
         ordering = ['order', 'id', 'name']   # I wish there was a better way

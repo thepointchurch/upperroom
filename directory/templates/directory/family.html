@@ -17,8 +17,8 @@
 {% if family.phone_home %}<p>Home: {{ family.phone_home }}</p>{% endif %}
 {% if family.phone_mobile %}<p>Mobile: {{ family.phone_mobile }}</p>{% endif %}
 
-{% for person in family.members.all %}{% if person.phone_mobile %}<p>Mobile ({{ person.name }}): {{ person.phone_mobile }}</p>{% endif %}{% endfor %}
-{% for person in family.members.all %}{% if person.phone_work %}<p>Work ({{ person.name }}): {{ person.phone_work }}</p>{% endif %}{% endfor %}
+{% for person in family.current_members.all %}{% if person.phone_mobile %}<p>Mobile ({{ person.name }}): {{ person.phone_mobile }}</p>{% endif %}{% endfor %}
+{% for person in family.current_members.all %}{% if person.phone_work %}<p>Work ({{ person.name }}): {{ person.phone_work }}</p>{% endif %}{% endfor %}
 
 {% if family.email %}<p>Email: <a href="mailto:{{ family.email }}">{{ family.email }}</a></p>{% endif %}
 
