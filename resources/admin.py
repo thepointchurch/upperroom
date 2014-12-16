@@ -23,12 +23,34 @@ class AttachmentInline(admin.TabularInline):
     }
 
 
+def action_publish(modeladmin, request, queryset):
+    queryset.update(is_published=True)
+action_publish.short_description = 'Publish selected resources'
+
+
+def action_unpublish(modeladmin, request, queryset):
+    queryset.update(is_published=False)
+action_unpublish.short_description = 'Unpublish selected resources'
+
+
+def action_mark_private(modeladmin, request, queryset):
+    queryset.update(is_private=True)
+action_mark_private.short_description = 'Mark selected resources as private'
+
+
+def action_mark_public(modeladmin, request, queryset):
+    queryset.update(is_private=False)
+action_mark_public.short_description = 'Mark selected resources as public'
+
+
 class ResourceAdmin(admin.ModelAdmin):
     model = Resource
     inlines = [AttachmentInline]
     list_filter = ('tags', 'created', 'modified', 'is_published', 'is_private')
     search_fields = ['title', 'description', 'body']
     prepopulated_fields = {'slug': ('title',)}
+    actions = [action_publish, action_unpublish,
+               action_mark_private, action_mark_public]
 
     fieldsets = (
         (None, {'fields': ('title', 'slug', 'description', 'body')}),
