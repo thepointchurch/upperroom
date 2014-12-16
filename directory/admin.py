@@ -20,11 +20,27 @@ class FamilyForm(forms.ModelForm):
             .filter(gender__exact='F')
 
 
+def action_mark_current(modeladmin, request, queryset):
+    for f in queryset.all():
+        f.is_current = True
+        f.save()
+action_mark_current.short_description = 'Mark selected families as current'
+
+
+def action_unmark_current(modeladmin, request, queryset):
+    for f in queryset.all():
+        f.is_current = False
+        f.save()
+action_unmark_current.short_description = \
+    'Mark selected families as not current'
+
+
 class FamilyAdmin(admin.ModelAdmin):
     inlines = [PersonInline]
     list_filter = ('is_current',)
     search_fields = ['name', 'members__name']
     form = FamilyForm
+    actions = [action_mark_current, action_unmark_current]
 
     fieldsets = (
         (None, {'fields': ('name',)}),
