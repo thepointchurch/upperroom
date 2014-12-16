@@ -37,7 +37,9 @@ class ResourceList(generic.ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        resources = Resource.published_objects.exclude(tags__is_exclusive=True)
+        resources = Resource.published_objects\
+            .filter(parent__isnull=True)\
+            .exclude(tags__is_exclusive=True)
         if not self.request.user.is_authenticated():
             resources = resources.filter(is_private=False)
         return resources
@@ -55,6 +57,9 @@ class RedirectToAttachment(Exception):
 
 class ResourceDetail(generic.DetailView):
     model = Resource
+
+    def get_queryset(self):
+        return Resource.published_objects.all()
 
     def get_object(self, **kwargs):
         obj = super(ResourceDetail, self).get_object(**kwargs)

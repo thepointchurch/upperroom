@@ -47,6 +47,9 @@ class Resource(models.Model):
                                related_name='resources')
     show_author = models.BooleanField(default=True)
 
+    parent = models.ForeignKey('self', null=True, blank=True,
+                               related_name='children')
+
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
 
@@ -76,9 +79,15 @@ class Resource(models.Model):
     def content(self):
         content = self.body
         content += '\n'
+        for child in self.children.all():
+            content += '\n%s' % child.markdown_link()
         for attachment in self.inlines:
             content += '\n%s' % attachment.markdown_link()
         return content
+
+    def markdown_link(self):
+        return '[%s]: %s' % (self.title, reverse('resources:detail',
+                                                 kwargs={'slug': self.slug}))
 
 
 def get_attachment_filename(instance, filename):

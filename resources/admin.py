@@ -37,7 +37,7 @@ class ResourceAdmin(admin.ModelAdmin):
         ('Author', {'classes': ('collapse',),
                     'fields': ('author', 'show_author')}),
         ('Advanced', {'classes': ('collapse',),
-                      'fields': ('is_published', 'is_private',)}),
+                      'fields': ('is_published', 'is_private', 'parent')}),
     )
 
 admin.site.register(Tag, TagAdmin)
