@@ -34,7 +34,8 @@ class Command(BaseCommand):
                 raise CommandError('Badly formatted date: %s' %
                                    options['date'])
 
-        roles = Role.objects.filter(meeting__date=d).exclude(person__isnull=True)
+        roles = Role.objects.filter(meeting__date=d)\
+            .exclude(person__isnull=True)
         role_map = {}
         for role in roles:
             if not role.person.find_email():

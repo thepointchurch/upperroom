@@ -76,7 +76,8 @@ class RoleType(models.Model):
 class CurrentRoleManager(models.Manager):
     def get_queryset(self):
         return super(CurrentRoleManager,
-                     self).get_queryset().filter(meeting__date__gte=date.today())
+                     self).get_queryset()\
+            .filter(meeting__date__gte=date.today())
 
 
 class Role(models.Model):

@@ -28,7 +28,10 @@ class IndexView(generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
         try:
-            context['role_list'] = Role.current_objects.filter(person__id=self.request.user.person.id).filter(meeting__date__lte=(date.today() + timedelta(days=60)))
+            context['role_list'] = Role.current_objects\
+                .filter(person__id=self.request.user.person.id)\
+                .filter(meeting__date__lte=(date.today() +
+                                            timedelta(days=60)))
         except:
             pass
         return context
