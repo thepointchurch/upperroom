@@ -10,9 +10,9 @@ class CurrentManager(models.Manager):
 
 class Family(models.Model):
     name = models.CharField(max_length=30)
-    phone_home = models.CharField(max_length=10, null=True, blank=True,
+    phone_home = models.CharField(max_length=15, null=True, blank=True,
                                   verbose_name='Home Phone')
-    phone_mobile = models.CharField(max_length=10, null=True, blank=True,
+    phone_mobile = models.CharField(max_length=15, null=True, blank=True,
                                     verbose_name='Mobile Phone')
     email = models.EmailField(null=True, blank=True)
     street = models.CharField(max_length=32, null=True, blank=True)
@@ -97,9 +97,9 @@ class Person(models.Model):
                               null=True, blank=True)
     birthday = models.DateField(null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
-    phone_mobile = models.CharField(max_length=10, null=True, blank=True,
+    phone_mobile = models.CharField(max_length=15, null=True, blank=True,
                                     verbose_name='Mobile Phone')
-    phone_work = models.CharField(max_length=10, null=True, blank=True,
+    phone_work = models.CharField(max_length=15, null=True, blank=True,
                                   verbose_name='Work Phone')
     is_member = models.BooleanField(default=True, verbose_name='Member')
     is_current = models.BooleanField(default=True, verbose_name='Current')
