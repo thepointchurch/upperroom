@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.conf import settings
 from django.db import models
 
@@ -62,14 +64,18 @@ class Family(models.Model):
         return self.anniversary.replace(year=2000)
 
     @property
-    def first_letter(self):
-        return self.name[0].lower()
+    def anniversary_age(self):
+        if self.anniversary:
+            today = date.today()
+            this_year = self.anniversary.replace(year=today.year)
+            age = today.year - self.anniversary.year
+            if this_year > today:
+                age -= 1
+            return age
 
     @property
-    def marriage(self):
-        if self.husband and self.wife:
-            return '%s and %s %s' % (self.husband.name,
-                                     self.wife.name, self.name)
+    def first_letter(self):
+        return self.name[0].lower()
 
     def save(self, *args, **kwargs):
         super(Family, self).save(*args, **kwargs)

@@ -11,7 +11,7 @@
     {% regroup month.list by anniversary.day as anniversary_by_month_day %}
     <ul>
     {% for day in anniversary_by_month_day %}
-        <li><strong>{{ day.grouper }}</strong>{% for family in day.list %} {{ family.marriage }}{% if not forloop.last %},{% endif %}{% endfor %}</li>
+        <li><strong>{{ day.grouper }}</strong>{% for family in day.list %} {{ family.husband.name }} &amp; {{ family.wife.name }} {{ family.name }} ({{ family.anniversary_age }} year{{ family.anniversary_age|pluralize }}){% if not forloop.last %},{% endif %}{% endfor %}</li>
     {% endfor %}
     </ul>
 {% empty %}

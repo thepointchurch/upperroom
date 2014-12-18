@@ -51,5 +51,5 @@ class BirthdayView(generic.ListView):
 
 class AnniversaryView(generic.ListView):
     template_name = 'directory/anniversary_list.html'
-    queryset = Family.current_objects.filter(husband__isnull=False)\
-        .filter(husband__isnull=False)
+    queryset = Family.current_objects.filter(anniversary__isnull=False)\
+        .filter(husband__isnull=False).filter(wife__isnull=False)
