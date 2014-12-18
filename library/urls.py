@@ -4,7 +4,7 @@ from library import views
 
 urlpatterns = patterns('',
                        url(r'^$',
-                           views.index,
+                           views.IndexView.as_view(),
                            name='index'),
                        url(r'^search/$',
                            views.SearchView.as_view(),
