@@ -1,10 +1,18 @@
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.views import generic
 
 from directory.models import Person
 from roster.models import Meeting, Role
 
 
-class MeetingIndex(generic.ListView):
+class PrivateMixin(object):
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(PrivateMixin, self).dispatch(*args, **kwargs)
+
+
+class MeetingIndex(PrivateMixin, generic.ListView):
     model = Meeting
     allow_future = True
     template_name = 'roster/index.html'
@@ -13,14 +21,14 @@ class MeetingIndex(generic.ListView):
         return Meeting.current_objects.all()[:5]
 
 
-class MonthlyMeetingView(generic.MonthArchiveView):
+class MonthlyMeetingView(PrivateMixin, generic.MonthArchiveView):
     model = Meeting
     allow_future = True
     date_field = 'date'
     make_object_list = True
 
 
-class PersonList(generic.ListView):
+class PersonList(PrivateMixin, generic.ListView):
     model = Role
     template_name = 'roster/person_list.html'
 

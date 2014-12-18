@@ -1,15 +1,23 @@
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.utils.decorators import method_decorator
 from django.views import generic
 
 from directory.models import Family, Person
 
 
-class IndexView(generic.ListView):
+class PrivateMixin(object):
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(PrivateMixin, self).dispatch(*args, **kwargs)
+
+
+class IndexView(PrivateMixin, generic.ListView):
     template_name = 'directory/index.html'
     queryset = Family.current_objects.all()
 
 
-class LetterView(generic.ListView):
+class LetterView(PrivateMixin, generic.ListView):
     model = Family
     template_name = 'directory/family_letter.html'
 
@@ -18,11 +26,11 @@ class LetterView(generic.ListView):
         return Family.current_objects.filter(name__startswith=self.letter)
 
 
-class DetailView(generic.DetailView):
+class DetailView(PrivateMixin, generic.DetailView):
     model = Family
 
 
-class SearchView(generic.ListView):
+class SearchView(PrivateMixin, generic.ListView):
     model = Family
     template_name = 'directory/family_search.html'
 
@@ -44,12 +52,12 @@ class SearchView(generic.ListView):
                 ).distinct()
 
 
-class BirthdayView(generic.ListView):
+class BirthdayView(PrivateMixin, generic.ListView):
     template_name = 'directory/birthday_list.html'
     queryset = Person.current_objects.all().exclude(birthday__isnull=True)
 
 
-class AnniversaryView(generic.ListView):
+class AnniversaryView(PrivateMixin, generic.ListView):
     template_name = 'directory/anniversary_list.html'
     queryset = Family.current_objects.filter(anniversary__isnull=False)\
         .filter(husband__isnull=False).filter(wife__isnull=False)

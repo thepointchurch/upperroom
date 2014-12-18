@@ -1,15 +1,24 @@
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
 from django.views import generic
 
 from library.models import Book
 
 
+@login_required
 def index(request):
     return render(request, 'library/index.html')
 
 
-class SearchView(generic.ListView):
+class PrivateMixin(object):
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(PrivateMixin, self).dispatch(*args, **kwargs)
+
+
+class SearchView(PrivateMixin, generic.ListView):
     model = Book
     template_name = 'library/book_list.html'
 
