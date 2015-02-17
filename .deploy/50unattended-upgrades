@@ -1,0 +1,10 @@
+Unattended-Upgrade::Origins-Pattern {
+        "o=Debian,a=stable";
+        "o=Debian,a=stable-updates";
+        "o=Debian Backports,a=wheezy-backports";
+};
+
+Unattended-Upgrade::Package-Blacklist {
+};
+
+Unattended-Upgrade::Mail "root";

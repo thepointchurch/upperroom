@@ -1,0 +1,8 @@
+#!/bin/sh
+
+branch='master'
+dest=../project
+
+GIT_WORK_TREE=$dest git checkout --force $branch
+
+cd $dest && envdir .env sh -c '(make && make reload)'

@@ -1,4 +1,10 @@
 *.pyc
 .*.swp
 db.sqlite3
-media
+media/
+static/
+.venv*/
+.env
+.runit/
+.nginx.conf
+.gunicorn.socket

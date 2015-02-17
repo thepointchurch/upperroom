@@ -1,0 +1,15 @@
+server {
+    listen [::]:80 ipv6only=off;
+
+    server_name $VHOST;
+
+    client_max_body_size 4G;
+
+    location / {
+        proxy_pass http://unix:$HOME/project/.gunicorn.socket;
+        proxy_set_header X-Forwarded-Host $server_name;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+    }
+}

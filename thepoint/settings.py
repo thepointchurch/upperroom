@@ -1,41 +1,22 @@
-"""
-Django settings for thepoint project.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/1.7/topics/settings/
-
-For the full list of settings and their values, see
-https://docs.djangoproject.com/en/1.7/ref/settings/
-"""
-
+import os
 import sys
+
 sys.path.append('apps')
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+SECRET_KEY = os.environ['SECRET_KEY']
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
+DEBUG = bool(os.getenv('DEBUG', False))
+TEMPLATE_DEBUG = bool(os.getenv('DEBUG', False))
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'dkro074xwe2@$_3nzng(is0h^u*#2f!i+icl@fth^l$n(g$p0q'
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND',
+                          'django.core.mail.backends.console.EmailBackend')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+ALLOWED_HOSTS = os.getenv('VHOST', '*').split()
 
-TEMPLATE_DEBUG = True
+SITE_ID = int(os.getenv('SITE_ID', 1))
 
-# testing only
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-ALLOWED_HOSTS = []
-
-SITE_ID = 1
-
-
-# Application definition
 
 INSTALLED_APPS = (
     'directory',
@@ -68,50 +49,32 @@ MIDDLEWARE_CLASSES = (
 )
 
 ROOT_URLCONF = 'thepoint.urls'
-
 WSGI_APPLICATION = 'thepoint.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': os.environ['DB_ENGINE'],
+        'NAME': os.environ['DB_NAME'],
     }
 }
 
-# Internationalization
-# https://docs.djangoproject.com/en/1.7/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'Australia/Brisbane'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 LOGIN_URL = '/members/login'
 LOGIN_REDIRECT_URL = '/members/'
 
-
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.7/howto/static-files/
-
-STATIC_URL = '/static/'
-
+STATIC_URL = os.getenv('STATIC_URL', '/static/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
-
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'thepoint/static'),
 )
@@ -120,7 +83,6 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
 )
-
 TEMPLATE_DIRS = (
     os.path.join(BASE_DIR, 'thepoint/templates'),
 )
@@ -135,3 +97,83 @@ PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.CryptPasswordHasher',
     'django.contrib.auth.hashers.UnsaltedMD5PasswordHasher',
 )
+
+if os.getenv('environment', '') in ['production', 'testing']:
+    if DEBUG:
+        level = 'DEBUG'
+    else:
+        level = 'INFO'
+
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': True,
+        'formatters': {
+            'standard': {
+                'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+            },
+            'cloudwatch': {
+                'format': '[%(levelname)s] %(name)s: %(message)s'
+            },
+        },
+        'handlers': {
+            'default': {
+                'level': level,
+                'class': 'util.logging.handlers.CloudwatchHandler',
+                'group': '%s_%s' % (os.uname()[1], ALLOWED_HOSTS[0]),
+                'stream': 'django',
+                'formatter': 'cloudwatch',
+            },
+            'request': {
+                'level': level,
+                'class': 'util.logging.handlers.CloudwatchHandler',
+                'group': '%s_%s' % (os.uname()[1], ALLOWED_HOSTS[0]),
+                'stream': 'request',
+                'formatter': 'cloudwatch',
+            },
+            'security': {
+                'level': level,
+                'class': 'util.logging.handlers.CloudwatchHandler',
+                'group': '%s_%s' % (os.uname()[1], ALLOWED_HOSTS[0]),
+                'stream': 'security',
+                'formatter': 'cloudwatch',
+            },
+            'gunicorn': {
+                'level': level,
+                'class': 'util.logging.handlers.CloudwatchHandler',
+                'group': '%s_%s' % (os.uname()[1], ALLOWED_HOSTS[0]),
+                'stream': 'gunicorn',
+                'formatter': 'cloudwatch',
+            },
+        },
+        'loggers': {
+            '': {
+                'handlers': ['default'],
+                'level': level,
+            },
+            'django.request': {
+                'handlers': ['request'],
+                'level': level,
+                'propagate': False,
+            },
+            'django.security': {
+                'handlers': ['security'],
+                'level': level,
+                'propagate': False,
+            },
+            'gunicorn.error': {
+                'handlers': ['gunicorn'],
+                'level': level,
+                'propagate': False,
+            },
+        }
+    }
+
+    INSTALLED_APPS += ('storages',)
+
+    STATICFILES_BUCKET = os.getenv('STATICFILES_BUCKET',
+                                   'static.%s' % ALLOWED_HOSTS[0])
+    STATICFILES_STORAGE = 'util.storages.backends.S3StaticStorage'
+
+    MEDIAFILES_BUCKET = os.getenv('MEDIAFILES_BUCKET',
+                                  'media.%s' % ALLOWED_HOSTS[0])
+    DEFAULT_FILE_STORAGE = 'util.storages.backends.S3MediaStorage'
