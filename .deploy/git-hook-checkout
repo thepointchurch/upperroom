@@ -1,8 +1,14 @@
 #!/bin/sh
 
-branch='master'
-dest=../project
+branch=$(git rev-parse --abbrev-ref HEAD)
+dest=${1-../project}
 
-GIT_WORK_TREE=$dest git checkout --force $branch
+if [ $branch = 'HEAD' ]; then
+    GIT_WORK_TREE=$dest git checkout --force $(head -1 | sed 's,^.*/,,')
+elif grep -q "/${branch}$"; then
+    GIT_WORK_TREE=$dest git checkout --force
+else
+    exit
+fi
 
 cd $dest && envdir .env sh -c '(make && make reload)'

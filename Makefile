@@ -65,7 +65,7 @@ reload: $(HOME)/service/django
 	sed -e 's,$$HOME,$(HOME),g' -e 's/$$VHOST/$(VHOST)/g' $< >$@
 
 $(HOME)/.profile: .deploy/profile
-	cp $< $@
+	cp $< $@ && chmod 755 $@
 
 $(HOME)/git/hooks/post-receive: .deploy/git-hook-checkout
 	cp $< $@

@@ -4,21 +4,14 @@
 # create_user.sh thepoint_test 'The Point Testing' testing
 
 user=${1?No username specified}
-description=$2
-branch=${3-master}
-
-if [ $branch = 'master' ]; then
-    guessed_env='production'
-else
-    guessed_env='testing'
-fi
-environment=${4-$guessed_env}
+description=${2?No description specified}
+environment=${3-production}
 
 adduser --gecos "${description}" --disabled-password --home "/srv/django/${user}" ${user}
 su -c "createuser -wDRS ${user}; createdb -O ${user} ${user}" postgres
 su -c "git init --bare '/srv/django/${user}/git' && \
        echo '${description}' >'/srv/django/${user}/git/description' && \
-       sed 's/master/${branch}/' /usr/local/bin/git-hook-checkout >'/srv/django/${user}/git/hooks/post-receive' && \
+       cp /usr/local/bin/git-hook-checkout /srv/django/${user}/git/hooks/post-receive && \
        chmod 755 '/srv/django/${user}/git/hooks/post-receive' && \
        mkdir '/srv/django/${user}/project' '/srv/django/${user}/service' && \
        ln -s .env_${environment} '/srv/django/${user}/project/.env'" $user
