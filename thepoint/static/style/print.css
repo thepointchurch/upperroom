@@ -39,10 +39,8 @@ h1, h2, h3, h4 {
     border: 0;
 }
 
-div#main {
-    position: static;
-    left: 0;
-    min-width: auto;
+h1 {
+    display: none;
 }
 
 h2 {
@@ -124,7 +122,11 @@ img.left {
     float: left;
 }
 
-div#header, div#nav {
+div#navbar {
+    display: none;
+}
+
+p#footer {
     display: none;
 }
 

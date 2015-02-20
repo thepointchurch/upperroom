@@ -1,76 +1,8 @@
-div#header {
-    padding-bottom: 10px;
+div#titlepage {
+        font-size: 12px;
 }
 
-div#header h1 {
-    border-width: 2px 0;
-    margin: 10px;
-    text-align: center;
-}
-
-div#header h2 {
-    display: inherit;
-    color: #ffc000;
-    font-style: italic;
-    text-shadow: 3px 3px 2px black;
-    text-align: center;
-    font-size: 16px;
-    border: 0;
-}
-
-div#header blockquote {
-    display: inherit;
-    background: transparent;
-    background-image: url(path.jpg);
-    background-repeat: no-repeat;
-    background-size: 180px 180px;
-    margin-left: 70px;
-    margin-top: 30px;
-    padding-left: 180px;
-    font-style: normal;
-}
-
-div#header blockquote * {
-    color: white;
-    margin: 0 20px;
-    font-size: 20px;
-    font-family: 'Gentium Book Basic', serif;
-    text-shadow: 2px 2px 1px black;
-}
-
-div#header blockquote footer {
-    margin-top: 10px;
-}
-
-div#header blockquote footer:before {
-    content: "\00a0\00a0\00a0\00a0- ";
-}
-
-div#main {
-    background: inherit;
-    background-image: url(hands.png);
-    background-repeat: no-repeat;
-    background-size: 100% auto;
-    width: 350px;
-    min-width: 250px;
-    height: 250px;
-    padding: 25px 50px;
-    color: white;
-    text-shadow: 2px 2px 1px black;
-}
-
-div#main * {
-    color: white;
-    font-family: serif;
-    font-family: 'Gentium Book Basic', serif;
-    font-style: italic;
-}
-
-div#main h2 {
-    font-size: 24px;
-    border: 0;
-}
-
-div#main p {
-    font-size: 18px;
+div#titlepage li a {
+        font-size: 16px;
+        font-weight: bold;
 }

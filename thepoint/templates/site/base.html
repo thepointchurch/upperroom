@@ -9,7 +9,6 @@
 <meta name="keywords" content="The Point Church, Wellington Point, Brisbane, Queensland, Australia, Church, Church of Christ, Christian, Bible" />
 <title>{% block title %}The Point Church{% endblock title %}</title>
 <link rel="stylesheet" type="text/css" href="{% static 'style/default.css' %}" title="Default" />
-<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ledger" />
 <link rel="stylesheet" type="text/css" href="{% static 'style/print.css' %}" media="print" />
 {% block stylesheets %}{% endblock stylesheets %}
 <link rel="shortcut icon" href="{% static 'style/icon.png' %}" />
@@ -18,31 +17,15 @@
 </head>
 <body>
 
-<div id="header">
-<div>
 <h1>The Point Church</h1>
-<h2>a church of Christ meeting at Wellington Point, Brisbane, Australia</h2>
-<blockquote>
-<p>Thus says the LORD:</p>
-<p>&quot;Stand by the roads, and look,</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;and ask for the ancient paths,</p>
-<p>where the good way is; and walk in it,</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;and find rest for your souls.</p>
-<p>But they said, &apos;We will not walk in it.&apos;&quot;</p>
-<footer>Jeremiah 6:16 ESV</footer>
-</blockquote>
-</div>
-</div>
 
-<div id="nav">
+<div id="navbar">
 <p><a href="{% url 'pages:home' %}">Home</a>
-<a href="{% url 'hilight:about' %}" title="Aquaint yourself with The Point and what we belive.">About Us</a>
+<a href="{% url 'hilight:about' %}" title="Aquaint yourself with The Point and what we belive.">About</a>
 <a href="{% url 'resources:index' %}" title="Publications from The Point on various Biblical topics.">Resources</a>
 <a href="{% url 'hilight:theophilus' %}" title="Theophilus' Quest is an attempt to convey the basics of Christianity in a simple and straight-forward way.">Theophilus' Quest</a>
-<a href="">Letters From Theophilus</a>
-<a href="{% url 'pages:contact' %}" title="Would you like to know more about The Point? Get our contact details and meeting times here.">Contact Us</a>
+<a href="{% url 'pages:contact' %}" title="Would you like to know more about The Point? Get our contact details and meeting times here.">Contact</a>
 {% if not user.is_authenticated %}<a href="{% url 'members:index' %}" title="Login to the Member's area.">Login</a>{% endif %}
-<a href="{% url 'pages:copyright' %}">Copyright</a>
 </p>
 {% if user.is_authenticated %}
 <p><a href="{% url 'members:index' %}">Member's Home</a>
@@ -57,8 +40,6 @@
 {% endif %}
 </div>
 
-<div id="main">
-
 {% if messages %}
 <div class="messages">
 {% for message in messages %}
@@ -71,7 +52,7 @@
 
 {% block content %}{% endblock content %}
 
-</div>
+<p id="footer">"Becoming a church of God's dreams"</p>
 
 </body>
 </html>

@@ -11,7 +11,7 @@ body {
     text-align: justify;
     text-indent: 0;
     margin: 0;
-    min-width: 700px;
+    margin-left: 150px;
     padding: 0;
 }
 
@@ -48,9 +48,13 @@ h2, h3, h4, h5, h6 {
     padding: 0 10px;
 }
 
+h1 {
+    display: none;
+}
+
 h2 {
     font-size: 20px;
-    color: #4e6128;
+    color: rgb(15,80,140);
     background: transparent;
     text-align: left;
     margin-left: 10px;
@@ -61,7 +65,7 @@ h2 {
 
 h3 {
     font-size: 15px;
-    color: #5f497a;
+    color: rgb(128,0,0);
     background: transparent;
     text-align: left;
     padding: 0;
@@ -73,7 +77,7 @@ h3 {
 
 h4 {
     font-size: 12px;
-    color: #4e6128;
+    color: rgb(15,80,140);
     background: transparent;
     text-align: left;
 }
@@ -81,19 +85,19 @@ h4 {
 h5 {
     font-size: 10px;
     font-weight: bold;
-    color: #4e6128;
+    color: rgb(15,80,140);
     background: transparent;
     text-align: left;
 }
 
 hr {
     width: 90%;
-    color: #4e6128;
+    color: rgb(128,0,0);
     border: none;
     border-bottom: 1px solid;
 }
 
-p, blockquote, footer, ul, ol, dl {
+p, blockquote, ul, ol {
     margin: 10px;
     font-size: 10px;
     text-align: justify;
@@ -121,14 +125,6 @@ td {
     padding: 5px;
 }
 
-dt {
-    font-weight: bold;
-}
-
-dt:after {
-    content: ":";
-}
-
 p.links {
     text-align: right;
 }
@@ -150,115 +146,83 @@ img.right {
     float: right;
 }
 
-div#header {
-    background: green;
-    background-image: url(marble.jpg);
-    display: block;
-    border: solid #ffc000;
-    border-width: 3px 0;
-    padding: 0;
-    margin: 0;
-}
-
-div#header div {
-    width: 700px;
-}
-
-div#header h1 {
-    color: white;
-    text-shadow: 3px 3px 2px black;
-    border: 0 solid white;
-    text-transform: uppercase;
-    text-align: left;
-    padding: 10px;
-    font-size: 32px;
-    font-weight: normal;
-    font-family: 'Ledger', serif;
-    letter-spacing: 0.5em;
-    margin: 0;
-}
-
-div#header h2 {
-    display: none;
-}
-
-div#header blockquote {
-    display: none;
-}
-
-div#nav {
+div#navbar {
     display: block;
     float: left;
-    width: 250px;
+    width: 150px;
+    margin-right: 10px;
+    padding-top: 157px;
+    background-image: url('logo2.png');
+    background-repeat: no-repeat;
+    position: fixed;
+    top: 0;
+    left: 0;
 }
 
-div#nav p a {
+div#navbar p {
+    background: rgb(255,255,255);
+    margin: 0;
+    padding: 10px 0;
+    font-size: 10px;
+    text-align: center;
+    font-weight: bold;
+    color: rgb(15,80,140);
+}
+
+div#navbar p + p {
+    border-top: 1px dotted rgb(15,80,140);
+}
+
+div#navbar p a {
     background: transparent;
     color: rgb(15,80,140);
     text-decoration: none;
     display: block;
     font-size: 12px;
-    text-transform: uppercase;
-    border: 1px solid black;
-    border-radius: 15px;
-    padding: 5px 20px;
 }
 
-div#nav p a:nth-child(1) {
-    background: #eeece1;
-    color: black;
-}
-
-div#nav p a:nth-child(2) {
-    background: #ddd8c2;
-    color: black;
-}
-
-div#nav p a:nth-child(3) {
-    background: #c2d69b;
-    color: black;
-}
-
-div#nav p a:nth-child(4) {
-    background: #76923c;
-    color: white;
-}
-
-div#nav p a:nth-child(5) {
-    background: #4e6128;
-    color: white;
-}
-
-div#nav p a:nth-child(6) {
-    background: #b2a1c7;
-    color: white;
-}
-
-div#nav p a:nth-child(7) {
-    background: #5f497a;
-    color: white;
-}
-
-div#nav p a:nth-child(8) {
-    background: #1c1a10;
-    color: white;
-}
-
-div#nav p a:hover {
-    color: rgb(200,0,0);
-    text-shadow: 1px 1px 1px black;
-}
-
-div#nav p.logon {
-    text-align: center;
-}
-
-div#main {
+div#navbar p a + a:before {
+    content: "-";
+    font-size: 4px;
     display: block;
-    position: absolute;
-    left: 250px;
-    min-width: 450px;
-    padding: 10px;
+}
+
+div#navbar p a:hover {
+    background: transparent;
+    color: rgb(200,0,0);
+}
+
+div#navbar p.logon {
+    margin: 0;
+    border: 0;
+    background: white;
+    font-weight: normal;
+    color: rgb(128,0,0);
+}
+
+p#footer {
+    margin: 0;
+    margin-top: 15px;
+    padding: 0;
+    border-top: 2px solid rgb(15,80,140);
+    color: rgb(128,0,0);
+    text-align: right;
+    font-style: italic;
+    width: 150px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+}
+
+p.error {
+    text-align: left;
+    color: red;
+    font-weight: bold;
+}
+
+p.error:before {
+    content: "Error: ";
+    font-weight: bold;
 }
 
 p.message {
@@ -279,11 +243,6 @@ a.footnote {
     font-size: 8px;
     vertical-align: top;
     font-weight: bold;
-}
-
-sup {
-    font-size: 8px;
-    vertical-align: top;
 }
 
 ol.footnotes {
@@ -313,7 +272,6 @@ table.family td {
 
 table.family td p {
     margin-top: 0;
-    margin-bottom: 3px;
     text-align: left;
 }
 
@@ -337,7 +295,7 @@ form table tr {
     height: auto;
 }
 
-form table th,td {
+form table td {
     padding: 0;
     vertical-align: top;
 }
@@ -355,52 +313,4 @@ form table td input[type=submit], form table td input[type=reset] {
 form table.passwd {
     width: auto;
     margin: auto;
-}
-
-form table.passwd label {
-    display: block;
-    margin: 0;
-    padding: 5px;
-    text-align: right;
-}
-
-form table.passwd ul.errorlist, p.error {
-    color: red;
-    list-style-type: none;
-    padding: 0;
-}
-
-form table.passwd .helptext {
-    font-style: normal;
-    font-size: 10px;
-    color: rgb(128,128,128);
-}
-
-div.messages p.debug {
-    padding: 5px;
-    color: rgb(160,160,160);
-}
-
-div.messages p.info {
-    padding: 5px;
-    border: 1px solid black;
-    background: rgb(224,224,224);
-}
-
-div.messages p.success {
-    padding: 5px;
-    border: 1px solid rgb(0,128,0);
-    background: rgb(208,256,208);
-}
-
-div.messages p.warning {
-    padding: 5px;
-    border: 1px solid rgb(208,208,0);
-    background: rgb(256,256,160);
-}
-
-div.messages p.error {
-    padding: 5px;
-    border: 1px solid rgb(128,0,0);
-    background: rgb(256,208,208);
 }

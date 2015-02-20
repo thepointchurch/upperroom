@@ -14,7 +14,7 @@ def setup_site(apps, schema_editor):
     page, created = FlatPage.objects.get_or_create(url='/')
     if created:
         page.sites.add(s)
-        page.title = "Welcome to The Point's website"
+        page.title = "Welcome to The Point Church"
         page.template_name = 'pages/home.html'
         page.save()
 

@@ -3,15 +3,25 @@
 
 {% block stylesheets %}
 <link rel="stylesheet" type="text/css" href="{% static 'style/titlepage.css' %}" />
-<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Gentium+Book+Basic.css" />
 {% endblock stylesheets %}
 
 {% block content %}
 {% if flatpage.content %}
 {{ flatpage.content }}
 {% else %}
-<p>We hope you find the information here useful, interesting and challenging &hellip; but most of all we hope you find it to be a source of blessing to you and bread for your journey with God.</p>
-
-<p>Grace and Peace</p>
+<div id="titlepage">
+<ul>
+<li><a href="{% url 'hilight:about' %}">About The Point</a><br />
+Getting aquainted with The Point and what we believe.</li>
+<li><a href="{% url 'resources:index' %}">Resources</a><br />
+Publications from The Point on various Biblical topics.</li>
+<li><a href="{% url 'hilight:theophilus' %}">Theophilus' Quest</a><br />
+Theophilus' Quest is an attempt to convey the basics of Christianity in a simple and straight-forward way.</li>
+<li><a href="{% url 'pages:contact' %}">Contact Details</a><br />
+Would you like to know more about The Point? Get our contact details and meeting times here.</li>
+<li><a href="{% url 'members:index' %}">Members Area</a><br />
+Log in to the members only area. (Password required)</li>
+</ul>
+</div>
 {% endif %}
 {% endblock content %}
