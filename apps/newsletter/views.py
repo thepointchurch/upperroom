@@ -45,8 +45,13 @@ class DetailView(PublicationMixin, generic.DetailView):
 
     def get(self, request, *args, **kwargs):
         issue = self.get_object()
-        response = HttpResponse(issue.file, content_type=issue.mime_type)
-        response['Content-Disposition'] = ('attachment; filename="%s %s%s"' %
-                                           (issue.publication.name,
-                                            issue.date, issue.extension))
+
+        if getattr(default_storage, 'offload', False):
+            response = HttpResponseRedirect(
+                default_storage.url(issue.file.name))
+        else:
+            response = HttpResponse(issue.file, content_type=issue.mime_type)
+            response['Content-Disposition'] = \
+                ('attachment; filename="%s %s%s"' %
+                 (issue.publication.name, issue.date, issue.extension))
         return response

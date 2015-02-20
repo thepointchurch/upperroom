@@ -1,4 +1,5 @@
-from django.http import HttpResponse
+from django.core.files.storage import default_storage
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.views import generic
 
@@ -95,9 +96,13 @@ class AttachmentView(generic.DetailView):
             from django.contrib.auth.views import redirect_to_login
             return redirect_to_login(self.request.path)
 
-        response = HttpResponse(attachment.file,
-                                content_type=attachment.mime_type)
-        response['Content-Disposition'] = ('attachment; filename="%s%s"' %
-                                           (attachment.title,
-                                            attachment.extension))
+        if getattr(default_storage, 'offload', False):
+            response = HttpResponseRedirect(
+                default_storage.url(attachment.file.name))
+        else:
+            response = HttpResponse(attachment.file,
+                                    content_type=attachment.mime_type)
+            response['Content-Disposition'] = ('attachment; filename="%s%s"' %
+                                               (attachment.title,
+                                                attachment.extension))
         return response

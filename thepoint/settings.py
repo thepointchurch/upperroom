@@ -174,6 +174,7 @@ if os.getenv('environment', '') in ['production', 'testing']:
                                    'static.%s' % ALLOWED_HOSTS[0])
     STATICFILES_STORAGE = 'util.storages.backends.S3StaticStorage'
 
+    MEDIAFILES_OFFLOAD = True
     MEDIAFILES_BUCKET = os.getenv('MEDIAFILES_BUCKET',
                                   'media.%s' % ALLOWED_HOSTS[0])
     DEFAULT_FILE_STORAGE = 'util.storages.backends.S3MediaStorage'

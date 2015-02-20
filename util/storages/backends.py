@@ -13,11 +13,18 @@ S3StaticStorage = lambda: S3BotoStorage(
     custom_domain=_static_custom_domain
 )
 
+
+class S3BotoStorageOffload(S3BotoStorage):
+    try:
+        offload = settings.MEDIAFILES_OFFLOAD
+    except NameError:
+        offload = Falsee
+
 _media_custom_domain = None
 if '.' in settings.MEDIAFILES_BUCKET:
     _media_custom_domain = settings.MEDIAFILES_BUCKET
 
-S3MediaStorage = lambda: S3BotoStorage(
+S3MediaStorage = lambda: S3BotoStorageOffload(
     bucket_name=settings.MEDIAFILES_BUCKET,
     querystring_auth=True,
     querystring_expire=300,
