@@ -37,10 +37,6 @@ class Meeting(models.Model):
     def __str__(self):
         return str(self.date)
 
-    def clean(self):
-        if self.date.weekday() != 6:
-            self.date = self.date + timedelta(6 - self.date.weekday())
-
 
 class Location(models.Model):
     name = models.CharField(max_length=30)
