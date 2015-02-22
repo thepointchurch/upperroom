@@ -5,13 +5,6 @@ from django.db import models
 from directory.models import Person
 
 
-def next_meeting_date():
-    d = date.today()
-    if d.weekday() == 6:
-        return d + timedelta(7)
-    return d + timedelta(6 - d.weekday())
-
-
 def next_empty_meeting_date():
     try:
         max = Meeting.objects.latest().date

@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from optparse import make_option
 
 from django.core import mail
@@ -6,7 +6,14 @@ from django.core.management.base import BaseCommand, CommandError
 from django.template import Context
 from django.template.loader import get_template
 
-from roster.models import Role, next_meeting_date
+from roster.models import Role
+
+
+_alert_interval = 3  # days
+
+
+def meeting_date():
+    return date.today() + timedelta(days=_alert_interval)
 
 
 class Command(BaseCommand):
@@ -15,7 +22,7 @@ class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
         make_option('-d', '--date',
                     dest='date',
-                    default=next_meeting_date(),
+                    default=meeting_date(),
                     help='The meeting date to send notifications for'),
         make_option('--test',
                     action='store_true',
