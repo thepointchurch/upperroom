@@ -28,25 +28,29 @@ class MonthlyMeetingView(PrivateMixin, generic.MonthArchiveView):
     make_object_list = True
 
 
-class PersonList(PrivateMixin, generic.ListView):
+class PublicPersonList(generic.ListView):
     model = Role
     template_name = 'roster/person_list.html'
 
     def get_queryset(self):
         self.person = self.kwargs['pk']
-        return Role.current_objects.filter(person__id=self.person)
+        return Role.current_objects.filter(people__id=self.person)
 
     def get_context_data(self, **kwargs):
-        context = super(PersonList, self).get_context_data(**kwargs)
+        context = super(PublicPersonList, self).get_context_data(**kwargs)
         context['person'] = Person.objects.get(id=self.person)
         return context
 
 
-class PersonTaskList(PersonList):
+class PersonList(PrivateMixin, PublicPersonList):
+    pass
+
+
+class PersonTaskList(PublicPersonList):
     template_name = 'roster/person_task.ics'
     content_type = 'text/calendar'
 
 
-class PersonEventList(PersonList):
+class PersonEventList(PublicPersonList):
     template_name = 'roster/person_event.ics'
     content_type = 'text/calendar'
