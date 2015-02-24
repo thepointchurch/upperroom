@@ -42,16 +42,17 @@ class Command(BaseCommand):
                                    options['date'])
 
         roles = Role.objects.filter(meeting__date=d)\
-            .exclude(person__isnull=True)
+            .exclude(people__isnull=True)
         role_map = {}
         for role in roles:
-            if not role.person.find_email():
-                continue
+            for person in role.people.all():
+                if not person.find_email():
+                    continue
 
-            if role.person not in role_map.keys():
-                role_map[role.person] = []
+                if person not in role_map.keys():
+                    role_map[person] = []
 
-            role_map[role.person].append(role)
+                role_map[person].append(role)
 
         backend = None
         if options['test']:
@@ -63,26 +64,12 @@ class Command(BaseCommand):
         messages = []
 
         for person, roles in role_map.items():
-            role_string = ''
-            for counter, role in enumerate(roles):
-                if len(roles) > 1 and counter >= 1:
-                    if len(roles) > 2:
-                        role_string += ','
-                    if counter + 1 == len(roles):
-                        role_string += ' and '
-                    else:
-                        role_string += ' '
-                role_string += role.role.verb
-                if role.location:
-                    role_string += ' at ' + str(role.location)
-
             messages.append(mail.EmailMessage(
                 'The Point Roster Notification',
                 get_template('roster/reminder.txt').render(Context({
                     'person': person,
                     'date': d,
                     'role_list': roles,
-                    'role_string': role_string,
                 })),
                 'webmaster@thepoint.org.au',
                 [person.find_email()], connection=connection))

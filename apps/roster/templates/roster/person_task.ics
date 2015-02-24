@@ -6,7 +6,7 @@ METHOD:PUBLISH{% regroup role_list|dictsort:"date" by date as role_date %}{% for
 BEGIN:VTODO
 SUMMARY:{{ role.role }}{% if role.location %}
 LOCATION:{{ role.location }}{% endif %}{% if role.description %}
-DESCRIPTION:Your topic is {{ role.description }}{% endif %}
+DESCRIPTION:{{ role.description }}{% endif %}
 DUE;VALUE=DATE:{{ role.date|date:"Ymd" }}
 DTSTAMP:{{ role.timestamp|date:"Ymd\THis\Z" }}
 UID:roster.{{ role.id }}@thepoint.org.au
