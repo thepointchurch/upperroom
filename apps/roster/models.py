@@ -76,9 +76,7 @@ class Role(models.Model):
     meeting = models.ForeignKey(Meeting, related_name='roles')
 
     people = models.ManyToManyField(Person, null=True, blank=True,
-                                    limit_choices_to={'is_current': True,
-                                                      'is_member': True,
-                                                      'gender': 'M'},
+                                    limit_choices_to={'is_current': True},
                                     related_name='roles')
     guest = models.CharField(max_length=30, null=True, blank=True)
     role = models.ForeignKey(RoleType, related_name='roles')
