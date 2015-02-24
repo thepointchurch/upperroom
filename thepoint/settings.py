@@ -178,3 +178,36 @@ if os.getenv('environment', '') in ['production', 'testing']:
     MEDIAFILES_BUCKET = os.getenv('MEDIAFILES_BUCKET',
                                   'media.%s' % ALLOWED_HOSTS[0])
     DEFAULT_FILE_STORAGE = 'util.storages.backends.S3MediaStorage'
+
+else:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'standard': {
+                'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+            },
+        },
+        'handlers': {
+            'default': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+                'formatter': 'standard'
+            },
+            'null': {
+                'level': 'DEBUG',
+                'class': 'logging.NullHandler',
+            },
+        },
+        'loggers': {
+            '': {
+                'handlers': ['default'],
+                'level': 'DEBUG',
+            },
+            'django.db': {
+                'handlers': ['null'],
+                'level': 'DEBUG',
+                'propagate': False,
+            },
+        }
+    }
