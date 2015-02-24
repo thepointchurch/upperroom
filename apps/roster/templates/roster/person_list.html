@@ -1,19 +1,23 @@
 {% extends "roster/base.html" %}
+{% load roster_filters %}
 
 {% block title %}{{ block.super }}: {{ person.fullname }}{% endblock title %}
 
-{% block heading %}{{ block.super }}: {{ person.fullname }}{% endblock heading %}
-
 {% block content %}
+
+<h3>{{ person.fullname }}</h3>
 
 {% regroup role_list|dictsort:"date" by date as role_date %}
 {% for date in role_date %}
+<h4>{{ date.grouper|date:"jS F, Y" }}:</h4>
+<ul>
 {% for role in date.list %}
-{% if forloop.first %}<h3>{{ role.date|date:"jS F, Y" }}</h3>{% endif %}
-<p>{{ role.role }}{% if role.location %}
+<li>{{ role.role }}{% if role.location %}
 at {{ role.location }}{% endif %}{% if role.description %}
-<cite>({{ role.description }})</cite>{% endif %}</p>
-{% endfor %}
+<cite>({{ role.description }})</cite>{% endif %}
+{% if role.people.count > 1 %} with {% for p in role.people.all|remove_person:person %}{% if not forloop.first %}, {% endif %}<a href="{% url 'roster:person' p.id %}">{{ p.fullname }}</a>{% endfor %}
+{% endif %}</li>
+{% endfor %}</ul>
 {% endfor %}
 
 <p class="links">[ <a href="{% url 'roster:event' person.id %}">iCalendar</a> ]</p>

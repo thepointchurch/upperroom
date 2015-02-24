@@ -29,7 +29,7 @@ class IndexView(generic.TemplateView):
         context = super(IndexView, self).get_context_data(**kwargs)
         try:
             context['role_list'] = Role.current_objects\
-                .filter(person__id=self.request.user.person.id)\
+                .filter(people__id=self.request.user.person.id)\
                 .filter(meeting__date__lte=(date.today() +
                                             timedelta(days=60)))
         except:

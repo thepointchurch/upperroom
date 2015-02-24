@@ -5,13 +5,6 @@ from django.db import models
 from directory.models import Person
 
 
-def next_meeting_date():
-    d = date.today()
-    if d.weekday() == 6:
-        return d + timedelta(7)
-    return d + timedelta(6 - d.weekday())
-
-
 def next_empty_meeting_date():
     try:
         max = Meeting.objects.latest().date
@@ -43,10 +36,6 @@ class Meeting(models.Model):
 
     def __str__(self):
         return str(self.date)
-
-    def clean(self):
-        if self.date.weekday() != 6:
-            self.date = self.date + timedelta(6 - self.date.weekday())
 
 
 class Location(models.Model):
@@ -86,11 +75,9 @@ class Role(models.Model):
 
     meeting = models.ForeignKey(Meeting, related_name='roles')
 
-    person = models.ForeignKey(Person, null=True, blank=True,
-                               limit_choices_to={'is_current': True,
-                                                 'is_member': True,
-                                                 'gender': 'M'},
-                               related_name='roles')
+    people = models.ManyToManyField(Person, null=True, blank=True,
+                                    limit_choices_to={'is_current': True},
+                                    related_name='roles')
     guest = models.CharField(max_length=30, null=True, blank=True)
     role = models.ForeignKey(RoleType, related_name='roles')
     description = models.CharField(max_length=64, null=True, blank=True)
@@ -101,18 +88,15 @@ class Role(models.Model):
     objects = models.Manager()
 
     class Meta:
-        ordering = ['role', 'person__name']
+        ordering = ['role']
         verbose_name_plural = 'roles'
 
     def __str__(self):
-        return '%s %s' % (self.role, self.name)
+        return self.name
 
     @property
     def name(self):
-        if self.person:
-            return self.person.fullname
-        if self.guest:
-            return self.guest
+        return self.role.name
 
     @property
     def is_guest(self):

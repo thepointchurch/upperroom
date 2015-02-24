@@ -20,8 +20,8 @@ class MeetingAdmin(admin.ModelAdmin):
     inlines = [RoleInline]
     list_filter = ('date',)
     search_fields = ['date',
-                     'roles__person__name',
-                     'roles__person__family__name']
+                     'roles__people__name',
+                     'roles__people__family__name']
 
     def get_queryset(self, request):
         qs = self.model.objects.get_queryset()

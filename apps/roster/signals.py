@@ -68,6 +68,18 @@ def default_roletypes(sender, **kwargs):
         r.order = 90
         r.save()
 
+    r, created = RoleType.objects.get_or_create(name='Bible Study')
+    if created:
+        r.verb = 'lead the Bible study'
+        r.order = 100
+        r.save()
+
+    r, created = RoleType.objects.get_or_create(name='Setup/Pack Up')
+    if created:
+        r.verb = 'assist with the set up and pack up'
+        r.order = 110
+        r.save()
+
 
 post_migrate.connect(default_locations,
                      sender=apps.get_app_config('roster'))

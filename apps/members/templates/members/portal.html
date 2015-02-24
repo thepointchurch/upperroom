@@ -1,3 +1,5 @@
+{% load roster_filters %}
+
 <p>Please report any problems you have to the <a href="mailto:webmaster@thepoint.org.au">webmaster</a>.</p>
 
 <table>
@@ -29,7 +31,9 @@
 {% for date in role_date %}
 <dt>{{ date.grouper|date:'jS F' }}</dt>
 {% for r in date.list %}
-<dd>{{ r.role }}{% if r.location %} at {{ r.location }}{% endif %}{% if r.description %} <cite>({{ r.description }})</cite>{% endif %}</dd>
+<dd>{{ r.role }}{% if r.location %} at {{ r.location }}{% endif %}{% if r.description %} <cite>({{ r.description }})</cite>{% endif %}
+{% if r.people.count > 1 %} with {% for p in r.people.all|remove_person:user.person %}{% if not forloop.first %}, {% endif %}<a href="{% url 'roster:person' p.id %}">{{ p.fullname }}</a>{% endfor %}{% endif %}
+</dd>
 {% endfor %}
 {% endfor %}
 </dl>
