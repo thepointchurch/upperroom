@@ -12,9 +12,11 @@
 
 <p>Browse entries, by surname:</p>
 
-{% regroup family_list by first_letter as index_list %}
+{% regroup family_list by first_letter as index_list_unsorted %}
 
+{% with index_list=index_list_unsorted|dictsort:"grouper" %}
 <p class="links">[ {% for letter in index_list %}{% if not forloop.first %} | {% endif %}<a href="{% url 'directory:letter' letter.grouper %}">{{ letter.grouper|upper }}</a>{% endfor %} ]</p>
+{% endwith %}
 
 <h3>Search</h3>
 
