@@ -51,7 +51,7 @@ class Location(models.Model):
 
 class RoleType(models.Model):
     name = models.CharField(max_length=30)
-    verb = models.CharField(max_length=30)
+    verb = models.CharField(max_length=50)
     order = models.PositiveSmallIntegerField(default=100)
 
     class Meta:
