@@ -1,0 +1,19 @@
+input[id$="-suffix"] {
+    width: 3em;
+}
+
+input#id_postcode {
+    width: 4em;
+}
+
+table#family_people {
+    margin-top: 2em;
+}
+
+form table {
+    width: auto;
+}
+
+form table td, th {
+    padding: 2px;
+}

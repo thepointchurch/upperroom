@@ -1,8 +1,12 @@
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
+from django.http import Http404
+from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views import generic
 
+from directory.forms import FamilyForm, PersonForm, PersonInlineFormSet
 from directory.models import Family, Person
 
 
@@ -50,6 +54,42 @@ class SearchView(PrivateMixin, generic.ListView):
                 (Q(members__name__icontains=q) &
                  Q(members__is_current=True))
                 ).distinct()
+
+
+class FamilyEditView(generic.edit.UpdateView):
+    model = Family
+    form_class = FamilyForm
+
+    def get_success_url(self):
+        return self.get_object().get_absolute_url()
+
+    def get_queryset(self):
+        try:
+            self.kwargs['pk'] = self.request.user.person.family.pk
+        except ObjectDoesNotExist:
+            raise Http404('No family for the current user (%s).' %
+                          self.request.user)
+        return super(FamilyEditView, self).get_queryset()
+
+    def get_context_data(self, **kwargs):
+        context = super(FamilyEditView, self).get_context_data(**kwargs)
+        if self.request.POST:
+            context['formset'] = PersonInlineFormSet(self.request.POST,
+                                                     instance=self.object)
+        else:
+            context['formset'] = PersonInlineFormSet(instance=self.object)
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        formset = context['formset']
+        if formset.is_valid():
+            self.object = form.save()
+            formset.instance = self.object
+            formset.save()
+            return redirect(self.get_success_url())
+        else:
+            return self.render_to_response(self.get_context_data(form=form))
 
 
 class BirthdayView(PrivateMixin, generic.ListView):

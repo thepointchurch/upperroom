@@ -1,6 +1,7 @@
 from datetime import date
 
 from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.db import models
 
 
@@ -76,6 +77,9 @@ class Family(models.Model):
     @property
     def first_letter(self):
         return self.name[0].lower()
+
+    def get_absolute_url(self):
+        return reverse('directory:detail', kwargs={'pk': self.pk})
 
     def save(self, *args, **kwargs):
         super(Family, self).save(*args, **kwargs)

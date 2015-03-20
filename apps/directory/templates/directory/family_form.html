@@ -1,0 +1,54 @@
+{% extends "directory/base.html" %}
+{% load staticfiles %}
+{% load cycle from future %}
+
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="{% static 'style/directory_form.css' %}" />
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+{% endblock stylesheets %}
+
+{% block title %}{{ block.super }}: {{ family.name }}: Edit{% endblock title %}
+
+{% block heading %}{{ block.super }}: {{ family.name }}: Edit{% endblock heading %}
+
+{% block content %}
+
+<form action="" method="post">{% csrf_token %}
+
+<table id="family">
+{{ form }}
+</table>
+
+{{ formset.non_form_errors.as_ul }}
+{{ formset.management_form }}
+
+<table id="family_people">
+{% for person_form in formset %}
+{% if forloop.first %}
+<thead><tr>
+{% for field in person_form.visible_fields %}
+<th>{{ field.label|capfirst }}</th>
+{% endfor %}
+</tr></thead>
+{% endif %}
+<tr class="{% cycle row1,row2 %}">
+{% for field in person_form.visible_fields %}
+<td>
+{% if forloop.first %}
+{% for hidden in person_form.hidden_fields %}
+{{ hidden }}
+{% endfor %}
+{% endif %}
+{{ field.errors.as_ul }}
+{{ field }}
+</td>
+{% endfor %}
+</tr>
+{% endfor %}
+</table>
+<input type="submit" value="Update" />
+</form>
+
+{% endblock content %}

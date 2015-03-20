@@ -28,7 +28,7 @@
 <img src="" />
 </td>{% endif %}
 
-{% if false %}<p class="links">[ <a href="">Edit</a> ]</p>{% endif %}
+{% if family == user.person.family %}<p class="links">[ <a href="{% url 'directory:edit' %}">Edit</a> ]</p>{% endif %}
 
 </td>
 </tr>
