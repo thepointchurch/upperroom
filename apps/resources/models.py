@@ -40,7 +40,7 @@ class Resource(models.Model):
     description = models.TextField(null=True, blank=True)
     body = models.TextField(null=True, blank=True)
 
-    tags = models.ManyToManyField(Tag, null=True, blank=True,
+    tags = models.ManyToManyField(Tag, blank=True,
                                   related_name='resources')
 
     author = models.ForeignKey(Person, null=True, blank=True,
