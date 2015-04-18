@@ -18,7 +18,7 @@ class Family(models.Model):
     phone_mobile = models.CharField(max_length=15, null=True, blank=True,
                                     verbose_name='Mobile Phone')
     email = models.EmailField(null=True, blank=True)
-    street = models.CharField(max_length=32, null=True, blank=True)
+    street = models.CharField(max_length=128, null=True, blank=True)
     suburb = models.CharField(max_length=32, null=True, blank=True)
     postcode = models.CharField(max_length=6, null=True, blank=True)
     is_current = models.BooleanField(default=True,
