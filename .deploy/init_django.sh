@@ -14,7 +14,7 @@ mount "/dev/${device}" "${path}"
 set -e
 
 /usr/bin/pg_dropcluster --stop "${version}" main
-/usr/bin/pg_createcluster -d "${path}/postgres" --locale=en_AU "${version}" django
+/usr/bin/pg_createcluster -d "${path}/postgres" --locale=en_AU.utf8 "${version}" django
 
 cat >"/etc/postgresql/${version}/django/postgresql.conf" <<POSTGRESQL_CONF
 data_directory = '${path}/postgres'
@@ -27,10 +27,6 @@ unix_socket_directory = '/var/run/postgresql'
 shared_buffers = 24MB
 log_line_prefix = '%t '
 datestyle = 'iso, dmy'
-lc_messages = 'en_AU'
-lc_monetary = 'en_AU'
-lc_numeric = 'en_AU'
-lc_time = 'en_AU'
 default_text_search_config = 'pg_catalog.english'
 POSTGRESQL_CONF
 
