@@ -1,8 +1,11 @@
 body {
-    color: rgb(0,0,0);
-    background: rgb(255,255,255);
-    font-family: verdana, serif;
-    font-size: 10px;
+    color: black;
+    background: white;
+    background-image: url(beach.jpg);
+    background-repeat: no-repeat;
+    background-size: 1000px;
+    font-family: 'Verdana', sans-serif;
+    font-size: 12px;
     font-size-adjust: none;
     font-style: normal;
     font-weight: normal;
@@ -11,7 +14,6 @@ body {
     text-align: justify;
     text-indent: 0;
     margin: 0;
-    margin-left: 150px;
     padding: 0;
 }
 
@@ -44,12 +46,43 @@ a:hover {
 }
 
 h2, h3, h4, h5, h6 {
-    font-family: verdana, sans-serif;
+    font-family: 'Verdana', sans-serif;
     padding: 0 10px;
 }
 
+div#header {
+    background-image: url(jetty.png);
+    background-repeat: no-repeat;
+    background-size: 1000px;
+    margin: 0;
+    padding: 10px;
+    font-weight: bold;
+    text-shadow: 2px 2px 2px black;
+    color: white;
+    min-height: 200px;
+}
+
+div#header p {
+    margin: 0;
+    font-size: 14px;
+    font-style: italic;
+    text-align: left;
+    border: 0;
+    border-top: 2px solid white;
+    margin: 0;
+    padding: 0;
+    padding-top: 5px;
+}
+
 h1 {
-    display: none;
+    font-variant: small-caps;
+    font-family: 'Bitstream Vera Serif', 'Times New Roman', serif;
+    font-weight: bold;
+    font-size: 36px;
+    text-align: left;
+    color: white;
+    margin: 0;
+    padding: 0;
 }
 
 h2 {
@@ -57,14 +90,14 @@ h2 {
     color: rgb(15,80,140);
     background: transparent;
     text-align: left;
-    margin-left: 10px;
-    margin-right: 10px;
+    margin: 10px;
     padding: 0;
+    padding-top: 0.5em;
     border-bottom: 2px solid;
 }
 
 h3 {
-    font-size: 15px;
+    font-size: 16px;
     color: rgb(128,0,0);
     background: transparent;
     text-align: left;
@@ -76,14 +109,14 @@ h3 {
 }
 
 h4 {
-    font-size: 12px;
+    font-size: 14px;
     color: rgb(15,80,140);
     background: transparent;
     text-align: left;
 }
 
 h5 {
-    font-size: 10px;
+    font-size: 12px;
     font-weight: bold;
     color: rgb(15,80,140);
     background: transparent;
@@ -99,7 +132,7 @@ hr {
 
 p, blockquote, ul, ol {
     margin: 10px;
-    font-size: 10px;
+    font-size: 12px;
     text-align: justify;
 }
 
@@ -149,69 +182,64 @@ img.right {
 div#navbar {
     display: block;
     float: left;
-    width: 150px;
-    margin-right: 10px;
-    padding-top: 157px;
-    background-image: url('logo2.png');
-    background-repeat: no-repeat;
-    position: fixed;
-    top: 0;
-    left: 0;
+    width: 200px;
 }
 
 div#navbar p {
-    background: rgb(255,255,255);
-    margin: 0;
-    padding: 10px 0;
-    font-size: 10px;
-    text-align: center;
+    background: transparent;
+    font-size: 14px;
+    text-align: left;
     font-weight: bold;
-    color: rgb(15,80,140);
-}
-
-div#navbar p + p {
-    border-top: 1px dotted rgb(15,80,140);
 }
 
 div#navbar p a {
     background: transparent;
-    color: rgb(15,80,140);
+    background-image: url(light60.png);
+    color: rgb(74,68,42);
     text-decoration: none;
+    text-transform: uppercase;
     display: block;
-    font-size: 12px;
+    padding: 5px;
+    padding-left: 1.5em; 
+    text-indent: -1em;
 }
 
-div#navbar p a + a:before {
-    content: "-";
-    font-size: 4px;
-    display: block;
+div#navbar p a:before {
+    content: "• ";
+    color: rgb(255,192,0);
 }
 
 div#navbar p a:hover {
     background: transparent;
+    background-image: url(light80.png);
     color: rgb(200,0,0);
 }
 
 div#navbar p.logon {
-    margin: 0;
-    border: 0;
-    background: white;
+    background: transparent;
+    background-image: url(light60.png);
+    padding: 5px;
+    text-align: center;
+    font-size: 10px;
     font-weight: normal;
-    color: rgb(128,0,0);
+    color: rgb(74,68,42);
 }
 
-p#footer {
-    margin: 0;
-    margin-top: 15px;
-    padding: 0;
-    border-top: 2px solid rgb(15,80,140);
-    color: rgb(128,0,0);
-    text-align: right;
-    font-style: italic;
-    width: 150px;
-    position: fixed;
-    left: 0;
-    bottom: 0;
+input#navbar-trigger {
+    display: none;
+}
+
+label[for="navbar-trigger"] {
+    display: none;
+}
+
+div#body {
+    background: white;
+    width: 790px;
+    margin: 10px;
+    margin-left: 200px;
+    display: block;
+    min-height: 560px;
 }
 
 p.error {
@@ -227,7 +255,7 @@ p.error:before {
 
 p.message {
     text-align: left;
-    color: rgb(0,0,255);
+    color: blue;
     font-weight: bold;
 }
 
@@ -277,7 +305,7 @@ table.family td p {
 
 table.family td img {
     margin: 0;
-    border: 1px solid rgb(0,0,0);
+    border: 1px solid black;
     float: right;
 }
 

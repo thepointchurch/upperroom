@@ -1,3 +1,7 @@
 div#contact img {
     float: right;
 }
+
+div#contact p {
+    text-align: left;
+}

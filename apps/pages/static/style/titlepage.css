@@ -1,8 +1,40 @@
-div#titlepage {
-        font-size: 12px;
+div#body {
+    background: transparent;
+    background-image: url(light60.png);
+    width: 770px;
+    min-height: initial;
+    padding: 10px;
 }
 
-div#titlepage li a {
-        font-size: 16px;
-        font-weight: bold;
+h2, p, blockquote, ul, ol {
+    margin: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: right;
+}
+
+h2 {
+    font-size: 20px;
+    color: rgb(74,68,42);
+    background: transparent;
+    text-align: right;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 0;
+    border: 0;
+    font-family: 'Verdana', sans-serif;
+}
+
+div#body p {
+    color: rgb(74,68,42);
+}
+
+div#body blockquote p {
+    color: rgb(192,0,0);
+}
+
+div#body blockquote p.attrib {
+    font-size: 12px;
+    font-weight: normal;
+    font-style: italic;
 }
