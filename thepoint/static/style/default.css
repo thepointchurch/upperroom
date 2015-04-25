@@ -235,10 +235,10 @@ label[for="navbar-trigger"] {
 
 div#body {
     background: white;
-    width: 790px;
     margin: 10px;
     margin-left: 200px;
     display: block;
+    max-width: 790px;
     min-height: 560px;
 }
 
