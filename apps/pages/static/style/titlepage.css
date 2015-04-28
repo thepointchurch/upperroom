@@ -1,6 +1,6 @@
 div#body {
-    background: transparent;
-    background-image: url(light60.png);
+    background: white;
+    background: rgba(255,255,255,0.6);
     max-width: 770px;
     min-height: initial;
     padding: 10px;

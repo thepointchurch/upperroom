@@ -193,8 +193,8 @@ div#navbar p {
 }
 
 div#navbar p a {
-    background: transparent;
-    background-image: url(light60.png);
+    background: white;
+    background: rgba(255,255,255,0.6);
     color: rgb(74,68,42);
     text-decoration: none;
     text-transform: uppercase;
@@ -210,14 +210,14 @@ div#navbar p a:before {
 }
 
 div#navbar p a:hover {
-    background: transparent;
-    background-image: url(light80.png);
+    background: white;
+    background: rgba(255,255,255,0.8);
     color: rgb(200,0,0);
 }
 
 div#navbar p.logon {
-    background: transparent;
-    background-image: url(light60.png);
+    background: white;
+    background: rgba(255,255,255,0.6);
     padding: 5px;
     text-align: center;
     font-size: 10px;
