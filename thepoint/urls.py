@@ -1,5 +1,13 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from django.contrib.sitemaps.views import sitemap
+
+from .sitemaps import StaticViewSitemap
+
+
+sitemaps = {
+    'static': StaticViewSitemap,
+}
 
 urlpatterns = patterns('',
                        url(r'^directory/',
@@ -25,6 +33,9 @@ urlpatterns = patterns('',
                                    app_name='roster')),
 
                        url(r'^admin/', include(admin.site.urls)),
+
+                       url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
+                           name='django.contrib.sitemaps.views.sitemap'),
 
                        url(r'', include('pages.urls', namespace='pages',
                                         app_name='pages')),
