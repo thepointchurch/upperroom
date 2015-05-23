@@ -38,7 +38,10 @@ class Family(models.Model):
         verbose_name_plural = 'families'
 
     def __str__(self):
-        return self.name
+        members = []
+        for member in self.members.all():
+            members.append(member.name)
+        return '%s (%s)' % (self.name, ', '.join(members))
 
     def spouse_ids(self):
         ids = []
