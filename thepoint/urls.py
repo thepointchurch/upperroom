@@ -34,6 +34,8 @@ urlpatterns = patterns('',
 
                        url(r'^admin/', include(admin.site.urls)),
 
+                       url(r'^robots\.txt$', include('robots.urls')),
+
                        url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
                            name='django.contrib.sitemaps.views.sitemap'),
 

@@ -25,6 +25,7 @@ INSTALLED_APPS = (
     'newsletter',
     'pages',
     'resources',
+    'robots',
     'roster',
     'django_markwhat',
     'django.contrib.admin',
@@ -98,6 +99,8 @@ PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.CryptPasswordHasher',
     'django.contrib.auth.hashers.UnsaltedMD5PasswordHasher',
 )
+
+ROBOTS_CACHE_TIMEOUT = 60*60*24
 
 if os.getenv('environment', '') in ['production', 'testing']:
     if DEBUG:
