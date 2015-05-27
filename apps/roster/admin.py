@@ -1,12 +1,24 @@
 from django.contrib import admin
+from django.forms import ModelForm, ModelMultipleChoiceField
 
+from directory.models import Person
 from roster.models import Location, Meeting, Role, RoleType
+
+
+class RoleInlineForm(ModelForm):
+    people = ModelMultipleChoiceField(
+        queryset=Person.current_objects.order_by('family__name', 'name'),
+        label='People')
+
+    class Meta:
+        model = Role
+        exclude = ('revision',)
 
 
 class RoleInline(admin.TabularInline):
     model = Role
     extra = 8
-    exclude = ('revision',)
+    form = RoleInlineForm
 
     def get_queryset(self, request):
         qs = self.model.objects.get_queryset()

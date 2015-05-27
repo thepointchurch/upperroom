@@ -1,6 +1,6 @@
 # The Point Church Website #
 
-This is a Django app designed to be deployed to an Amazon EC2 instance running Debian Wheezy, although this is not a requirement.
+This is a Django project designed to be deployed to an Amazon EC2 instance running Debian Wheezy, although this is not a requirement.
 
 ## Installation ##
 
