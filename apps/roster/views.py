@@ -4,6 +4,7 @@ from django.views import generic
 
 from directory.models import Person
 from roster.models import Meeting, Role
+from util.mixin import NeverCacheMixin
 
 
 class PrivateMixin(object):
@@ -46,11 +47,11 @@ class PersonList(PrivateMixin, PublicPersonList):
     pass
 
 
-class PersonTaskList(PublicPersonList):
+class PersonTaskList(NeverCacheMixin, PublicPersonList):
     template_name = 'roster/person_task.ics'
     content_type = 'text/calendar'
 
 
-class PersonEventList(PublicPersonList):
+class PersonEventList(NeverCacheMixin, PublicPersonList):
     template_name = 'roster/person_event.ics'
     content_type = 'text/calendar'
