@@ -27,7 +27,7 @@ class LetterView(PrivateMixin, generic.ListView):
 
     def get_queryset(self):
         self.letter = self.kwargs['letter']
-        return Family.current_objects.filter(name__startswith=self.letter)
+        return Family.current_objects.filter(name__istartswith=self.letter)
 
 
 class DetailView(PrivateMixin, generic.DetailView):
