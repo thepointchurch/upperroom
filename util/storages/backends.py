@@ -10,6 +10,7 @@ S3StaticStorage = lambda: S3BotoStorage(
     bucket_name=settings.STATICFILES_BUCKET,
     querystring_auth=False,
     secure_urls=False,
+    url_protocol='',
     custom_domain=_static_custom_domain
 )
 
