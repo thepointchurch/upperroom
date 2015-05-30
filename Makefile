@@ -17,7 +17,7 @@ all: install setup
 
 install: .venv boto_fix environment .nginx.conf $(HOME)/service/django $(HOME)/.profile $(HOME)/git/hooks/post-receive
 
-setup: syncdb collectstatic
+setup: migrate collectstatic
 
 .venv: .venv/bin/activate
 .venv/bin/activate: requirements.txt
@@ -44,8 +44,8 @@ cron: crontab
 migrate: .venv
 	.venv/bin/python manage.py migrate --noinput
 
-syncdb: .venv
-	.venv/bin/python manage.py syncdb --noinput
+migrate: .venv
+	.venv/bin/python manage.py migrate --noinput
 
 collectstatic: .venv
 	.venv/bin/python manage.py collectstatic --noinput
