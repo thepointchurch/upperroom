@@ -18,7 +18,7 @@ def setup_site(apps, schema_editor):
         page.template_name = 'pages/home.html'
         page.save()
 
-    page, created = FlatPage.objects.get_or_create(url='/calendar/')
+    page, created = FlatPage.objects.get_or_create(url='/calendar')
     if created:
         page.sites.add(s)
         page.title = 'Event Calendar'
@@ -26,14 +26,14 @@ def setup_site(apps, schema_editor):
         page.registration_required = True
         page.save()
 
-    page, created = FlatPage.objects.get_or_create(url='/contact/')
+    page, created = FlatPage.objects.get_or_create(url='/contact')
     if created:
         page.sites.add(s)
         page.title = 'Contact Details'
         page.template_name = 'pages/contact.html'
         page.save()
 
-    page, created = FlatPage.objects.get_or_create(url='/copyright/')
+    page, created = FlatPage.objects.get_or_create(url='/copyright')
     if created:
         page.sites.add(s)
         page.title = 'Copyright Notice'

@@ -6,7 +6,7 @@ urlpatterns = patterns('',
                        url(r'^$',
                            views.IndexView.as_view(),
                            name='index'),
-                       url(r'^search/$',
+                       url(r'^search$',
                            views.SearchView.as_view(),
                            name='search'),
                        )
