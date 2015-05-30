@@ -31,5 +31,6 @@ S3MediaStorage = lambda: S3BotoStorageOffload(
     querystring_expire=300,
     default_acl='private',
     secure_urls=False,
+    url_protocol='',
     custom_domain=_media_custom_domain
 )
