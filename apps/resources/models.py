@@ -91,7 +91,8 @@ class Resource(models.Model):
 
 
 def get_attachment_filename(instance, filename):
-    return 'resource/attachment/%d/%s' % (instance.resource.id, instance.title)
+    return 'resource/attachment/%d/%s' % (instance.resource.id,
+                                          instance.title.replace('?', ''))
 
 
 class Attachment(models.Model):
