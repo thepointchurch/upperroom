@@ -1,3 +1,5 @@
+from urllib.parse import urlsplit
+
 from django.conf import settings
 from storages.backends.s3boto import S3BotoStorage
 
@@ -18,8 +20,26 @@ S3StaticStorage = lambda: S3BotoStorage(
 class S3BotoStorageOffload(S3BotoStorage):
     try:
         offload = settings.MEDIAFILES_OFFLOAD
-    except NameError:
-        offload = Falsee
+    except (AttributeError, NameError):
+        offload = False
+
+    def url(self, name, headers=None, response_headers=None):
+        # Generate the S3 offload URL but enforce our protocol and domain
+        name = self._normalize_name(self._clean_name(name))
+        url = self.connection.generate_url(self.querystring_expire,
+                                           method='GET',
+                                           bucket=self.bucket.name,
+                                           key=self._encode_name(name),
+                                           headers=headers,
+                                           query_auth=self.querystring_auth,
+                                           force_http=False,
+                                           response_headers=response_headers)
+        url = urlsplit(url)
+        domain = self.custom_domain or url.netloc
+        return '%s//%s%s?%s' % (self.url_protocol,
+                                domain,
+                                url.path,
+                                url.query)
 
 _media_custom_domain = None
 if '.' in settings.MEDIAFILES_BUCKET:
