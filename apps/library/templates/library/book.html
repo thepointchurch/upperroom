@@ -1,7 +1,9 @@
 <h3>{{ book.title }}</h3>
-{% if book.subtitle %}<p>Subtitle: {{ book.subtitle }}</p>{% endif %}
-{% if book.author %}<p>Author: {{ book.author }}</p>{% endif %}
-{% if book.description %}<p>Description: {{ book.description }}</p>{% endif %}
-{% if book.location %}<p>Location: {{ book.location }}</p>{% endif %}
-{% if book.type %}<p>Type: {{ book.type }}</p>{% endif %}
-{% if book.isbn %}<p>ISBN: <a href="http://www.amazon.com/gp/search/ref=sr_adv_b/?field-isbn={{ book.isbn }}">{{ book.isbn }}</a></p>{% endif %}
+<table class="book">
+{% if book.subtitle %}<tr><td>Subtitle:</td><td>{{ book.subtitle }}</td></tr>{% endif %}
+{% if book.author %}<tr><td>Author:</td><td>{% for author in book.authors %}{{ author }}<br/>{% endfor %}</td><tr>{% endif %}
+{% if book.description %}<tr><td>Description:</td><td>{{ book.description }}</td></tr>{% endif %}
+{% if book.location %}<tr><td>Location:</td><td>{{ book.location }}</td></tr>{% endif %}
+{% if book.type %}<tr><td>Type:</td><td>{{ book.type }}</td></tr>{% endif %}
+{% if book.isbn %}<tr><td>ISBN:</td><td><a href="http://www.amazon.com/gp/search/ref=sr_adv_b/?field-isbn={{ book.isbn }}">{{ book.isbn }}</a></td></tr>{% endif %}
+</table>
