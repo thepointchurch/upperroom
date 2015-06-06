@@ -1,4 +1,9 @@
 {% extends "site/base.html" %}
+{% load staticfiles %}
+
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="{% static 'style/library.css' %}" />
+{% endblock stylesheets %}
 
 {% block title %}{{ block.super }}: Library{% endblock title %}
 

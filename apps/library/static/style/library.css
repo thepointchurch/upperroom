@@ -1,0 +1,7 @@
+table.book {
+    width: auto;
+}
+
+table.book td {
+    padding: 0 1em;
+}
