@@ -91,8 +91,9 @@ class Resource(models.Model):
 
 
 def get_attachment_filename(instance, filename):
-    return 'resource/attachment/%d/%s' % (instance.resource.id,
-                                          instance.title.replace('?', ''))
+    return 'resource/attachment/%s/%s%s' % (instance.resource.slug,
+                                            instance.slug,
+                                            instance.extension)
 
 
 class Attachment(models.Model):
@@ -104,6 +105,7 @@ class Attachment(models.Model):
     )
 
     title = models.CharField(max_length=64)
+    slug = models.SlugField(db_index=True)
     file = models.FileField(upload_to=get_attachment_filename)
     mime_type = models.CharField(max_length=128, editable=False)
     kind = models.CharField(max_length=1, choices=KIND_CHOICES,
@@ -114,6 +116,7 @@ class Attachment(models.Model):
     class Meta:
         ordering = ['resource']
         verbose_name_plural = 'attachments'
+        unique_together = ('resource', 'slug')
 
     def __str__(self):
         return self.title

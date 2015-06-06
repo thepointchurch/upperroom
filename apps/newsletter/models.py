@@ -11,9 +11,10 @@ from datetime import date, timedelta
 
 
 def get_filename(instance, filename):
-    return 'newsletter/%s/%s/%s' % (instance.publication.slug,
-                                    instance.date.year,
-                                    instance.date)
+    return 'newsletter/%s/%s/%s%s' % (instance.publication.slug,
+                                      instance.date.year,
+                                      instance.date,
+                                      instance.extension)
 
 
 def default_publication():

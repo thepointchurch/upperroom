@@ -97,8 +97,15 @@ class AttachmentView(generic.DetailView):
             return redirect_to_login(self.request.path)
 
         if getattr(default_storage, 'offload', False):
+            disposition = 'attachment; filename="%s%s"' % \
+                (attachment.title, attachment.extension)
+            response_headers = {
+                'response-content-disposition': disposition,
+                'response-content-type':        attachment.mime_type,
+            }
             response = HttpResponseRedirect(
-                default_storage.url(attachment.file.name))
+                default_storage.url(attachment.file.name,
+                                    response_headers=response_headers))
         else:
             response = HttpResponse(attachment.file,
                                     content_type=attachment.mime_type)

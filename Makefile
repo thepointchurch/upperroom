@@ -44,9 +44,6 @@ cron: crontab
 migrate: .venv
 	.venv/bin/python manage.py migrate --noinput
 
-migrate: .venv
-	.venv/bin/python manage.py migrate --noinput
-
 collectstatic: .venv
 	.venv/bin/python manage.py collectstatic --noinput
 
