@@ -47,6 +47,9 @@ migrate: .venv
 collectstatic: .venv
 	.venv/bin/python manage.py collectstatic --noinput
 
+flush: .venv
+	.venv/bin/python manage.py flush --noinput
+
 .runit/run: .deploy/run.in .env/APP_PATH
 	test -d .runit || mkdir .runit
 	envsubst <$< >$@
@@ -57,6 +60,16 @@ $(HOME)/service/django: .runit/run
 
 reload: $(HOME)/service/django
 	sv reload django
+
+backup: .venv
+	@.venv/bin/python manage.py dumpdata --indent=2 --exclude auth.permission --exclude contenttypes | bzip2 | .venv/bin/aws s3 cp - "s3://$(BACKUP_BUCKET)/data.json.bz2" --quiet
+	@.venv/bin/aws s3 sync "s3://$(MEDIAFILES_BUCKET)/" "s3://$(BACKUP_BUCKET)/media/" --quiet --delete
+
+restore: migrate flush all
+	@.venv/bin/aws s3 sync "s3://$(BACKUP_BUCKET)/media/" "s3://$(MEDIAFILES_BUCKET)/" --quiet --delete
+	@.venv/bin/aws s3 cp "s3://$(BACKUP_BUCKET)/data.json.bz2" - --quiet | bunzip2 >/tmp/data.json
+	@.venv/bin/python manage.py loaddata /tmp/data.json
+	@rm -f /tmp/data.json
 
 .nginx.conf: .deploy/nginx.conf.in .env/VHOST
 	sed -e 's,$$HOME,$(HOME),g' -e 's/$$VHOST/$(VHOST)/g' $< >$@
