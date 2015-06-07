@@ -50,6 +50,9 @@ collectstatic: .venv
 flush: .venv
 	.venv/bin/python manage.py flush --noinput
 
+sendrosteremails: .venv
+	@.venv/bin/python manage.py sendrosteremails
+
 .runit/run: .deploy/run.in .env/APP_PATH
 	test -d .runit || mkdir .runit
 	envsubst <$< >$@
