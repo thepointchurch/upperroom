@@ -13,7 +13,14 @@ export SECRET_KEY ?= $(shell openssl rand -base64 37 | cut -c -50)
 export SVDIR = $(HOME)/service
 
 
-all: install setup
+ifeq ($(environment),production)
+    cron = cron
+else
+    cron =
+endif
+
+
+all: install setup $(cron)
 
 install: .venv boto_fix environment .nginx.conf $(HOME)/service/django $(HOME)/.profile $(HOME)/git/hooks/post-receive
 
