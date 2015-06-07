@@ -111,7 +111,7 @@ write_files:
 
 runcmd:
   - [ sh, -c, '/bin/sed -i "s/^# en_AU/en_AU/" /etc/locale.gen && /usr/sbin/locale-gen' ]
-  - [ rm, -f, /etc/nginx/sites-enabled/default ]
+  - [ sh, -c, '/bin/echo -e "server {\n    listen [::]:80 default_server ipv6only=off;\n}" >/etc/nginx/sites-available/default' ]
   - [ sh, -c, '/bin/echo "include /srv/django/*/project/.nginx.conf;" >/etc/nginx/conf.d/django.conf' ]
   - [ /tmp/init_django.sh, xvdb, '9.1', /srv/django ]
   - [ /root/bin/build_python.sh, '3.4.2' ]
