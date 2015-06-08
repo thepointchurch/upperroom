@@ -5,4 +5,4 @@ class NewsletterAppConfig(AppConfig):
     name = 'newsletter'
 
     def ready(self):
-        import newsletter.signals
+        import newsletter.signals  # noqa

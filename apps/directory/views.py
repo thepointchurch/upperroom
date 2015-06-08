@@ -6,7 +6,7 @@ from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 from django.views import generic
 
-from directory.forms import FamilyForm, PersonForm, PersonInlineFormSet
+from directory.forms import FamilyForm, PersonInlineFormSet
 from directory.models import Family, Person
 
 
