@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                                         primary_key=True)),
                 ('date', models.DateField(default=datetime.date.today)),
                 ('slug', models.SlugField(editable=False)),
-                ('file', models.FileField(upload_to=newsletter.models.get_filename)),
+                ('file', models.FileField(upload_to=newsletter.models.get_filename)),  # noqa
                 ('mime_type', models.CharField(max_length=64,
                                                editable=False)),
                 ('description', models.TextField(null=True, blank=True)),
@@ -66,7 +66,7 @@ class Migration(migrations.Migration):
             model_name='issue',
             name='publication',
             field=models.ForeignKey(related_name='issues',
-                                    default=newsletter.models.default_publication,
+                                    default=newsletter.models.default_publication,  # noqa
                                     to='newsletter.Publication',
                                     unique_for_date='date'),
             preserve_default=True,

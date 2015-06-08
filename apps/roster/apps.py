@@ -5,4 +5,4 @@ class RosterAppConfig(AppConfig):
     name = 'roster'
 
     def ready(self):
-        import roster.signals
+        import roster.signals  # noqa

@@ -1,4 +1,3 @@
-import json
 import logging
 import logging.handlers
 import os
@@ -121,7 +120,7 @@ if __name__ == '__main__':
         logger.info('Cleaning up socket at %s', socket_name)
         try:
             os.unlink(socket_name)
-        except FileNotFoundError:
+        except FileNotFoundError:  # noqa
             pass
 
     def signal_term_handler(signal, frame):

@@ -5,4 +5,4 @@ class MembersAppConfig(AppConfig):
     name = 'members'
 
     def ready(self):
-        import members.signals
+        import members.signals  # noqa

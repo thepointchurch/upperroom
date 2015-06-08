@@ -5,4 +5,4 @@ class ResourcesAppConfig(AppConfig):
     name = 'resources'
 
     def ready(self):
-        import resources.signals
+        import resources.signals  # noqa
