@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 
@@ -100,6 +101,16 @@ PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.UnsaltedMD5PasswordHasher',
 )
 
+
+class AddEnvironmentFilter(logging.Filter):
+    def __init__(self, environment):
+        self.environment = environment
+
+    def filter(self, record):
+        record.environment = self.environment
+        return True
+
+
 if os.getenv('environment', '') in ['production', 'testing']:
     if DEBUG:
         level = 'DEBUG'
@@ -109,61 +120,59 @@ if os.getenv('environment', '') in ['production', 'testing']:
     LOGGING = {
         'version': 1,
         'disable_existing_loggers': True,
-        'formatters': {
-            'standard': {
-                'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+        'filters': {
+            'add_environment': {
+                '()': AddEnvironmentFilter,
+                'environment': os.getenv('environment', ''),
             },
-            'cloudwatch': {
-                'format': '[%(levelname)s] %(name)s: %(message)s'
+        },
+        'formatters': {
+            'syslog': {
+                'format': ('django_%(environment)s[%(process)d]: '
+                           '%(name)s [%(levelname)s] %(message)s')
             },
         },
         'handlers': {
-            'default': {
+            'syslog': {
                 'level': level,
-                'class': 'util.logging.handlers.CloudwatchHandler',
-                'group': '%s_%s' % (os.uname()[1], ALLOWED_HOSTS[0]),
-                'stream': 'django',
-                'formatter': 'cloudwatch',
-            },
-            'request': {
-                'level': level,
-                'class': 'util.logging.handlers.CloudwatchHandler',
-                'group': '%s_%s' % (os.uname()[1], ALLOWED_HOSTS[0]),
-                'stream': 'request',
-                'formatter': 'cloudwatch',
-            },
-            'security': {
-                'level': level,
-                'class': 'util.logging.handlers.CloudwatchHandler',
-                'group': '%s_%s' % (os.uname()[1], ALLOWED_HOSTS[0]),
-                'stream': 'security',
-                'formatter': 'cloudwatch',
-            },
-            'gunicorn': {
-                'level': level,
-                'class': 'util.logging.handlers.CloudwatchHandler',
-                'group': '%s_%s' % (os.uname()[1], ALLOWED_HOSTS[0]),
-                'stream': 'gunicorn',
-                'formatter': 'cloudwatch',
+                'class': 'logging.handlers.SysLogHandler',
+                'address': '/dev/log',
+                'formatter': 'syslog',
+                'filters': ['add_environment'],
             },
         },
         'loggers': {
-            '': {
-                'handlers': ['default'],
+            'root': {
+                'handlers': ['syslog'],
                 'level': level,
             },
+            'django': {
+                'handlers': ['syslog'],
+                'level': level,
+                'propagate': False,
+            },
             'django.request': {
-                'handlers': ['request'],
+                'handlers': ['syslog'],
                 'level': level,
                 'propagate': False,
             },
             'django.security': {
-                'handlers': ['security'],
+                'handlers': ['syslog'],
+                'level': level,
+                'propagate': False,
+            },
+            'gunicorn.access': {
+                'handlers': ['syslog'],
                 'level': level,
                 'propagate': False,
             },
             'gunicorn.error': {
-                'handlers': ['gunicorn'],
+                'handlers': ['syslog'],
+                'level': level,
+                'propagate': False,
+            },
+            'py.warnings': {
+                'handlers': ['syslog'],
                 'level': level,
                 'propagate': False,
             },

@@ -82,7 +82,7 @@ restore: migrate flush all
 	@rm -f /tmp/data.json
 
 .nginx.conf: .deploy/nginx.conf.in .env/VHOST
-	sed -e 's,$$HOME,$(HOME),g' -e 's/$$VHOST/$(VHOST)/g' $< >$@
+	sed -e 's,$$HOME,$(HOME),g' -e 's,$$USER,$(USER),g' -e 's/$$VHOST/$(VHOST)/g' $< >$@
 
 $(HOME)/.profile: .deploy/profile
 	cp $< $@ && chmod 755 $@

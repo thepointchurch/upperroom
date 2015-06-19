@@ -1,0 +1,6 @@
+#!/bin/sh
+
+BUCKET='thepoint-logs'
+
+/opt/python/bin/aws s3 sync /var/log/django/ "s3://${BUCKET}/django" --exclude=*.log --quiet
+/opt/python/bin/aws s3 sync /var/log/nginx/ "s3://${BUCKET}/nginx" --exclude=*.log --quiet

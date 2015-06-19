@@ -86,15 +86,27 @@ write_files:
     permissions: '0750'
   - encoding: b64
     content : |
-`base64 .deploy/cloudwatch_logger.py | sed 's/^/      /'`
+`base64 .deploy/rsyslog_django.conf | sed 's/^/      /'`
     owner: root:root
-    path: /usr/local/bin/cloudwatch_logger
-    permissions: '0755'
+    path: /etc/rsyslog.d/90-django.conf
+    permissions: '0644'
   - encoding: b64
     content : |
-`echo '#!/bin/sh\n\nexec chpst -u nobody:nogroup /opt/python/bin/python3 /usr/local/bin/cloudwatch_logger' | base64 | sed 's/^/      /'`
+`base64 .deploy/logrotate_django | sed 's/^/      /'`
     owner: root:root
-    path: /etc/sv/cloudwatch_logger/run
+    path: /etc/logrotate.d/django
+    permissions: '0644'
+  - encoding: b64
+    content : |
+`base64 .deploy/logrotate_nginx | sed 's/^/      /'`
+    owner: root:root
+    path: /etc/logrotate.d/nginx
+    permissions: '0644'
+  - encoding: b64
+    content : |
+`base64 .deploy/log_upload | sed 's/^/      /'`
+    owner: root:root
+    path: /etc/cron.daily/logrotate_upload
     permissions: '0755'
   - encoding: b64
     content : |
@@ -114,6 +126,7 @@ runcmd:
   - [ sh, -c, '/bin/echo -e "server {\n    listen [::]:80 default_server ipv6only=off;\n}" >/etc/nginx/sites-available/default' ]
   - [ sh, -c, '/bin/echo "include /srv/django/*/project/.nginx.conf;" >/etc/nginx/conf.d/django.conf' ]
   - [ sh, -c, '/bin/echo "server_tokens off;" >/etc/nginx/conf.d/00_server_tokens.conf' ]
+  - [ sh, -c, '((/usr/bin/curl -s https://www.cloudflare.com/ips-v4; /bin/echo; /usr/bin/curl -s https://www.cloudflare.com/ips-v6; /bin/echo) | sed -e "s/^/set_real_ip_from /" -e "s/$/;/"; /bin/echo "real_ip_header X-Forwarded-For;"; /bin/echo "real_ip_recursive on;") >/etc/nginx/conf.d/00_real_ip.conf' ]
   - [ /tmp/init_django.sh, xvdb, '9.1', /srv/django ]
   - [ /root/bin/build_python.sh, '3.4.2' ]
   - [ /tmp/init_aws.sh ]
@@ -121,7 +134,6 @@ runcmd:
   - [ cp, -r, /home/admin/.ssh, /etc/skel/.ssh ]
   - [ sh, -c, 'echo "Australia/Brisbane" > /etc/timezone && dpkg-reconfigure -f noninteractive tzdata' ]
   - [ sh, -c, 'echo "Deployment of ${HOST} complete" | mail -s "Deployment complete" root' ]
-  - [ ln, -s, /etc/sv/cloudwatch_logger, /etc/service/cloudwatch_logger ]
 
 power_state:
   mode: reboot
