@@ -12,4 +12,7 @@ server {
         proxy_set_header Host $http_host;
         proxy_redirect off;
     }
+
+    error_log /var/log/nginx/$USER.error.log;
+    access_log /var/log/nginx/$USER.access.log;
 }

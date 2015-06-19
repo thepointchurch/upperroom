@@ -1,0 +1,13 @@
+/var/log/django/*.log {
+    daily
+    dateext
+    dateyesterday
+    missingok
+    rotate 7
+    compress
+    notifempty
+    sharedscripts
+    postrotate
+        invoke-rc.d rsyslog rotate > /dev/null
+    endscript
+}
