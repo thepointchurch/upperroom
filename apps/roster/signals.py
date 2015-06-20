@@ -1,3 +1,5 @@
+from datetime import time
+
 from django.apps import apps
 from django.db.models.signals import post_migrate
 
@@ -13,72 +15,82 @@ def default_locations(sender, **kwargs):
     Location.objects.get_or_create(name='Wynnum')
 
 
+def _ensure_role_type(name, verb, order, start_time, end_time):
+    r, created = RoleType.objects.get_or_create(name=name)
+    if created:
+        r.verb = verb
+        r.order = order
+        r.start_time = start_time
+        r.end_time = end_time
+        r.save()
+
+
 def default_roletypes(sender, **kwargs):
-    r, created = RoleType.objects.get_or_create(name='Lesson')
-    if created:
-        r.verb = 'bring the lesson'
-        r.order = 10
-        r.save()
+    _ensure_role_type(name='Lesson',
+                      verb='bring the lesson',
+                      order=10,
+                      start_time=time(9, 30),
+                      end_time=time(10, 0))
 
-    r, created = RoleType.objects.get_or_create(name="Kid's Time")
-    if created:
-        r.verb = "lead Kid's Time"
-        r.order = 20
-        r.save()
+    _ensure_role_type(name="Kid's Time",
+                      verb="lead Kid's Time",
+                      order=20,
+                      start_time=time(9, 30),
+                      end_time=time(9, 45))
 
-    r, created = RoleType.objects.get_or_create(name='Focus Theme')
-    if created:
-        r.verb = 'lead the Focus Theme'
-        r.order = 30
-        r.save()
+    _ensure_role_type(name='Focus Theme',
+                      verb='lead the Focus Theme',
+                      order=30,
+                      start_time=time(9, 45),
+                      end_time=time(10, 0))
 
-    r, created = RoleType.objects.get_or_create(name='Singing')
-    if created:
-        r.verb = 'lead the singing'
-        r.order = 40
-        r.save()
+    _ensure_role_type(name='Singing',
+                      verb='lead the singing',
+                      order=40,
+                      start_time=time(11, 15),
+                      end_time=time(11, 30))
 
-    r, created = RoleType.objects.get_or_create(name='Communion')
-    if created:
-        r.verb = 'lead Communion'
-        r.order = 50
-        r.save()
+    _ensure_role_type(name='Communion',
+                      verb='lead Communion',
+                      order=50,
+                      start_time=time(11, 30),
+                      end_time=time(11, 45))
 
-    r, created = RoleType.objects.get_or_create(name='Assisting Communion')
-    if created:
-        r.verb = 'assist with Communion'
-        r.order = 60
-        r.save()
+    _ensure_role_type(name='Assisting Communion',
+                      verb='assist with Communion',
+                      order=60,
+                      start_time=time(11, 30),
+                      end_time=time(11, 45))
 
-    r, created = RoleType.objects.get_or_create(name='News Sharing')
-    if created:
-        r.verb = 'lead the announcements'
-        r.order = 70
-        r.save()
+    _ensure_role_type(name='News Sharing',
+                      verb='lead the announcements',
+                      order=70,
+                      start_time=time(11, 45),
+                      end_time=time(12, 0))
 
-    r, created = RoleType.objects.get_or_create(name='Benediction')
-    if created:
-        r.verb = 'offer the benediction'
-        r.order = 80
-        r.save()
+    _ensure_role_type(name='Benediction',
+                      verb='offer the benediction',
+                      order=80,
+                      start_time=time(11, 45),
+                      end_time=time(12, 0))
 
-    r, created = RoleType.objects.get_or_create(name='Guest Teaching')
-    if created:
-        r.verb = 'be the guest teacher'
-        r.order = 90
-        r.save()
+    _ensure_role_type(name='Guest Teaching',
+                      verb='be the guest teacher',
+                      order=90,
+                      start_time=time(9, 30),
+                      end_time=time(11, 30))
 
-    r, created = RoleType.objects.get_or_create(name='Bible Study')
-    if created:
-        r.verb = 'lead the Bible study'
-        r.order = 100
-        r.save()
+    _ensure_role_type(name='Bible Study',
+                      verb='lead the Bible study',
+                      order=100,
+                      start_time=time(19, 30),
+                      end_time=time(20, 30))
 
-    r, created = RoleType.objects.get_or_create(name='Setup/Pack Up')
-    if created:
-        r.verb = 'assist with the set up and pack up'
-        r.order = 110
-        r.save()
+    _ensure_role_type(name='Setup/Pack Up',
+                      verb='assist with the set up and pack up',
+                      order=110,
+                      start_time=time(11, 45),
+                      end_time=time(12, 0))
 
 
 post_migrate.connect(default_locations,
