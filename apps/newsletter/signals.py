@@ -5,8 +5,13 @@ from newsletter.models import Publication
 
 
 def default_publications(sender, **kwargs):
-    Publication(slug='poi', name='Points of Interest', publication_day='6',
-                mime_types='application/pdf', is_private=True).save()
+    p, created = Publication.objects.get_or_create(slug='poi')
+    if created:
+        p.name = 'Points of Interest'
+        p.publication_day = '6'
+        p.mime_types = 'application/pdf'
+        p.is_private = True
+        p.save()
 
 post_migrate.connect(default_publications,
                      sender=apps.get_app_config('newsletter'))
