@@ -20,8 +20,9 @@ class Migration(migrations.Migration):
                                         auto_created=True,
                                         primary_key=True)),
                 ('title', models.CharField(max_length=64)),
+                ('slug', models.SlugField()),
                 ('file', models.FileField(upload_to=resources.models.get_attachment_filename)),  # noqa
-                ('mime_type', models.CharField(max_length=64,
+                ('mime_type', models.CharField(max_length=128,
                                                editable=False)),
                 ('kind', models.CharField(default='I',
                                           max_length=1,
@@ -33,7 +34,6 @@ class Migration(migrations.Migration):
                 'ordering': ['resource'],
                 'verbose_name_plural': 'attachments',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Resource',
@@ -68,7 +68,6 @@ class Migration(migrations.Migration):
                 'get_latest_by': 'created',
                 'verbose_name_plural': 'resources',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Tag',
@@ -92,22 +91,22 @@ class Migration(migrations.Migration):
                 'ordering': ['name'],
                 'verbose_name_plural': 'tags',
             },
-            bases=(models.Model,),
         ),
         migrations.AddField(
             model_name='resource',
             name='tags',
             field=models.ManyToManyField(related_name='resources',
                                          to='resources.Tag',
-                                         null=True,
                                          blank=True),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='attachment',
             name='resource',
             field=models.ForeignKey(related_name='attachments',
                                     to='resources.Resource'),
-            preserve_default=True,
+        ),
+        migrations.AlterUniqueTogether(
+            name='attachment',
+            unique_together=set([('resource', 'slug')]),
         ),
     ]

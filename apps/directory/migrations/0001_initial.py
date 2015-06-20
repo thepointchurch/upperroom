@@ -29,10 +29,10 @@ class Migration(migrations.Migration):
                                                   verbose_name='Mobile Phone',
                                                   null=True,
                                                   blank=True)),
-                ('email', models.EmailField(max_length=75,
+                ('email', models.EmailField(max_length=254,
                                             null=True,
                                             blank=True)),
-                ('street', models.CharField(max_length=32,
+                ('street', models.CharField(max_length=128,
                                             null=True,
                                             blank=True)),
                 ('suburb', models.CharField(max_length=32,
@@ -49,7 +49,6 @@ class Migration(migrations.Migration):
                 'ordering': ['name'],
                 'verbose_name_plural': 'families',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Person',
@@ -69,7 +68,7 @@ class Migration(migrations.Migration):
                                             null=True,
                                             blank=True)),
                 ('birthday', models.DateField(null=True, blank=True)),
-                ('email', models.EmailField(max_length=75,
+                ('email', models.EmailField(max_length=254,
                                             null=True,
                                             blank=True)),
                 ('phone_mobile', models.CharField(max_length=15,
@@ -94,7 +93,6 @@ class Migration(migrations.Migration):
                 'ordering': ['order', 'id', 'name'],
                 'verbose_name_plural': 'people',
             },
-            bases=(models.Model,),
         ),
         migrations.AddField(
             model_name='family',
@@ -103,7 +101,6 @@ class Migration(migrations.Migration):
                                     blank=True,
                                     to='directory.Person',
                                     null=True),
-            preserve_default=True,
         ),
         migrations.AddField(
             model_name='family',
@@ -112,6 +109,5 @@ class Migration(migrations.Migration):
                                     blank=True,
                                     to='directory.Person',
                                     null=True),
-            preserve_default=True,
         ),
     ]

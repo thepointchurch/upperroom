@@ -32,7 +32,7 @@ class Publication(models.Model):
         ('6', _('Sunday')),
     )
 
-    slug = models.SlugField(primary_key=True)
+    slug = models.SlugField(unique=True)
     name = models.CharField(max_length=64)
     description = models.TextField(null=True, blank=True)
     mime_types = models.CharField(max_length=256, null=True, blank=True)

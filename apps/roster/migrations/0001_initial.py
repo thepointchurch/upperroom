@@ -25,22 +25,23 @@ class Migration(migrations.Migration):
                 'ordering': ['name'],
                 'verbose_name_plural': 'locations',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Meeting',
             fields=[
+                ('id', models.AutoField(verbose_name='ID',
+                                        serialize=False,
+                                        auto_created=True,
+                                        primary_key=True)),
                 ('date', models.DateField(
                     default=roster.models.next_empty_meeting_date,
-                    serialize=False,
-                    primary_key=True)),
+                    unique=True)),
             ],
             options={
                 'ordering': ['date'],
                 'get_latest_by': 'date',
                 'verbose_name_plural': 'meetings',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Role',
@@ -65,14 +66,12 @@ class Migration(migrations.Migration):
                                               to='roster.Meeting')),
                 ('people', models.ManyToManyField(related_name='roles',
                                                   to='directory.Person',
-                                                  null=True,
                                                   blank=True)),
             ],
             options={
                 'ordering': ['role'],
                 'verbose_name_plural': 'roles',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='RoleType',
@@ -82,20 +81,18 @@ class Migration(migrations.Migration):
                                         auto_created=True,
                                         primary_key=True)),
                 ('name', models.CharField(max_length=30)),
-                ('verb', models.CharField(max_length=30)),
+                ('verb', models.CharField(max_length=50)),
                 ('order', models.PositiveSmallIntegerField(default=100)),
             ],
             options={
                 'ordering': ['order'],
                 'verbose_name_plural': 'roletypes',
             },
-            bases=(models.Model,),
         ),
         migrations.AddField(
             model_name='role',
             name='role',
             field=models.ForeignKey(related_name='roles',
                                     to='roster.RoleType'),
-            preserve_default=True,
         ),
     ]
