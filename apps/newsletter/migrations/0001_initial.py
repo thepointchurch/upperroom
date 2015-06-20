@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('date', models.DateField(default=datetime.date.today)),
                 ('slug', models.SlugField(editable=False)),
                 ('file', models.FileField(upload_to=newsletter.models.get_filename)),  # noqa
-                ('mime_type', models.CharField(max_length=64,
+                ('mime_type', models.CharField(max_length=128,
                                                editable=False)),
                 ('description', models.TextField(null=True, blank=True)),
             ],
@@ -31,12 +31,15 @@ class Migration(migrations.Migration):
                 'get_latest_by': 'date',
                 'verbose_name_plural': 'issues',
             },
-            bases=(models.Model,),
         ),
         migrations.CreateModel(
             name='Publication',
             fields=[
-                ('slug', models.SlugField(serialize=False, primary_key=True)),
+                ('id', models.AutoField(verbose_name='ID',
+                                        auto_created=True,
+                                        serialize=False,
+                                        primary_key=True)),
+                ('slug', models.SlugField(unique=True)),
                 ('name', models.CharField(max_length=64)),
                 ('description', models.TextField(null=True, blank=True)),
                 ('mime_types', models.CharField(max_length=256,
@@ -60,7 +63,6 @@ class Migration(migrations.Migration):
                 'ordering': ['name'],
                 'verbose_name_plural': 'publications',
             },
-            bases=(models.Model,),
         ),
         migrations.AddField(
             model_name='issue',
@@ -69,6 +71,5 @@ class Migration(migrations.Migration):
                                     default=newsletter.models.default_publication,  # noqa
                                     to='newsletter.Publication',
                                     unique_for_date='date'),
-            preserve_default=True,
         ),
     ]

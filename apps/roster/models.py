@@ -24,7 +24,7 @@ class CurrentManager(models.Manager):
 
 
 class Meeting(models.Model):
-    date = models.DateField(primary_key=True, default=next_empty_meeting_date)
+    date = models.DateField(unique=True, default=next_empty_meeting_date)
 
     current_objects = CurrentManager()
     objects = models.Manager()
