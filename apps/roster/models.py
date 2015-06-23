@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, time, timedelta
 
 from django.db import models
 
@@ -53,6 +53,8 @@ class RoleType(models.Model):
     name = models.CharField(max_length=30)
     verb = models.CharField(max_length=50)
     order = models.PositiveSmallIntegerField(default=100)
+    start_time = models.TimeField(default=time(9, 30))
+    end_time = models.TimeField(default=time(10, 0))
 
     class Meta:
         ordering = ['order']
@@ -112,13 +114,17 @@ class Role(models.Model):
     def starttime(self):
         return datetime(self.meeting.date.year,
                         self.meeting.date.month,
-                        self.meeting.date.day, 9, 30) - timedelta(hours=10)
+                        self.meeting.date.day,
+                        self.role.start_time.hour,
+                        self.role.start_time.minute) - timedelta(hours=10)
 
     @property
     def endtime(self):
         return datetime(self.meeting.date.year,
                         self.meeting.date.month,
-                        self.meeting.date.day, 12, 0) - timedelta(hours=10)
+                        self.meeting.date.day,
+                        self.role.end_time.hour,
+                        self.role.end_time.minute) - timedelta(hours=10)
 
     def save(self, *args, **kwargs):
         self.revision += 1
