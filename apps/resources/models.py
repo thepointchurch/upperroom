@@ -15,6 +15,7 @@ class Tag(models.Model):
                                                           null=True,
                                                           blank=True)
     reverse_order = models.BooleanField(default=False)
+    show_date = models.BooleanField(default=True)
 
     # Items with an exclusive tag only appear when searching for this tag.
     is_exclusive = models.BooleanField(default=False,
@@ -52,6 +53,7 @@ class Resource(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
+    show_date = models.BooleanField(default=True)
 
     is_published = models.BooleanField(default=False, verbose_name='Published')
     is_private = models.BooleanField(default=False, verbose_name='Private')

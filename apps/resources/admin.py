@@ -11,6 +11,13 @@ class TagAdmin(admin.ModelAdmin):
     search_fields = ['name', 'slug']
     prepopulated_fields = {'slug': ('name',)}
 
+    fieldsets = (
+        (None, {'fields': ('name', 'slug')}),
+        ('Advanced', {'classes': ('collapse',),
+                      'fields': ('resources_per_page', 'reverse_order',
+                                 'show_date', 'is_exclusive')}),
+    )
+
 
 class AttachmentInline(admin.TabularInline):
     model = Attachment
@@ -60,7 +67,8 @@ class ResourceAdmin(admin.ModelAdmin):
         ('Author', {'classes': ('collapse',),
                     'fields': ('author', 'show_author')}),
         ('Advanced', {'classes': ('collapse',),
-                      'fields': ('is_published', 'is_private', 'parent')}),
+                      'fields': ('is_published', 'is_private', 'show_date',
+                                 'parent')}),
     )
 
 admin.site.register(Tag, TagAdmin)
