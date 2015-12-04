@@ -7,6 +7,10 @@ div#header {
     min-height: 120px;
 }
 
+div#header p.caption {
+    display: none;
+}
+
 div#navbar {
     display: none;
     float: none;
@@ -14,9 +18,14 @@ div#navbar {
     box-shadow: 5px 5px 5px black;
 }
 
-div#navbar p {
+div#navbar ul {
     margin: 0;
     padding: 0;
+}
+
+div#navbar ul a {
+    background: white;
+    background: rgba(255,255,255,0.6);
 }
 
 label[for="navbar-trigger"] {

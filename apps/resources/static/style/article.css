@@ -1,17 +1,95 @@
 p#author {
-        text-align: right;
+    text-align: right;
 }
 
 p.option {
-        color: rgb(150,150,150);
-        padding-left: 2em;
+    color: rgb(150,150,150);
+    padding-left: 2em;
 }
 
 p.intro {
-        border-top: 1px solid;
-        border-bottom: 1px solid;
-        padding: 5px;
-        text-align: justify;
-        margin-top: 2em;
-        margin-bottom: 2em;
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    padding: 5px;
+    text-align: justify;
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+p.pull {
+    padding: 1em;
+    margin: 20px;
+    background: rgba(0,0,0,0.1);
+}
+
+div#body > p, div#body > blockquote, div#body > ul, div#body > ol, div#body > dl, div#body > form, div#body > table {
+    margin: 2em 5em;
+    line-height: 200%;
+}
+
+table > p, table > blockquote, table > ul, table > ol, table > dl, table > form {
+    margin: 10px;
+    line-height: 120%;
+}
+
+div#index > h3 {
+    margin-top: 2em;
+    margin-left: 2em;
+    margin-right: 2em;
+    margin-bottom: inherit;
+}
+
+div#index > h3:first-child {
+    margin-top: 0;
+}
+
+div#index > h3 > a:hover {
+    font-weight: bold;
+    text-decoration: none;
+}
+
+div#index > p {
+    margin: 10px 5em;
+}
+
+div#index > p.timestamp, div#index > p.links {
+    margin-top: 2px;
+    margin-bottom: 0;
+}
+
+div#index > p.links {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+@media (max-width: 640px) {
+    div#body {
+        padding: 0;
+    }
+
+    div#body > h3 {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    div#body > p, div#body > blockquote, div#body > ul, div#body > ol, div#body > dl, div#body > form, div#body > table {
+        margin: 10px;
+    }
+
+    div#index > h3 {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    div#index > p {
+        margin-left: 2em;
+        margin-right: 2em;
+    }
+}
+
+@media print {
+    div#body > p, div#body > blockquote, div#body > ul, div#body > ol, div#body > dl, div#body > form, div#body > table {
+        margin: 10px;
+        line-height: 120%;
+    }
 }

@@ -1,15 +1,15 @@
 {% load markup %}
+<div id="index">
 {% for resource in resource_list %}
-{% if forloop.first %}<ul>{% endif %}
-<li><strong><a href="{% url "resources:detail" resource.slug %}">{{ resource.title }}</a></strong>
-{% if resource.alternates.count > 0 %}[
+<h3><a href="{% url "resources:detail" resource.slug %}">{{ resource.title }}</a></h3>
+{% if not tag and resource.show_date or tag.show_date %}<p class="timestamp">{{ resource.created|date:"j/n/Y" }}</p>{% endif %}
+{% if resource.description %}{{ resource.description|markdown:"safe" }}{% endif %}
+<p class="links">[
+{% if resource.body %}<a href="{% url "resources:detail" resource.slug %}">read</a>{% endif %}
 {% for attachment in resource.alternates %}
-<a href="{% url 'resources:attachment' attachment.id %}">{{ attachment.format }}</a>{% if not forloop.last %},{% endif %}
+{% if resource.body or not forloop.first %}| {% endif %}<a href="{% url 'resources:attachment' attachment.id %}">{{ attachment.format }}</a>
 {% endfor %}
-]{% endif %}
-({{ resource.created|date:"j/n/Y" }})
-{% if resource.description %}{{ resource.description|markdown:"safe" }}{% endif %}</li>
-{% if forloop.last %}</ul>{% endif %}
+]</p>
 {% empty %}
 <p>There were no resources found.</p>
 {% endfor %}
@@ -25,3 +25,4 @@ Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
 {% endif %}
 ]</p>
 {% endif %}
+</div>

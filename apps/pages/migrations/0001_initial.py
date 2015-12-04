@@ -36,7 +36,7 @@ def setup_site(apps, schema_editor):
     page, created = FlatPage.objects.get_or_create(url='/copyright')
     if created:
         page.sites.add(s)
-        page.title = 'Copyright Notice'
+        page.title = 'Copyright Information'
         page.template_name = 'pages/copyright.html'
         page.save()
 

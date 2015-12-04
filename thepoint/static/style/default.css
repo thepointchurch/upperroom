@@ -51,6 +51,7 @@ h2, h3, h4, h5, h6 {
 }
 
 div#header {
+    position: relative;
     background-image: url(jetty.png);
     background-repeat: no-repeat;
     background-size: 1000px;
@@ -59,6 +60,7 @@ div#header {
     font-weight: bold;
     text-shadow: 2px 2px 2px black;
     color: white;
+    max-width: 980px;
     min-height: 200px;
 }
 
@@ -72,6 +74,16 @@ div#header p {
     margin: 0;
     padding: 0;
     padding-top: 5px;
+}
+
+div#header p.caption {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border: 0;
+    padding: 10px;
+    font-size: 10px;
+    font-style: normal;
 }
 
 h1 {
@@ -138,8 +150,7 @@ p, blockquote, ul, ol, dl {
 
 blockquote {
     font-style: italic;
-    margin-left: 20px;
-    margin-right: 20px;
+    padding: 0 2em;
 }
 
 blockquote p.attrib {
@@ -178,9 +189,18 @@ p.timestamp {
     text-align: right;
 }
 
+.center {
+    text-align: center;
+}
+
+.right {
+    text-align: right;
+}
+
 img {
     margin: 5px;
     border: 1px solid black;
+    max-width: 100%;
 }
 
 img.right {
@@ -193,17 +213,32 @@ div#navbar {
     width: 200px;
 }
 
-div#navbar p {
+div#navbar ul {
     background: transparent;
     font-size: 14px;
     text-align: left;
     font-weight: bold;
+    list-style-type: none;
+    padding-left: 0;
 }
 
-div#navbar p a {
-    background: white;
-    background: rgba(255,255,255,0.6);
-    color: rgb(74,68,42);
+div#navbar ul ul {
+    margin: 0;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+div#navbar ul ul a {
+    padding-left: 3em;
+    text-transform: none;
+}
+
+div#navbar ul li {
+    margin: 0;
+}
+
+div#navbar ul a {
+    color: black;
     text-decoration: none;
     text-transform: uppercase;
     display: block;
@@ -212,12 +247,12 @@ div#navbar p a {
     text-indent: -1em;
 }
 
-div#navbar p a:before {
+div#navbar ul a:before {
     content: "• ";
     color: rgb(255,192,0);
 }
 
-div#navbar p a:hover {
+div#navbar ul a:hover {
     background: white;
     background: rgba(255,255,255,0.8);
     color: rgb(200,0,0);
@@ -246,8 +281,9 @@ div#body {
     margin: 10px;
     margin-left: 200px;
     display: block;
-    max-width: 790px;
+    max-width: 750px;
     min-height: 560px;
+    padding: 0 20px;
 }
 
 p.error {
@@ -349,4 +385,10 @@ form table td input[type=submit], form table td input[type=reset] {
 form table.passwd {
     width: auto;
     margin: auto;
+}
+
+iframe.calendar {
+    width: 750px;
+    min-height: 600px;
+    border: none;
 }
