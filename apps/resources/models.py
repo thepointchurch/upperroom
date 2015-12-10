@@ -1,15 +1,43 @@
+import logging
 import magic
 import mimetypes
+from itertools import chain
 
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import resolve, reverse
 from django.db import models
+from django.http import Http404
+from django.utils.translation import ugettext_lazy as _
 
 from directory.models import Person
 
 
-class Tag(models.Model):
+logger = logging.getLogger(__name__)
+
+
+class FeaturedMixin(models.Model):
+    priority = models.PositiveSmallIntegerField(
+        null=True, blank=True,
+        help_text=_('A non-empty value will feature this item '
+                    'in the main menu.'))
+
+    class Meta:
+        abstract = True
+
+    @property
+    def is_featured(self):
+        return self.priority is not None
+
+
+class FeaturedManager(models.Manager):
+    def get_queryset(self):
+        return super(FeaturedManager,
+                     self).get_queryset().filter(priority__isnull=False)
+
+
+class Tag(FeaturedMixin, models.Model):
     name = models.CharField(max_length=64)
     slug = models.SlugField(unique=True)
+    description = models.TextField(null=True, blank=True)
 
     resources_per_page = models.PositiveSmallIntegerField(default=10,
                                                           null=True,
@@ -21,12 +49,29 @@ class Tag(models.Model):
     is_exclusive = models.BooleanField(default=False,
                                        verbose_name='Exclusive')
 
+    objects = models.Manager()
+    featured_objects = FeaturedManager()
+
     class Meta:
         ordering = ['name']
         verbose_name_plural = 'tags'
 
     def __str__(self):
         return self.name
+
+    @property
+    def title(self):
+        return self.name
+
+    def get_absolute_url(self):
+        # should we search for conflicting URLs?
+        if self.is_featured:
+            url = '/%s/' % self.slug
+            try:
+                resolve(url)
+            except Http404:
+                return url
+        return reverse('resources:tag', kwargs={'slug': self.slug})
 
 
 class PublishedManager(models.Manager):
@@ -35,7 +80,7 @@ class PublishedManager(models.Manager):
                      self).get_queryset().filter(is_published=True)
 
 
-class Resource(models.Model):
+class Resource(FeaturedMixin, models.Model):
     title = models.CharField(max_length=64)
     slug = models.SlugField(unique=True)
     description = models.TextField(null=True, blank=True)
@@ -60,6 +105,7 @@ class Resource(models.Model):
 
     objects = models.Manager()
     published_objects = PublishedManager()
+    featured_objects = FeaturedManager()
 
     class Meta:
         ordering = ['created']
@@ -86,6 +132,16 @@ class Resource(models.Model):
         for attachment in self.inlines:
             content += '\n%s' % attachment.markdown_link()
         return content
+
+    def get_absolute_url(self):
+        # should we search for conflicting URLs?
+        if self.is_featured:
+            url = '/%s' % self.slug
+            try:
+                resolve(url)
+            except Http404:
+                return url
+        return reverse('resources:detail', kwargs={'slug': self.slug})
 
     def markdown_link(self):
         return '[%s]: %s' % (self.title, reverse('resources:detail',
@@ -158,3 +214,21 @@ class Attachment(models.Model):
     def markdown_link(self):
         return '[%s]: %s' % (self.title, reverse('resources:attachment',
                                                  kwargs={'pk': self.id}))
+
+
+def get_featured_items():
+    featured_items = list(chain(
+        Tag.featured_objects.all(),
+        Resource.featured_objects.filter(is_published=True, is_private=False)
+    ))
+    try:
+        featured_items.sort(key=lambda X: X.priority)
+    except TypeError:
+        logger.debug('Failed to sort featured items')
+
+    return featured_items
+
+
+def get_featured_private_items():
+    return Resource.featured_objects.filter(
+        is_published=True, is_private=True).order_by('priority')

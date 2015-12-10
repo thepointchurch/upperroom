@@ -9,7 +9,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = os.environ['SECRET_KEY']
 
 DEBUG = bool(os.getenv('DEBUG', False))
-TEMPLATE_DEBUG = bool(os.getenv('DEBUG', False))
 
 EMAIL_BACKEND = os.getenv('EMAIL_BACKEND',
                           'django.core.mail.backends.console.EmailBackend')
@@ -51,6 +50,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'apps.resources.middleware.ResourceFallbackMiddleware',
 )
 
 ROOT_URLCONF = 'thepoint.urls'
@@ -84,13 +84,27 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'thepoint/static'),
 )
 
-TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-)
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'thepoint/templates'),
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [
+            os.path.join(BASE_DIR, 'thepoint/templates'),
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+                'apps.resources.context_processors.featured_tags',
+            ],
+        },
+    },
+]
 
 PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.PBKDF2PasswordHasher',

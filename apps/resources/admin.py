@@ -12,7 +12,9 @@ class TagAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
 
     fieldsets = (
-        (None, {'fields': ('name', 'slug')}),
+        (None, {'fields': ('name', 'slug', 'description')}),
+        ('Featured', {'classes': ('collapse',),
+                      'fields': ('priority',)}),
         ('Advanced', {'classes': ('collapse',),
                       'fields': ('resources_per_page', 'reverse_order',
                                  'show_date', 'is_exclusive')}),
@@ -66,6 +68,8 @@ class ResourceAdmin(admin.ModelAdmin):
                   'fields': ('tags',)}),
         ('Author', {'classes': ('collapse',),
                     'fields': ('author', 'show_author')}),
+        ('Featured', {'classes': ('collapse',),
+                      'fields': ('priority',)}),
         ('Advanced', {'classes': ('collapse',),
                       'fields': ('is_published', 'is_private', 'show_date',
                                  'parent')}),

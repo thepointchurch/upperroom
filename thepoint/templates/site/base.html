@@ -32,21 +32,17 @@
 <li>
 <a href="{% url 'pages:home' %}">Home</a>
 </li>
-<li>
-<a href="{% url 'hilight:about' %}" title="Aquaint yourself with The Point and what we belive.">About Us</a>
-{% block nav:about %}{% endblock nav:about %}
-</li>
+{% block nav:top %}
+{% for item in featured_items %}
+<li><a href="{{ item.get_absolute_url }}"{% if item.description %} title="{{ item.description }}"{% endif %}>{{ item.title }}</a></li>
+{% endfor %}
+{% endblock nav:top %}
 <li>
 <a href="{% url 'resources:index' %}" title="Publications from The Point on various Biblical topics.">Resources</a>
 {% block nav:resources %}{% endblock nav:resources %}
 </li>
 <li>
-<a href="{% url 'hilight:theophilus' %}" title="Theophilus' Quest is an attempt to convey the basics of Christianity in a simple and straight-forward way.">Theophilus' Quest</a>
-{% block nav:theophilus %}{% endblock nav:theophilus %}
-</li>
-<li>
 <a href="{% url 'pages:contact' %}" title="Would you like to know more about The Point? Get our contact details and meeting times here.">Contact Us</a>
-{% block nav:contact %}{% endblock nav:contact %}
 </li>
 {% if not user.is_authenticated %}<li>
 <a href="{% url 'members:index' %}" title="Login to the Member's area.">Member Login</a>
@@ -59,27 +55,26 @@
 <ul>
 <li>
 <a href="{% url 'members:index' %}">Member's Home</a>
-{% block nav:members %}{% endblock nav:members %}
 </li>
+{% block nav:private_top %}
+{% for item in featured_private_items %}
+<li><a href="{{ item.get_absolute_url }}"{% if item.description %} title="{{ item.description }}"{% endif %}>{{ item.title }}</a></li>
+{% endfor %}
+{% endblock nav:private_top %}
 <li>
 <a href="{% url 'directory:index' %}" title="A directory of Members and Friends of The Point.">Directory</a>
-{% block nav:directory %}{% endblock nav:directory %}
 </li>
 <li>
 <a href="{% url 'pages:calendar' %}" title="A calendar of Events at The Point.">Calendar</a>
-{% block nav:calendar %}{% endblock nav:calendar %}
 </li>
 <li>
 <a href="{% url 'roster:index' %}" title="The Sunday Assembly Roster.">Roster</a>
-{% block nav:roster %}{% endblock nav:roster %}
 </li>
 <li>
 <a href="{% url 'library:index' %}" title="Search the The Point's Library.">Library</a>
-{% block nav:library %}{% endblock nav:library %}
 </li>
 <li>
 <a href="{% url 'poi:index' %}" title="Read past issues of Points of Interest">POI</a>
-{% block nav:poi %}{% endblock nav:poi %}
 </li>
 <li>
 <a href="{% url 'members:logout' %}" title="Log out of the Member's Area.">Logout</a>

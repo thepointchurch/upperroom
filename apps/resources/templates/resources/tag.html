@@ -1,8 +1,20 @@
 {% extends "resources/base.html" %}
 
-{% block title %}{{ block.super }}: Tag: {{ tag.name }}{% endblock title %}
+{% block title %}
+{% if tag.is_featured %}
+{{ tag.name }}
+{% else %}
+{{ block.super }}: Tag: {{ tag.name }}
+{% endif %}
+{% endblock title %}
 
-{% block heading %}{{ block.super }}: Tag: {{ tag.name }}{% endblock heading %}
+{% block heading %}
+{% if tag.is_featured %}
+{{ tag.name }}
+{% else %}
+{{ block.super }}: Tag: {{ tag.name }}
+{% endif %}
+{% endblock heading %}
 
 {% block content %}
 {% include "resources/resource_list.html" %}
