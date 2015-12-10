@@ -162,6 +162,11 @@ class Attachment(models.Model):
         (KIND_INLINE, 'Inline'),
     )
 
+    _utf_translate = str.maketrans(
+        '\u2013\u201c\u201d',
+        '-""'
+    )
+
     title = models.CharField(max_length=64)
     slug = models.SlugField(db_index=True)
     file = models.FileField(upload_to=get_attachment_filename)
@@ -191,6 +196,10 @@ class Attachment(models.Model):
             uploaded_content_type = magic_content_type
 
         self.mime_type = uploaded_content_type
+
+    @property
+    def clean_title(self):
+        return self.title.translate(Attachment._utf_translate)
 
     @property
     def extension(self):

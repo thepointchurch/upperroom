@@ -98,7 +98,7 @@ class AttachmentView(generic.DetailView):
 
         if getattr(default_storage, 'offload', False):
             disposition = 'attachment; filename="%s%s"' % \
-                (attachment.title, attachment.extension)
+                (attachment.clean_title, attachment.extension)
             response_headers = {
                 'response-content-disposition': disposition,
                 'response-content-type':        attachment.mime_type,
@@ -110,6 +110,6 @@ class AttachmentView(generic.DetailView):
             response = HttpResponse(attachment.file,
                                     content_type=attachment.mime_type)
             response['Content-Disposition'] = ('attachment; filename="%s%s"' %
-                                               (attachment.title,
+                                               (attachment.clean_title,
                                                 attachment.extension))
         return response
