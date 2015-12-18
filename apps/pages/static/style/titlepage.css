@@ -31,9 +31,12 @@ div#body p {
 
 div#body blockquote p {
     color: rgb(192,0,0);
+    font-family: "Times New Roman", serif;
+    font-weight: normal;
 }
 
 div#body blockquote p.attrib {
+    font-family: 'Verdana', sans-serif;
     font-size: 12px;
     font-weight: normal;
     font-style: italic;
