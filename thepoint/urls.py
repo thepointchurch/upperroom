@@ -1,9 +1,8 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, patterns, url
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
 
 from .sitemaps import StaticViewSitemap
-
 
 sitemaps = {
     'static': StaticViewSitemap,

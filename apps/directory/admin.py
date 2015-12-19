@@ -12,12 +12,16 @@ class PersonInline(admin.TabularInline):
 class FamilyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(FamilyForm, self).__init__(*args, **kwargs)
-        self.fields['husband'].queryset = \
-            Person.objects.filter(family__exact=self.instance.id)\
+        self.fields['husband'].queryset = (
+            Person.objects
+            .filter(family__exact=self.instance.id)
             .filter(gender__exact='M')
-        self.fields['wife'].queryset = \
-            Person.objects.filter(family__exact=self.instance.id)\
+            )
+        self.fields['wife'].queryset = (
+            Person.objects
+            .filter(family__exact=self.instance.id)
             .filter(gender__exact='F')
+            )
 
 
 def action_mark_current(modeladmin, request, queryset):
@@ -31,8 +35,7 @@ def action_unmark_current(modeladmin, request, queryset):
     for f in queryset.all():
         f.is_current = False
         f.save()
-action_unmark_current.short_description = \
-    'Mark selected families as not current'
+action_unmark_current.short_description = 'Mark selected families as not current'
 
 
 class FamilyAdmin(admin.ModelAdmin):

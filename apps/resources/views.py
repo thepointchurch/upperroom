@@ -38,9 +38,10 @@ class ResourceList(generic.ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        resources = Resource.published_objects\
-            .filter(parent__isnull=True)\
-            .exclude(tags__is_exclusive=True)
+        resources = (Resource.published_objects
+                     .filter(parent__isnull=True)
+                     .exclude(tags__is_exclusive=True)
+                     )
         if not self.request.user.is_authenticated():
             resources = resources.filter(is_private=False)
         return resources
@@ -97,8 +98,10 @@ class AttachmentView(generic.DetailView):
             return redirect_to_login(self.request.path)
 
         if getattr(default_storage, 'offload', False):
-            disposition = 'attachment; filename="%s%s"' % \
-                (attachment.clean_title, attachment.extension)
+            disposition = ('attachment; filename="%s%s"' % (
+                           attachment.clean_title,
+                           attachment.extension,
+                           ))
             response_headers = {
                 'response-content-disposition': disposition,
                 'response-content-type':        attachment.mime_type,

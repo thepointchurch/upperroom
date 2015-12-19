@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.http import Http404
 
-from resources.models import Resource, Tag
 from resources import views
+from resources.models import Resource, Tag
 
 
 class ResourceFallbackMiddleware(object):

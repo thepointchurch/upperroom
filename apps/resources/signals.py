@@ -1,6 +1,7 @@
 from django.apps import apps
-from resources.models import Tag
 from django.db.models.signals import post_migrate
+
+from resources.models import Tag
 
 
 def add_tags(sender, **kwargs):

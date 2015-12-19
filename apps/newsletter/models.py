@@ -1,13 +1,12 @@
 import fnmatch
-import magic
 import mimetypes
 import re
+from datetime import date, timedelta
 
+import magic
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext as _
-
-from datetime import date, timedelta
 
 
 def get_filename(instance, filename):

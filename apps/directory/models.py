@@ -96,6 +96,13 @@ class Family(models.Model):
 
 
 class Person(models.Model):
+    GENDER_MALE = 'M'
+    GENDER_FEMALE = 'F'
+    GENDER_CHOICES = (
+        (GENDER_MALE, 'Male'),
+        (GENDER_FEMALE, 'Female'),
+    )
+
     user = models.OneToOneField(settings.AUTH_USER_MODEL,
                                 null=True, blank=True,
                                 on_delete=models.SET_NULL)
@@ -106,7 +113,7 @@ class Person(models.Model):
     name = models.CharField(max_length=30)
     suffix = models.CharField(max_length=3, null=True, blank=True)
     gender = models.CharField(max_length=1,
-                              choices=(('M', 'Male'), ('F', 'Female')),
+                              choices=GENDER_CHOICES,
                               null=True, blank=True)
     birthday = models.DateField(null=True, blank=True)
     email = models.EmailField(null=True, blank=True)

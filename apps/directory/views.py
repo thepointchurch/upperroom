@@ -99,5 +99,8 @@ class BirthdayView(PrivateMixin, generic.ListView):
 
 class AnniversaryView(PrivateMixin, generic.ListView):
     template_name = 'directory/anniversary_list.html'
-    queryset = Family.current_objects.filter(anniversary__isnull=False)\
-        .filter(husband__isnull=False).filter(wife__isnull=False)
+    queryset = (Family.current_objects
+                .filter(anniversary__isnull=False)
+                .filter(husband__isnull=False)
+                .filter(wife__isnull=False)
+                )

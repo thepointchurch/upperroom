@@ -3,7 +3,6 @@ from urllib.parse import urlsplit
 from django.conf import settings
 from storages.backends.s3boto import S3BotoStorage
 
-
 _static_custom_domain = None
 if '.' in settings.STATICFILES_BUCKET:
     _static_custom_domain = settings.STATICFILES_BUCKET

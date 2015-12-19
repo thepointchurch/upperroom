@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
-import newsletter.models
 import datetime
+
+from django.db import migrations, models
+
+import newsletter.models
 
 
 class Migration(migrations.Migration):
@@ -21,7 +23,7 @@ class Migration(migrations.Migration):
                                         primary_key=True)),
                 ('date', models.DateField(default=datetime.date.today)),
                 ('slug', models.SlugField(editable=False)),
-                ('file', models.FileField(upload_to=newsletter.models.get_filename)),  # noqa
+                ('file', models.FileField(upload_to=newsletter.models.get_filename)),
                 ('mime_type', models.CharField(max_length=128,
                                                editable=False)),
                 ('description', models.TextField(null=True, blank=True)),
@@ -67,9 +69,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='issue',
             name='publication',
-            field=models.ForeignKey(related_name='issues',
-                                    default=newsletter.models.default_publication,  # noqa
-                                    to='newsletter.Publication',
-                                    unique_for_date='date'),
+            field=models.ForeignKey(
+                related_name='issues',
+                default=newsletter.models.default_publication,
+                to='newsletter.Publication',
+                unique_for_date='date',
+            ),
         ),
     ]

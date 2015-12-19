@@ -8,12 +8,27 @@ from django.template.loader import get_template
 
 from roster.models import Role
 
-
 _alert_interval = 3  # days
 
 
 def meeting_date():
     return date.today() + timedelta(days=_alert_interval)
+
+
+def _get_role_map(roles):
+    role_map = {}
+
+    for role in roles:
+        for person in role.people.all():
+            if not person.find_email():
+                continue
+
+            if person not in role_map.keys():
+                role_map[person] = []
+
+            role_map[person].append(role)
+
+    return role_map
 
 
 class Command(BaseCommand):
@@ -41,18 +56,8 @@ class Command(BaseCommand):
                 raise CommandError('Badly formatted date: %s' %
                                    options['date'])
 
-        roles = Role.objects.filter(meeting__date=d)\
-            .exclude(people__isnull=True)
-        role_map = {}
-        for role in roles:
-            for person in role.people.all():
-                if not person.find_email():
-                    continue
-
-                if person not in role_map.keys():
-                    role_map[person] = []
-
-                role_map[person].append(role)
+        role_map = _get_role_map(Role.objects.filter(meeting__date=d)
+                                             .exclude(people__isnull=True))
 
         backend = None
         if options['test']:

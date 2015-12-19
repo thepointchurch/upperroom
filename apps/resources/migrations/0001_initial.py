@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.db import models, migrations
+from django.db import migrations, models
+
 import resources.models
 
 
@@ -21,7 +22,7 @@ class Migration(migrations.Migration):
                                         primary_key=True)),
                 ('title', models.CharField(max_length=64)),
                 ('slug', models.SlugField()),
-                ('file', models.FileField(upload_to=resources.models.get_attachment_filename)),  # noqa
+                ('file', models.FileField(upload_to=resources.models.get_attachment_filename)),
                 ('mime_type', models.CharField(max_length=128,
                                                editable=False)),
                 ('kind', models.CharField(default='I',
