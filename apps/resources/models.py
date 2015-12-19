@@ -227,7 +227,10 @@ class Attachment(models.Model):
 def get_featured_items():
     featured_items = list(chain(
         Tag.featured_objects.all(),
-        Resource.featured_objects.filter(is_published=True, is_private=False)
+        (Resource.featured_objects
+         .filter(is_published=True, is_private=False)
+         .exclude(slug__in=Tag.featured_objects.values('slug'))
+         ),
     ))
     try:
         featured_items.sort(key=lambda X: X.priority)
