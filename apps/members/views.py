@@ -1,3 +1,4 @@
+import logging
 from datetime import date, timedelta
 
 from django.contrib import messages
@@ -10,12 +11,16 @@ from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse_lazy
 from django.db.models import Q
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
 from directory.models import Person
 from roster.models import Role
+
+
+logger = logging.getLogger(__name__)
 
 
 class IndexView(generic.TemplateView):
@@ -88,7 +93,25 @@ class CreateConfirmView(generic.edit.CreateView):
     def post(self, request, *args, **kwargs):
         person = get_object_or_404(
             Person, pk=self.kwargs.get(self.pk_url_kwarg, None))
+
+        try:
+            User.objects.get(username=request.POST['username'])
+            messages.error(request, _('A user with that username already exists.'))
+            return redirect(request.path)
+        except User.DoesNotExist:
+            pass
+
+        if request.POST['password1'] != request.POST['password2']:
+            messages.error(request, _("The two password fields didn't match."))
+            return redirect(request.path)
+
         result = super(CreateConfirmView, self).post(request, *args, **kwargs)
+
+        if not self.object:
+            logger.error('Error creating user %r' % self.object)
+            messages.error(request, _('An error occurred trying to create your account.'))
+            return redirect(request.path)
+
         person.user = self.object
         person.save()
 
@@ -97,6 +120,6 @@ class CreateConfirmView(generic.edit.CreateView):
         self.object.backend = 'django.contrib.auth.backends.ModelBackend'
         login(request, self.object)
 
-        messages.success(request, 'Your account has been set up.')
+        messages.success(request, _('Your account has been set up successfully.'))
 
         return result
