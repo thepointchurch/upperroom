@@ -9,7 +9,6 @@ div#body {
 h2, p, blockquote, ul, ol {
     margin: 10px;
     font-size: 16px;
-    font-weight: bold;
     text-align: right;
 }
 
@@ -32,7 +31,7 @@ div#body p {
 div#body blockquote p {
     color: rgb(192,0,0);
     font-family: "Times New Roman", serif;
-    font-weight: normal;
+    font-weight: bold;
 }
 
 div#body blockquote p.attrib {
