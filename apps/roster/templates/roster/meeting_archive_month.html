@@ -15,7 +15,7 @@
 {% else %} Next {% endif %}
 ]</p>
 
-{% for meeting in meeting_list %}
+{% for meeting in meeting_list|dictsort:"date" %}
 {% include "roster/meeting.html" %}
 {% endfor %}
 
