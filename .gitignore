@@ -3,8 +3,9 @@
 /db.sqlite3
 /media/
 /static/
-/.venv*/
+/.venv*
 /.env
+/.env_development/
 /.runit/
 /.nginx.conf
 /.gunicorn.socket
