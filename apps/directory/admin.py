@@ -2,6 +2,7 @@ from django import forms
 from django.contrib import admin
 
 from directory.models import Family, Person
+from directory.signals import family_updated
 
 
 class PersonInline(admin.TabularInline):
@@ -53,5 +54,9 @@ class FamilyAdmin(admin.ModelAdmin):
         ('Advanced options', {'classes': ('collapse',),
                               'fields': ('is_current',)}),
     )
+
+    def save_related(self, request, form, formsets, change):
+        super(FamilyAdmin, self).save_related(request, form, formsets, change)
+        family_updated.send(sender=form.instance.__class__, instance=form.instance)
 
 admin.site.register(Family, FamilyAdmin)

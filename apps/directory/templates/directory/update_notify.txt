@@ -1,0 +1,23 @@
+A family has been updated in the directory:
+
+{{ family.name }}
+
+Address: {{ family.street }}, {{ family.suburb }} {{ family.postcode }}
+Home:    {{ family.phone_home }}
+Mobile:  {{ family.phone_mobile }}
+Email:   {{ family.email }}
+{% if family.anniversary %}
+Anniversary: {{ family.anniversary|date:"j F, Y" }}
+{% endif %}{% for person in family.spouses.all %}
+{{ person.name_with_suffix }}
+  Birthday: {{ person.birthday|date:"j F, Y" }}
+  Mobile:   {{ person.phone_mobile }}
+  Work:     {{ person.phone_work }}
+  Email:    {{ person.email }}
+{% endfor %}{% for person in family.siblings.all %}
+{{ person.name_with_suffix }}
+  Birthday: {{ person.birthday|date:"j F, Y" }}
+  Mobile:   {{ person.phone_mobile }}
+  Work:     {{ person.phone_work }}
+  Email:    {{ person.email }}
+{% endfor %}

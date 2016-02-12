@@ -8,6 +8,7 @@ from django.views import generic
 
 from directory.forms import FamilyForm, PersonInlineFormSet
 from directory.models import Family, Person
+from directory.signals import family_updated
 
 
 class PrivateMixin(object):
@@ -87,6 +88,7 @@ class FamilyEditView(generic.edit.UpdateView):
             self.object = form.save()
             formset.instance = self.object
             formset.save()
+            family_updated.send(sender=self.object.__class__, instance=self.object)
             return redirect(self.get_success_url())
         else:
             return self.render_to_response(self.get_context_data(form=form))

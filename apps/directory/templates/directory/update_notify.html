@@ -1,0 +1,38 @@
+<html>
+<body>
+
+<p>A family has been updated in the directory:</p>
+
+<h3>{{ family.name }}</h3>
+
+<table style="width: 100%; table-layout: fixed;">
+<tr style="vertical-align: top;">
+<td>
+{% for person in family.spouses.all %}
+<p style="margin: 0"><strong>{{ person.name_with_suffix }}</strong>{% if person.birthday %}: {{ person.birthday|date:"j F" }}{% endif %}</p>
+{% endfor %}
+{% for person in family.siblings.all %}
+<p style="margin: 0"><strong>{{ person.name_with_suffix }}</strong>{% if person.birthday %}: {{ person.birthday|date:"j F" }}{% endif %}</p>
+{% endfor %}
+{% if family.anniversary %}<p>Anniversary: {{ family.anniversary|date:"j F, Y" }}</p>{% endif %}
+</td>
+<td>
+
+{% if family.street and family.suburb and family.postcode %}<p>{{ family.street }}<br />
+{{ family.suburb }} {{ family.postcode }}</p>{% endif %}
+{% if family.phone_home %}<p style="margin: 0">Home: {{ family.phone_home }}</p>{% endif %}
+{% if family.phone_mobile %}<p style="margin: 0">Mobile: {{ family.phone_mobile }}</p>{% endif %}
+
+{% for person in family.current_members.all %}{% if person.phone_mobile %}<p style="margin: 0">Mobile ({{ person.name }}): {{ person.phone_mobile }}</p>{% endif %}{% endfor %}
+{% for person in family.current_members.all %}{% if person.phone_work %}<p style="margin: 0">Work ({{ person.name }}): {{ person.phone_work }}</p>{% endif %}{% endfor %}
+
+{% if family.email %}<p style="margin: 0">Email: <a href="mailto:{{ family.email }}">{{ family.email }}</a></p>{% endif %}
+
+{% for person in family.current_members.all %}{% if person.email %}<p style="margin: 0">Email ({{ person.name }}): <a href="mailto:{{ person.email }}">{{ person.email }}</a></p>{% endif %}{% endfor %}
+
+</td>
+</tr>
+</table>
+
+</body>
+</html>
