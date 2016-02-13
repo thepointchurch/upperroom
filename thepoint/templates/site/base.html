@@ -14,8 +14,9 @@
 {% block stylesheets %}{% endblock stylesheets %}
 <link rel="stylesheet" type="text/css" href="{% static 'style/mobile.css' %}" media="(max-width: 640px)" />
 <link rel="shortcut icon" href="{% static 'style/icon.png' %}" />
-<link rel="home" href="/public_html/" />
-<link rel="index" href="/public_html/resources.php" />
+<link rel="home" href="/" />
+<link rel="index" href="/" />
+<link rel="license" href="{% url 'pages:copyright' %}" />
 </head>
 <body>
 
