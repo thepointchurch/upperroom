@@ -22,7 +22,7 @@
 
 {% if family.email %}<p>Email: <a href="mailto:{{ family.email }}">{{ family.email }}</a></p>{% endif %}
 
-{# Same for person email #}
+{% for person in family.current_members.all %}{% if person.email %}<p>Email ({{ person.name }}): <a href="mailto:{{ person.email }}">{{ person.email }}</a></p>{% endif %}{% endfor %}
 
 {% if false %}<td rowspan="2">
 <img src="" />
