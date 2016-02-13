@@ -66,17 +66,6 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name='issue',
-            name='publication',
-            field=models.ForeignKey(
-                default=newsletter.models.default_publication,
-                related_name='issues',
-                to='newsletter.Publication',
-                verbose_name='publication',
-                unique_for_date='date',
-            ),
-        ),
-        migrations.AlterField(
-            model_name='issue',
             name='slug',
             field=models.SlugField(
                 verbose_name='slug',
