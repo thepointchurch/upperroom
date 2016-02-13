@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.db import models
 from django.forms.widgets import Textarea
+from django.utils.translation import ugettext_lazy as _
 
 from resources.models import Attachment, Resource, Tag
 
@@ -13,11 +14,11 @@ class TagAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {'fields': ('name', 'slug', 'description')}),
-        ('Featured', {'classes': ('collapse',),
-                      'fields': ('priority',)}),
-        ('Advanced', {'classes': ('collapse',),
-                      'fields': ('resources_per_page', 'reverse_order',
-                                 'show_date', 'is_exclusive')}),
+        (_('Featured'), {'classes': ('collapse',),
+                         'fields': ('priority',)}),
+        (_('Advanced'), {'classes': ('collapse',),
+                         'fields': ('resources_per_page', 'reverse_order',
+                                    'show_date', 'is_exclusive')}),
     )
 
 
@@ -35,22 +36,22 @@ class AttachmentInline(admin.TabularInline):
 
 def action_publish(modeladmin, request, queryset):
     queryset.update(is_published=True)
-action_publish.short_description = 'Publish selected resources'
+action_publish.short_description = _('Publish selected resources')
 
 
 def action_unpublish(modeladmin, request, queryset):
     queryset.update(is_published=False)
-action_unpublish.short_description = 'Unpublish selected resources'
+action_unpublish.short_description = _('Unpublish selected resources')
 
 
 def action_mark_private(modeladmin, request, queryset):
     queryset.update(is_private=True)
-action_mark_private.short_description = 'Mark selected resources as private'
+action_mark_private.short_description = _('Mark selected resources as private')
 
 
 def action_mark_public(modeladmin, request, queryset):
     queryset.update(is_private=False)
-action_mark_public.short_description = 'Mark selected resources as public'
+action_mark_public.short_description = _('Mark selected resources as public')
 
 
 class ResourceAdmin(admin.ModelAdmin):
@@ -64,15 +65,15 @@ class ResourceAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {'fields': ('title', 'slug', 'description', 'body')}),
-        ('Tags', {'classes': ('collapse',),
-                  'fields': ('tags',)}),
-        ('Author', {'classes': ('collapse',),
-                    'fields': ('author', 'show_author')}),
-        ('Featured', {'classes': ('collapse',),
-                      'fields': ('priority',)}),
-        ('Advanced', {'classes': ('collapse',),
-                      'fields': ('is_published', 'is_private', 'show_date',
-                                 'parent')}),
+        (_('Tags'), {'classes': ('collapse',),
+                     'fields': ('tags',)}),
+        (_('Author'), {'classes': ('collapse',),
+                       'fields': ('author', 'show_author')}),
+        (_('Featured'), {'classes': ('collapse',),
+                         'fields': ('priority',)}),
+        (_('Advanced'), {'classes': ('collapse',),
+                         'fields': ('is_published', 'is_private', 'show_date',
+                                    'parent')}),
     )
 
 admin.site.register(Tag, TagAdmin)

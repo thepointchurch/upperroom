@@ -2,17 +2,18 @@ from datetime import time
 
 from django.apps import apps
 from django.db.models.signals import post_migrate
+from django.utils.translation import ugettext_lazy as _
 
 from roster.models import Location, RoleType
 
 
 def default_locations(sender, **kwargs):
-    Location.objects.get_or_create(name='Gold Coast')
-    Location.objects.get_or_create(name='Maryborough')
-    Location.objects.get_or_create(name='Morayfield')
-    Location.objects.get_or_create(name='Sunshine Coast')
-    Location.objects.get_or_create(name='Warwick')
-    Location.objects.get_or_create(name='Wynnum')
+    Location.objects.get_or_create(name=_('Gold Coast'))
+    Location.objects.get_or_create(name=_('Maryborough'))
+    Location.objects.get_or_create(name=_('Morayfield'))
+    Location.objects.get_or_create(name=_('Sunshine Coast'))
+    Location.objects.get_or_create(name=_('Warwick'))
+    Location.objects.get_or_create(name=_('Wynnum'))
 
 
 def _ensure_role_type(name, verb, order, start_time, end_time):
@@ -26,68 +27,68 @@ def _ensure_role_type(name, verb, order, start_time, end_time):
 
 
 def default_roletypes(sender, **kwargs):
-    _ensure_role_type(name='Lesson',
-                      verb='bring the lesson',
+    _ensure_role_type(name=_('Lesson'),
+                      verb=_('bring the lesson'),
                       order=10,
                       start_time=time(9, 30),
                       end_time=time(10, 0))
 
-    _ensure_role_type(name="Kid's Time",
-                      verb="lead Kid's Time",
+    _ensure_role_type(name=_("Kid's Time"),
+                      verb=_("lead Kid's Time"),
                       order=20,
                       start_time=time(9, 30),
                       end_time=time(9, 45))
 
-    _ensure_role_type(name='Focus Theme',
-                      verb='lead the Focus Theme',
+    _ensure_role_type(name=_('Focus Theme'),
+                      verb=_('lead the Focus Theme'),
                       order=30,
                       start_time=time(9, 45),
                       end_time=time(10, 0))
 
-    _ensure_role_type(name='Singing',
-                      verb='lead the singing',
+    _ensure_role_type(name=_('Singing'),
+                      verb=_('lead the singing'),
                       order=40,
                       start_time=time(11, 15),
                       end_time=time(11, 30))
 
-    _ensure_role_type(name='Communion',
-                      verb='lead Communion',
+    _ensure_role_type(name=_('Communion'),
+                      verb=_('lead Communion'),
                       order=50,
                       start_time=time(11, 30),
                       end_time=time(11, 45))
 
-    _ensure_role_type(name='Assisting Communion',
-                      verb='assist with Communion',
+    _ensure_role_type(name=_('Assisting Communion'),
+                      verb=_('assist with Communion'),
                       order=60,
                       start_time=time(11, 30),
                       end_time=time(11, 45))
 
-    _ensure_role_type(name='News Sharing',
-                      verb='lead the announcements',
+    _ensure_role_type(name=_('News Sharing'),
+                      verb=_('lead the announcements'),
                       order=70,
                       start_time=time(11, 45),
                       end_time=time(12, 0))
 
-    _ensure_role_type(name='Benediction',
-                      verb='offer the benediction',
+    _ensure_role_type(name=_('Benediction'),
+                      verb=_('offer the benediction'),
                       order=80,
                       start_time=time(11, 45),
                       end_time=time(12, 0))
 
-    _ensure_role_type(name='Guest Teaching',
-                      verb='be the guest teacher',
+    _ensure_role_type(name=_('Guest Teaching'),
+                      verb=_('be the guest teacher'),
                       order=90,
                       start_time=time(9, 30),
                       end_time=time(11, 30))
 
-    _ensure_role_type(name='Bible Study',
-                      verb='lead the Bible study',
+    _ensure_role_type(name=_('Bible Study'),
+                      verb=_('lead the Bible study'),
                       order=100,
                       start_time=time(19, 30),
                       end_time=time(20, 30))
 
-    _ensure_role_type(name='Setup/Pack Up',
-                      verb='assist with the set up and pack up',
+    _ensure_role_type(name=_('Setup/Pack Up'),
+                      verb=_('assist with the set up and pack up'),
                       order=110,
                       start_time=time(11, 45),
                       end_time=time(12, 0))

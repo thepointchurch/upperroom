@@ -6,7 +6,7 @@ from datetime import date, timedelta
 import magic
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 
 
 def get_filename(instance, filename):
@@ -31,17 +31,41 @@ class Publication(models.Model):
         ('6', _('Sunday')),
     )
 
-    slug = models.SlugField(unique=True)
-    name = models.CharField(max_length=64)
-    description = models.TextField(null=True, blank=True)
-    mime_types = models.CharField(max_length=256, null=True, blank=True)
-    is_private = models.BooleanField(default=False, verbose_name='Private')
-    publication_day = models.CharField(max_length=1, choices=DAYS_OF_WEEK,
-                                       null=True, blank=True)
+    slug = models.SlugField(
+        unique=True,
+        verbose_name=_('slug'),
+    )
+    name = models.CharField(
+        max_length=64,
+        verbose_name=_('name'),
+    )
+    description = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name=_('description'),
+    )
+    mime_types = models.CharField(
+        max_length=256,
+        null=True,
+        blank=True,
+        verbose_name=_('MIME types'),
+    )
+    is_private = models.BooleanField(
+        default=False,
+        verbose_name=_('private'),
+    )
+    publication_day = models.CharField(
+        max_length=1,
+        choices=DAYS_OF_WEEK,
+        null=True,
+        blank=True,
+        verbose_name=_('publication day'),
+    )
 
     class Meta:
         ordering = ['name']
-        verbose_name_plural = 'publications'
+        verbose_name = _('publication')
+        verbose_name_plural = _('publications')
 
     def __str__(self):
         return self.name
@@ -69,20 +93,42 @@ class Publication(models.Model):
 
 
 class Issue(models.Model):
-    date = models.DateField(default=date.today)
-    slug = models.SlugField(editable=False)
-    file = models.FileField(upload_to=get_filename)
-    mime_type = models.CharField(max_length=128, editable=False)
-    description = models.TextField(null=True, blank=True)
+    date = models.DateField(
+        default=date.today,
+        verbose_name=_('date'),
+    )
+    slug = models.SlugField(
+        editable=False,
+        verbose_name=_('slug'),
+    )
+    file = models.FileField(
+        upload_to=get_filename,
+        verbose_name=_('file'),
+    )
+    mime_type = models.CharField(
+        max_length=128,
+        editable=False,
+        verbose_name=_('MIME type'),
+    )
+    description = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name=_('description'),
+    )
 
-    publication = models.ForeignKey(Publication, related_name='issues',
-                                    unique_for_date='date',
-                                    default=default_publication)
+    publication = models.ForeignKey(
+        Publication,
+        related_name='issues',
+        unique_for_date='date',
+        default=default_publication,
+        verbose_name=_('publication'),
+    )
 
     class Meta:
         ordering = ['-date']
         get_latest_by = 'date'
-        verbose_name_plural = 'issues'
+        verbose_name = _('issue')
+        verbose_name_plural = _('issues')
 
     def __str__(self):
         return str(self.date)

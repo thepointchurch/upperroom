@@ -55,7 +55,7 @@ def password_change(request, *args, **kwargs):
     result = dist_password_change(request, *args, **kwargs)
     if result.__class__ == HttpResponseRedirect:
         messages.success(request,
-                         'Your password has been changed successfully.')
+                         _('Your password has been changed successfully.'))
     return result
 
 

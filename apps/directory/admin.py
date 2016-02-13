@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib import admin
+from django.utils.translation import ugettext_lazy as _
 
 from directory.models import Family, Person
 from directory.signals import family_updated
@@ -29,14 +30,14 @@ def action_mark_current(modeladmin, request, queryset):
     for f in queryset.all():
         f.is_current = True
         f.save()
-action_mark_current.short_description = 'Mark selected families as current'
+action_mark_current.short_description = _('Mark selected families as current')
 
 
 def action_unmark_current(modeladmin, request, queryset):
     for f in queryset.all():
         f.is_current = False
         f.save()
-action_unmark_current.short_description = 'Mark selected families as not current'
+action_unmark_current.short_description = _('Mark selected families as not current')
 
 
 class FamilyAdmin(admin.ModelAdmin):
@@ -48,11 +49,11 @@ class FamilyAdmin(admin.ModelAdmin):
 
     fieldsets = (
         (None, {'fields': ('name',)}),
-        ('Address', {'fields': ('street', 'suburb', 'postcode')}),
-        ('Contact', {'fields': ('email', 'phone_home', 'phone_mobile')}),
-        ('Marriage', {'fields': ('anniversary', 'husband', 'wife')}),
-        ('Advanced options', {'classes': ('collapse',),
-                              'fields': ('is_current',)}),
+        (_('Address'), {'fields': ('street', 'suburb', 'postcode')}),
+        (_('Contact'), {'fields': ('email', 'phone_home', 'phone_mobile')}),
+        (_('Marriage'), {'fields': ('anniversary', 'husband', 'wife')}),
+        (_('Advanced options'), {'classes': ('collapse',),
+                                 'fields': ('is_current',)}),
     )
 
     def save_related(self, request, form, formsets, change):

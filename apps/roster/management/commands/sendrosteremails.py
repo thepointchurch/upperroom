@@ -1,10 +1,12 @@
 from datetime import date, datetime, timedelta
 from optparse import make_option
 
+from django.conf import settings
 from django.core import mail
 from django.core.management.base import BaseCommand, CommandError
 from django.template import Context
 from django.template.loader import get_template
+from django.utils.translation import ugettext_lazy as _
 
 from roster.models import Role
 
@@ -32,18 +34,18 @@ def _get_role_map(roles):
 
 
 class Command(BaseCommand):
-    help = '''Send notification emails for a coming meeting.'''
+    help = _('Send notification emails for a coming meeting.')
 
     option_list = BaseCommand.option_list + (
         make_option('-d', '--date',
                     dest='date',
                     default=meeting_date(),
-                    help='The meeting date to send notifications for'),
+                    help=_('The meeting date to send notifications for')),
         make_option('--test',
                     action='store_true',
                     dest='test',
                     default=False,
-                    help='Send emails to the console only'),
+                    help=_('Send emails to the console only')),
         )
 
     def handle(self, *args, **options):
@@ -70,13 +72,15 @@ class Command(BaseCommand):
 
         for person, roles in role_map.items():
             messages.append(mail.EmailMessage(
-                'The Point Roster Notification',
+                _('%(site)s Roster Notification') % {
+                    'site': settings.SITE_NAME
+                },
                 get_template('roster/reminder.txt').render(Context({
                     'person': person,
                     'date': d,
                     'role_list': roles,
                 })),
-                'webmaster@thepoint.org.au',
+                settings.DEFAULT_FROM_EMAIL,
                 [person.find_email()], connection=connection))
 
         connection.send_messages(messages)

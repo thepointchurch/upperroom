@@ -3,6 +3,7 @@ from datetime import date
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
 
 class CurrentManager(models.Manager):
@@ -12,30 +13,77 @@ class CurrentManager(models.Manager):
 
 
 class Family(models.Model):
-    name = models.CharField(max_length=30)
-    phone_home = models.CharField(max_length=15, null=True, blank=True,
-                                  verbose_name='Home Phone')
-    phone_mobile = models.CharField(max_length=15, null=True, blank=True,
-                                    verbose_name='Mobile Phone')
-    email = models.EmailField(null=True, blank=True)
-    street = models.CharField(max_length=128, null=True, blank=True)
-    suburb = models.CharField(max_length=32, null=True, blank=True)
-    postcode = models.CharField(max_length=6, null=True, blank=True)
-    is_current = models.BooleanField(default=True,
-                                     verbose_name='Current')
+    name = models.CharField(
+        max_length=30,
+        verbose_name=_('name'),
+    )
+    phone_home = models.CharField(
+        max_length=15,
+        null=True,
+        blank=True,
+        verbose_name=_('home phone'),
+    )
+    phone_mobile = models.CharField(
+        max_length=15,
+        null=True,
+        blank=True,
+        verbose_name=_('mobile phone'),
+    )
+    email = models.EmailField(
+        null=True,
+        blank=True,
+        verbose_name=_('email'),
+    )
+    street = models.CharField(
+        max_length=128,
+        null=True,
+        blank=True,
+        verbose_name=_('street'),
+    )
+    suburb = models.CharField(
+        max_length=32,
+        null=True,
+        blank=True,
+        verbose_name=_('suburb'),
+    )
+    postcode = models.CharField(
+        max_length=6,
+        null=True,
+        blank=True,
+        verbose_name=_('postcode'),
+    )
+    is_current = models.BooleanField(
+        default=True,
+        verbose_name=_('current'),
+    )
 
-    husband = models.ForeignKey('Person', null=True, blank=True,
-                                related_name='+')
-    wife = models.ForeignKey('Person', null=True, blank=True,
-                             related_name='+')
-    anniversary = models.DateField(null=True, blank=True)
+    husband = models.ForeignKey(
+        'Person',
+        null=True,
+        blank=True,
+        related_name='+',
+        verbose_name=_('husband'),
+    )
+    wife = models.ForeignKey(
+        'Person',
+        null=True,
+        blank=True,
+        related_name='+',
+        verbose_name=_('wife'),
+    )
+    anniversary = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name=_('anniversary'),
+    )
 
     objects = models.Manager()
     current_objects = CurrentManager()
 
     class Meta:
         ordering = ['name']
-        verbose_name_plural = 'families'
+        verbose_name = _('family')
+        verbose_name_plural = _('families')
 
     def __str__(self):
         members = []
@@ -99,37 +147,84 @@ class Person(models.Model):
     GENDER_MALE = 'M'
     GENDER_FEMALE = 'F'
     GENDER_CHOICES = (
-        (GENDER_MALE, 'Male'),
-        (GENDER_FEMALE, 'Female'),
+        (GENDER_MALE, _('Male')),
+        (GENDER_FEMALE, _('Female')),
     )
 
-    user = models.OneToOneField(settings.AUTH_USER_MODEL,
-                                null=True, blank=True,
-                                on_delete=models.SET_NULL)
-    family = models.ForeignKey(Family, related_name='members')
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        verbose_name=_('user'),
+    )
+    family = models.ForeignKey(
+        Family,
+        related_name='members',
+        verbose_name=_('family'),
+    )
 
-    order = models.SmallIntegerField(null=True, blank=True)
+    order = models.SmallIntegerField(
+        null=True,
+        blank=True,
+        verbose_name=_('order'),
+    )
 
-    name = models.CharField(max_length=30)
-    suffix = models.CharField(max_length=3, null=True, blank=True)
-    gender = models.CharField(max_length=1,
-                              choices=GENDER_CHOICES,
-                              null=True, blank=True)
-    birthday = models.DateField(null=True, blank=True)
-    email = models.EmailField(null=True, blank=True)
-    phone_mobile = models.CharField(max_length=15, null=True, blank=True,
-                                    verbose_name='Mobile Phone')
-    phone_work = models.CharField(max_length=15, null=True, blank=True,
-                                  verbose_name='Work Phone')
-    is_member = models.BooleanField(default=True, verbose_name='Member')
-    is_current = models.BooleanField(default=True, verbose_name='Current')
+    name = models.CharField(
+        max_length=30,
+        verbose_name=_('name'),
+    )
+    suffix = models.CharField(
+        max_length=3,
+        null=True,
+        blank=True,
+        verbose_name=_('suffix'),
+    )
+    gender = models.CharField(
+        max_length=1,
+        choices=GENDER_CHOICES,
+        null=True,
+        blank=True,
+        verbose_name=_('gender'),
+    )
+    birthday = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name=_('birthday'),
+    )
+    email = models.EmailField(
+        null=True,
+        blank=True,
+        verbose_name=_('email'),
+    )
+    phone_mobile = models.CharField(
+        max_length=15,
+        null=True,
+        blank=True,
+        verbose_name=_('mobile phone'),
+    )
+    phone_work = models.CharField(
+        max_length=15,
+        null=True,
+        blank=True,
+        verbose_name=_('work phone'),
+    )
+    is_member = models.BooleanField(
+        default=True,
+        verbose_name=_('member'),
+    )
+    is_current = models.BooleanField(
+        default=True,
+        verbose_name=_('current'),
+    )
 
     objects = models.Manager()
     current_objects = CurrentManager()
 
     class Meta:
         ordering = ['order', 'id', 'name']   # I wish there was a better way
-        verbose_name_plural = 'people'
+        verbose_name = _('person')
+        verbose_name_plural = _('people')
 
     def __str__(self):
         return self.fullname

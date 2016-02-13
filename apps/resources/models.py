@@ -15,9 +15,11 @@ logger = logging.getLogger(__name__)
 
 class FeaturedMixin(models.Model):
     priority = models.PositiveSmallIntegerField(
-        null=True, blank=True,
+        null=True,
+        blank=True,
         help_text=_('A non-empty value will feature this item '
-                    'in the main menu.'))
+                    'in the main menu.'),
+    )
 
     class Meta:
         abstract = True
@@ -34,26 +36,48 @@ class FeaturedManager(models.Manager):
 
 
 class Tag(FeaturedMixin, models.Model):
-    name = models.CharField(max_length=64)
-    slug = models.SlugField(unique=True)
-    description = models.TextField(null=True, blank=True)
+    name = models.CharField(
+        max_length=64,
+        verbose_name=_('name'),
+    )
+    slug = models.SlugField(
+        unique=True,
+        verbose_name=_('slug'),
+    )
+    description = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name=_('description'),
+    )
 
-    resources_per_page = models.PositiveSmallIntegerField(default=10,
-                                                          null=True,
-                                                          blank=True)
-    reverse_order = models.BooleanField(default=False)
-    show_date = models.BooleanField(default=True)
+    resources_per_page = models.PositiveSmallIntegerField(
+        default=10,
+        null=True,
+        blank=True,
+        verbose_name=_('resources per page'),
+    )
+    reverse_order = models.BooleanField(
+        default=False,
+        verbose_name=_('reverse order'),
+    )
+    show_date = models.BooleanField(
+        default=True,
+        verbose_name=_('show date'),
+    )
 
     # Items with an exclusive tag only appear when searching for this tag.
-    is_exclusive = models.BooleanField(default=False,
-                                       verbose_name='Exclusive')
+    is_exclusive = models.BooleanField(
+        default=False,
+        verbose_name=_('exclusive'),
+    )
 
     objects = models.Manager()
     featured_objects = FeaturedManager()
 
     class Meta:
         ordering = ['name']
-        verbose_name_plural = 'tags'
+        verbose_name = _('tag')
+        verbose_name_plural = _('tags')
 
     def __str__(self):
         return self.name
@@ -80,27 +104,73 @@ class PublishedManager(models.Manager):
 
 
 class Resource(FeaturedMixin, models.Model):
-    title = models.CharField(max_length=64)
-    slug = models.SlugField(unique=True)
-    description = models.TextField(null=True, blank=True)
-    body = models.TextField(null=True, blank=True)
+    title = models.CharField(
+        max_length=64,
+        verbose_name=_('title'),
+    )
+    slug = models.SlugField(
+        unique=True,
+        verbose_name=_('slug'),
+    )
+    description = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name=_('description'),
+    )
+    body = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name=_('body'),
+    )
 
-    tags = models.ManyToManyField(Tag, blank=True,
-                                  related_name='resources')
+    tags = models.ManyToManyField(
+        Tag,
+        blank=True,
+        related_name='resources',
+        verbose_name=_('tags'),
+    )
 
-    author = models.ForeignKey(Person, null=True, blank=True,
-                               related_name='resources')
-    show_author = models.BooleanField(default=True)
+    author = models.ForeignKey(
+        Person,
+        null=True,
+        blank=True,
+        related_name='resources',
+        verbose_name=_('author'),
+    )
+    show_author = models.BooleanField(
+        default=True,
+        verbose_name=_('show author'),
+    )
 
-    parent = models.ForeignKey('self', null=True, blank=True,
-                               related_name='children')
+    parent = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        related_name='children',
+        verbose_name=_('parent'),
+    )
 
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
-    show_date = models.BooleanField(default=True)
+    created = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name=_('created'),
+    )
+    modified = models.DateTimeField(
+        auto_now=True,
+        verbose_name=_('modified'),
+    )
+    show_date = models.BooleanField(
+        default=True,
+        verbose_name=_('show date'),
+    )
 
-    is_published = models.BooleanField(default=False, verbose_name='Published')
-    is_private = models.BooleanField(default=False, verbose_name='Private')
+    is_published = models.BooleanField(
+        default=False,
+        verbose_name=_('published'),
+    )
+    is_private = models.BooleanField(
+        default=False,
+        verbose_name=_('private'),
+    )
 
     objects = models.Manager()
     published_objects = PublishedManager()
@@ -109,7 +179,8 @@ class Resource(FeaturedMixin, models.Model):
     class Meta:
         ordering = ['created']
         get_latest_by = 'created'
-        verbose_name_plural = 'resources'
+        verbose_name = _('resource')
+        verbose_name_plural = _('resources')
 
     def __str__(self):
         return self.title
@@ -157,8 +228,8 @@ class Attachment(models.Model):
     KIND_ALTERNATE = 'A'
     KIND_INLINE = 'I'
     KIND_CHOICES = (
-        (KIND_ALTERNATE, 'Alternate'),
-        (KIND_INLINE, 'Inline'),
+        (KIND_ALTERNATE, _('Alternate')),
+        (KIND_INLINE, _('Inline')),
     )
 
     _utf_translate = str.maketrans(
@@ -166,19 +237,45 @@ class Attachment(models.Model):
         '-""'
     )
 
-    title = models.CharField(max_length=64)
-    slug = models.SlugField(db_index=True)
-    file = models.FileField(upload_to=get_attachment_filename)
-    mime_type = models.CharField(max_length=128, editable=False)
-    kind = models.CharField(max_length=1, choices=KIND_CHOICES,
-                            default=KIND_INLINE)
-    description = models.TextField(null=True, blank=True)
-    resource = models.ForeignKey(Resource, related_name='attachments')
+    title = models.CharField(
+        max_length=64,
+        verbose_name=_('title'),
+    )
+    slug = models.SlugField(
+        db_index=True,
+        verbose_name=_('slug'),
+    )
+    file = models.FileField(
+        upload_to=get_attachment_filename,
+        verbose_name=_('file'),
+    )
+    mime_type = models.CharField(
+        max_length=128,
+        editable=False,
+        verbose_name=_('MIME type'),
+    )
+    kind = models.CharField(
+        max_length=1,
+        choices=KIND_CHOICES,
+        default=KIND_INLINE,
+        verbose_name=_('kind'),
+    )
+    description = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name=_('description'),
+    )
+    resource = models.ForeignKey(
+        Resource,
+        related_name='attachments',
+        verbose_name=_('resource'),
+    )
 
     class Meta:
         ordering = ['resource']
-        verbose_name_plural = 'attachments'
         unique_together = ('resource', 'slug')
+        verbose_name = _('attachment')
+        verbose_name_plural = _('attachments')
 
     def __str__(self):
         return self.title
