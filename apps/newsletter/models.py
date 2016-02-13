@@ -17,7 +17,7 @@ def get_filename(instance, filename):
 
 
 def default_publication():
-    return Publication.objects.first()
+    return Publication.objects.first().pk
 
 
 class Publication(models.Model):
