@@ -17,7 +17,10 @@ def get_filename(instance, filename):
 
 
 def default_publication():
-    return Publication.objects.first().pk
+    try:
+        return Publication.objects.first().pk
+    except:
+        return None
 
 
 class Publication(models.Model):
