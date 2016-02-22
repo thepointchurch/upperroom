@@ -24,4 +24,7 @@ urlpatterns = patterns('',
                        url(r'^anniversaries$',
                            views.AnniversaryView.as_view(),
                            name='anniversaries'),
+                       url(r'^pdf$',
+                           views.PdfView.as_view(),
+                           name='pdf'),
                        )

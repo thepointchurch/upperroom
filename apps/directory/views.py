@@ -1,9 +1,12 @@
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.files.storage import default_storage
 from django.db.models import Q
-from django.http import Http404
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext as _
 from django.views import generic
 
 from directory.forms import FamilyForm, PersonInlineFormSet
@@ -106,3 +109,22 @@ class AnniversaryView(PrivateMixin, generic.ListView):
                 .filter(husband__isnull=False)
                 .filter(wife__isnull=False)
                 )
+
+
+class PdfView(PrivateMixin, generic.View):
+    def get(self, request, *args, **kwargs):
+        title = _('%(site)s Directory') % {'site': settings.SITE_NAME}
+        if getattr(default_storage, 'offload', False):
+            disposition = 'attachment; filename="%s.pdf"' % title
+            response_headers = {
+                'response-content-disposition': disposition,
+                'response-content-type':        'application/pdf',
+            }
+            response = HttpResponseRedirect(
+                default_storage.url('directory/directory.pdf',
+                                    response_headers=response_headers))
+        else:
+            fsock = open('%s/directory/directory.pdf' % settings.MEDIA_ROOT, 'rb')
+            response = HttpResponse(fsock, content_type='application/pdf')
+            response['Content-Disposition'] = ('attachment; filename="%s.pdf"' % title)
+        return response
