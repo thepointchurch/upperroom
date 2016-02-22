@@ -10,6 +10,12 @@ class PersonInline(admin.TabularInline):
     model = Person
     extra = 1
 
+    def formfield_for_dbfield(self, db_field, **kwargs):
+        field = super(PersonInline, self).formfield_for_dbfield(db_field, **kwargs)
+        if db_field.name == 'suffix':
+            field.widget.attrs['style'] = 'width: 5em;'
+        return field
+
 
 class FamilyForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
