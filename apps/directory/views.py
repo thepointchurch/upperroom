@@ -1,11 +1,10 @@
 from django.conf import settings
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.storage import default_storage
 from django.db.models import Q
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
-from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext as _
 from django.views import generic
 
@@ -14,18 +13,12 @@ from directory.models import Family, Person
 from directory.signals import family_updated
 
 
-class PrivateMixin(object):
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(PrivateMixin, self).dispatch(*args, **kwargs)
-
-
-class IndexView(PrivateMixin, generic.ListView):
+class IndexView(LoginRequiredMixin, generic.ListView):
     template_name = 'directory/index.html'
     queryset = Family.current_objects.all()
 
 
-class LetterView(PrivateMixin, generic.ListView):
+class LetterView(LoginRequiredMixin, generic.ListView):
     model = Family
     template_name = 'directory/family_letter.html'
 
@@ -34,11 +27,11 @@ class LetterView(PrivateMixin, generic.ListView):
         return Family.current_objects.filter(name__istartswith=self.letter)
 
 
-class DetailView(PrivateMixin, generic.DetailView):
+class DetailView(LoginRequiredMixin, generic.DetailView):
     model = Family
 
 
-class SearchView(PrivateMixin, generic.ListView):
+class SearchView(LoginRequiredMixin, generic.ListView):
     model = Family
     template_name = 'directory/family_search.html'
 
@@ -60,7 +53,7 @@ class SearchView(PrivateMixin, generic.ListView):
                 ).distinct()
 
 
-class FamilyEditView(generic.edit.UpdateView):
+class FamilyEditView(LoginRequiredMixin, generic.edit.UpdateView):
     model = Family
     form_class = FamilyForm
 
@@ -97,12 +90,12 @@ class FamilyEditView(generic.edit.UpdateView):
             return self.render_to_response(self.get_context_data(form=form))
 
 
-class BirthdayView(PrivateMixin, generic.ListView):
+class BirthdayView(LoginRequiredMixin, generic.ListView):
     template_name = 'directory/birthday_list.html'
     queryset = Person.current_objects.all().exclude(birthday__isnull=True)
 
 
-class AnniversaryView(PrivateMixin, generic.ListView):
+class AnniversaryView(LoginRequiredMixin, generic.ListView):
     template_name = 'directory/anniversary_list.html'
     queryset = (Family.current_objects
                 .filter(anniversary__isnull=False)
@@ -111,7 +104,7 @@ class AnniversaryView(PrivateMixin, generic.ListView):
                 )
 
 
-class PdfView(PrivateMixin, generic.View):
+class PdfView(LoginRequiredMixin, generic.View):
     def get(self, request, *args, **kwargs):
         title = _('%(site)s Directory') % {'site': settings.SITE_NAME}
         if getattr(default_storage, 'offload', False):

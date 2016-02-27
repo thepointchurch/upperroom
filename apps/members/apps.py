@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 
 
-class MembersAppConfig(AppConfig):
+class MembersConfig(AppConfig):
     name = 'members'
 
     def ready(self):

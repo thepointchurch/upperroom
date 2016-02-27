@@ -109,6 +109,7 @@ class Role(models.Model):
 
     meeting = models.ForeignKey(
         Meeting,
+        on_delete=models.CASCADE,
         related_name='roles',
         verbose_name=_('meeting'),
     )
@@ -128,6 +129,7 @@ class Role(models.Model):
     )
     role = models.ForeignKey(
         RoleType,
+        on_delete=models.PROTECT,
         related_name='roles',
         verbose_name=_('role'),
     )
@@ -141,6 +143,7 @@ class Role(models.Model):
         Location,
         null=True,
         blank=True,
+        on_delete=models.PROTECT,
         related_name='roles',
         verbose_name=_('location'),
     )

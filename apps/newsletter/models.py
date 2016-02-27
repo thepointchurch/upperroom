@@ -121,6 +121,7 @@ class Issue(models.Model):
 
     publication = models.ForeignKey(
         Publication,
+        on_delete=models.PROTECT,
         related_name='issues',
         unique_for_date='date',
         default=default_publication,

@@ -3,7 +3,8 @@ from datetime import date, timedelta
 
 from django.contrib import messages
 from django.contrib.auth import login, logout
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.views import password_change as dist_password_change
@@ -12,7 +13,6 @@ from django.core.urlresolvers import reverse_lazy
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
-from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
@@ -23,12 +23,8 @@ from roster.models import Role
 logger = logging.getLogger(__name__)
 
 
-class IndexView(generic.TemplateView):
+class IndexView(LoginRequiredMixin, generic.TemplateView):
     template_name = 'members/index.html'
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(IndexView, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
@@ -59,13 +55,9 @@ def password_change(request, *args, **kwargs):
     return result
 
 
-class CreateView(generic.ListView):
+class CreateView(LoginRequiredMixin, generic.ListView):
     model = Person
     template_name = 'members/create_search.html'
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(CreateView, self).dispatch(*args, **kwargs)
 
     def get_queryset(self):
         self.query = self.request.GET.get('query', '')
@@ -78,7 +70,7 @@ class CreateView(generic.ListView):
                 Q(family__name__icontains=self.query)).distinct()
 
 
-class CreateConfirmView(generic.edit.CreateView):
+class CreateConfirmView(LoginRequiredMixin, generic.edit.CreateView):
     model = User
     form_class = UserCreationForm
     template_name = 'members/create_form.html'

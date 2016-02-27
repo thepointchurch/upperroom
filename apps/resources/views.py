@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.files.storage import default_storage
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
@@ -47,17 +48,19 @@ class ResourceList(generic.ListView):
         return resources
 
 
-class PermissionRequired(Exception):
-    pass
-
-
 class RedirectToAttachment(Exception):
     def __init__(self, attachment):
         super(RedirectToAttachment, self).__init__(str(attachment))
         self.attachment = attachment
 
 
-class ResourceDetail(generic.DetailView):
+class ResourcePermissionMixin(UserPassesTestMixin):
+    def test_func(self):
+        obj = self.get_object()
+        return not obj.is_private or self.request.user.is_authenticated()
+
+
+class ResourceDetail(ResourcePermissionMixin, generic.DetailView):
     model = Resource
 
     def get_queryset(self):
@@ -65,8 +68,6 @@ class ResourceDetail(generic.DetailView):
 
     def get_object(self, **kwargs):
         obj = super(ResourceDetail, self).get_object(**kwargs)
-        if obj.is_private and not self.request.user.is_authenticated():
-            raise PermissionRequired('Resource is private')
         if not obj.body and obj.attachments.count() == 1:
             raise RedirectToAttachment(obj.attachments.first())
         return obj
@@ -74,28 +75,15 @@ class ResourceDetail(generic.DetailView):
     def dispatch(self, *args, **kwargs):
         try:
             return super(ResourceDetail, self).dispatch(*args, **kwargs)
-        except PermissionRequired:
-            from django.contrib.auth.views import redirect_to_login
-            return redirect_to_login(self.request.path)
         except RedirectToAttachment as e:
             return redirect('resources:attachment', pk=e.attachment.id)
 
 
-class AttachmentView(generic.DetailView):
+class AttachmentView(ResourcePermissionMixin, generic.DetailView):
     model = Attachment
 
-    def get_object(self, **kwargs):
-        obj = super(AttachmentView, self).get_object(**kwargs)
-        if obj.is_private and not self.request.user.is_authenticated():
-            raise PermissionRequired('Resource is private')
-        return obj
-
     def get(self, request, *args, **kwargs):
-        try:
-            attachment = self.get_object()
-        except PermissionRequired:
-            from django.contrib.auth.views import redirect_to_login
-            return redirect_to_login(self.request.path)
+        attachment = self.get_object()
 
         if getattr(default_storage, 'offload', False):
             disposition = ('attachment; filename="%s%s"' % (

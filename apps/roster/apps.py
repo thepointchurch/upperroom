@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 
 
-class RosterAppConfig(AppConfig):
+class RosterConfig(AppConfig):
     name = 'roster'
 
     def ready(self):

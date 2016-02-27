@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.files.storage import default_storage
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -6,18 +7,13 @@ from django.views import generic
 from newsletter.models import Issue, Publication
 
 
-class PublicationMixin(object):
-    def dispatch(self, *args, **kwargs):
-        namespace = self.request.resolver_match.namespace
-        self.publication = get_object_or_404(Publication,
-                                             slug=namespace)
-
-        if (self.publication.is_private
-                and not self.request.user.is_authenticated()):
-            from django.contrib.auth.views import redirect_to_login
-            return redirect_to_login(self.request.path)
-
-        return super(PublicationMixin, self).dispatch(*args, **kwargs)
+class PublicationMixin(UserPassesTestMixin):
+    def test_func(self):
+        self.publication = get_object_or_404(
+            Publication,
+            slug=self.request.resolver_match.namespace)
+        return (not self.publication.is_private or
+                self.request.user.is_authenticated())
 
 
 class IndexView(PublicationMixin, generic.ListView):

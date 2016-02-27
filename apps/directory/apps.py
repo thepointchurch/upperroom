@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 
 
-class DirectoryAppConfig(AppConfig):
+class DirectoryConfig(AppConfig):
     name = 'directory'
 
     def ready(self):

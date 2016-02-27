@@ -134,6 +134,7 @@ class Resource(FeaturedMixin, models.Model):
         Person,
         null=True,
         blank=True,
+        on_delete=models.SET_NULL,
         related_name='resources',
         verbose_name=_('author'),
     )
@@ -146,6 +147,7 @@ class Resource(FeaturedMixin, models.Model):
         'self',
         null=True,
         blank=True,
+        on_delete=models.SET_NULL,
         related_name='children',
         verbose_name=_('parent'),
     )
@@ -267,6 +269,7 @@ class Attachment(models.Model):
     )
     resource = models.ForeignKey(
         Resource,
+        on_delete=models.CASCADE,
         related_name='attachments',
         verbose_name=_('resource'),
     )

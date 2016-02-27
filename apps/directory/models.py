@@ -61,6 +61,7 @@ class Family(models.Model):
         'Person',
         null=True,
         blank=True,
+        on_delete=models.SET_NULL,
         related_name='+',
         verbose_name=_('husband'),
     )
@@ -68,6 +69,7 @@ class Family(models.Model):
         'Person',
         null=True,
         blank=True,
+        on_delete=models.SET_NULL,
         related_name='+',
         verbose_name=_('wife'),
     )
@@ -160,6 +162,7 @@ class Person(models.Model):
     )
     family = models.ForeignKey(
         Family,
+        on_delete=models.CASCADE,
         related_name='members',
         verbose_name=_('family'),
     )

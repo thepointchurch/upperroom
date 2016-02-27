@@ -1,1 +1,1 @@
-django.db.backends.postgresql_psycopg2
+django.db.backends.postgresql

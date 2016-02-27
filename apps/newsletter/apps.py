@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 
 
-class NewsletterAppConfig(AppConfig):
+class NewsletterConfig(AppConfig):
     name = 'newsletter'
 
     def ready(self):

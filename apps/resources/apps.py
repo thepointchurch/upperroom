@@ -1,7 +1,7 @@
 from django.apps import AppConfig
 
 
-class ResourcesAppConfig(AppConfig):
+class ResourcesConfig(AppConfig):
     name = 'resources'
 
     def ready(self):

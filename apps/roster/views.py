@@ -1,5 +1,4 @@
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
 
 from directory.models import Person
@@ -7,13 +6,7 @@ from roster.models import Meeting, Role
 from util.mixin import NeverCacheMixin
 
 
-class PrivateMixin(object):
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super(PrivateMixin, self).dispatch(*args, **kwargs)
-
-
-class MeetingIndex(PrivateMixin, generic.ListView):
+class MeetingIndex(LoginRequiredMixin, generic.ListView):
     model = Meeting
     allow_future = True
     template_name = 'roster/index.html'
@@ -22,7 +15,7 @@ class MeetingIndex(PrivateMixin, generic.ListView):
         return Meeting.current_objects.all()[:5]
 
 
-class MonthlyMeetingView(PrivateMixin, generic.MonthArchiveView):
+class MonthlyMeetingView(LoginRequiredMixin, generic.MonthArchiveView):
     model = Meeting
     allow_future = True
     date_field = 'date'
@@ -43,7 +36,7 @@ class PublicPersonList(generic.ListView):
         return context
 
 
-class PersonList(PrivateMixin, PublicPersonList):
+class PersonList(LoginRequiredMixin, PublicPersonList):
     pass
 
 

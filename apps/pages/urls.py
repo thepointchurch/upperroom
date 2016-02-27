@@ -1,21 +1,22 @@
-from django.conf.urls import patterns, url
-from django.contrib import flatpages
+from django.conf.urls import url
+from django.contrib.flatpages import views
 
-urlpatterns = patterns('',
-                       url(r'^$',
-                           flatpages.views.flatpage,
-                           {'url': '/'},
-                           name='home'),
-                       url(r'^calendar$',
-                           flatpages.views.flatpage,
-                           {'url': '/calendar'},
-                           name='calendar'),
-                       url(r'^contact$',
-                           flatpages.views.flatpage,
-                           {'url': '/contact'},
-                           name='contact'),
-                       url(r'^copyright$',
-                           flatpages.views.flatpage,
-                           {'url': '/copyright'},
-                           name='copyright'),
-                       )
+app_name = 'pages'
+urlpatterns = [
+    url(r'^$',
+        views.flatpage,
+        {'url': '/'},
+        name='home'),
+    url(r'^calendar$',
+        views.flatpage,
+        {'url': '/calendar'},
+        name='calendar'),
+    url(r'^contact$',
+        views.flatpage,
+        {'url': '/contact'},
+        name='contact'),
+    url(r'^copyright$',
+        views.flatpage,
+        {'url': '/copyright'},
+        name='copyright'),
+]

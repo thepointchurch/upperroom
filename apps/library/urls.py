@@ -1,12 +1,14 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
 from library import views
 
-urlpatterns = patterns('',
-                       url(r'^$',
-                           views.IndexView.as_view(),
-                           name='index'),
-                       url(r'^search$',
-                           views.SearchView.as_view(),
-                           name='search'),
-                       )
+
+app_name = 'library'
+urlpatterns = [
+    url(r'^$',
+        views.IndexView.as_view(),
+        name='index'),
+    url(r'^search$',
+        views.SearchView.as_view(),
+        name='search'),
+]
