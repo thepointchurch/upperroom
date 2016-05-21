@@ -28,11 +28,6 @@ class IndexView(PublicationMixin, generic.ListView):
         context['publication'] = self.publication
         return context
 
-    def render_to_response(self, context, **response_kwargs):
-        response_kwargs['current_app'] = self.request.resolver_match.namespace
-        return super(IndexView, self).render_to_response(context,
-                                                         **response_kwargs)
-
 
 class DetailView(PublicationMixin, generic.DetailView):
     model = Issue
