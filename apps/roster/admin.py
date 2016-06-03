@@ -8,6 +8,7 @@ from roster.models import Location, Meeting, Role, RoleType
 
 class RoleInlineForm(ModelForm):
     people = ModelMultipleChoiceField(
+        required=False,
         queryset=Person.current_objects.order_by('family__name', 'name'),
         label=_('People'))
 
