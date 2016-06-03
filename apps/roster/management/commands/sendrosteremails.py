@@ -4,7 +4,6 @@ from optparse import make_option
 from django.conf import settings
 from django.core import mail
 from django.core.management.base import BaseCommand, CommandError
-from django.template import Context
 from django.template.loader import get_template
 from django.utils.translation import ugettext_lazy as _
 
@@ -75,11 +74,11 @@ class Command(BaseCommand):
                 _('%(site)s Roster Notification') % {
                     'site': settings.SITE_NAME
                 },
-                get_template('roster/reminder.txt').render(Context({
+                get_template('roster/reminder.txt').render({
                     'person': person,
                     'date': d,
                     'role_list': roles,
-                })),
+                }),
                 settings.DEFAULT_FROM_EMAIL,
                 [person.find_email()], connection=connection))
 
