@@ -95,7 +95,7 @@ $(HOME)/.profile: .deploy/profile
 $(HOME)/git/hooks/post-receive: .deploy/git-hook-checkout
 	cp $< $@
 
-user-data: .deploy/user-data.sh .deploy/20auto-upgrades .deploy/50unattended-upgrades .deploy/init_django.sh .deploy/build_python.sh .deploy/init_aws.sh .deploy/init_exim.sh .deploy/create_user.sh .deploy/user-data.sh .deploy/git-hook-checkout .deploy/profile
+user-data: .deploy/user-data.sh .deploy/20auto-upgrades .deploy/50unattended-upgrades.$(debian_release) .deploy/init_django.sh .deploy/build_python.sh .deploy/init_aws.sh .deploy/init_exim.sh .deploy/create_user.sh .deploy/rsyslog_django.conf .deploy/logrotate_django .deploy/logrotate_nginx.$(debian_release) .deploy/log_upload .deploy/git-hook-checkout .deploy/user-data.sh .deploy/profile
 	@test "$(HOST)" != '' || (echo No HOST defined; /bin/false)
 	@test "$(MAILHUB)" != '' || (echo No MAILHUB defined; /bin/false)
 	@test "$(AUTHUSER)" != '' || (echo No AUTHUSER defined; /bin/false)
