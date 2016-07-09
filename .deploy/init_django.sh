@@ -1,7 +1,7 @@
 #!/bin/sh
 
 device=${1?No device specified}
-version=${2-9.1}
+version=${2-$(pg_lsclusters -h | awk '{print $1}')}
 path=${3-/srv/django}
 
 mkdir -p "${path}"
@@ -23,7 +23,6 @@ ident_file = '/etc/postgresql/${version}/django/pg_ident.conf'
 external_pid_file = '/var/run/postgresql/${version}-django.pid'
 listen_addresses = ''
 max_connections = 100
-unix_socket_directory = '/var/run/postgresql'
 shared_buffers = 24MB
 log_line_prefix = '%t '
 datestyle = 'iso, dmy'

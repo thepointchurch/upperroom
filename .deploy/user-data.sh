@@ -1,5 +1,7 @@
 #!/bin/sh
 
+debian_release=${1-jessie}
+
 cat <<CLOUDCONFIG
 #cloud-config
 
@@ -19,19 +21,7 @@ packages:
   - postgresql
   - postgresql-server-dev-all
   - git
-  - build-essential
-  - libbz2-dev
-  - libdb-dev
-  - libexpat1-dev
   - libffi-dev
-  - libgdbm-dev
-  - libgpm2
-  - liblzma-dev
-  - libncursesw5-dev
-  - libreadline6-dev
-  - libsqlite3-dev
-  - libssl-dev
-  - zlib1g-dev
   - nginx-full
   - runit
   - daemontools
@@ -40,6 +30,32 @@ packages:
   - ntp
   - exim4-daemon-light
   - curl
+CLOUDCONFIG
+
+if [ $debian_release = 'wheezy' ]; then
+cat <<CLOUDCONFIG
+  - build-essential
+  - libbz2-dev
+  - libdb-dev
+  - libexpat1-dev
+  - libgdbm-dev
+  - libgpm2
+  - liblzma-dev
+  - libncursesw5-dev
+  - libreadline6-dev
+  - libsqlite3-dev
+  - libssl-dev
+  - zlib1g-dev
+CLOUDCONFIG
+else
+cat <<CLOUDCONFIG
+  - python3-venv
+  - python3-dev
+  - bzip2
+CLOUDCONFIG
+fi
+
+cat <<CLOUDCONFIG
 
 write_files:
   - encoding: b64
@@ -50,7 +66,7 @@ write_files:
     permissions: '0644'
   - encoding: b64
     content: |
-`base64 .deploy/50unattended-upgrades | sed 's/^/      /'`
+`base64 .deploy/50unattended-upgrades.${debian_release} | sed 's/^/      /'`
     owner: root:root
     path: /etc/apt/apt.conf.d/50unattended-upgrades
     permissions: '0644'
@@ -60,12 +76,20 @@ write_files:
     owner: root:root
     path: /tmp/init_django.sh
     permissions: '0750'
+CLOUDCONFIG
+
+if [ $debian_release = 'wheezy' ]; then
+cat <<CLOUDCONFIG
   - encoding: b64
     content: |
 `base64 .deploy/build_python.sh | sed 's/^/      /'`
     owner: root:root
-    path: /root/bin/build_python.sh
+    path: /usr/local/bin/build_python.sh
     permissions: '0750'
+CLOUDCONFIG
+fi
+
+cat <<CLOUDCONFIG
   - encoding: b64
     content: |
 `base64 .deploy/init_aws.sh | sed 's/^/      /'`
@@ -82,7 +106,7 @@ write_files:
     content: |
 `base64 .deploy/create_user.sh | sed 's/^/      /'`
     owner: root:root
-    path: /root/bin/create_user.sh
+    path: /usr/local/bin/create_user.sh
     permissions: '0750'
   - encoding: b64
     content : |
@@ -98,7 +122,7 @@ write_files:
     permissions: '0644'
   - encoding: b64
     content : |
-`base64 .deploy/logrotate_nginx | sed 's/^/      /'`
+`base64 .deploy/logrotate_nginx.${debian_release} | sed 's/^/      /'`
     owner: root:root
     path: /etc/logrotate.d/nginx
     permissions: '0644'
@@ -126,9 +150,21 @@ runcmd:
   - [ sh, -c, '/bin/echo -e "server {\n    listen [::]:80 default_server ipv6only=off;\n}" >/etc/nginx/sites-available/default' ]
   - [ sh, -c, '/bin/echo "include /srv/django/*/project/.nginx.conf;" >/etc/nginx/conf.d/django.conf' ]
   - [ sh, -c, '/bin/echo "server_tokens off;" >/etc/nginx/conf.d/00_server_tokens.conf' ]
-  - [ sh, -c, '((/usr/bin/curl -s https://www.cloudflare.com/ips-v4; /bin/echo; /usr/bin/curl -s https://www.cloudflare.com/ips-v6; /bin/echo) | sed -e "s/^/set_real_ip_from /" -e "s/$/;/"; /bin/echo "real_ip_header X-Forwarded-For;"; /bin/echo "real_ip_recursive on;") >/etc/nginx/conf.d/00_real_ip.conf' ]
+  - [ sh, -c, '((/usr/bin/curl -s https://www.cloudflare.com/ips-v4; /bin/echo; /usr/bin/curl -s https://www.cloudflare.com/ips-v6; /bin/echo) | sed -e "/^$/d" -e "s/^/set_real_ip_from /" -e "s/$/;/"; /bin/echo "real_ip_header X-Forwarded-For;"; /bin/echo "real_ip_recursive on;") >/etc/nginx/conf.d/00_real_ip.conf' ]
+CLOUDCONFIG
+
+if [ $debian_release = 'wheezy' ]; then
+cat <<CLOUDCONFIG
   - [ /tmp/init_django.sh, xvdb, '9.1', /srv/django ]
-  - [ /root/bin/build_python.sh, '3.4.2' ]
+  - [ /usr/local/bin/build_python.sh, '3.4.2' ]
+CLOUDCONFIG
+else
+cat <<CLOUDCONFIG
+  - [ /tmp/init_django.sh, xvdb, '9.4', /srv/django ]
+CLOUDCONFIG
+fi
+
+cat <<CLOUDCONFIG
   - [ /tmp/init_aws.sh ]
   - [ /tmp/init_exim.sh ]
   - [ cp, -r, /home/admin/.ssh, /etc/skel/.ssh ]

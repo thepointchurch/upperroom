@@ -1,6 +1,6 @@
 # The Point Church Website #
 
-This is a Django project designed to be deployed to an Amazon EC2 instance running Debian Wheezy, although this is not a requirement.
+This is a Django project designed to be deployed to an Amazon EC2 instance running Debian (wheezy or jessie), although this is not a requirement.
 
 ## Installation ##
 
@@ -8,7 +8,7 @@ This is a Django project designed to be deployed to an Amazon EC2 instance runni
 
 Generate `user-data` for the EC2 instance by running:
 
-    HOST=<hostname> MAILHUB=<mailrelay> AUTHUSER=<mailuser> AUTHPASS=<mailpass> make user-data
+    HOST=<hostname> MAILHUB=<mailrelay> AUTHUSER=<mailuser> AUTHPASS=<mailpass> debian_release=[wheezy|jessie] make user-data
 
 where you define:
 
