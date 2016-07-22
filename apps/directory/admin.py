@@ -66,4 +66,11 @@ class FamilyAdmin(admin.ModelAdmin):
         super(FamilyAdmin, self).save_related(request, form, formsets, change)
         family_updated.send(sender=form.instance.__class__, instance=form.instance)
 
+
+class PersonAdmin(admin.ModelAdmin):
+    list_filter = ('is_current',)
+    search_fields = ['name', 'family__name']
+    ordering = ('name', 'family__name')
+
 admin.site.register(Family, FamilyAdmin)
+admin.site.register(Person, PersonAdmin)
