@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from django.contrib import auth
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 
 from members import views
 

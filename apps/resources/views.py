@@ -14,7 +14,7 @@ class TagList(generic.ListView):
         self.tag = get_object_or_404(
             Tag, slug=self.kwargs.get('slug', None))
 
-        if self.request.user.is_authenticated():
+        if self.request.user.is_authenticated:
             resources = self.tag.resources.filter(is_published=True)
         else:
             resources = self.tag.resources.filter(is_published=True,
@@ -43,7 +43,7 @@ class ResourceList(generic.ListView):
                      .filter(parent__isnull=True)
                      .exclude(tags__is_exclusive=True)
                      )
-        if not self.request.user.is_authenticated():
+        if not self.request.user.is_authenticated:
             resources = resources.filter(is_private=False)
         return resources
 
@@ -57,7 +57,7 @@ class RedirectToAttachment(Exception):
 class ResourcePermissionMixin(UserPassesTestMixin):
     def test_func(self):
         obj = self.get_object()
-        return not obj.is_private or self.request.user.is_authenticated()
+        return not obj.is_private or self.request.user.is_authenticated
 
 
 class ResourceDetail(ResourcePermissionMixin, generic.DetailView):

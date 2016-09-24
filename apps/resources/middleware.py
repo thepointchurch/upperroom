@@ -1,11 +1,12 @@
 from django.conf import settings
 from django.http import Http404
+from django.utils.deprecation import MiddlewareMixin
 
 from resources import views
 from resources.models import Resource, Tag
 
 
-class ResourceFallbackMiddleware(object):
+class ResourceFallbackMiddleware(MiddlewareMixin, object):
     def process_response(self, request, response):
         if response.status_code != 404:
             return response

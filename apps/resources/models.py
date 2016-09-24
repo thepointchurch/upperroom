@@ -3,9 +3,9 @@ import mimetypes
 from itertools import chain
 
 import magic
-from django.core.urlresolvers import resolve, reverse
 from django.db import models
 from django.http import Http404
+from django.urls import resolve, reverse
 from django.utils.translation import ugettext_lazy as _
 
 from directory.models import Person

@@ -9,10 +9,10 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.views import password_change as dist_password_change
 from django.core.exceptions import PermissionDenied
-from django.core.urlresolvers import reverse_lazy
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 
@@ -41,7 +41,7 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
 
 def not_a_guest(user):
     try:
-        return user.is_authenticated() and (user.is_staff or user.person)
+        return user.is_authenticated and (user.is_staff or user.person)
     except:
         raise PermissionDenied
 

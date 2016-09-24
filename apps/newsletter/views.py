@@ -13,7 +13,7 @@ class PublicationMixin(UserPassesTestMixin):
             Publication,
             slug=self.request.resolver_match.namespace)
         return (not self.publication.is_private or
-                self.request.user.is_authenticated())
+                self.request.user.is_authenticated)
 
 
 class IndexView(PublicationMixin, generic.ListView):

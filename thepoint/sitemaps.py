@@ -1,7 +1,7 @@
 from itertools import chain
 
 from django.contrib import sitemaps
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from resources.models import get_featured_items
 
