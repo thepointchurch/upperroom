@@ -287,7 +287,7 @@ class Attachment(models.Model):
         uploaded_content_type = getattr(self.file, 'content_type', '')
         self.file.seek(0)
         magic_content_type = magic.from_buffer(self.file.read(),
-                                               mime=True).decode()
+                                               mime=True)
         self.file.seek(0)
 
         # Prefer magic mime-type instead mime-type from http header
