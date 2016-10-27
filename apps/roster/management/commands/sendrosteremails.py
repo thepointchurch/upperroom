@@ -1,5 +1,4 @@
 from datetime import date, datetime, timedelta
-from optparse import make_option
 
 from django.conf import settings
 from django.core import mail
@@ -35,17 +34,16 @@ def _get_role_map(roles):
 class Command(BaseCommand):
     help = _('Send notification emails for a coming meeting.')
 
-    option_list = BaseCommand.option_list + (
-        make_option('-d', '--date',
-                    dest='date',
-                    default=meeting_date(),
-                    help=_('The meeting date to send notifications for')),
-        make_option('--test',
-                    action='store_true',
-                    dest='test',
-                    default=False,
-                    help=_('Send emails to the console only')),
-        )
+    def add_arguments(self, parser):
+        parser.add_argument('-d', '--date',
+                            dest='date',
+                            default=meeting_date(),
+                            help=_('The meeting date to send notifications for'))
+        parser.add_argument('--test',
+                            action='store_true',
+                            dest='test',
+                            default=False,
+                            help=_('Send emails to the console only'))
 
     def handle(self, *args, **options):
         d = options['date']

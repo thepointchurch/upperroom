@@ -1,6 +1,5 @@
 import csv
 import sys
-from optparse import make_option
 
 from django.core.management.base import BaseCommand, CommandError
 from django.utils.translation import ugettext_lazy as _
@@ -12,17 +11,16 @@ class Command(BaseCommand):
     args = '< books.csv'
     help = _('Import books into the library through a CSV file on stdin.')
 
-    option_list = BaseCommand.option_list + (
-        make_option('--refresh',
-                    action='store_true',
-                    dest='refresh',
-                    default=True,
-                    help=_('Delete all books before importing')),
-        make_option('--no-refresh',
-                    action='store_false',
-                    dest='refresh',
-                    help=_('Keep existing books when importing'))
-    )
+    def add_arguments(self, parser):
+        parser.add_argument('--refresh',
+                            action='store_true',
+                            dest='refresh',
+                            default=True,
+                            help=_('Delete all books before importing'))
+        parser.add_argument('--no-refresh',
+                            action='store_false',
+                            dest='refresh',
+                            help=_('Keep existing books when importing'))
 
     def handle(self, *args, **options):
         if options['refresh']:
