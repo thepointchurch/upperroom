@@ -1,11 +1,11 @@
-Django==1.10.4
+Django==1.10.5
 Markdown==2.6.7
 PyYAML==3.12
-awscli==1.11.30
+awscli==1.11.36
 bcdoc==0.16.0
-bcrypt==3.1.1
+bcrypt==3.1.2
 boto==2.45.0
-botocore==1.4.87
+botocore==1.4.93
 cffi==1.9.1
 colorama==0.3.7
 django-markwhat==1.5.1
