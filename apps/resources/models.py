@@ -201,6 +201,8 @@ class Resource(FeaturedMixin, models.Model):
         content += '\n'
         for child in self.children.all():
             content += '\n%s' % child.markdown_link()
+            for child_alt in child.alternates:
+                content += '\n%s' % child_alt.markdown_link(slug=True)
         for attachment in self.inlines:
             content += '\n%s' % attachment.markdown_link()
         return content
@@ -215,9 +217,10 @@ class Resource(FeaturedMixin, models.Model):
                 return url
         return reverse('resources:detail', kwargs={'slug': self.slug})
 
-    def markdown_link(self):
-        return '[%s]: %s' % (self.title, reverse('resources:detail',
-                                                 kwargs={'slug': self.slug}))
+    def markdown_link(self, slug=False):
+        return '[%s]: %s' % (self.slug if slug else self.title,
+                             reverse('resources:detail',
+                                     kwargs={'slug': self.slug}))
 
 
 def get_attachment_filename(instance, filename):
@@ -319,9 +322,10 @@ class Attachment(models.Model):
     def is_private(self):
         return self.resource.is_private
 
-    def markdown_link(self):
-        return '[%s]: %s' % (self.title, reverse('resources:attachment',
-                                                 kwargs={'pk': self.id}))
+    def markdown_link(self, slug=False):
+        return '[%s]: %s' % (self.slug if slug else self.title,
+                             reverse('resources:attachment',
+                                     kwargs={'pk': self.id}))
 
 
 def get_featured_items():
