@@ -96,9 +96,21 @@
 </div>
 {% endif %}
 
+{% if splashes_above %}
+{% for splash in splashes_above %}
+{% include "splash/splash.html" %}
+{% endfor %}
+{% endif %}
+
 <h2>{% block heading %}Welcome to The Point's website{% endblock heading %}</h2>
 
 {% block content %}{% endblock content %}
+
+{% if splashes_below %}
+{% for splash in splashes_below %}
+{% include "splash/splash.html" %}
+{% endfor %}
+{% endif %}
 
 </div>
 

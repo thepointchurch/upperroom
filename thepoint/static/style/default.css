@@ -392,3 +392,13 @@ iframe.calendar {
     min-height: 600px;
     border: none;
 }
+
+div.splash {
+    padding: 10px 0;
+}
+
+div.splash > h3 {
+    margin: 0;
+    text-align: center;
+    border: none;
+}

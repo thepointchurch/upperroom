@@ -1,0 +1,5 @@
+{% load markup %}
+<div class="splash">
+<h3>{{ splash.title }}</h3>
+{{ splash.content|markdown:"safe" }}
+</div>

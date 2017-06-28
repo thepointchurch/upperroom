@@ -301,3 +301,8 @@ div.write p:after {
     text-align: left;
     line-height: 200%;
 }
+
+/***[ splash stuff ]*********************************/
+div.splash {
+    display: none;
+}

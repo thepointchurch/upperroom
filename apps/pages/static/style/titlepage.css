@@ -40,3 +40,14 @@ div#body blockquote p.attrib {
     font-weight: normal;
     font-style: italic;
 }
+
+div.splash {
+    background: white;
+    border: 1px solid black;
+    margin: 10px;
+    padding: 10px 0;
+}
+
+div.splash p {
+    text-align: center;
+}
