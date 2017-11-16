@@ -179,7 +179,7 @@ class Resource(FeaturedMixin, models.Model):
     featured_objects = FeaturedManager()
 
     class Meta:
-        ordering = ['created']
+        ordering = ['-created']
         get_latest_by = 'created'
         verbose_name = _('resource')
         verbose_name_plural = _('resources')
