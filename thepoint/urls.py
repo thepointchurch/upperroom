@@ -9,12 +9,12 @@ sitemaps = {
 }
 
 urlpatterns = [
-    url(r'^directory/', include('directory.urls', namespace='directory')),
-    url(r'^library/', include('library.urls', namespace='library')),
-    url(r'^members/', include('members.urls', namespace='members')),
-    url(r'^poi/', include('newsletter.urls', namespace='poi')),
-    url(r'^resources/', include('resources.urls', namespace='resources')),
-    url(r'^roster/', include('roster.urls', namespace='roster')),
+    url(r'^directory/', include('thepoint.apps.directory.urls', namespace='directory')),
+    url(r'^library/', include('thepoint.apps.library.urls', namespace='library')),
+    url(r'^members/', include('thepoint.apps.members.urls', namespace='members')),
+    url(r'^poi/', include('thepoint.apps.newsletter.urls', namespace='poi')),
+    url(r'^resources/', include('thepoint.apps.resources.urls', namespace='resources')),
+    url(r'^roster/', include('thepoint.apps.roster.urls', namespace='roster')),
 
     url(r'^admin/', admin.site.urls),
 
@@ -23,5 +23,5 @@ urlpatterns = [
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
         name='django.contrib.sitemaps.views.sitemap'),
 
-    url(r'', include('pages.urls', namespace='pages')),
+    url(r'', include('thepoint.apps.pages.urls', namespace='pages')),
 ]

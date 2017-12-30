@@ -1,10 +1,7 @@
 import logging
 import os
-import sys
 
-sys.path.append('apps')
-
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = os.path.dirname(__file__)
 
 SECRET_KEY = os.environ['SECRET_KEY']
 
@@ -19,15 +16,15 @@ SITE_ID = int(os.getenv('SITE_ID', 1))
 
 
 INSTALLED_APPS = (
-    'directory.apps.DirectoryConfig',
-    'library.apps.LibraryConfig',
-    'members.apps.MembersConfig',
-    'newsletter.apps.NewsletterConfig',
-    'pages.apps.PagesConfig',
-    'resources.apps.ResourcesConfig',
+    'thepoint.apps.directory.apps.DirectoryConfig',
+    'thepoint.apps.library.apps.LibraryConfig',
+    'thepoint.apps.members.apps.MembersConfig',
+    'thepoint.apps.newsletter.apps.NewsletterConfig',
+    'thepoint.apps.pages.apps.PagesConfig',
+    'thepoint.apps.resources.apps.ResourcesConfig',
     'robots',
-    'roster.apps.RosterConfig',
-    'splash.apps.SplashConfig',
+    'thepoint.apps.roster.apps.RosterConfig',
+    'thepoint.apps.splash.apps.SplashConfig',
     'django_markwhat',
     'django.contrib.admin.apps.AdminConfig',
     'django.contrib.auth.apps.AuthConfig',
@@ -51,7 +48,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'apps.resources.middleware.ResourceFallbackMiddleware',
+    'thepoint.apps.resources.middleware.ResourceFallbackMiddleware',
 )
 
 ROOT_URLCONF = 'thepoint.urls'
@@ -78,23 +75,23 @@ DIRECTORY_NOTIFY_EMAIL = 'directory@thepoint.org.au'
 LOGIN_URL = '/members/login'
 LOGIN_REDIRECT_URL = '/members/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join('.', 'media')
 
 STATIC_URL = os.getenv('STATIC_URL', '/static/')
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join('.', 'static')
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'thepoint/static'),
+    os.path.join(BASE_DIR, 'static'),
 )
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'thepoint/templates'),
+            os.path.join(BASE_DIR, 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -106,8 +103,8 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
-                'apps.resources.context_processors.featured_tags',
-                'apps.splash.context_processors.splashes',
+                'thepoint.apps.resources.context_processors.featured_tags',
+                'thepoint.apps.splash.context_processors.splashes',
             ],
         },
     },
@@ -123,16 +120,29 @@ PASSWORD_HASHERS = (
 ROBOTS_CACHE_TIMEOUT = 60*60*24
 
 
-class AddEnvironmentFilter(logging.Filter):
-    def __init__(self, environment):
-        self.environment = environment
+if os.getenv('STATICFILES_BUCKET', None) or os.getenv('MEDIAFILES_BUCKET', None):
+    INSTALLED_APPS += ('storages',)
+
+    STATICFILES_BUCKET = os.getenv('STATICFILES_BUCKET',
+                                   'static.%s' % ALLOWED_HOSTS[0])
+    STATICFILES_STORAGE = 'thepoint.util.storages.backends.S3StaticStorage'
+
+    MEDIAFILES_OFFLOAD = True
+    MEDIAFILES_BUCKET = os.getenv('MEDIAFILES_BUCKET',
+                                  'media.%s' % ALLOWED_HOSTS[0])
+    DEFAULT_FILE_STORAGE = 'thepoint.util.storages.backends.S3MediaStorage'
+
+
+class AddSyslogTagFilter(logging.Filter):
+    def __init__(self, tag):
+        self.tag = tag
 
     def filter(self, record):
-        record.environment = self.environment
+        record.tag = self.tag
         return True
 
 
-if os.getenv('environment', '') in ['production', 'testing']:
+if os.getenv('SYSLOG_TAG', ''):
     if DEBUG:
         level = 'DEBUG'
     else:
@@ -142,14 +152,14 @@ if os.getenv('environment', '') in ['production', 'testing']:
         'version': 1,
         'disable_existing_loggers': True,
         'filters': {
-            'add_environment': {
-                '()': AddEnvironmentFilter,
-                'environment': os.getenv('environment', ''),
+            'add_syslog_tag': {
+                '()': AddSyslogTagFilter,
+                'tag': os.getenv('SYSLOG_TAG', ''),
             },
         },
         'formatters': {
             'syslog': {
-                'format': ('django_%(environment)s[%(process)d]: '
+                'format': ('django_%(tag)s[%(process)d]: '
                            '%(name)s [%(levelname)s] %(message)s')
             },
         },
@@ -159,7 +169,7 @@ if os.getenv('environment', '') in ['production', 'testing']:
                 'class': 'logging.handlers.SysLogHandler',
                 'address': '/dev/log',
                 'formatter': 'syslog',
-                'filters': ['add_environment'],
+                'filters': ['add_syslog_tag'],
             },
         },
         'loggers': {
@@ -199,17 +209,6 @@ if os.getenv('environment', '') in ['production', 'testing']:
             },
         }
     }
-
-    INSTALLED_APPS += ('storages',)
-
-    STATICFILES_BUCKET = os.getenv('STATICFILES_BUCKET',
-                                   'static.%s' % ALLOWED_HOSTS[0])
-    STATICFILES_STORAGE = 'util.storages.backends.S3StaticStorage'
-
-    MEDIAFILES_OFFLOAD = True
-    MEDIAFILES_BUCKET = os.getenv('MEDIAFILES_BUCKET',
-                                  'media.%s' % ALLOWED_HOSTS[0])
-    DEFAULT_FILE_STORAGE = 'util.storages.backends.S3MediaStorage'
 
 else:
     LOGGING = {

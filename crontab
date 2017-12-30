@@ -1,2 +1,0 @@
-0 22 * * * ${HOME}/project/bin/backup.sh
-0 14 * * * ${HOME}/project/bin/sendrosteremails.sh

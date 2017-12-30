@@ -1,0 +1,17 @@
+include LICENSE
+include README.md
+recursive-include bin *
+recursive-include thepoint/apps/directory/static *
+recursive-include thepoint/apps/directory/templates *
+recursive-include thepoint/apps/library/static *
+recursive-include thepoint/apps/library/templates *
+recursive-include thepoint/apps/members/templates *
+recursive-include thepoint/apps/newsletter/templates *
+recursive-include thepoint/apps/pages/static *
+recursive-include thepoint/apps/pages/templates *
+recursive-include thepoint/apps/resources/static *
+recursive-include thepoint/apps/resources/templates *
+recursive-include thepoint/apps/roster/templates *
+recursive-include thepoint/apps/splash/templates *
+recursive-include thepoint/static *
+recursive-include thepoint/templates *

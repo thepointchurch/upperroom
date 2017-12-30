@@ -1,3 +1,0 @@
-#!/bin/sh
-
-exec envdir $APP_PATH/.env $APP_PATH/bin/run 2>&1
