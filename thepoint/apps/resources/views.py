@@ -90,13 +90,12 @@ class AttachmentView(ResourcePermissionMixin, generic.DetailView):
                            attachment.clean_title,
                            attachment.extension,
                            ))
-            response_headers = {
-                'response-content-disposition': disposition,
-                'response-content-type':        attachment.mime_type,
-            }
             response = HttpResponseRedirect(
                 default_storage.url(attachment.file.name,
-                                    response_headers=response_headers))
+                                    parameters={
+                                        'ResponseContentDisposition': disposition,
+                                        'ResponseContentType': attachment.mime_type,
+                                    }))
         else:
             response = HttpResponse(attachment.file,
                                     content_type=attachment.mime_type)

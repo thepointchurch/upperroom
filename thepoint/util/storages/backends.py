@@ -22,22 +22,25 @@ class S3Boto3StorageOffload(S3Boto3Storage):
     except (AttributeError, NameError):
         offload = False
 
-    def url(self, name, headers=None, response_headers=None):
+    def url(self, name, parameters=None, expire=None):
         # Generate the S3 offload URL but enforce our protocol and domain
         name = self._normalize_name(self._clean_name(name))
-        url = self.connection.generate_url(self.querystring_expire,
-                                           method='GET',
-                                           bucket=self.bucket.name,
-                                           key=self._encode_name(name),
-                                           headers=headers,
-                                           query_auth=self.querystring_auth,
-                                           force_http=False,
-                                           response_headers=response_headers)
+        params = parameters.copy() if parameters else {}
+        params['Bucket'] = self.bucket.name
+        params['Key'] = self._encode_name(name)
+        url = self.bucket.meta.client.generate_presigned_url('get_object',
+                                                             Params=params,
+                                                             ExpiresIn=self.querystring_expire)
         url = urlsplit(url)
-        domain = self.custom_domain or url.netloc
+        if self.custom_domain:
+            domain = self.custom_domain
+            url_path = '/'.join([x for x in url.path.split('/') if x != self.custom_domain])
+        else:
+            domain = url.netloc
+            url_path = url.path
         return '%s//%s%s?%s' % (self.url_protocol,
                                 domain,
-                                url.path,
+                                url_path,
                                 url.query)
 
 
