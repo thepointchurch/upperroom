@@ -44,13 +44,12 @@ class DetailView(PublicationMixin, generic.DetailView):
                            issue.date,
                            issue.extension,
                            ))
-            response_headers = {
-                'response-content-disposition': disposition,
-                'response-content-type':        issue.mime_type,
-            }
             response = HttpResponseRedirect(
                 default_storage.url(issue.file.name,
-                                    response_headers=response_headers))
+                                    parameters={
+                                        'ResponseContentDisposition': disposition,
+                                        'ResponseContentType': issue.mime_type,
+                                    }))
         else:
             response = HttpResponse(issue.file, content_type=issue.mime_type)
             response['Content-Disposition'] = (

@@ -109,13 +109,12 @@ class PdfView(LoginRequiredMixin, generic.View):
         title = _('%(site)s Directory') % {'site': settings.SITE_NAME}
         if getattr(default_storage, 'offload', False):
             disposition = 'attachment; filename="%s.pdf"' % title
-            response_headers = {
-                'response-content-disposition': disposition,
-                'response-content-type':        'application/pdf',
-            }
             response = HttpResponseRedirect(
                 default_storage.url('directory/directory.pdf',
-                                    response_headers=response_headers))
+                                    parameters={
+                                        'ResponseContentDisposition': disposition,
+                                        'ResponseContentType': 'application/pdf',
+                                    }))
         else:
             fsock = open('%s/directory/directory.pdf' % settings.MEDIA_ROOT, 'rb')
             response = HttpResponse(fsock, content_type='application/pdf')
