@@ -1,13 +1,13 @@
-from django.conf.urls import url
+from django.urls import path, re_path
 
 from . import views
 
 app_name = 'newsletter'
 urlpatterns = [
-    url(r'^$',
-        views.IndexView.as_view(),
-        name='index'),
-    url(r'(?P<slug>\d{4}-\d{2}-\d{2})$',
-        views.DetailView.as_view(),
-        name='issue'),
+    path('',
+         views.IndexView.as_view(),
+         name='index'),
+    re_path('(?P<slug>\d{4}-\d{2}-\d{2})$',
+            views.DetailView.as_view(),
+            name='issue'),
 ]
