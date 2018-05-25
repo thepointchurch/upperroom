@@ -73,6 +73,7 @@ class Migration(migrations.Migration):
                 related_name='issues',
                 default=newsletter.models.default_publication,
                 to='newsletter.Publication',
+                on_delete=models.PROTECT,
                 unique_for_date='date',
             ),
         ),

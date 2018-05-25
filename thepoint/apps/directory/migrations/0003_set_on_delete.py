@@ -1,7 +1,6 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
@@ -17,7 +16,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(
                 blank=True,
                 null=True,
-                on_delete=django.db.models.deletion.SET_NULL,
+                on_delete=models.SET_NULL,
                 related_name='+',
                 to='directory.Person',
                 verbose_name='husband',
@@ -29,7 +28,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(
                 blank=True,
                 null=True,
-                on_delete=django.db.models.deletion.SET_NULL,
+                on_delete=models.SET_NULL,
                 related_name='+',
                 to='directory.Person',
                 verbose_name='wife',

@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(
                 blank=True,
                 null=True,
-                on_delete=django.db.models.deletion.PROTECT,
+                on_delete=models.PROTECT,
                 related_name='roles',
                 to='roster.Location',
                 verbose_name='location',
@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
             model_name='role',
             name='role',
             field=models.ForeignKey(
-                on_delete=django.db.models.deletion.PROTECT,
+                on_delete=models.PROTECT,
                 related_name='roles',
                 to='roster.RoleType',
                 verbose_name='role',

@@ -2,7 +2,6 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-import django.db.models.deletion
 from django.conf import settings
 
 
@@ -56,6 +55,7 @@ class Migration(migrations.Migration):
                 related_name='+',
                 verbose_name='husband',
                 to='directory.Person',
+                on_delete=models.SET_NULL,
                 null=True,
             ),
         ),
@@ -133,6 +133,7 @@ class Migration(migrations.Migration):
                 related_name='+',
                 verbose_name='wife',
                 to='directory.Person',
+                on_delete=models.SET_NULL,
                 null=True,
             ),
         ),
@@ -162,6 +163,7 @@ class Migration(migrations.Migration):
                 related_name='members',
                 verbose_name='family',
                 to='directory.Family',
+                on_delete=models.CASCADE,
             ),
         ),
         migrations.AlterField(
@@ -246,7 +248,7 @@ class Migration(migrations.Migration):
                 verbose_name='user',
                 to=settings.AUTH_USER_MODEL,
                 null=True,
-                on_delete=django.db.models.deletion.SET_NULL,
+                on_delete=models.SET_NULL,
             ),
         ),
     ]

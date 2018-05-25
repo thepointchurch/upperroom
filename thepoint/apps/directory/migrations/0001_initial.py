@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import django.db.models.deletion
 from django.conf import settings
 from django.db import migrations, models
 
@@ -84,10 +83,11 @@ class Migration(migrations.Migration):
                 ('is_current', models.BooleanField(default=True,
                                                    verbose_name='Current')),
                 ('family', models.ForeignKey(related_name='members',
-                                             to='directory.Family')),
+                                             to='directory.Family',
+                                             on_delete=models.CASCADE)),
                 ('user', models.OneToOneField(null=True, blank=True,
-                 on_delete=django.db.models.deletion.SET_NULL,
-                 to=settings.AUTH_USER_MODEL)),
+                                              on_delete=models.SET_NULL,
+                                              to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'ordering': ['order', 'id', 'name'],
@@ -100,6 +100,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(related_name='+',
                                     blank=True,
                                     to='directory.Person',
+                                    on_delete=models.SET_NULL,
                                     null=True),
         ),
         migrations.AddField(
@@ -108,6 +109,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(related_name='+',
                                     blank=True,
                                     to='directory.Person',
+                                    on_delete=models.SET_NULL,
                                     null=True),
         ),
     ]

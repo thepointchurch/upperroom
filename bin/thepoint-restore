@@ -1,8 +1,12 @@
 #!/bin/sh
 
+if [ -z $MEDIAFILES_BUCKET ]; then
+    MEDIA_DIR='./media/'
+else
+    MEDIA_DIR="s3://${MEDIAFILES_BUCKET}/"
+fi
+
 python -m thepoint migrate --noinput
 python -m thepoint flush --noinput
-aws s3 sync "s3://${BACKUP_BUCKET}/media/" "s3://${MEDIAFILES_BUCKET}/" --quiet --delete
-aws s3 cp "s3://${BACKUP_BUCKET}/data.json.bz2" - --quiet | bunzip2 >/tmp/data.json
-DEBUG='' python -m thepoint loaddata /tmp/data.json
-rm -f /tmp/data.json
+aws s3 sync "s3://${BACKUP_BUCKET}/media/" $MEDIA_DIR --quiet --delete
+aws s3 cp "s3://${BACKUP_BUCKET}/data.json.bz2" - --quiet | bunzip2 | DEBUG='' python -m thepoint loaddata --format json -
