@@ -20,7 +20,6 @@ setup(
     install_requires=[
         'Django',
         'django-storages',
-        'python-magic',
     ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
