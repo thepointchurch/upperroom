@@ -1,4 +1,10 @@
 {% extends "resources/base.html" %}
+{% load markup %}
+
+{% block headers %}{% for feed in tag.feeds.all %}
+<link rel="alternate" type="application/rss+xml" title="{{ feed.title }}: {% if feed.is_podcast %}Podcast{% else %}RSS{% endif %}" href="{% url 'resources:rss' feed.slug %}" />
+<link rel="alternate" type="application/atom+xml" title="{{ feed.title }}: Atom" href="{% url 'resources:atom' feed.slug %}" />
+{% endfor %}{% endblock headers %}
 
 {% block title %}
 {% if tag.is_featured %}
@@ -17,5 +23,13 @@
 {% endblock heading %}
 
 {% block content %}
+{% if tag.description %}
+{{ tag.description|markdown:"safe" }}
+{% endif %}
+{% for feed in tag.feeds.all %}
+{% if feed.is_podcast %}
+<p>These items are available as a <a href="{% url 'resources:rss' feed.slug %}">podcast</a>.</p>
+{% endif %}
+{% endfor %}
 {% include "resources/resource_list.html" %}
 {% endblock content %}

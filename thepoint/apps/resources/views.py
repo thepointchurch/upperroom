@@ -1,10 +1,12 @@
+import mimetypes
+
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.files.storage import default_storage
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.views import generic
 
-from .models import Attachment, Resource, Tag
+from .models import Attachment, Resource, ResourceFeed, Tag
 
 
 class TagList(generic.ListView):
@@ -102,4 +104,22 @@ class AttachmentView(ResourcePermissionMixin, generic.DetailView):
             response['Content-Disposition'] = ('attachment; filename="%s%s"' %
                                                (attachment.clean_title,
                                                 attachment.extension))
+        return response
+
+
+class FeedArtworkView(generic.DetailView):
+    model = ResourceFeed
+
+    def get(self, request, *args, **kwargs):
+        feed = self.get_object()
+        if not feed.artwork:
+            raise Http404('This feed has no artwork')
+
+        if getattr(default_storage, 'offload', False):
+            response = HttpResponseRedirect(default_storage.url(feed.artwork.name))
+        else:
+            content_type = mimetypes.guess_type(feed.artwork.name + 'foo')[0]
+            if not content_type:
+                content_type = 'image/png'
+            response = HttpResponse(feed.artwork, content_type=content_type)
         return response

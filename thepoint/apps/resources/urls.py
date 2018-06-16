@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views
+from . import feeds, views
 
 app_name = 'resources'
 urlpatterns = [
@@ -16,4 +16,13 @@ urlpatterns = [
     path('download/<int:pk>',
          views.AttachmentView.as_view(),
          name='attachment'),
+    path('feed/<slug:slug>/art',
+         views.FeedArtworkView.as_view(),
+         name='feed_artwork'),
+    path('feed/<slug:slug>',
+         feeds.ResourceFeedRSS(),
+         name='rss'),
+    path('feed/<slug:slug>/atom',
+         feeds.ResourceFeedAtom(),
+         name='atom'),
 ]

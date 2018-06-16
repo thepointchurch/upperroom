@@ -1,8 +1,10 @@
 import logging
-import mimetypes
 from itertools import chain
 
-import magic
+import mutagen
+from django.contrib.postgres.fields import JSONField
+from django.core.files.storage import default_storage
+from django.core.validators import RegexValidator
 from django.db import models
 from django.http import Http404
 from django.urls import resolve, reverse
@@ -160,6 +162,11 @@ class Resource(FeaturedMixin, models.Model):
         auto_now=True,
         verbose_name=_('modified'),
     )
+    published = models.DateTimeField(
+        null=True,
+        blank=True,
+        verbose_name=_('published'),
+    )
     show_date = models.BooleanField(
         default=True,
         verbose_name=_('show date'),
@@ -179,8 +186,8 @@ class Resource(FeaturedMixin, models.Model):
     featured_objects = FeaturedManager()
 
     class Meta:
-        ordering = ['-created']
-        get_latest_by = 'created'
+        ordering = ['-published']
+        get_latest_by = 'published'
         verbose_name = _('resource')
         verbose_name_plural = _('resources')
 
@@ -207,6 +214,10 @@ class Resource(FeaturedMixin, models.Model):
             content += '\n%s' % attachment.markdown_link()
         return content
 
+    def clean(self):
+        if self.is_published and not self.published:
+            self.published = self.modified
+
     def get_absolute_url(self):
         # should we search for conflicting URLs?
         if self.is_featured:
@@ -224,9 +235,13 @@ class Resource(FeaturedMixin, models.Model):
 
 
 def get_attachment_filename(instance, filename):
+    try:
+        extension = '.' + filename.split('.')[-1]
+    except IndexError:
+        extension = ''
     return 'resource/attachment/%s/%s%s' % (instance.resource.slug,
                                             instance.slug,
-                                            instance.extension)
+                                            extension)
 
 
 class Attachment(models.Model):
@@ -276,6 +291,11 @@ class Attachment(models.Model):
         related_name='attachments',
         verbose_name=_('resource'),
     )
+    metadata = JSONField(
+        null=True,
+        blank=True,
+        verbose_name=_('metadata'),
+    )
 
     class Meta:
         ordering = ['resource']
@@ -286,19 +306,6 @@ class Attachment(models.Model):
     def __str__(self):
         return self.title
 
-    def clean(self):
-        uploaded_content_type = getattr(self.file, 'content_type', '')
-        self.file.seek(0)
-        magic_content_type = magic.from_buffer(self.file.read(),
-                                               mime=True)
-        self.file.seek(0)
-
-        # Prefer magic mime-type instead mime-type from http header
-        if uploaded_content_type != magic_content_type:
-            uploaded_content_type = magic_content_type
-
-        self.mime_type = uploaded_content_type
-
     @property
     def clean_title(self):
         return self.title.translate(Attachment._utf_translate)
@@ -306,8 +313,7 @@ class Attachment(models.Model):
     @property
     def extension(self):
         try:
-            return [t for t in mimetypes.guess_all_extensions(self.mime_type)
-                    if t not in ['.jpe', '.pwz']][0]
+            return '.' + self.file.name.split('.')[-1]
         except IndexError:
             return None
 
@@ -319,13 +325,183 @@ class Attachment(models.Model):
             return 'Unknown'
 
     @property
+    def is_podcast_audio(self):
+        if self.mime_type.split('/')[0] != 'audio':
+            return False
+
+        for tag in self.resource.tags.all():
+            if tag.feeds.filter(is_podcast=True):
+                return True
+
+        return False
+
+    @property
     def is_private(self):
         return self.resource.is_private
+
+    @property
+    def size(self):
+        return self.file.size
 
     def markdown_link(self, slug=False):
         return '[%s]: %s' % (self.slug if slug else self.title,
                              reverse('resources:attachment',
                                      kwargs={'pk': self.id}))
+
+    def update_metadata(self):
+        if self.mime_type.split('/')[0] == 'audio':
+            try:
+                m = mutagen.File(self.file)
+                metadata = {'length': str(int(m.info.length))}
+                if m.info.channels:
+                    metadata['channels'] = str(m.info.channels)
+                if m.info.bitrate:
+                    metadata['bitrate'] = str(m.info.bitrate)
+                if m.info.sample_rate:
+                    metadata['sample_rate'] = str(m.info.sample_rate)
+                self.metadata = metadata
+
+                if self.is_podcast_audio:
+                    self.update_podcast_tags_mp3(m)
+            except mutagen.MutagenError:
+                self.metadata = {}
+        else:
+            self.metadata = {}
+
+    def update_podcast_tags_mp3(self, mediafile):
+        if self.mime_type not in ['audio/mp3', 'audio/mpeg']:
+            return
+
+        feed = None
+        for tag in self.resource.tags.all():
+            feed = tag.feeds.filter(is_podcast=True).first()
+            break
+
+        if not feed:
+            return
+
+        id3_tags = [
+            ('TALB', mutagen.id3.TALB, feed.title),
+            ('TIT2', mutagen.id3.TIT2, self.resource.title),
+            ('TDRC', mutagen.id3.TDRC, self.resource.published.strftime('%Y-%m-%d')),
+            ('TCON', mutagen.id3.TCON, 'Podcast')
+        ]
+        if self.resource.author:
+            id3_tags.append(('TPE1', mutagen.id3.TPE1, self.resource.author.fullname))
+
+        update_required = False
+        for id3_tag, ID3Tag, value in id3_tags:
+            if value in mediafile.tags.getall(id3_tag):
+                continue
+            mediafile.tags.add(ID3Tag(encoding=3, text=value))
+            update_required = True
+
+        if update_required:
+            mediafile.tags.save(self.file.file.file)
+
+
+def get_feed_artwork_filename(instance, filename):
+    try:
+        extension = '.' + filename.split('.')[-1]
+    except IndexError:
+        extension = ''
+    return 'resource/feed/%s%s' % (instance.slug, extension)
+
+
+class ResourceFeed(models.Model):
+    title = models.CharField(
+        max_length=64,
+        verbose_name=_('title'),
+    )
+    slug = models.SlugField(
+        db_index=True,
+        verbose_name=_('slug'),
+    )
+    description = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name=_('description'),
+    )
+    tags = models.ManyToManyField(
+        Tag,
+        blank=True,
+        related_name='feeds',
+        verbose_name=_('tags'),
+    )
+    mime_type_list = models.CharField(
+        null=True,
+        blank=True,
+        validators=[RegexValidator(regex=r'^([\w+-]+/[\w+-]+,)*([\w+-]+/[\w+-]+)?$')],
+        max_length=256,
+        verbose_name=_('MIME types'),
+        help_text=_('A comma-separated list of MIME types. Only items with attachments of'
+                    'the given MIME types will appear in the feed.'),
+    )
+    category_list = models.CharField(
+        null=True,
+        blank=True,
+        validators=[RegexValidator(regex=r'^([^,]+,)*([^,]+)?$')],
+        max_length=256,
+        verbose_name=_('categories'),
+        help_text=_('A comma-separated list of category names to apply to the feed.'),
+    )
+    copyright = models.CharField(
+        null=True,
+        blank=True,
+        max_length=128,
+        verbose_name=_('copyright'),
+    )
+    artwork = models.FileField(
+        null=True,
+        blank=True,
+        upload_to=get_feed_artwork_filename,
+        verbose_name=_('artwork'),
+    )
+    is_podcast = models.BooleanField(
+        default=False,
+        verbose_name=_('podcast'),
+    )
+    owner_name = models.CharField(
+        null=True,
+        blank=True,
+        max_length=64,
+        verbose_name=_('owner name'),
+    )
+    owner_email = models.CharField(
+        null=True,
+        blank=True,
+        max_length=64,
+        verbose_name=_('owner email'),
+    )
+
+    class Meta:
+        ordering = ['title']
+        verbose_name = _('feed')
+        verbose_name_plural = _('feeds')
+
+    def __str__(self):
+        return self.title
+
+    @property
+    def mime_types(self):
+        return self.mime_type_list.split(',') if self.mime_type_list else []
+
+    @property
+    def categories(self):
+        return [c.strip() for c in self.category_list.split(',')] if self.category_list else []
+
+    @property
+    def image_url(self):
+        if self.artwork:
+            if getattr(default_storage, 'offload', False):
+                url = default_storage.url(self.artwork.file.name)
+                url = url.split('?', 1)[0]  # remove auth query strings, should be public
+                if not url.startswith('http'):
+                    url = 'https:' + url
+            else:
+                url = self.artwork.name
+                url = reverse('resources:feed_artwork', kwargs={'slug': self.slug})
+            return url
 
 
 def get_featured_items():

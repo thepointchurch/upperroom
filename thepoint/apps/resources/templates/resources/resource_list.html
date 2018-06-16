@@ -2,7 +2,7 @@
 <div id="index">
 {% for resource in resource_list %}
 <h3><a href="{% url "resources:detail" resource.slug %}">{{ resource.title }}</a></h3>
-{% if not tag and resource.show_date or tag.show_date %}<p class="timestamp">{{ resource.created|date:"j/n/Y" }}</p>{% endif %}
+{% if not tag and resource.show_date or tag.show_date %}<p class="timestamp">{{ resource.published|date:"j/n/Y" }}</p>{% endif %}
 {% if resource.description %}{{ resource.description|markdown:"safe" }}{% endif %}
 <p class="links">[
 {% if resource.body %}<a href="{% url "resources:detail" resource.slug %}">read</a>{% endif %}
