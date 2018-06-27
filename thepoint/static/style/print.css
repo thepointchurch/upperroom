@@ -1,16 +1,18 @@
+@import url('https://fonts.googleapis.com/css?family=Merriweather:300');
+
 body {
     color: black;
     background: white;
-    font-family: 'Times New Roman', serif;
-    font-size: 12pt;
+    font-family: 'Merriweather', 'Times New Roman', serif;
+    font-size: 11pt;
     font-size-adjust: none;
     font-style: normal;
-    font-weight: normal;
+    font-weight: 300;
     font-stretch: normal;
     vertical-align: middle;
     text-align: justify;
     text-indent: 0;
-    margin: 10pt;
+    line-height: 2rem;
 }
 
 ul, ol {
@@ -30,8 +32,8 @@ a {
     text-decoration: none;
 }
 
-h1, h2, h3, h4 {
-    font-family: 'Verdana', sans-serif;
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Fira Sans', 'Verdana', sans-serif;
     color: black;
     text-align: left;
     margin: 0;
@@ -40,6 +42,10 @@ h1, h2, h3, h4 {
 }
 
 div#header {
+    display: none;
+}
+
+div.toc {
     display: none;
 }
 
@@ -60,7 +66,7 @@ h4 {
 
 h5 {
     font-size: 10pt;
-    font-weight: bold;
+    font-weight: 600;
     color: black;
 }
 
@@ -80,13 +86,6 @@ blockquote {
     font-style: italic;
     margin-left: 20pt;
     margin-right: 20pt;
-}
-
-blockquote p.attrib {
-    text-align: right;
-    font-weight: bold;
-    font-style: normal;
-    font-size: 10pt;
 }
 
 code {
@@ -137,7 +136,7 @@ p.logon {
 }
 
 p.date {
-    font-weight: bold;
+    font-weight: 600;
 }
 
 p.option {
@@ -151,11 +150,11 @@ p.error {
 
 p.error:before {
     content: "Error: ";
-    font-weight: bold;
+    font-weight: 600;
 }
 
 a.footnote {
-    font-size: 8px;
+    font-size: 0.6rem;
     vertical-align: top;
     color: black;
 }
@@ -187,8 +186,8 @@ table.family td img {
 }
 
 @page {
-    size: landscape;
-    margin: 72pt;
+    size: portrait;
+    margin: 35mm;
 }
 
 table.calendar {
@@ -215,7 +214,7 @@ table.calendar th {
 }
 
 table.calendar p.date {
-    font-weight: bold;
+    font-weight: 600;
     text-align: right;
 }
 
@@ -233,7 +232,7 @@ table.myhome td {
 }
 
 table.passwd {
-    margin: 1em;
+    margin: 1rem;
     text-align: right;
 }
 
@@ -255,8 +254,18 @@ p#intro {
     border-bottom: 1pt solid;
     padding: 5pt;
     text-align: justify;
-    margin-top: 2em;
-    margin-bottom: 2em;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.footnote li, .footnote p {
+    margin: 0;
+    font-size: 9pt;
+    line-height: 1.2rem;
+}
+
+a.footnote-backref {
+    display: none;
 }
 
 /***[ rsg stuff ]*************************************/
@@ -264,7 +273,7 @@ p.bible {
     background-image: url(bible.png);
     background-repeat: no-repeat;
     background-position: left center;
-    font-weight: bold;
+    font-weight: 600;
     font-size: 14pt;
     min-height: 66pt;
     padding-left: 80pt;

@@ -1,4 +1,5 @@
 {% extends "directory/base.html" %}
+{% load smartquote %}
 
 {% block heading %}{{ block.super }}: Anniversaries{% endblock heading %}
 
@@ -11,7 +12,7 @@
     {% regroup month.list by anniversary.day as anniversary_by_month_day %}
     <ul>
     {% for day in anniversary_by_month_day %}
-        <li><strong>{{ day.grouper }}</strong>{% for family in day.list %} {{ family.husband.name }} &amp; {{ family.wife.name }} {{ family.name }} ({{ family.anniversary_age }} year{{ family.anniversary_age|pluralize }}){% if not forloop.last %},{% endif %}{% endfor %}</li>
+        <li><strong>{{ day.grouper }}</strong>{% for family in day.list %} {{ family.husband.name|smartquote }} &amp; {{ family.wife.name|smartquote }} {{ family.name|smartquote }} ({{ family.anniversary_age }} year{{ family.anniversary_age|pluralize }}){% if not forloop.last %},{% endif %}{% endfor %}</li>
     {% endfor %}
     </ul>
 {% empty %}

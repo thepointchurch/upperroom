@@ -1,28 +1,29 @@
-<h3>{{ family.name }}</h3>
+{% load smartquote %}
+<h3>{{ family.name|smartquote }}</h3>
 
 <table class="family">
 <tr>
 <td>
 {% for person in family.spouses.all %}
-<p><strong>{% if person.has_roster %}<a href="{% url 'roster:person' person.id %}">{{ person.name_with_suffix }}</a>{% else %}{{ person.name_with_suffix }}{% endif %}</strong>{% if person.birthday %}: {{ person.birthday|date:"j F" }}{% endif %}</p>
+<p><strong>{% if person.has_roster %}<a href="{% url 'roster:person' person.id %}">{{ person.name_with_suffix|smartquote }}</a>{% else %}{{ person.name_with_suffix|smartquote }}{% endif %}</strong>{% if person.birthday %}: {{ person.birthday|date:"j F" }}{% endif %}</p>
 {% endfor %}
 {% for person in family.siblings.all %}
-<p><strong>{% if person.has_roster %}<a href="{% url 'roster:person' person.id %}">{{ person.name_with_suffix }}</a>{% else %}{{ person.name_with_suffix }}{% endif %}</strong>{% if person.birthday %}: {{ person.birthday|date:"j F" }}{% endif %}</p>
+<p><strong>{% if person.has_roster %}<a href="{% url 'roster:person' person.id %}">{{ person.name_with_suffix|smartquote }}</a>{% else %}{{ person.name_with_suffix|smartquote }}{% endif %}</strong>{% if person.birthday %}: {{ person.birthday|date:"j F" }}{% endif %}</p>
 {% endfor %}
 </td>
 <td>
 
-{% if family.street and family.suburb and family.postcode %}<p>{{ family.street }}<br />
-{{ family.suburb }} {{ family.postcode }}</p>{% endif %}
+{% if family.street and family.suburb and family.postcode %}<p>{{ family.street|smartquote }}<br />
+{{ family.suburb|smartquote }} {{ family.postcode }}</p>{% endif %}
 {% if family.phone_home %}<p>Home: {{ family.phone_home }}</p>{% endif %}
 {% if family.phone_mobile %}<p>Mobile: {{ family.phone_mobile }}</p>{% endif %}
 
-{% for person in family.current_members.all %}{% if person.phone_mobile %}<p>Mobile ({{ person.name }}): {{ person.phone_mobile }}</p>{% endif %}{% endfor %}
-{% for person in family.current_members.all %}{% if person.phone_work %}<p>Work ({{ person.name }}): {{ person.phone_work }}</p>{% endif %}{% endfor %}
+{% for person in family.current_members.all %}{% if person.phone_mobile %}<p>Mobile ({{ person.name|smartquote }}): {{ person.phone_mobile }}</p>{% endif %}{% endfor %}
+{% for person in family.current_members.all %}{% if person.phone_work %}<p>Work ({{ person.name|smartquote }}): {{ person.phone_work }}</p>{% endif %}{% endfor %}
 
 {% if family.email %}<p>Email: <a href="mailto:{{ family.email }}">{{ family.email }}</a></p>{% endif %}
 
-{% for person in family.current_members.all %}{% if person.email %}<p>Email ({{ person.name }}): <a href="mailto:{{ person.email }}">{{ person.email }}</a></p>{% endif %}{% endfor %}
+{% for person in family.current_members.all %}{% if person.email %}<p>Email ({{ person.name|smartquote }}): <a href="mailto:{{ person.email }}">{{ person.email }}</a></p>{% endif %}{% endfor %}
 
 {% if false %}<td rowspan="2">
 <img src="" />

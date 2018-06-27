@@ -1,13 +1,13 @@
 input[id$="-suffix"] {
-    width: 3em;
+    width: 3rem;
 }
 
 input#id_postcode {
-    width: 4em;
+    width: 4rem;
 }
 
 table#family_people {
-    margin-top: 2em;
+    margin-top: 2rem;
 }
 
 form table {

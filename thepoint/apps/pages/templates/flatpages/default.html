@@ -1,8 +1,9 @@
 {% extends "site/base.html" %}
+{% load smartquote %}
 
-{% block title %}{{ block.super }}: {{ flatpage.title }}{% endblock title %}
+{% block title %}{{ block.super }}: {{ flatpage.title|smartquote }}{% endblock title %}
 
-{% block heading %}{{ flatpage.title }}{% endblock heading %}
+{% block heading %}{{ flatpage.title|smartquote }}{% endblock heading %}
 
 {% block content %}
 {{ flatpage.content }}

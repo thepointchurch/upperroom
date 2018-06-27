@@ -25,6 +25,7 @@ INSTALLED_APPS = (
     'robots',
     'thepoint.apps.roster.apps.RosterConfig',
     'thepoint.apps.splash.apps.SplashConfig',
+    'thepoint.apps.utils.apps.UtilsConfig',
     'django_markwhat',
     'django.contrib.admin.apps.AdminConfig',
     'django.contrib.auth.apps.AuthConfig',
@@ -124,12 +125,12 @@ if os.getenv('STATICFILES_BUCKET', None) or os.getenv('MEDIAFILES_BUCKET', None)
 
     STATICFILES_BUCKET = os.getenv('STATICFILES_BUCKET',
                                    'static.%s' % ALLOWED_HOSTS[0])
-    STATICFILES_STORAGE = 'thepoint.util.storages.backends.S3StaticStorage'
+    STATICFILES_STORAGE = 'thepoint.apps.utils.storages.backends.S3StaticStorage'
 
     MEDIAFILES_OFFLOAD = True
     MEDIAFILES_BUCKET = os.getenv('MEDIAFILES_BUCKET',
                                   'media.%s' % ALLOWED_HOSTS[0])
-    DEFAULT_FILE_STORAGE = 'thepoint.util.storages.backends.S3MediaStorage'
+    DEFAULT_FILE_STORAGE = 'thepoint.apps.utils.storages.backends.S3MediaStorage'
 
 
 class AddSyslogTagFilter(logging.Filter):

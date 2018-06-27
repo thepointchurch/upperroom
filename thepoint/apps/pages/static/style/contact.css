@@ -6,7 +6,7 @@ div#contact p {
     text-align: left;
 }
 
-@media (max-width: 640px) {
+@media screen and (max-width: 640px) {
     div#contact p {
         clear: right
     }

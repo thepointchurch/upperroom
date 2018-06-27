@@ -1,5 +1,6 @@
 {% load markup %}
+{% load smartquote %}
 <div class="splash">
-<h3>{{ splash.title }}</h3>
-{{ splash.content|markdown:"safe" }}
+<h3>{{ splash.title|smartquote }}</h3>
+{{ splash.content|markdown:"safe,smarty" }}
 </div>

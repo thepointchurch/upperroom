@@ -1,30 +1,31 @@
 {% extends "resources/base.html" %}
 {% load markup %}
+{% load smartquote %}
 
 {% block headers %}{% for feed in tag.feeds.all %}
-<link rel="alternate" type="application/rss+xml" title="{{ feed.title }}: {% if feed.is_podcast %}Podcast{% else %}RSS{% endif %}" href="{% url 'resources:rss' feed.slug %}" />
-<link rel="alternate" type="application/atom+xml" title="{{ feed.title }}: Atom" href="{% url 'resources:atom' feed.slug %}" />
+<link rel="alternate" type="application/rss+xml" title="{{ feed.title|smartquote }}: {% if feed.is_podcast %}Podcast{% else %}RSS{% endif %}" href="{% url 'resources:rss' feed.slug %}" />
+<link rel="alternate" type="application/atom+xml" title="{{ feed.title|smartquote }}: Atom" href="{% url 'resources:atom' feed.slug %}" />
 {% endfor %}{% endblock headers %}
 
 {% block title %}
 {% if tag.is_featured %}
-{{ tag.name }}
+{{ tag.name|smartquote }}
 {% else %}
-{{ block.super }}: Tag: {{ tag.name }}
+{{ block.super }}: Tag: {{ tag.name|smartquote }}
 {% endif %}
 {% endblock title %}
 
 {% block heading %}
 {% if tag.is_featured %}
-{{ tag.name }}
+{{ tag.name|smartquote }}
 {% else %}
-{{ block.super }}: Tag: {{ tag.name }}
+{{ block.super }}: Tag: {{ tag.name|smartquote }}
 {% endif %}
 {% endblock heading %}
 
 {% block content %}
 {% if tag.description %}
-{{ tag.description|markdown:"safe" }}
+{{ tag.description|markdown:"safe,smarty" }}
 {% endif %}
 {% for feed in tag.feeds.all %}
 {% if feed.is_podcast %}

@@ -1,8 +1,9 @@
 {% extends "directory/base.html" %}
+{% load smartquote %}
 
-{% block title %}{{ block.super }}: {{ family.name }}{% endblock title %}
+{% block title %}{{ block.super }}: {{ family.name|smartquote }}{% endblock title %}
 
-{% block heading %}{{ block.super }}: {{ family.name }}{% endblock heading %}
+{% block heading %}{{ block.super }}: {{ family.name|smartquote }}{% endblock heading %}
 
 {% block content %}
 {% include "directory/family.html" %}

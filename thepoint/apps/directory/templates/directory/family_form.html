@@ -1,5 +1,6 @@
 {% extends "directory/base.html" %}
 {% load staticfiles %}
+{% load smartquote %}
 
 {% block stylesheets %}
 <link rel="stylesheet" type="text/css" href="{% static 'style/directory_form.css' %}" />
@@ -8,9 +9,9 @@
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 {% endblock stylesheets %}
 
-{% block title %}{{ block.super }}: {{ family.name }}: Edit{% endblock title %}
+{% block title %}{{ block.super }}: {{ family.name|smartquote }}: Edit{% endblock title %}
 
-{% block heading %}{{ block.super }}: {{ family.name }}: Edit{% endblock heading %}
+{% block heading %}{{ block.super }}: {{ family.name|smartquote }}: Edit{% endblock heading %}
 
 {% block content %}
 

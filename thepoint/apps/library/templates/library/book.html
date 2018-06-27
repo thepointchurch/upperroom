@@ -1,8 +1,9 @@
+{% load smartquote %}
 <h3>{{ book.title }}</h3>
 <table class="book">
-{% if book.subtitle %}<tr><td>Subtitle:</td><td>{{ book.subtitle }}</td></tr>{% endif %}
-{% if book.author %}<tr><td>Author:</td><td>{% for author in book.authors %}{{ author }}<br/>{% endfor %}</td><tr>{% endif %}
-{% if book.description %}<tr><td>Description:</td><td>{{ book.description }}</td></tr>{% endif %}
+{% if book.subtitle %}<tr><td>Subtitle:</td><td>{{ book.subtitle|smartquote }}</td></tr>{% endif %}
+{% if book.author %}<tr><td>Author:</td><td>{% for author in book.authors %}{{ author|smartquote }}<br/>{% endfor %}</td><tr>{% endif %}
+{% if book.description %}<tr><td>Description:</td><td>{{ book.description|smartquote }}</td></tr>{% endif %}
 {% if book.location %}<tr><td>Location:</td><td>{{ book.location }}</td></tr>{% endif %}
 {% if book.type %}<tr><td>Type:</td><td>{{ book.type }}</td></tr>{% endif %}
 {% if book.isbn %}<tr><td>ISBN:</td><td><a href="http://www.amazon.com/gp/search/ref=sr_adv_b/?field-isbn={{ book.isbn }}">{{ book.isbn }}</a></td></tr>{% endif %}

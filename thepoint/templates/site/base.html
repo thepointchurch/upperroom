@@ -2,6 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
         "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 {% load staticfiles %}
+{% load smartquote %}
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
@@ -12,7 +13,7 @@
 <link rel="stylesheet" type="text/css" href="{% static 'style/default.css' %}" title="Default" />
 <link rel="stylesheet" type="text/css" href="{% static 'style/print.css' %}" media="print" />
 {% block stylesheets %}{% endblock stylesheets %}
-<link rel="stylesheet" type="text/css" href="{% static 'style/mobile.css' %}" media="(max-width: 640px)" />
+<link rel="stylesheet" type="text/css" href="{% static 'style/mobile.css' %}" media="screen and (max-width: 640px)" />
 <link rel="shortcut icon" href="{% static 'style/icon.png' %}" />
 <link rel="home" href="/" />
 <link rel="index" href="/" />
@@ -36,7 +37,7 @@
 </li>
 {% block nav:top %}
 {% for item in featured_items %}
-<li><a href="{{ item.get_absolute_url }}"{% if item.description %} title="{{ item.description }}"{% endif %}>{{ item.title }}</a></li>
+<li><a href="{{ item.get_absolute_url }}"{% if item.description %} title="{{ item.description|smartquote }}"{% endif %}>{{ item.title|smartquote }}</a></li>
 {% endfor %}
 {% endblock nav:top %}
 <li>
@@ -47,7 +48,7 @@
 <a href="{% url 'pages:contact' %}" title="Would you like to know more about The Point? Get our contact details and meeting times here.">Contact Us</a>
 </li>
 {% if not user.is_authenticated %}<li>
-<a href="{% url 'members:index' %}" title="Login to the Member's area.">Member Login</a>
+<a href="{% url 'members:index' %}" title="Login to the Members’ area.">Member Login</a>
 </li>{% endif %}
 <li>
 <a href="{% url 'pages:copyright' %}">Copyright</a>
@@ -56,11 +57,11 @@
 {% if user.is_authenticated %}
 <ul>
 <li>
-<a href="{% url 'members:index' %}">Member's Home</a>
+<a href="{% url 'members:index' %}">Members’ Home</a>
 </li>
 {% block nav:private_top %}
 {% for item in featured_private_items %}
-<li><a href="{{ item.get_absolute_url }}"{% if item.description %} title="{{ item.description }}"{% endif %}>{{ item.title }}</a></li>
+<li><a href="{{ item.get_absolute_url }}"{% if item.description %} title="{{ item.description|smartquote }}"{% endif %}>{{ item.title|smartquote }}</a></li>
 {% endfor %}
 {% endblock nav:private_top %}
 <li>
@@ -73,17 +74,17 @@
 <a href="{% url 'roster:index' %}" title="The Sunday Assembly Roster.">Roster</a>
 </li>
 <li>
-<a href="{% url 'library:index' %}" title="Search the The Point's Library.">Library</a>
+<a href="{% url 'library:index' %}" title="Search the The Point’s Library.">Library</a>
 </li>
 <li>
 <a href="{% url 'poi:index' %}" title="Read past issues of Points of Interest">POI</a>
 </li>
 <li>
-<a href="{% url 'members:logout' %}" title="Log out of the Member's Area.">Logout</a>
+<a href="{% url 'members:logout' %}" title="Log out of the Members’ Area.">Logout</a>
 </li>
 </ul>
 
-<p class="logon">You are logged in as<br />{{ user.get_full_name }}</p>
+<p class="logon">You are logged in as {{ user.get_full_name }}</p>
 {% endif %}
 </div>
 
@@ -92,7 +93,7 @@
 {% if messages %}
 <div class="messages">
 {% for message in messages %}
-<p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+<p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|smartquote }}</p>
 {% endfor %}
 </div>
 {% endif %}
@@ -103,7 +104,7 @@
 {% endfor %}
 {% endif %}
 
-<h2>{% block heading %}Welcome to The Point's website{% endblock heading %}</h2>
+<h2>{% block heading %}Welcome to The Point’s website{% endblock heading %}</h2>
 
 {% block content %}{% endblock content %}
 
