@@ -234,6 +234,7 @@ div#navbar ul {
     font-weight: 600;
     list-style-type: none;
     margin: 0;
+    padding: 0;
 }
 
 div#navbar ul li {
