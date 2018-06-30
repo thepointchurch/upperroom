@@ -89,7 +89,7 @@ class ResourceFeedRSS(Feed):
         if item.author:
             args['author'] = item.author.fullname
         attachment = item.attachments.filter(mime_type__in=self.object.mime_types).first()
-        if attachment and 'length' in attachment.metadata:
+        if attachment and attachment.metadata and 'length' in attachment.metadata:
             args['duration'] = attachment.metadata['length']
         return args
 
