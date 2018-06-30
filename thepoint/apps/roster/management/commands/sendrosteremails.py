@@ -6,7 +6,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.template.loader import get_template
 from django.utils.translation import ugettext_lazy as _
 
-from ....models import Role
+from ...models import Role
 
 _alert_interval = 3  # days
 
