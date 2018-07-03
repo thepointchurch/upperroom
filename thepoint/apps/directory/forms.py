@@ -10,6 +10,7 @@ class PersonForm(ModelForm):
         model = Person
         fields = ['name',
                   'suffix',
+                  'surname_override',
                   'gender',
                   'birthday',
                   'email',

@@ -5,10 +5,10 @@
 <tr>
 <td>
 {% for person in family.spouses.all %}
-<p><strong>{% if person.has_roster %}<a href="{% url 'roster:person' person.id %}">{{ person.name_with_suffix|smartquote }}</a>{% else %}{{ person.name_with_suffix|smartquote }}{% endif %}</strong>{% if person.birthday %}: {{ person.birthday|date:"j F" }}{% endif %}</p>
+<p><strong>{% if person.has_roster %}<a href="{% url 'roster:person' person.id %}">{{ person.name_with_suffix|smartquote }}{% if person.surname_override %} {{ person.surname_override|smartquote }}{% endif %}</a>{% else %}{{ person.name_with_suffix|smartquote }}{% if person.surname_override %} {{ person.surname_override|smartquote }}{% endif %}{% endif %}</strong>{% if person.birthday %}: {{ person.birthday|date:"j F" }}{% endif %}</p>
 {% endfor %}
 {% for person in family.siblings.all %}
-<p><strong>{% if person.has_roster %}<a href="{% url 'roster:person' person.id %}">{{ person.name_with_suffix|smartquote }}</a>{% else %}{{ person.name_with_suffix|smartquote }}{% endif %}</strong>{% if person.birthday %}: {{ person.birthday|date:"j F" }}{% endif %}</p>
+<p><strong>{% if person.has_roster %}<a href="{% url 'roster:person' person.id %}">{{ person.name_with_suffix|smartquote }}{% if person.surname_override %} {{ person.surname_override|smartquote }}{% endif %}</a>{% else %}{{ person.name_with_suffix|smartquote }}{% if person.surname_override %} {{ person.surname_override|smartquote }}{% endif %}{% endif %}</strong>{% if person.birthday %}: {{ person.birthday|date:"j F" }}{% endif %}</p>
 {% endfor %}
 </td>
 <td>
