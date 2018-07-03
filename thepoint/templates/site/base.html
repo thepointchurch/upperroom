@@ -45,14 +45,14 @@
 {% block nav:resources %}{% endblock nav:resources %}
 </li>
 <li>
-<a href="{% url 'pages:contact' %}" title="Would you like to know more about The Point? Get our contact details and meeting times here.">Contact Us</a>
+<a href="{% url 'pages:contact' %}" title="Would you like to know more about The Point? Get our contact details and meeting times here.">Contact</a>
 </li>
-{% if not user.is_authenticated %}<li>
-<a href="{% url 'members:index' %}" title="Login to the Members’ area.">Member Login</a>
-</li>{% endif %}
 <li>
 <a href="{% url 'pages:copyright' %}">Copyright</a>
 </li>
+{% if not user.is_authenticated %}<li>
+<a href="{% url 'members:index' %}" title="Login to the Members’ area.">Login</a>
+</li>{% endif %}
 </ul>
 {% if user.is_authenticated %}
 <ul>
