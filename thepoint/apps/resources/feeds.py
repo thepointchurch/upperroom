@@ -107,6 +107,9 @@ class ResourceFeedRSS(Feed):
     def description(self, obj):
         return obj.description
 
+    def author_name(self, obj):
+        return obj.owner_name
+
     def categories(self, obj):
         return obj.categories
 
