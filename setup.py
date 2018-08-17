@@ -8,7 +8,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='thepoint',
-    version='1.99',
+    version='1.999',
     license=open('LICENSE').read(),
     description='''A Django project for The Point Church's website.''',
     long_description=README,
