@@ -1,6 +1,7 @@
 import logging
 from datetime import date, timedelta
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import user_passes_test
@@ -36,6 +37,7 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
                                     )
         except:
             pass
+        context['webmaster_email'] = settings.WEBMASTER_EMAIL
         return context
 
 

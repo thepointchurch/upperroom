@@ -35,7 +35,7 @@ class MaybePodcastFeed(Rss201rev2Feed):
             handler.startElement("itunes:owner", {})
             handler.addQuickElement('itunes:email',
                                     self.feed['owner_email'] if 'owner_email' in self.feed
-                                    else settings.DEFAULT_FROM_EMAIL)
+                                    else settings.WEBMASTER_EMAIL)
             if 'owner_name' in self.feed:
                 handler.addQuickElement('itunes:name', self.feed['owner_name'])
             handler.endElement("itunes:owner")

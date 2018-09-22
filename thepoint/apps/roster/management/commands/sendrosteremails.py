@@ -1,6 +1,7 @@
 from datetime import date, datetime, timedelta
 
 from django.conf import settings
+from django.contrib.sites.shortcuts import get_current_site
 from django.core import mail
 from django.core.management.base import BaseCommand, CommandError
 from django.template.loader import get_template
@@ -67,17 +68,19 @@ class Command(BaseCommand):
 
         messages = []
 
+        site_name = get_current_site(None).name
+
         for person, roles in role_map.items():
             messages.append(mail.EmailMessage(
                 _('%(site)s Roster Notification') % {
-                    'site': settings.SITE_NAME
+                    'site': site_name,
                 },
                 get_template('roster/reminder.txt').render({
                     'person': person,
                     'date': d,
                     'role_list': roles,
                 }),
-                settings.DEFAULT_FROM_EMAIL,
+                settings.ROSTER_EMAIL,
                 [person.find_email()], connection=connection))
 
         connection.send_messages(messages)

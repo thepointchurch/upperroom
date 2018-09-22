@@ -268,49 +268,6 @@ a.footnote-backref {
     display: none;
 }
 
-/***[ rsg stuff ]*************************************/
-p.bible {
-    background-image: url(bible.png);
-    background-repeat: no-repeat;
-    background-position: left center;
-    font-weight: 600;
-    font-size: 14pt;
-    min-height: 66pt;
-    padding-left: 80pt;
-}
-
-p.note {
-    font-size: 9pt;
-}
-
-div.write {
-    background-image: url(write.png);
-    background-repeat: no-repeat;
-    background-position: left top;
-    min-height: 80pt;
-    font-style: italic;
-    padding-left: 80pt;
-}
-
-div.write p:after {
-    content: "\
-. . . . . . . . . . . . . . . . . . . . . . \
-. . . . . . . . . . . . . . . . . . . . . \
-. . . . . . . . . . . . . . . . . . . . . . \
-. . . . . . . . . . . . . . . . . . . .\A \
-. . . . . . . . . . . . . . . . . . . . . . \
-. . . . . . . . . . . . . . . . . . . . . \
-. . . . . . . . . . . . . . . . . . . . . . \
-. . . . . . . . . . . . . . . . . . . .\A \
-. . . . . . . . . . . . . . . . . . . . . . \
-. . . . . . . . . . . . . . . . . . . . . \
-. . . . . . . . . . . . . . . . . . . . . . \
-. . . . . . . . . . . . . . . . . . . . ";
-    display: block;
-    text-align: left;
-    line-height: 200%;
-}
-
 /***[ splash stuff ]*********************************/
 div.splash {
     display: none;

@@ -1,13 +1,22 @@
-div#contact img {
+img {
     float: right;
 }
 
-div#contact p {
+p {
     text-align: left;
 }
 
+blockquote {
+    font-style: normal;
+    padding: 0 1rem;
+}
+
+blockquote > p {
+    margin: 0;
+}
+
 @media screen and (max-width: 640px) {
-    div#contact p {
+    p {
         clear: right
     }
 }

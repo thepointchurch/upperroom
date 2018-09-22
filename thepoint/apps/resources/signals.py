@@ -1,12 +1,10 @@
-from django.apps import apps
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.uploadedfile import UploadedFile
-from django.db.models.signals import post_migrate, post_delete, pre_save, post_save
+from django.db.models.signals import post_delete, pre_save, post_save
 from django.dispatch import receiver
-from django.utils.translation import ugettext as _
 from storages.backends.s3boto3 import S3Boto3StorageFile
 
-from .models import Attachment, Resource, ResourceFeed, Tag
+from .models import Attachment, Resource, ResourceFeed
 
 
 def is_s3_file_public(file_object):
@@ -115,19 +113,3 @@ def feed_post_save(sender, instance, **kwargs):
 def feed_post_delete(sender, instance, **kwargs):
     if instance.artwork:
         delete_file(instance.artwork)
-
-
-def add_tags(sender, **kwargs):
-    tag, created = Tag.objects.get_or_create(slug='about')
-    if created:
-        tag.name = _('About Us')
-        tag.description = _('Aquaint yourself with The Point and what we belive.')
-        tag.resources_per_page = None
-        tag.reverse_order = True
-        tag.is_exclusive = True
-        tag.priority = 10
-        tag.show_date = False
-        tag.save()
-
-
-post_migrate.connect(add_tags, sender=apps.get_app_config('resources'))

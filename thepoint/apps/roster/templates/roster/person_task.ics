@@ -1,6 +1,6 @@
 BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//The Point Church//Website//EN
+PRODID:-//{{ site.name }}//Website//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH{% regroup role_list|dictsort:"date" by date as role_date %}{% for date in role_date %}{% for role in date.list %}
 BEGIN:VTODO
@@ -9,7 +9,7 @@ LOCATION:{{ role.location }}{% endif %}{% if role.description %}
 DESCRIPTION:{{ role.description }}{% endif %}
 DUE;VALUE=DATE:{{ role.date|date:"Ymd" }}
 DTSTAMP:{{ role.timestamp|date:"Ymd\THis\Z" }}
-UID:roster.{{ role.id }}@thepoint.org.au
+UID:roster.{{ role.id }}@{{ site.domain }}
 SEQUENCE:{{ role.revision }}
 END:VTODO{% endfor %}{% endfor %}
 END:VCALENDAR

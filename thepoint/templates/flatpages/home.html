@@ -1,0 +1,11 @@
+{% extends "flatpages/default.html" %}
+{% load staticfiles %}
+
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="{% static 'style/titlepage.css' %}" />
+{% endblock stylesheets %}
+
+{% block content %}
+<img src="{% static 'style/welcome.jpg' %}"/>
+{{ block.super }}
+{% endblock content %}

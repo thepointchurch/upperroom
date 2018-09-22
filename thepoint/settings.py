@@ -17,10 +17,10 @@ SITE_ID = int(os.getenv('SITE_ID', 1))
 
 INSTALLED_APPS = (
     'thepoint.apps.directory.apps.DirectoryConfig',
+    'thepoint.apps.extendedsites.apps.ExtendedSitesConfig',
     'thepoint.apps.library.apps.LibraryConfig',
     'thepoint.apps.members.apps.MembersConfig',
     'thepoint.apps.newsletter.apps.NewsletterConfig',
-    'thepoint.apps.pages.apps.PagesConfig',
     'thepoint.apps.resources.apps.ResourcesConfig',
     'robots',
     'thepoint.apps.roster.apps.RosterConfig',
@@ -67,10 +67,9 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-SITE_NAME = 'The Point Church'
-
-DEFAULT_FROM_EMAIL = 'webmaster@thepoint.org.au'
-DIRECTORY_NOTIFY_EMAIL = 'directory@thepoint.org.au'
+WEBMASTER_EMAIL = 'webmaster@thepoint.org.au'
+DIRECTORY_EMAIL = 'directory@thepoint.org.au'
+ROSTER_EMAIL = 'roster@thepoint.org.au'
 
 LOGIN_URL = '/members/login'
 LOGIN_REDIRECT_URL = '/members/'
@@ -103,6 +102,7 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
+                'thepoint.apps.extendedsites.context_processors.site',
                 'thepoint.apps.resources.context_processors.featured_tags',
                 'thepoint.apps.splash.context_processors.splashes',
             ],

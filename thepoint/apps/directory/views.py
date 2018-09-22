@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.storage import default_storage
 from django.db.models import Q
@@ -16,6 +17,11 @@ from .signals import family_updated
 class IndexView(LoginRequiredMixin, generic.ListView):
     template_name = 'directory/index.html'
     queryset = Family.current_objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(IndexView, self).get_context_data(**kwargs)
+        context['directory_email'] = settings.DIRECTORY_EMAIL
+        return context
 
 
 class LetterView(LoginRequiredMixin, generic.ListView):
@@ -106,7 +112,7 @@ class AnniversaryView(LoginRequiredMixin, generic.ListView):
 
 class PdfView(LoginRequiredMixin, generic.View):
     def get(self, request, *args, **kwargs):
-        title = _('%(site)s Directory') % {'site': settings.SITE_NAME}
+        title = _('%(site)s Directory') % {'site': get_current_site(request).name}
         if getattr(default_storage, 'offload', False):
             disposition = 'attachment; filename="%s.pdf"' % title
             response = HttpResponseRedirect(
