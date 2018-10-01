@@ -287,6 +287,10 @@ p.error:before {
     font-weight: 600;
 }
 
+ul.errorlist {
+    color: red;
+}
+
 p.message {
     text-align: left;
     color: blue;

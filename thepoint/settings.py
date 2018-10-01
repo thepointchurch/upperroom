@@ -71,6 +71,8 @@ WEBMASTER_EMAIL = 'webmaster@thepoint.org.au'
 DIRECTORY_EMAIL = 'directory@thepoint.org.au'
 ROSTER_EMAIL = 'roster@thepoint.org.au'
 
+DEFAULT_FROM_EMAIL = WEBMASTER_EMAIL
+
 LOGIN_URL = '/members/login'
 LOGIN_REDIRECT_URL = '/members/'
 
@@ -131,6 +133,8 @@ if os.getenv('STATICFILES_BUCKET', None) or os.getenv('MEDIAFILES_BUCKET', None)
     MEDIAFILES_BUCKET = os.getenv('MEDIAFILES_BUCKET',
                                   'media.%s' % ALLOWED_HOSTS[0])
     DEFAULT_FILE_STORAGE = 'thepoint.apps.utils.storages.backends.S3MediaStorage'
+
+    AWS_DEFAULT_ACL = None
 
 
 class AddSyslogTagFilter(logging.Filter):
