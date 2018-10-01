@@ -2,12 +2,12 @@ import urllib.parse
 
 from django.conf import settings
 from django.contrib.syndication.views import Feed
-from django.core.files.storage import default_storage
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.feedgenerator import Atom1Feed, Enclosure, Rss201rev2Feed
 
 from .models import Resource, ResourceFeed
+from ..utils.storages.attachment import attachment_url
 
 
 class MaybePodcastFeed(Rss201rev2Feed):
@@ -146,14 +146,9 @@ class ResourceFeedRSS(Feed):
     def item_enclosures(self, item):
         enc = []
         for attachment in item.attachments.filter(mime_type__in=self.object.mime_types):
-            if getattr(default_storage, 'offload', False):
-                url = default_storage.url(attachment.file.name)
-                url = url.split('?', 1)[0]  # remove auth query strings, should be public
-                if not url.startswith('http'):
-                    url = 'https:' + url
-            else:
-                url = self.request.build_absolute_uri(reverse('resources:attachment',
-                                                              kwargs={'pk': attachment.id}))
+            url = attachment_url(reverse('resources:attachment', kwargs={'pk': attachment.id}),
+                                 attachment.file.name,
+                                 True, self.request)
             enc.append(Enclosure(url=url,
                                  length=str(attachment.size),
                                  mime_type=attachment.mime_type))

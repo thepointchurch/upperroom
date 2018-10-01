@@ -1,12 +1,10 @@
-import mimetypes
-
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.core.files.storage import default_storage
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.views import generic
 
 from .models import Attachment, Resource, ResourceFeed, Tag
+from ..utils.storages.attachment import attachment_response
 
 
 class TagList(generic.ListView):
@@ -86,25 +84,9 @@ class AttachmentView(ResourcePermissionMixin, generic.DetailView):
 
     def get(self, request, *args, **kwargs):
         attachment = self.get_object()
-
-        if getattr(default_storage, 'offload', False):
-            disposition = ('attachment; filename="%s%s"' % (
-                           attachment.clean_title,
-                           attachment.extension,
-                           ))
-            response = HttpResponseRedirect(
-                default_storage.url(attachment.file.name,
-                                    parameters={
-                                        'ResponseContentDisposition': disposition,
-                                        'ResponseContentType': attachment.mime_type,
-                                    }))
-        else:
-            response = HttpResponse(attachment.file,
-                                    content_type=attachment.mime_type)
-            response['Content-Disposition'] = ('attachment; filename="%s%s"' %
-                                               (attachment.clean_title,
-                                                attachment.extension))
-        return response
+        return attachment_response(attachment.file,
+                                   filename=(attachment.clean_title + attachment.extension),
+                                   content_type=attachment.mime_type)
 
 
 class FeedArtworkView(generic.DetailView):
@@ -114,12 +96,4 @@ class FeedArtworkView(generic.DetailView):
         feed = self.get_object()
         if not feed.artwork:
             raise Http404('This feed has no artwork')
-
-        if getattr(default_storage, 'offload', False):
-            response = HttpResponseRedirect(default_storage.url(feed.artwork.name))
-        else:
-            content_type = mimetypes.guess_type(feed.artwork.name + 'foo')[0]
-            if not content_type:
-                content_type = 'image/png'
-            response = HttpResponse(feed.artwork, content_type=content_type)
-        return response
+        return attachment_response(feed.artwork, as_attachment=False)

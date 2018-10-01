@@ -1,10 +1,9 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.core.files.storage import default_storage
-from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.views import generic
 
 from .models import Issue, Publication
+from ..utils.storages.attachment import attachment_response
 
 
 class PublicationMixin(UserPassesTestMixin):
@@ -37,25 +36,6 @@ class DetailView(PublicationMixin, generic.DetailView):
 
     def get(self, request, *args, **kwargs):
         issue = self.get_object()
-
-        if getattr(default_storage, 'offload', False):
-            disposition = ('attachment; filename="%s %s%s"' % (
-                           issue.publication.name,
-                           issue.date,
-                           issue.extension,
-                           ))
-            response = HttpResponseRedirect(
-                default_storage.url(issue.file.name,
-                                    parameters={
-                                        'ResponseContentDisposition': disposition,
-                                        'ResponseContentType': issue.mime_type,
-                                    }))
-        else:
-            response = HttpResponse(issue.file, content_type=issue.mime_type)
-            response['Content-Disposition'] = (
-                ('attachment; filename="%s %s%s"' % (
-                 issue.publication.name,
-                 issue.date,
-                 issue.extension,
-                 )))
-        return response
+        return attachment_response(issue.file,
+                                   filename='%s %s%s' % (issue.publication.name, issue.date, issue.extension),
+                                   content_type=issue.mime_type)

@@ -3,7 +3,6 @@ from itertools import chain
 
 import mutagen
 from django.contrib.postgres.fields import JSONField
-from django.core.files.storage import default_storage
 from django.core.validators import RegexValidator
 from django.db import models
 from django.http import Http404
@@ -11,6 +10,7 @@ from django.urls import resolve, reverse
 from django.utils.translation import ugettext_lazy as _
 
 from ..directory.models import Person
+from ..utils.storages.attachment import attachment_url
 
 logger = logging.getLogger(__name__)
 
@@ -493,15 +493,8 @@ class ResourceFeed(models.Model):
     @property
     def image_url(self):
         if self.artwork:
-            if getattr(default_storage, 'offload', False):
-                url = default_storage.url(self.artwork.file.name)
-                url = url.split('?', 1)[0]  # remove auth query strings, should be public
-                if not url.startswith('http'):
-                    url = 'https:' + url
-            else:
-                url = self.artwork.name
-                url = reverse('resources:feed_artwork', kwargs={'slug': self.slug})
-            return url
+            return attachment_url(reverse('resources:feed_artwork', kwargs={'slug': self.slug}),
+                                  self.artwork.file.name)
 
 
 def get_featured_items():

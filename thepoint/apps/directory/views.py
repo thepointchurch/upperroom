@@ -2,9 +2,8 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
-from django.core.files.storage import default_storage
 from django.db.models import Q
-from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.http import Http404
 from django.shortcuts import redirect
 from django.utils.translation import ugettext as _
 from django.views import generic
@@ -12,6 +11,7 @@ from django.views import generic
 from .forms import FamilyForm, PersonInlineFormSet
 from .models import Family, Person
 from .signals import family_updated
+from ..utils.storages.attachment import attachment_response
 
 
 class IndexView(LoginRequiredMixin, generic.ListView):
@@ -113,16 +113,6 @@ class AnniversaryView(LoginRequiredMixin, generic.ListView):
 class PdfView(LoginRequiredMixin, generic.View):
     def get(self, request, *args, **kwargs):
         title = _('%(site)s Directory') % {'site': get_current_site(request).name}
-        if getattr(default_storage, 'offload', False):
-            disposition = 'attachment; filename="%s.pdf"' % title
-            response = HttpResponseRedirect(
-                default_storage.url('directory/directory.pdf',
-                                    parameters={
-                                        'ResponseContentDisposition': disposition,
-                                        'ResponseContentType': 'application/pdf',
-                                    }))
-        else:
-            fsock = open('%s/directory/directory.pdf' % settings.MEDIA_ROOT, 'rb')
-            response = HttpResponse(fsock, content_type='application/pdf')
-            response['Content-Disposition'] = ('attachment; filename="%s.pdf"' % title)
-        return response
+        return attachment_response('directory/directory.pdf',
+                                   filename=('%s.pdf' % title),
+                                   content_type='application/pdf')
