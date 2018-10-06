@@ -44,7 +44,7 @@ class MaybePodcastFeed(Rss201rev2Feed):
             if 'image_url' in self.feed:
                 image_url = self.feed['image_url']
             else:
-                image_url = 'style/podcast.png'
+                image_url = 'style/podcast.jpg'
             try:
                 if '.' in settings.STATICFILES_BUCKET:
                     bucket = settings.STATICFILES_BUCKET
