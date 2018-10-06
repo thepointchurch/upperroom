@@ -6,6 +6,7 @@ from django.forms.widgets import Textarea
 from django.utils.translation import ugettext_lazy as _
 
 from .models import Attachment, Resource, ResourceFeed, Tag
+from ..directory.models import Person
 
 
 class TagAdmin(admin.ModelAdmin):
@@ -82,8 +83,18 @@ def action_mark_public(modeladmin, request, queryset):
 action_mark_public.short_description = _('Mark selected resources as public')
 
 
+class ResourceForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ResourceForm, self).__init__(*args, **kwargs)
+        self.fields['author'].queryset = (
+            Person.objects.filter(models.Q(id__exact=self.instance.author.id) |
+                                  (models.Q(is_current=True) & models.Q(is_member=True)))
+        )
+
+
 class ResourceAdmin(admin.ModelAdmin):
     model = Resource
+    form = ResourceForm
     inlines = [AttachmentInline]
     list_filter = ('tags', 'created', 'published', 'modified', 'is_published', 'is_private')
     search_fields = ['title', 'description', 'body']
