@@ -25,3 +25,14 @@ div.splash {
     border: 1px solid black;
     margin: 1rem;
 }
+
+div#welcome {
+    text-align: center;
+    line-height: 0;
+}
+
+div#welcome img {
+    display: inline;
+    margin: 0;
+    max-width: 50%;
+}

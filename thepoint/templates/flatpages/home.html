@@ -6,6 +6,8 @@
 {% endblock stylesheets %}
 
 {% block content %}
-<img src="{% static 'style/welcome.jpg' %}"/>
+<div id="welcome">
+<img src="{% static 'style/welcome1.jpg' %}"/><img src="{% static 'style/welcome2.jpg' %}"/><img src="{% static 'style/welcome3.jpg' %}"/><img src="{% static 'style/welcome4.jpg' %}"/>
+</div>
 {{ block.super }}
 {% endblock content %}
