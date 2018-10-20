@@ -18,7 +18,7 @@ div#header p {
 }
 
 div#header p.caption {
-    display: none;
+    left: 0;
 }
 
 div#navbar {

@@ -74,11 +74,11 @@ div#header p {
 
 div#header p.caption {
     position: absolute;
-    top: 0;
+    bottom: 0;
     right: 0;
     border: 0;
     padding: 0.4rem;
-    font-size: 0.7rem;
+    font-size: 1.6rem;
     font-style: normal;
 }
 
