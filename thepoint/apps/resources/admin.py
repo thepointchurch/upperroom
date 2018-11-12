@@ -86,10 +86,15 @@ action_mark_public.short_description = _('Mark selected resources as public')
 class ResourceForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(ResourceForm, self).__init__(*args, **kwargs)
-        self.fields['author'].queryset = (
-            Person.objects.filter(models.Q(id__exact=self.instance.author.id) |
-                                  (models.Q(is_current=True) & models.Q(is_member=True)))
-        )
+        if self.instance.author:
+            self.fields['author'].queryset = (
+                Person.objects.filter(models.Q(id__exact=self.instance.author.id) |
+                                      (models.Q(is_current=True) & models.Q(is_member=True)))
+            )
+        else:
+            self.fields['author'].queryset = (
+                Person.objects.filter(models.Q(is_current=True) & models.Q(is_member=True))
+            )
 
 
 class ResourceAdmin(admin.ModelAdmin):
