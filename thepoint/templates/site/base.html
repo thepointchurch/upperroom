@@ -3,6 +3,7 @@
         "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 {% load static %}
 {% load smartquote %}
+{% load markup %}
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
@@ -13,7 +14,6 @@
 <link rel="stylesheet" type="text/css" href="{% static 'style/default.css' %}" title="Default" />
 <link rel="stylesheet" type="text/css" href="{% static 'style/print.css' %}" media="print" />
 {% block stylesheets %}{% endblock stylesheets %}
-<link rel="stylesheet" type="text/css" href="{% static 'style/mobile.css' %}" media="screen and (max-width: 640px)" />
 <link rel="shortcut icon" href="{% static 'style/icon.png' %}" />
 <link rel="home" href="/" />
 <link rel="index" href="/" />
@@ -21,100 +21,25 @@
 {% block headers %}{% endblock headers %}
 </head>
 <body>
+<div id="wrapper">
 
-<div id="header">
-<h1>{{ site.name }}</h1>
-{% if site.extra.subtitle %}<p>{{ site.extra.subtitle }}</p>{% endif %}
-<p class="caption"><i>Simply</i> <b>Christ</b>ians</p>
-</div>
-
-<input type="checkbox" id="navbar-trigger" />
-<label for="navbar-trigger">Menu</label>
-<div id="navbar">
-<ul>
-<li>
-<a href="{% url 'home' %}">Home</a>
-</li>
-{% block nav:top %}
-{% for item in featured_items %}
-<li><a href="{{ item.get_absolute_url }}"{% if item.description %} title="{{ item.description|smartquote }}"{% endif %}>{{ item.title|smartquote }}</a></li>
-{% endfor %}
-{% endblock nav:top %}
-<li>
-<a href="{% url 'resources:index' %}" title="Publications from The Point on various Biblical topics.">Resources</a>
-{% block nav:resources %}{% endblock nav:resources %}
-</li>
-<li>
-<a href="{% url 'contact' %}" title="Would you like to know more about The Point? Get our contact details and meeting times here.">Contact</a>
-</li>
-<li>
-<a href="{% url 'copyright' %}">Copyright</a>
-</li>
-{% if not user.is_authenticated %}<li>
-<a href="{% url 'members:index' %}" title="Login to the Members’ area.">Login</a>
-</li>{% endif %}
-</ul>
-{% if user.is_authenticated %}
-<ul>
-<li>
-<a href="{% url 'members:index' %}">Members’ Home</a>
-</li>
-{% block nav:private_top %}
-{% for item in featured_private_items %}
-<li><a href="{{ item.get_absolute_url }}"{% if item.description %} title="{{ item.description|smartquote }}"{% endif %}>{{ item.title|smartquote }}</a></li>
-{% endfor %}
-{% endblock nav:private_top %}
-<li>
-<a href="{% url 'directory:index' %}" title="A directory of Members and Friends of The Point.">Directory</a>
-</li>
-<li>
-<a href="{% url 'calendar' %}" title="A calendar of Events at The Point.">Calendar</a>
-</li>
-<li>
-<a href="{% url 'roster:index' %}" title="The Sunday Assembly Roster.">Roster</a>
-</li>
-<li>
-<a href="{% url 'library:index' %}" title="Search the The Point’s Library.">Library</a>
-</li>
-<li>
-<a href="{% url 'poi:index' %}" title="Read past issues of Points of Interest">POI</a>
-</li>
-<li>
-<a href="{% url 'members:logout' %}" title="Log out of the Members’ Area.">Logout</a>
-</li>
-</ul>
-
-<p class="logon">You are logged in as {{ user.get_full_name }}</p>
-{% endif %}
-</div>
+{% block body %}
+{% include "site/header.html" %}
+{% include "site/navbar.html" %}
 
 <div id="body">
+{% include "site/messages.html" %}
 
-{% if messages %}
-<div class="messages">
-{% for message in messages %}
-<p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|smartquote }}</p>
-{% endfor %}
-</div>
-{% endif %}
+{% if splashes_above %}{% include "splash/splash.html" with splashes=splashes_above %}{% endif %}
 
-{% if splashes_above %}
-{% for splash in splashes_above %}
-{% include "splash/splash.html" %}
-{% endfor %}
-{% endif %}
-
-<h2>{% block heading %}Welcome to The Point’s website{% endblock heading %}</h2>
+<h2>{% block heading %}{% endblock heading %}</h2>
 
 {% block content %}{% endblock content %}
 
-{% if splashes_below %}
-{% for splash in splashes_below %}
-{% include "splash/splash.html" %}
-{% endfor %}
-{% endif %}
-
+{% if splashes_below %}{% include "splash/splash.html" with splashes=splashes_below %}{% endif %}
 </div>
 
+{% endblock body %}
+</div>
 </body>
 </html>

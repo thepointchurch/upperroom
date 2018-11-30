@@ -127,7 +127,7 @@ div#body {
     min-height: initial;
 }
 
-div#navbar {
+div#navbar, div#navbar-member, label[for="navbar-trigger"], label[for="navbar-member-trigger"] {
     display: none;
 }
 
