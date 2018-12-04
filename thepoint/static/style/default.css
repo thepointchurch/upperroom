@@ -55,7 +55,7 @@ div#header {
     position: relative;
     background-image: url(lights.jpg);
     background-repeat: no-repeat;
-    background-position: bottom;
+    background-position: center;
     background-color: black;
     font-weight: 400;
     text-shadow: 2px 2px 2px black;

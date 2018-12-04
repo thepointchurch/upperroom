@@ -98,7 +98,6 @@ div.splash p {
 @media screen and (min-height: 760px) {
     div#header {
         height: 625px;
-        background-position: center;
     }
 
     div#header-inner {
@@ -131,6 +130,10 @@ div.splash p {
 }
 
 @media screen and (max-width: 800px) {
+    div#header {
+        background-position: left;
+    }
+
     div#navbar ul li {
         width: 40%;
     }
