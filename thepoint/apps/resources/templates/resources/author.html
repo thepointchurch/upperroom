@@ -1,0 +1,15 @@
+{% extends "resources/base.html" %}
+{% load markup %}
+{% load smartquote %}
+
+{% block title %}
+{{ block.super }}: {{ author.fullname|smartquote }}
+{% endblock title %}
+
+{% block heading %}
+{{ block.super }} by {{ author.fullname|smartquote }}
+{% endblock heading %}
+
+{% block content %}
+{% include "resources/resource_list.html" %}
+{% endblock content %}

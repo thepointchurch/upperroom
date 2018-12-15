@@ -8,13 +8,7 @@
 
 {% block content %}
 
-{% if resource.author and resource.show_author %}
-<p id="author">By
-{% if resource.author.email %}<a href="mailto:{{resource.author.email}}">{% endif %}
-{{ resource.author.fullname|smartquote }}
-{% if resource.author.email %}</a>{% endif %}
-</p>
-{% endif %}
+{% if resource.author and resource.show_author %}<p id="author">By <a href="{% url 'resources:author' resource.author.id %}">{{ resource.author.fullname|smartquote }}</a></p>{% endif %}
 
 {% if resource.alternates.count > 0 %}
 <p class="option">This resource is also available in

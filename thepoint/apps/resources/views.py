@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.views import generic
 
 from .models import Attachment, Resource, ResourceFeed, Tag
+from ..directory.models import Person
 from ..utils.storages.attachment import attachment_response
 
 
@@ -87,6 +88,26 @@ class AttachmentView(ResourcePermissionMixin, generic.DetailView):
         return attachment_response(attachment.file,
                                    filename=(attachment.clean_title + attachment.extension),
                                    content_type=attachment.mime_type)
+
+
+class AuthorList(generic.ListView):
+    template_name = 'resources/author.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        self.author = get_object_or_404(
+            Person, id=self.kwargs.get('pk', None))
+
+        if self.request.user.is_authenticated:
+            return self.author.resources.filter(is_published=True, show_author=True)
+        else:
+            return self.author.resources.filter(is_published=True, show_author=True,
+                                                is_private=False)
+
+    def get_context_data(self, **kwargs):
+        context = super(AuthorList, self).get_context_data(**kwargs)
+        context['author'] = self.author
+        return context
 
 
 class FeedArtworkView(generic.DetailView):
