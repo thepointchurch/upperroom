@@ -57,6 +57,7 @@ class CreateView(LoginRequiredMixin, generic.ListView):
         else:
             return Person.current_objects.filter(user__isnull=True).filter(
                 Q(name__icontains=self.query) |
+                Q(surname_override__icontains=self.query) |
                 Q(family__name__icontains=self.query)).distinct()
 
 

@@ -54,7 +54,7 @@ class SearchView(LoginRequiredMixin, generic.ListView):
         else:
             return Family.current_objects.filter(
                 Q(name__icontains=q) |
-                (Q(members__name__icontains=q) &
+                ((Q(members__name__icontains=q) | Q(members__surname_override__icontains=q)) &
                  Q(members__is_current=True))
                 ).distinct()
 
