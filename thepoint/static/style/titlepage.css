@@ -107,7 +107,7 @@ div.splash p {
 
     div#header-inner {
         vertical-align: middle;
-        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' width='200px' height='200px' viewBox='0 0 200 200'><circle cx='100' cy='100' r='90' stroke='white' stroke-width='1.5' fill='none'/><circle cx='100' cy='100' r='87' stroke='white' stroke-width='0.5' fill='none'/><circle cx='100' cy='100' r='83.5' stroke='white' stroke-width='0.5' fill='none'/></svg>");
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' version='1.1' width='200px' height='200px' viewBox='0 0 200 200'%3E%3Ccircle cx='100' cy='100' r='90' stroke='white' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='100' cy='100' r='87' stroke='white' stroke-width='0.5' fill='none'/%3E%3Ccircle cx='100' cy='100' r='83.5' stroke='white' stroke-width='0.5' fill='none'/%3E%3C/svg%3E");
         background-position: center;
         background-repeat: no-repeat;
         background-size: contain;
@@ -122,6 +122,7 @@ div.splash p {
 
     div#header h1 {
         text-align: center;
+        letter-spacing: 0.5rem;
     }
 
     div#header p {
@@ -140,6 +141,11 @@ div.splash p {
 }
 
 @media screen and (max-width: 600px), screen and (max-height: 400px) {
+    div#header h1 {
+        letter-spacing: 0.2rem;
+        padding: 1rem 2rem 0;
+    }
+
     label[for="navbar-trigger"] {
         display: none;
     }

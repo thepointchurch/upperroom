@@ -29,5 +29,5 @@
 <p class="logon">You are logged in as {{ user.get_full_name }}</p>
 </div>
 {% else %}
-<a href="{% url 'members:index' %}" title="Login to the Members’ area."><label for="navbar-member-trigger">Member Login</label></a>
+<a href="{% url 'members:index' %}" title="Login to the Members’ area."><p id="navbar-member-trigger">Member Login</p></a>
 {% endif %}
