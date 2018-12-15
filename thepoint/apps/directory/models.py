@@ -183,6 +183,12 @@ class Person(models.Model):
         blank=True,
         verbose_name=_('suffix'),
     )
+    surname_override = models.CharField(
+        max_length=30,
+        null=True,
+        blank=True,
+        verbose_name=_('surname'),
+    )
     gender = models.CharField(
         max_length=1,
         choices=GENDER_CHOICES,
@@ -235,14 +241,20 @@ class Person(models.Model):
     @property
     def fullname(self):
         if self.suffix:
-            return '%s %s (%s)' % (self.name, self.family.name, self.suffix)
-        return '%s %s' % (self.name, self.family.name)
+            return '%s %s (%s)' % (self.name, self.surname, self.suffix)
+        return '%s %s' % (self.name, self.surname)
 
     @property
     def name_with_suffix(self):
         if self.suffix:
             return '%s (%s)' % (self.name, self.suffix)
         return self.name
+
+    @property
+    def surname(self):
+        if self.surname_override:
+            return self.surname_override
+        return self.family.name
 
     @property
     def birthdate(self):
@@ -264,6 +276,6 @@ class Person(models.Model):
         super(Person, self).save(*args, **kwargs)
         if self.user:
             self.user.first_name = self.name
-            self.user.last_name = self.family.name
+            self.user.last_name = self.surname
             self.user.email = self.email or self.family.email
             self.user.save()

@@ -17,14 +17,15 @@ SITE_ID = int(os.getenv('SITE_ID', 1))
 
 INSTALLED_APPS = (
     'thepoint.apps.directory.apps.DirectoryConfig',
+    'thepoint.apps.extendedsites.apps.ExtendedSitesConfig',
     'thepoint.apps.library.apps.LibraryConfig',
     'thepoint.apps.members.apps.MembersConfig',
     'thepoint.apps.newsletter.apps.NewsletterConfig',
-    'thepoint.apps.pages.apps.PagesConfig',
     'thepoint.apps.resources.apps.ResourcesConfig',
     'robots',
     'thepoint.apps.roster.apps.RosterConfig',
     'thepoint.apps.splash.apps.SplashConfig',
+    'thepoint.apps.utils.apps.UtilsConfig',
     'django_markwhat',
     'django.contrib.admin.apps.AdminConfig',
     'django.contrib.auth.apps.AuthConfig',
@@ -38,13 +39,12 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles.apps.StaticFilesConfig',
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.contrib.redirects.middleware.RedirectFallbackMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -67,10 +67,11 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-SITE_NAME = 'The Point'
+WEBMASTER_EMAIL = 'webmaster@thepoint.org.au'
+DIRECTORY_EMAIL = 'directory@thepoint.org.au'
+ROSTER_EMAIL = 'roster@thepoint.org.au'
 
-DEFAULT_FROM_EMAIL = 'webmaster@thepoint.org.au'
-DIRECTORY_NOTIFY_EMAIL = 'directory@thepoint.org.au'
+DEFAULT_FROM_EMAIL = WEBMASTER_EMAIL
 
 LOGIN_URL = '/members/login'
 LOGIN_REDIRECT_URL = '/members/'
@@ -103,6 +104,7 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
+                'thepoint.apps.extendedsites.context_processors.site',
                 'thepoint.apps.resources.context_processors.featured_tags',
                 'thepoint.apps.splash.context_processors.splashes',
             ],
@@ -125,12 +127,14 @@ if os.getenv('STATICFILES_BUCKET', None) or os.getenv('MEDIAFILES_BUCKET', None)
 
     STATICFILES_BUCKET = os.getenv('STATICFILES_BUCKET',
                                    'static.%s' % ALLOWED_HOSTS[0])
-    STATICFILES_STORAGE = 'thepoint.util.storages.backends.S3StaticStorage'
+    STATICFILES_STORAGE = 'thepoint.apps.utils.storages.backends.S3StaticStorage'
 
     MEDIAFILES_OFFLOAD = True
     MEDIAFILES_BUCKET = os.getenv('MEDIAFILES_BUCKET',
                                   'media.%s' % ALLOWED_HOSTS[0])
-    DEFAULT_FILE_STORAGE = 'thepoint.util.storages.backends.S3MediaStorage'
+    DEFAULT_FILE_STORAGE = 'thepoint.apps.utils.storages.backends.S3MediaStorage'
+
+    AWS_DEFAULT_ACL = None
 
 
 class AddSyslogTagFilter(logging.Filter):

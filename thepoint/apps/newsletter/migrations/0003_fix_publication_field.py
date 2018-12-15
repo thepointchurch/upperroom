@@ -18,6 +18,7 @@ class Migration(migrations.Migration):
             name='publication',
             field=models.ForeignKey(
                 to='newsletter.Publication',
+                on_delete=models.PROTECT,
                 default=newsletter.models.default_publication,
                 unique_for_date='date',
                 verbose_name='publication',

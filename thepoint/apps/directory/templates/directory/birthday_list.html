@@ -1,4 +1,5 @@
 {% extends "directory/base.html" %}
+{% load smartquote %}
 
 {% block heading %}{{ block.super }}: Birthdays{% endblock heading %}
 
@@ -11,7 +12,7 @@
     {% regroup month.list by birthday.day as birthday_by_month_day %}
     <ul>
     {% for day in birthday_by_month_day %}
-        <li><strong>{{ day.grouper }}</strong>{% for person in day.list %} {{ person.fullname }}{% if not forloop.last %},{% endif %}{% endfor %}</li>
+        <li><strong>{{ day.grouper }}</strong>{% for person in day.list %} {{ person.fullname|smartquote }}{% if not forloop.last %},{% endif %}{% endfor %}</li>
     {% endfor %}
     </ul>
 {% empty %}

@@ -1,15 +1,16 @@
+{% load smartquote %}
 <h3>{{ meeting.date|date:"jS F, Y" }}</h3>
 
 {% regroup meeting.roles.all by location as role_location %}
 {% for location in role_location %}
 {% for role in location.list %}
-<p><strong>{{ role.name }}:</strong>
+<p><strong>{{ role.name|smartquote }}:</strong>
 {% for person in role.people.all %}
-<a href="{% url 'roster:person' person.id %}">{{ person.fullname }}</a>{% if not forloop.last %}, {% endif %}
+<a href="{% url 'roster:person' person.id %}">{{ person.fullname|smartquote }}</a>{% if not forloop.last %}, {% endif %}
 {% empty %}
-{% if role.guest %}{{ role.guest }}{% endif %}
+{% if role.guest %}{{ role.guest|smartquote }}{% endif %}
 {% endfor %}
-{% if role.description %}<cite>({{ role.description }})</cite>{% endif %}
-{% if role.location %}at {{ role.location }}{% endif %}
+{% if role.description %}<cite>({{ role.description|smartquote }})</cite>{% endif %}
+{% if role.location %}at {{ role.location|smartquote }}{% endif %}
 </p>
 {% endfor %}{% endfor %}

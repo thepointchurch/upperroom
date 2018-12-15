@@ -1,10 +1,11 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.core.files.storage import default_storage
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.views import generic
 
-from .models import Attachment, Resource, Tag
+from .models import Attachment, Resource, ResourceFeed, Tag
+from ..directory.models import Person
+from ..utils.storages.attachment import attachment_response
 
 
 class TagList(generic.ListView):
@@ -84,22 +85,36 @@ class AttachmentView(ResourcePermissionMixin, generic.DetailView):
 
     def get(self, request, *args, **kwargs):
         attachment = self.get_object()
+        return attachment_response(attachment.file,
+                                   filename=(attachment.clean_title + attachment.extension),
+                                   content_type=attachment.mime_type)
 
-        if getattr(default_storage, 'offload', False):
-            disposition = ('attachment; filename="%s%s"' % (
-                           attachment.clean_title,
-                           attachment.extension,
-                           ))
-            response = HttpResponseRedirect(
-                default_storage.url(attachment.file.name,
-                                    parameters={
-                                        'ResponseContentDisposition': disposition,
-                                        'ResponseContentType': attachment.mime_type,
-                                    }))
+
+class AuthorList(generic.ListView):
+    template_name = 'resources/author.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        self.author = get_object_or_404(
+            Person, id=self.kwargs.get('pk', None))
+
+        if self.request.user.is_authenticated:
+            return self.author.resources.filter(is_published=True, show_author=True)
         else:
-            response = HttpResponse(attachment.file,
-                                    content_type=attachment.mime_type)
-            response['Content-Disposition'] = ('attachment; filename="%s%s"' %
-                                               (attachment.clean_title,
-                                                attachment.extension))
-        return response
+            return self.author.resources.filter(is_published=True, show_author=True,
+                                                is_private=False)
+
+    def get_context_data(self, **kwargs):
+        context = super(AuthorList, self).get_context_data(**kwargs)
+        context['author'] = self.author
+        return context
+
+
+class FeedArtworkView(generic.DetailView):
+    model = ResourceFeed
+
+    def get(self, request, *args, **kwargs):
+        feed = self.get_object()
+        if not feed.artwork:
+            raise Http404('This feed has no artwork')
+        return attachment_response(feed.artwork, as_attachment=False)

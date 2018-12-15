@@ -1,0 +1,33 @@
+{% load smartquote %}
+{% load static %}
+<input type="checkbox" id="navbar-trigger"/><label for="navbar-trigger">Menu</label>
+<div id="navbar">
+<ul>
+<li><a href="{% url 'home' %}" class="nav-home">Home</a></li>
+{% for item in featured_items %}
+<li><a href="{{ item.get_absolute_url }}" class="nav-{{ item.slug }}"{% if item.description %} title="{{ item.description|smartquote }}"{% endif %}>{{ item.title|smartquote }}</a></li>
+{% endfor %}
+<li><a href="{% url 'resources:index' %}" class="nav-resources" title="Publications from The Point on various Biblical topics.">Resources</a></li>
+<li><a href="{% url 'contact' %}" class="nav-contact" title="Would you like to know more about The Point? Get our contact details and meeting times here.">Contact</a></li>
+</ul>
+</div>
+{% if user.is_authenticated %}
+<input type="checkbox" id="navbar-member-trigger"/><label for="navbar-member-trigger">Members’ Area</label>
+<div id="navbar-member">
+<ul>
+<li><a href="{% url 'members:index' %}" class="nav-members">Members’ Home</a></li>
+{% for item in featured_private_items %}
+<li><a href="{{ item.get_absolute_url }}" class="nav-{{ item.slug }}"{% if item.description %} title="{{ item.description|smartquote }}"{% endif %}>{{ item.title|smartquote }}</a></li>
+{% endfor %}
+<li><a href="{% url 'directory:index' %}" class="nav-directory" title="A directory of Members and Friends of The Point.">Directory</a></li>
+<li><a href="{% url 'calendar' %}" class="nav-calendar" title="A calendar of Events at The Point.">Calendar</a></li>
+<li><a href="{% url 'roster:index' %}" class="nav-roster" title="The Sunday Assembly Roster.">Roster</a></li>
+<li><a href="{% url 'library:index' %}" class="nav-library" title="Search the The Point’s Library.">Library</a></li>
+<li><a href="{% url 'poi:index' %}" class="nav-poi" title="Read past issues of Points of Interest">POI</a></li>
+<li><a href="{% url 'members:logout' %}" class="nav-logout" title="Log out of the Members’ Area.">Logout</a></li>
+</ul>
+<p class="logon">You are logged in as {{ user.get_full_name }}</p>
+</div>
+{% else %}
+<a href="{% url 'members:index' %}" title="Login to the Members’ area."><p id="navbar-member-trigger">Member Login</p></a>
+{% endif %}

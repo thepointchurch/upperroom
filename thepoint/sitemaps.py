@@ -9,11 +9,11 @@ from .apps.resources.models import get_featured_items
 class StaticViewSitemap(sitemaps.Sitemap):
     def items(self):
         return list(chain(
-            ['pages:home'],
+            ['home'],
             get_featured_items(),
             ['resources:index',
-             'pages:contact',
-             'pages:copyright'],
+             'contact',
+             'copyright'],
         ))
 
     def location(self, item):

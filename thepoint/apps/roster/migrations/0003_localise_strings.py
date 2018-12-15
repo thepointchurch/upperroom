@@ -93,6 +93,7 @@ class Migration(migrations.Migration):
                 related_name='roles',
                 verbose_name='location',
                 to='roster.Location',
+                on_delete=models.PROTECT,
             ),
         ),
         migrations.AlterField(
@@ -102,6 +103,7 @@ class Migration(migrations.Migration):
                 verbose_name='meeting',
                 related_name='roles',
                 to='roster.Meeting',
+                on_delete=models.CASCADE,
             ),
         ),
         migrations.AlterField(
@@ -129,6 +131,7 @@ class Migration(migrations.Migration):
                 verbose_name='role',
                 related_name='roles',
                 to='roster.RoleType',
+                on_delete=models.PROTECT,
             ),
         ),
         migrations.AlterField(

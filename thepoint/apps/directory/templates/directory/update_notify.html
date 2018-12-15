@@ -9,10 +9,10 @@
 <tr style="vertical-align: top;">
 <td>
 {% for person in family.spouses.all %}
-<p style="margin: 0"><strong>{{ person.name_with_suffix }}</strong>{% if person.birthday %}: {{ person.birthday|date:"j F" }}{% endif %}</p>
+<p style="margin: 0"><strong>{{ person.name_with_suffix }}{% if person.surname_override %} ({{ person.surname_override }}){% endif %}</strong>{% if person.birthday %}: {{ person.birthday|date:"j F" }}{% endif %}</p>
 {% endfor %}
 {% for person in family.siblings.all %}
-<p style="margin: 0"><strong>{{ person.name_with_suffix }}</strong>{% if person.birthday %}: {{ person.birthday|date:"j F" }}{% endif %}</p>
+<p style="margin: 0"><strong>{{ person.name_with_suffix }}{% if person.surname_override %} ({{ person.surname_override }}){% endif %}</strong>{% if person.birthday %}: {{ person.birthday|date:"j F" }}{% endif %}</p>
 {% endfor %}
 {% if family.anniversary %}<p>Anniversary: {{ family.anniversary|date:"j F, Y" }}</p>{% endif %}
 </td>

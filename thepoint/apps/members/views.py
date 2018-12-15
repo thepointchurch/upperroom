@@ -1,16 +1,14 @@
 import logging
 from datetime import date, timedelta
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, logout
-from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.contrib.auth.views import password_change as dist_password_change
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
-from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
@@ -36,6 +34,7 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
                                     )
         except:
             pass
+        context['webmaster_email'] = settings.WEBMASTER_EMAIL
         return context
 
 
@@ -44,15 +43,6 @@ def not_a_guest(user):
         return user.is_authenticated and (user.is_staff or user.person)
     except:
         raise PermissionDenied
-
-
-@user_passes_test(not_a_guest)
-def password_change(request, *args, **kwargs):
-    result = dist_password_change(request, *args, **kwargs)
-    if result.__class__ == HttpResponseRedirect:
-        messages.success(request,
-                         _('Your password has been changed successfully.'))
-    return result
 
 
 class CreateView(LoginRequiredMixin, generic.ListView):
@@ -67,6 +57,7 @@ class CreateView(LoginRequiredMixin, generic.ListView):
         else:
             return Person.current_objects.filter(user__isnull=True).filter(
                 Q(name__icontains=self.query) |
+                Q(surname_override__icontains=self.query) |
                 Q(family__name__icontains=self.query)).distinct()
 
 

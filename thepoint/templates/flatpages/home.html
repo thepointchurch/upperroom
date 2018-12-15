@@ -1,0 +1,31 @@
+{% extends "site/base.html" %}
+{% load static %}
+{% load markup %}
+{% load smartquote %}
+
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="{% static 'style/titlepage.css' %}" />
+{% endblock stylesheets %}
+
+{% block body %}
+{% include "site/header.html" %}
+
+<div id="body">
+{% include "site/messages.html" %}
+
+{% if splashes_above %}{% include "splash/splash.html" with splashes=splashes_above %}{% endif %}
+
+<div id="title-body">
+{{ flatpage.content|markdown:"extra,smarty" }}
+</div>
+
+{% include "site/navbar.html" %}
+
+{% if splashes_below %}{% include "splash/splash.html" with splashes=splashes_below %}{% endif %}
+
+<blockquote cite="Matthew 5:14 ESV">
+<p>You are the light of the world. A city set on a hill cannot be hidden.</p>
+</blockquote>
+</div>
+
+{% endblock body %}

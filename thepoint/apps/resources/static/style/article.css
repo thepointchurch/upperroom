@@ -4,38 +4,36 @@ p#author {
 
 p.option {
     color: rgb(150,150,150);
-    padding-left: 2em;
+    padding-left: 2rem;
 }
 
 p.intro {
     border-top: 1px solid;
     border-bottom: 1px solid;
-    padding: 5px;
+    padding: 0.5rem;
     text-align: justify;
-    margin-top: 2em;
-    margin-bottom: 2em;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
 }
 
 p.pull {
-    padding: 1em;
-    margin: 20px;
+    padding: 1rem;
+    margin: 1.5rem;
     background: rgba(0,0,0,0.1);
 }
 
 div#body > p, div#body > blockquote, div#body > ul, div#body > ol, div#body > dl, div#body > form, div#body > table {
-    margin: 2em 5em;
-    line-height: 200%;
+    margin: 2rem 5rem;
 }
 
 table > p, table > blockquote, table > ul, table > ol, table > dl, table > form {
-    margin: 10px;
-    line-height: 120%;
+    margin: 1rem;
 }
 
 div#index > h3 {
-    margin-top: 2em;
-    margin-left: 2em;
-    margin-right: 2em;
+    margin-top: 2rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
     margin-bottom: inherit;
 }
 
@@ -44,52 +42,55 @@ div#index > h3:first-child {
 }
 
 div#index > h3 > a:hover {
-    font-weight: bold;
     text-decoration: none;
 }
 
 div#index > p {
-    margin: 10px 5em;
+    margin: 1rem 5rem;
 }
 
 div#index > p.timestamp, div#index > p.links {
-    margin-top: 2px;
+    margin-top: 0.2rem;
     margin-bottom: 0;
 }
 
 div#index > p.links {
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 0.8rem;
+    margin-bottom: 0.8rem;
 }
 
-@media (max-width: 640px) {
+@media screen and (max-width: 640px) {
     div#body {
         padding: 0;
     }
 
     div#body > h3 {
-        margin-left: 10px;
-        margin-right: 10px;
+        margin-left: 0.8rem;
+        margin-right: 0.8rem;
     }
 
     div#body > p, div#body > blockquote, div#body > ul, div#body > ol, div#body > dl, div#body > form, div#body > table {
-        margin: 10px;
+        margin: 0.8rem;
     }
 
     div#index > h3 {
-        margin-left: 10px;
-        margin-right: 10px;
+        margin-left: 0.8rem;
+        margin-right: 0.8rem;
     }
 
     div#index > p {
-        margin-left: 2em;
-        margin-right: 2em;
+        margin-left: 0.8rem;
+        margin-right: 0.8rem;
     }
 }
 
 @media print {
     div#body > p, div#body > blockquote, div#body > ul, div#body > ol, div#body > dl, div#body > form, div#body > table {
-        margin: 10px;
-        line-height: 120%;
+        margin: 16pt 0;
+    }
+
+    div#body > p#author {
+        font-size: 9pt;
+        margin-top: 0;
     }
 }

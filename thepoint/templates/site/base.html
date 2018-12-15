@@ -1,118 +1,45 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
         "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-{% load staticfiles %}
+{% load static %}
+{% load smartquote %}
+{% load markup %}
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-<meta name="description" content="The Point Church, Wellington Point, Brisbane, Queensland, Australia" />
-<meta name="keywords" content="The Point Church, Wellington Point, Brisbane, Queensland, Australia, Church, Church of Christ, Christian, Bible" />
+{% if site.extra.description %}<meta name="description" content="{{ site.extra.description }}" />{% endif %}
+{% if site.extra.keywords.all %}<meta name="keywords" content="{{ site.extra.keywords.all|join:', ' }}" />{% endif %}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{% block title %}The Point Church{% endblock title %}</title>
+<title>{% block title %}{{ site.name }}{% endblock title %}</title>
 <link rel="stylesheet" type="text/css" href="{% static 'style/default.css' %}" title="Default" />
 <link rel="stylesheet" type="text/css" href="{% static 'style/print.css' %}" media="print" />
 {% block stylesheets %}{% endblock stylesheets %}
-<link rel="stylesheet" type="text/css" href="{% static 'style/mobile.css' %}" media="(max-width: 640px)" />
 <link rel="shortcut icon" href="{% static 'style/icon.png' %}" />
 <link rel="home" href="/" />
 <link rel="index" href="/" />
-<link rel="license" href="{% url 'pages:copyright' %}" />
+<link rel="license" href="{% url 'copyright' %}" />
+{% block headers %}{% endblock headers %}
 </head>
 <body>
+<div id="wrapper">
 
-<div id="header">
-<h1>The Point Church</h1>
-<p>a church of Christ meeting at Wellington Point, Brisbane, Australia</p>
-<p class="caption">Wellington Point Jetty</p>
-</div>
-
-<label for="navbar-trigger">Menu</label>
-<input type="checkbox" id="navbar-trigger" />
-<div id="navbar">
-<ul>
-<li>
-<a href="{% url 'pages:home' %}">Home</a>
-</li>
-{% block nav:top %}
-{% for item in featured_items %}
-<li><a href="{{ item.get_absolute_url }}"{% if item.description %} title="{{ item.description }}"{% endif %}>{{ item.title }}</a></li>
-{% endfor %}
-{% endblock nav:top %}
-<li>
-<a href="{% url 'resources:index' %}" title="Publications from The Point on various Biblical topics.">Resources</a>
-{% block nav:resources %}{% endblock nav:resources %}
-</li>
-<li>
-<a href="{% url 'pages:contact' %}" title="Would you like to know more about The Point? Get our contact details and meeting times here.">Contact Us</a>
-</li>
-{% if not user.is_authenticated %}<li>
-<a href="{% url 'members:index' %}" title="Login to the Member's area.">Member Login</a>
-</li>{% endif %}
-<li>
-<a href="{% url 'pages:copyright' %}">Copyright</a>
-</li>
-</ul>
-{% if user.is_authenticated %}
-<ul>
-<li>
-<a href="{% url 'members:index' %}">Member's Home</a>
-</li>
-{% block nav:private_top %}
-{% for item in featured_private_items %}
-<li><a href="{{ item.get_absolute_url }}"{% if item.description %} title="{{ item.description }}"{% endif %}>{{ item.title }}</a></li>
-{% endfor %}
-{% endblock nav:private_top %}
-<li>
-<a href="{% url 'directory:index' %}" title="A directory of Members and Friends of The Point.">Directory</a>
-</li>
-<li>
-<a href="{% url 'pages:calendar' %}" title="A calendar of Events at The Point.">Calendar</a>
-</li>
-<li>
-<a href="{% url 'roster:index' %}" title="The Sunday Assembly Roster.">Roster</a>
-</li>
-<li>
-<a href="{% url 'library:index' %}" title="Search the The Point's Library.">Library</a>
-</li>
-<li>
-<a href="{% url 'poi:index' %}" title="Read past issues of Points of Interest">POI</a>
-</li>
-<li>
-<a href="{% url 'members:logout' %}" title="Log out of the Member's Area.">Logout</a>
-</li>
-</ul>
-
-<p class="logon">You are logged in as<br />{{ user.get_full_name }}</p>
-{% endif %}
-</div>
+{% block body %}
+{% include "site/header.html" %}
+{% include "site/navbar.html" %}
 
 <div id="body">
+{% include "site/messages.html" %}
 
-{% if messages %}
-<div class="messages">
-{% for message in messages %}
-<p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
-{% endfor %}
-</div>
-{% endif %}
+{% if splashes_above %}{% include "splash/splash.html" with splashes=splashes_above %}{% endif %}
 
-{% if splashes_above %}
-{% for splash in splashes_above %}
-{% include "splash/splash.html" %}
-{% endfor %}
-{% endif %}
-
-<h2>{% block heading %}Welcome to The Point's website{% endblock heading %}</h2>
+<h2>{% block heading %}{% endblock heading %}</h2>
 
 {% block content %}{% endblock content %}
 
-{% if splashes_below %}
-{% for splash in splashes_below %}
-{% include "splash/splash.html" %}
-{% endfor %}
-{% endif %}
-
+{% if splashes_below %}{% include "splash/splash.html" with splashes=splashes_below %}{% endif %}
 </div>
 
+{% endblock body %}
+</div>
 </body>
 </html>

@@ -1,19 +1,14 @@
 {% extends "resources/base.html" %}
 {% load markup %}
+{% load smartquote %}
 
-{% block title %}{{ block.super }}: {{ resource.title }}{% endblock title %}
+{% block title %}{{ block.super }}: {{ resource.title|smartquote }}{% endblock title %}
 
-{% block heading %}{{ resource.title }}{% endblock heading %}
+{% block heading %}{{ resource.title|smartquote }}{% endblock heading %}
 
 {% block content %}
 
-{% if resource.author and resource.show_author %}
-<p id="author">By
-{% if resource.author.email %}<a href="mailto:{{resource.author.email}}">{% endif %}
-{{ resource.author.fullname }}
-{% if resource.author.email %}</a>{% endif %}
-</p>
-{% endif %}
+{% if resource.author and resource.show_author %}<p id="author">By <a href="{% url 'resources:author' resource.author.id %}">{{ resource.author.fullname|smartquote }}</a></p>{% endif %}
 
 {% if resource.alternates.count > 0 %}
 <p class="option">This resource is also available in
@@ -24,6 +19,6 @@
 format.</p>
 {% endif %}
 
-{{ resource.content|markdown:"extra,toc" }}
+{{ resource.content|markdown:"extra,smarty,toc" }}
 
 {% endblock content %}

@@ -79,6 +79,7 @@ class Migration(migrations.Migration):
             name='resource',
             field=models.ForeignKey(
                 to='resources.Resource',
+                on_delete=models.CASCADE,
                 related_name='attachments',
                 verbose_name='resource',
             ),
@@ -104,6 +105,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(
                 blank=True,
                 to='directory.Person',
+                on_delete=models.SET_NULL,
                 related_name='resources',
                 null=True,
                 verbose_name='author',
@@ -165,6 +167,7 @@ class Migration(migrations.Migration):
             field=models.ForeignKey(
                 blank=True,
                 to='resources.Resource',
+                on_delete=models.SET_NULL,
                 related_name='children',
                 null=True,
                 verbose_name='parent',

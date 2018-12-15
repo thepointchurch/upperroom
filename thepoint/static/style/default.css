@@ -1,20 +1,26 @@
+@import url('https://fonts.googleapis.com/css?family=Fira+Sans:300,400,600,800');
+@import url('icons.css');
+
 body {
     color: black;
     background: white;
-    background-image: url(beach.jpg);
-    background-repeat: no-repeat;
-    background-size: 1000px;
-    font-family: 'Verdana', sans-serif;
-    font-size: 12px;
-    font-size-adjust: none;
+    font-family: 'Fira Sans', 'Verdana', sans-serif;
+    font-size: 1rem;
     font-style: normal;
-    font-weight: normal;
+    font-weight: 300;
     font-stretch: normal;
+    line-height: 1.7rem;
     vertical-align: middle;
     text-align: justify;
     text-indent: 0;
     margin: 0;
     padding: 0;
+}
+
+div#wrapper {
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
 ul, ol {
@@ -30,12 +36,12 @@ ol {
 }
 
 li {
-    margin-bottom: 0.5em;
+    margin-bottom: 0.5rem;
 }
 
 a {
     background: transparent;
-    color: rgb(128,0,0);
+    color: rgb(170,50,0);
     text-decoration: none;
 }
 
@@ -45,119 +51,129 @@ a:hover {
     text-decoration: underline;
 }
 
-h2, h3, h4, h5, h6 {
-    font-family: 'Verdana', sans-serif;
-    padding: 0 10px;
-}
-
 div#header {
     position: relative;
-    background-image: url(jetty.png);
+    background-image: url(lights.jpg);
     background-repeat: no-repeat;
-    background-size: 1000px;
-    margin: 0;
-    padding: 10px;
-    font-weight: bold;
+    background-position: center;
+    background-color: black;
+    font-weight: 400;
     text-shadow: 2px 2px 2px black;
     color: white;
-    max-width: 980px;
-    min-height: 200px;
+    height: 200px;
+}
+
+div#header h1 {
+    padding: 1rem;
+    line-height: 3rem;
+    font-weight: 800;
+    letter-spacing: 0.2rem;
+    text-transform: uppercase;
 }
 
 div#header p {
-    margin: 0;
-    font-size: 14px;
-    font-style: italic;
+    font-size: 1.8rem;
+    font-weight: 300;
     text-align: left;
+    font-family: Times New Roman, serif;
     border: 0;
-    border-top: 2px solid white;
     margin: 0;
-    padding: 0;
-    padding-top: 5px;
+    padding: 0 1rem 0.4rem;
 }
 
-div#header p.caption {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    border: 0;
-    padding: 10px;
-    font-size: 10px;
-    font-style: normal;
+div#header-inner {
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200px' height='200px' viewBox='0 0 200 200'%3E%3Ccircle cx='30' cy='-100' r='150' stroke='white' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='30' cy='-100' r='147' stroke='white' stroke-width='0.5' fill='none'/%3E%3Ccircle cx='30' cy='-100' r='143.5' stroke='white' stroke-width='0.5' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: 750px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Fira Sans', 'Verdana', sans-serif;
+    font-weight: 600;
+    padding: 0 1rem;
 }
 
 h1 {
-    font-variant: small-caps;
-    font-family: 'Bitstream Vera Serif', 'Times New Roman', serif;
-    font-weight: bold;
-    font-size: 36px;
+    font-size: 2.5rem;
     text-align: left;
     color: white;
     margin: 0;
-    padding: 0;
+    padding: 0 0 0.4rem;
 }
 
 h2 {
-    font-size: 20px;
-    color: rgb(15,80,140);
+    font-size: 1.6rem;
+    color: rgb(170,50,0);
     background: transparent;
     text-align: left;
-    margin: 10px;
+    margin: 0.8rem;
+    margin-top: 2rem;
     padding: 0;
-    padding-top: 0.5em;
     border-bottom: 2px solid;
 }
 
 h3 {
-    font-size: 16px;
-    color: rgb(128,0,0);
+    font-size: 1.3rem;
+    color: rgb(170,50,0);
     background: transparent;
     text-align: left;
     padding: 0;
-    margin-left: 10px;
-    margin-right: 10px;
+    margin-left: 0.8rem;
+    margin-right: 0.8rem;
     border-bottom: 1px solid;
     margin-bottom: 0;
 }
 
 h4 {
-    font-size: 14px;
-    color: rgb(15,80,140);
+    font-size: 1.1rem;
+    color: rgb(170,50,0);
     background: transparent;
     text-align: left;
+    padding: 0;
+    margin-left: 0.8rem;
+    margin-right: 0.8rem;
 }
 
 h5 {
-    font-size: 12px;
-    font-weight: bold;
-    color: rgb(15,80,140);
+    font-size: 1rem;
+    font-weight: 400;
+    color: rgb(170,50,0);
     background: transparent;
     text-align: left;
+    padding: 0;
 }
 
 hr {
     width: 90%;
-    color: rgb(128,0,0);
+    color: rgb(170,50,0);
     border: none;
     border-bottom: 1px solid;
 }
 
 p, blockquote, ul, ol, dl {
-    margin: 10px;
-    font-size: 12px;
+    margin: 1rem;
     text-align: justify;
 }
 
 blockquote {
     font-style: italic;
-    padding: 0 2em;
+    padding: 0 2rem;
+}
+
+blockquote:after {
+    content: "\2013 \2003" attr(cite);
+    content: attr(cite);
+    display: block;
+    text-align: right;
+    font-style: normal;
+    font-size: 0.9rem;
 }
 
 blockquote p.attrib {
     text-align: right;
-    font-weight: bold;
     font-style: normal;
-    font-size: 10px;
+    font-size: 0.9rem;
 }
 
 code {
@@ -165,16 +181,16 @@ code {
 }
 
 dt {
-    font-weight: bold;
+    font-weight: 400;
 }
 
 dd {
-    margin-left: 2em;
+    margin-left: 2rem;
 }
 
 td {
     vertical-align: top;
-    padding: 5px;
+    padding: 0.4rem;
 }
 
 p.links {
@@ -184,7 +200,7 @@ p.links {
 p.timestamp {
     margin-top: 0;
     padding: 0;
-    font-size: 9px;
+    font-size: 0.8rem;
     color: rgb(85,85,85);
     text-align: right;
 }
@@ -197,8 +213,18 @@ p.timestamp {
     text-align: right;
 }
 
+sup, sub {
+    vertical-align: baseline;
+    position: relative;
+    top: -0.4rem;
+}
+
+sub {
+    top: 0.4rem;
+}
+
 img {
-    margin: 5px;
+    margin: 0.4rem;
     border: 1px solid black;
     max-width: 100%;
 }
@@ -209,66 +235,105 @@ img.right {
 
 div#navbar {
     display: block;
-    float: left;
-    width: 200px;
+    margin: 0.3rem 0;
 }
 
 div#navbar ul {
     background: transparent;
-    font-size: 14px;
-    text-align: left;
-    font-weight: bold;
+    text-align: center;
+    font-weight: 600;
     list-style-type: none;
-    padding-left: 0;
-}
-
-div#navbar ul ul {
     margin: 0;
-    font-size: 12px;
-    font-weight: normal;
-}
-
-div#navbar ul ul a {
-    padding-left: 3em;
-    text-transform: none;
+    padding: 0;
 }
 
 div#navbar ul li {
-    margin: 0;
+    padding: 0 0.5rem;
+    display: inline-block;
 }
 
 div#navbar ul a {
     color: black;
     text-decoration: none;
-    text-transform: uppercase;
+    text-transform: lowercase;
     display: block;
-    padding: 5px;
-    padding-left: 1.5em; 
-    text-indent: -1em;
-}
-
-div#navbar ul a:before {
-    content: "• ";
-    color: rgb(255,192,0);
 }
 
 div#navbar ul a:hover {
-    background: white;
-    background: rgba(255,255,255,0.8);
-    color: rgb(200,0,0);
+    color: rgb(170,50,0);
 }
 
-div#navbar p.logon {
-    background: white;
-    background: rgba(255,255,255,0.6);
-    padding: 5px;
-    text-align: center;
-    font-size: 10px;
-    font-weight: normal;
-    color: rgb(74,68,42);
+div#navbar ul li a:before {
+    border: 0;
+    margin: 0 0.5rem 0 0;
+    padding: 0.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    vertical-align: middle;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Ccircle cx='15' cy='15' r='14' fill='rgb(207,174,81)'/%3E%3C/svg%3E");
+    display: inline-block;
 }
 
-input#navbar-trigger {
+div#navbar ul li a:hover:before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Ccircle cx='15' cy='15' r='14' fill='rgb(200,140,0)'/%3E%3C/svg%3E");
+}
+
+div#navbar-member {
+    color: white;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect width='1' height='1' fill='black' opacity='0.8'/%3E%3C/svg%3E");
+    background-size: 100px 100px;
+    display: none;
+    position: absolute;
+    top: 30px;
+    right: 0;
+}
+
+div#navbar-member ul {
+    background: transparent;
+    text-align: left;
+    font-weight: 600;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+}
+
+div#navbar-member ul li {
+    display: block;
+    text-align: left;
+}
+
+div#navbar-member ul a {
+    color: white;
+    text-decoration: none;
+    text-transform: lowercase;
+    display: block;
+}
+
+div#navbar-member ul li a:before {
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 0;
+    margin: 0 0.5rem;
+    padding: 0.4rem;
+    vertical-align: middle;
+}
+
+div#navbar-member ul a {
+    color: white;
+    padding-right: 0.3rem;
+}
+
+div#navbar-member ul li a:hover {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect width='1' height='1' fill='rgb(170,50,0)' opacity='0.8'/%3E%3C/svg%3E");
+    background-size: 100px 100px;
+}
+
+input#navbar-trigger, input#navbar-member-trigger {
     display: none;
 }
 
@@ -276,45 +341,77 @@ label[for="navbar-trigger"] {
     display: none;
 }
 
+label[for="navbar-member-trigger"], p#navbar-member-trigger {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300px' height='30px' viewBox='0 0 300 30'%3E%3Crect width='300' height='30' fill='black' opacity='0.8'/%3E%3Cpath d='M274,4 L296,4 M274,15 L296,15 M274,26 L296,26' stroke-width='6' stroke-linecap='round' stroke='white'/%3E%3C/svg%3E");
+    background-position: right;
+    background-repeat: no-repeat;
+    color: white;
+    margin: 0;
+    padding: 0;
+    padding-left: 5px;
+    padding-right: 35px;
+    font-weight: 600;
+    line-height: 30px;
+    vertical-align: middle;
+    display: block;
+}
+
+input#navbar-member-trigger:checked ~ div#navbar-member {
+    display: block;
+}
+
+input#navbar-member-trigger:checked + label[for="navbar-member-trigger"] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300px' height='30px' viewBox='0 0 300 30'%3E%3Crect width='300' height='30' fill='black' opacity='0.8'/%3E%3Cpath d='M296,4 L274,26 M274,4 L296,26' stroke-width='6' stroke-linecap='round' stroke='white'/%3E%3C/svg%3E");
+}
+
+div#navbar-member p.logon {
+    margin: 0;
+    text-align: center;
+    font-size: 0.7rem;
+}
+
 div#body {
     background: white;
-    margin: 10px;
-    margin-left: 200px;
     display: block;
-    max-width: 750px;
-    min-height: 560px;
-    padding: 0 20px;
 }
 
 p.error {
     text-align: left;
     color: red;
-    font-weight: bold;
+    font-weight: 600;
 }
 
 p.error:before {
     content: "Error: ";
-    font-weight: bold;
+    font-weight: 600;
+}
+
+ul.errorlist {
+    color: red;
 }
 
 p.message {
     text-align: left;
     color: blue;
-    font-weight: bold;
+    font-weight: 400;
 }
 
 p.intro {
     border-top: 1px solid;
     border-bottom: 1px solid;
-    padding: 5px;
+    padding: 0.4rem;
     text-align: justify;
-    margin: 2em;
+    margin: 2rem;
 }
 
 a.footnote {
-    font-size: 8px;
+    font-size: 0.8rem;
     vertical-align: top;
-    font-weight: bold;
+    font-weight: 400;
 }
 
 ol.footnotes {
@@ -324,7 +421,7 @@ ol.footnotes {
 table {
     table-layout: fixed;
     width: 100%;
-    padding: 10px;
+    padding: 0.9rem;
 }
 
 table td {
@@ -354,7 +451,7 @@ table.family td img {
 }
 
 form {
-    padding: 0 10px;
+    padding: 0 0.8rem;
 }
 
 form table {
@@ -374,7 +471,7 @@ form table td {
 
 form table td p {
     margin: 0;
-    padding: 5px;
+    padding: 0.4rem;
     text-align: right;
 }
 
@@ -394,11 +491,111 @@ iframe.calendar {
 }
 
 div.splash {
-    padding: 10px 0;
+    padding: 1rem 0;
+    border: 1px solid black;
+    margin: 1rem;
 }
 
 div.splash > h3 {
     margin: 0;
     text-align: center;
     border: none;
+}
+
+@media screen and (max-width: 600px) {
+    body {
+        background-size: auto;
+        text-align: left;
+    }
+
+    div#body {
+        width: auto;
+        margin: 0.7rem;
+    }
+
+    div#header-inner-inner {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    div#header h1 {
+        padding: 1rem 0.5rem 0;
+        line-height: 2.5rem;
+    }
+
+    div#header p {
+        font-size: 1.5rem;
+    }
+
+    div#navbar {
+        float: none;
+        width: auto;
+        border-top: 0;
+        border-bottom: 1px solid black;
+    }
+
+    div#navbar ul {
+        margin: 0;
+        padding: 0;
+        font-size: 1.5rem;
+    }
+
+    div#navbar ul li {
+        padding: 0.5rem;
+    }
+
+    div#navbar ul + ul:before {
+        content: '⎼⎼';
+        font-size: 1rem;
+        font-weight: 300;
+    }
+}
+
+@media screen and (max-width: 600px), screen and (max-height: 400px) {
+    div#navbar {
+        display: none;
+        box-shadow: 0 7px 5px -5px black;
+    }
+
+    label[for="navbar-trigger"] {
+        cursor: pointer;
+        position: absolute;
+        height: 30px;
+        top: 170px;
+        right: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300px' height='30px' viewBox='0 0 300 30'%3E%3Crect width='300' height='30' fill='black' opacity='0.8'/%3E%3Cpath d='M274,4 L296,4 M274,15 L296,15 M274,26 L296,26' stroke-width='6' stroke-linecap='round' stroke='white'/%3E%3C/svg%3E");
+        background-position: right;
+        background-repeat: no-repeat;
+        color: white;
+        padding: 0;
+        padding-left: 5px;
+        padding-right: 35px;
+        font-weight: 600;
+        line-height: 30px;
+        vertical-align: middle;
+        display: block;
+    }
+
+    input#navbar-trigger:checked ~ div#navbar {
+        display: block;
+    }
+
+    input#navbar-trigger:checked + label[for="navbar-trigger"] {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300px' height='30px' viewBox='0 0 300 30'%3E%3Crect width='300' height='30' fill='black' opacity='0.8'/%3E%3Cpath d='M296,4 L274,26 M274,4 L296,26' stroke-width='6' stroke-linecap='round' stroke='white'/%3E%3C/svg%3E");
+    }
+}
+
+@media screen and (max-height: 400px) {
+    div#header {
+        height: 100px;
+    }
+
+    div#header h1 {
+        padding-top: 0;
+    }
+
+    label[for="navbar-trigger"] {
+        top: 70px;
+    }
 }

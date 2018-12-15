@@ -3,7 +3,7 @@ from django.views import generic
 
 from .models import Meeting, Role
 from ..directory.models import Person
-from ...util.mixin import NeverCacheMixin
+from ..utils.mixin import NeverCacheMixin
 
 
 class MeetingIndex(LoginRequiredMixin, generic.ListView):

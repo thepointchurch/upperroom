@@ -1,19 +1,21 @@
 import fnmatch
-import mimetypes
 import re
 from datetime import date, timedelta
 
-import magic
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 
 def get_filename(instance, filename):
+    try:
+        extension = '.' + filename.split('.')[-1]
+    except IndexError:
+        extension = ''
     return 'newsletter/%s/%s/%s%s' % (instance.publication.slug,
                                       instance.date.year,
                                       instance.date,
-                                      instance.extension)
+                                      extension)
 
 
 def default_publication():
@@ -141,27 +143,14 @@ class Issue(models.Model):
         self.date = self.publication.correct_publication_date(self.date)
         self.slug = str(self.date)
 
-        uploaded_content_type = getattr(self.file, 'content_type', '')
-        self.file.seek(0)
-        magic_content_type = magic.from_buffer(self.file.read(),
-                                               mime=True)
-        self.file.seek(0)
-
-        # Prefer magic mime-type instead mime-type from http header
-        if uploaded_content_type != magic_content_type:
-            uploaded_content_type = magic_content_type
-
-        self.mime_type = uploaded_content_type
-
         if not self.publication.accept_mime_type(self.mime_type):
             raise ValidationError('Files of type %s are not supported.'
-                                  % uploaded_content_type)
+                                  % self.mime_type)
 
     @property
     def extension(self):
         try:
-            return [t for t in mimetypes.guess_all_extensions(self.mime_type)
-                    if t not in ['.jpe']][0]
+            return '.' + self.file.name.split('.')[-1]
         except IndexError:
             return None
 

@@ -1,0 +1,11 @@
+{% extends "site/base.html" %}
+{% load markup %}
+{% load smartquote %}
+
+{% block title %}{{ block.super }}: {{ flatpage.title|smartquote }}{% endblock title %}
+
+{% block heading %}{{ flatpage.title|smartquote }}{% endblock heading %}
+
+{% block content %}
+{{ flatpage.content|markdown:"extra,smarty" }}
+{% endblock content %}

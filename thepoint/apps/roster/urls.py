@@ -1,22 +1,22 @@
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 
 app_name = 'roster'
 urlpatterns = [
-    url(r'^$',
-        views.MeetingIndex.as_view(),
-        name='index'),
-    url(r'^(?P<year>\d{4})/(?P<month>\d+)$',
-        views.MonthlyMeetingView.as_view(month_format='%m'),
-        name='meeting_month'),
-    url(r'^person/(?P<pk>\d+)$',
-        views.PersonList.as_view(),
-        name='person'),
-    url(r'^event/(?P<pk>\d+).ics$',
-        views.PersonEventList.as_view(),
-        name='event'),
-    url(r'^task/(?P<pk>\d+).ics$',
-        views.PersonTaskList.as_view(),
-        name='task'),
+    path('',
+         views.MeetingIndex.as_view(),
+         name='index'),
+    path('<int:year>/<int:month>',
+         views.MonthlyMeetingView.as_view(month_format='%m'),
+         name='meeting_month'),
+    path('person/<int:pk>',
+         views.PersonList.as_view(),
+         name='person'),
+    path('event/<int:pk>.ics',
+         views.PersonEventList.as_view(),
+         name='event'),
+    path('task/<int:pk>.ics',
+         views.PersonTaskList.as_view(),
+         name='task'),
 ]

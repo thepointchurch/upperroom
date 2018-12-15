@@ -1,0 +1,197 @@
+div#navbar {
+    margin: 2rem 0;
+}
+
+div#navbar ul {
+    font-size: 1.5rem;
+}
+
+div#navbar ul li {
+    width: 25%;
+    margin: 1rem 0.5rem;
+    text-align: left;
+}
+
+div#navbar ul li a {
+    display: inline-flex;
+    align-items: center;
+}
+
+div#navbar ul li a:before {
+    width: 2rem;
+    height: 2rem;
+    padding: 1.2rem;
+    flex-shrink: 0;
+}
+
+div#title-body {
+    text-align: center;
+}
+
+div#title-body div {
+    width: 30%;
+    text-align: center;
+    display: inline-block;
+    padding: 0 2rem;
+    line-height: normal;
+    vertical-align: middle;
+}
+
+div#title-body div ~ div {
+    border-left: 2px solid black;
+}
+
+div#title-body div#title-bar {
+    width: 10px;
+    height: 80%;
+    background: red;
+}
+
+div#title-body h2 {
+    border: 0;
+    color: black;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+div#title-body p {
+    text-align: center;
+}
+
+div#body blockquote {
+    font-style: normal;
+    max-width: 15rem;
+    margin: 5rem auto 0;
+}
+
+div#body blockquote p {
+    margin: 0 0 1rem;
+    text-align: center;
+    font-size: 0.8rem;
+    line-height: 1.3rem;
+}
+
+div#body blockquote:after {
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 0.8rem;
+    line-height: 1.3rem;
+}
+
+div#body blockquote p.attrib {
+    margin-top: 0.5rem;
+}
+
+div#body blockquote:before {
+    content: '\201C';
+    margin: 0 auto;
+    display: block;
+    font-size: 4rem;
+    line-height: 0.2rem;
+    text-align: center;
+}
+
+div.splash p {
+    text-align: center;
+}
+
+@media screen and (min-height: 760px) {
+    div#header {
+        height: 625px;
+    }
+
+    div#header-inner {
+        height: 100%;
+        position: relative;
+    }
+
+    div#header-inner {
+        vertical-align: middle;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' version='1.1' width='200px' height='200px' viewBox='0 0 200 200'%3E%3Ccircle cx='100' cy='100' r='90' stroke='white' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='100' cy='100' r='87' stroke='white' stroke-width='0.5' fill='none'/%3E%3Ccircle cx='100' cy='100' r='83.5' stroke='white' stroke-width='0.5' fill='none'/%3E%3C/svg%3E");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+
+    div#header-inner-inner {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        transform: translateY(-50%);
+    }
+
+    div#header h1 {
+        text-align: center;
+        letter-spacing: 0.5rem;
+    }
+
+    div#header p {
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    div#header {
+        background-position: left;
+    }
+
+    div#navbar ul li {
+        width: 40%;
+    }
+}
+
+@media screen and (max-width: 600px), screen and (max-height: 400px) {
+    div#header h1 {
+        letter-spacing: 0.2rem;
+        padding: 1rem 2rem 0;
+    }
+
+    label[for="navbar-trigger"] {
+        display: none;
+    }
+
+    div#navbar {
+        display: block;
+        margin-top: 0;
+        border: 0;
+        box-shadow: none;
+    }
+
+    label[for="navbar-member-trigger"] {
+        display: block;
+    }
+
+    div#navbar ul li {
+        margin: 0 0.2rem;
+        font-size: 1rem;
+    }
+
+    div#navbar ul li a:before {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+}
+
+@media screen and (max-width: 600px and min-height: 750px) {
+    div#header {
+        height: 75vw;
+    }
+
+    div#header-inner {
+        width: 75%;
+        margin: 0 auto;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    div#title-body div {
+        width: inherit;
+        padding: 0 0 2rem;
+    }
+
+    div#title-body div ~ div {
+        padding: 2rem 0;
+        border: 0;
+        border-top: 2px solid black;
+    }
+}

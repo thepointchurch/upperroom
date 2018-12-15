@@ -1,7 +1,6 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-import django.db.models.deletion
 
 import thepoint.apps.newsletter as newsletter
 
@@ -18,7 +17,7 @@ class Migration(migrations.Migration):
             name='publication',
             field=models.ForeignKey(
                 default=newsletter.models.default_publication,
-                on_delete=django.db.models.deletion.PROTECT,
+                on_delete=models.PROTECT,
                 related_name='issues',
                 to='newsletter.Publication',
                 unique_for_date='date',
