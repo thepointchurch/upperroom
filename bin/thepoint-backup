@@ -1,4 +1,4 @@
 #!/bin/sh
 
-python -m thepoint dumpdata --indent=2 --exclude auth.permission --exclude contenttypes | bzip2 | aws s3 cp - "s3://${BACKUP_BUCKET}/data.json.bz2" --quiet
+python -m thepoint dumpdata -a --indent=2 --exclude auth.permission --exclude contenttypes | bzip2 | aws s3 cp - "s3://${BACKUP_BUCKET}/data.json.bz2" --quiet
 aws s3 sync "s3://${MEDIAFILES_BUCKET}/" "s3://${BACKUP_BUCKET}/media/" --quiet --delete
