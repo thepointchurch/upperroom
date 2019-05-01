@@ -7,6 +7,7 @@ from django.core.validators import RegexValidator
 from django.db import models
 from django.http import Http404
 from django.urls import resolve, reverse
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from ..directory.models import Person
@@ -102,7 +103,7 @@ class Tag(FeaturedMixin, models.Model):
 class PublishedManager(models.Manager):
     def get_queryset(self):
         return super(PublishedManager,
-                     self).get_queryset().filter(is_published=True)
+                     self).get_queryset().filter(is_published=True).exclude(published__gt=timezone.now())
 
 
 class Resource(FeaturedMixin, models.Model):
