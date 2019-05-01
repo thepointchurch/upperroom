@@ -3,7 +3,7 @@
 <div id="index">
 {% for resource in resource_list %}
 <h3><a href="{% url "resources:detail" resource.slug %}">{{ resource.title|smartquote }}</a></h3>
-{% if not tag and resource.show_date or tag.show_date %}<p class="timestamp">{{ resource.published|date:"j/n/Y" }}</p>{% endif %}
+{% if tag and tag.show_date or resource.show_date or resource.author and resource.show_author %}<p class="metadata">{% if resource.author and resource.show_author %}{{ resource.author }}{% if tag and tag.show_date or resource.show_date %} on {% endif %}{% endif %}{% if tag and tag.show_date or resource.show_date %}{{ resource.published|date:"j/n/Y" }}{% endif %}</p>{% endif %}
 {% if resource.description %}{{ resource.description|markdown:"safe,smarty" }}{% endif %}
 <p class="links">[
 {% if resource.body %}<a href="{% url "resources:detail" resource.slug %}">read</a>{% endif %}

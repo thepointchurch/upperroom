@@ -49,7 +49,7 @@ div#index > p {
     margin: 1rem 5rem;
 }
 
-div#index > p.timestamp, div#index > p.links {
+div#index > p.metadata, div#index > p.links {
     margin-top: 0.2rem;
     margin-bottom: 0;
 }
