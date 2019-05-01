@@ -383,9 +383,10 @@ class Attachment(models.Model):
         id3_tags = [
             ('TALB', mutagen.id3.TALB, feed.title),
             ('TIT2', mutagen.id3.TIT2, self.resource.title),
-            ('TDRC', mutagen.id3.TDRC, self.resource.published.strftime('%Y-%m-%d')),
             ('TCON', mutagen.id3.TCON, 'Podcast')
         ]
+        if self.resource.published:
+            id3_tags.append(('TDRC', mutagen.id3.TDRC, self.resource.published.strftime('%Y-%m-%d')))
         if self.resource.author:
             id3_tags.append(('TPE1', mutagen.id3.TPE1, self.resource.author.fullname))
 
