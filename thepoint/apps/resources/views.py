@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
+from django.utils import timezone
 from django.views import generic
 
 from .models import Attachment, Resource, ResourceFeed, Tag
@@ -15,11 +16,10 @@ class TagList(generic.ListView):
         self.tag = get_object_or_404(
             Tag, slug=self.kwargs.get('slug', None))
 
-        if self.request.user.is_authenticated:
-            resources = self.tag.resources.filter(is_published=True)
-        else:
-            resources = self.tag.resources.filter(is_published=True,
-                                                  is_private=False)
+        resources = self.tag.resources.filter(is_published=True,
+                                              parent__isnull=True).exclude(published__gt=timezone.now())
+        if not self.request.user.is_authenticated:
+            resources = resources.filter(is_private=False)
 
         if self.tag.reverse_order:
             return resources.reverse()

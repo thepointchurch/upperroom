@@ -130,7 +130,7 @@ class ResourceFeedAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {'fields': ('title', 'slug', 'description')}),
         (_('Optional'), {'classes': ('collapse',),
-                         'fields': ('tags', 'mime_type_list', 'category_list', 'copyright')}),
+                         'fields': ('tags', 'show_children', 'mime_type_list', 'category_list', 'copyright')}),
         (_('Podcast'), {'classes': ('collapse',),
                         'fields': ('is_podcast', 'artwork', 'owner_name', 'owner_email')}),
     )

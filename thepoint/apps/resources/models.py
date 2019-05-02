@@ -430,6 +430,10 @@ class ResourceFeed(models.Model):
         related_name='feeds',
         verbose_name=_('tags'),
     )
+    show_children = models.BooleanField(
+        default=False,
+        verbose_name=_('show children'),
+    )
     mime_type_list = models.CharField(
         null=True,
         blank=True,

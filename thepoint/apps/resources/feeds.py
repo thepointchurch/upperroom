@@ -118,8 +118,11 @@ class ResourceFeedRSS(Feed):
 
     def items(self, obj):
         resources = Resource.published_objects.filter(is_private=False).\
-                                               filter(parent__isnull=True).\
                                                filter(tags__in=obj.tags.all())
+        if not obj.tags.exists():
+            resources = resources.exclude(tags__is_exclusive=True)
+        if not obj.show_children:
+            resources = resources.filter(parent__isnull=True)
         if obj.mime_type_list:
             resources = resources.filter(attachments__mime_type__in=obj.mime_types)
         return resources.order_by('-published')[:10]
