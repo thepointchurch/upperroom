@@ -1,0 +1,102 @@
+{% load smartquote %}
+<head>
+<title>{{ site_name }} Roster {{ year }}</title>
+<meta name="dcterms.created" content="{% now 'c' %}" />
+<meta name="dcterms.modified" content="{% now 'c' %}" />
+<style type="text/css">
+{% block "stylesheet" %}
+@page {
+    size: A4;
+    margin: 1cm 2.5cm;
+}
+
+body {
+    margin: 0;
+}
+
+h1 {
+    margin-top: 0;
+    bookmark-level: none;
+    page-break-before: always;
+}
+
+h2 {
+    margin-top: 0;
+    page-break-before: always;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.meeting {
+    border: 0.5pt solid black;
+    margin: 1em 0;
+    padding: 0.5em;
+    width: 100%;
+}
+
+.meeting > h3 {
+    margin-top: 0;
+}
+
+.meeting > p {
+    margin: 0;
+}
+{% endblock "stylesheet" %}
+</style>
+</head>
+<body>
+
+{% block "preamble" %}
+<h1>{{ site_name }} Assembly Roster <span class="year">{{ year }}</span></h1>
+{% endblock "preamble" %}
+
+{% regroup meeting_list by date.month as meeting_list_month %}
+{% for m, meetings in meeting_list_month %}
+{% with meetings|first as o %}<h2>{{ o.date|date:"F" }} {{ year }}</h2>{% endwith %}
+
+    {% for meeting in meetings|dictsort:"date" %}
+
+        <div class="meeting">
+        <h3>{{ meeting.date|date:"jS F, Y" }}</h3>
+
+        {% regroup meeting.merged_roles|dictsort:"location" by location as role_location %}
+        {% for location in role_location %}
+            {% if not location.grouper %}
+                {% for role in location.list %}
+                    <p><span class="role">{{ role.name|smartquote }}:</span>
+                    <span class="person role_{{ role.role.id }}">{% for person in role.people %}
+                        {{ person.fullname|smartquote }}{% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                        {% if role.guest %}{{ role.guest|smartquote }}{% endif %}
+                    {% endfor %}</span>
+                    {% if role.description %}<span class="description"> &mdash; {{ role.description|smartquote }}</span>{% endif %}
+                    </p>
+                {% endfor %}
+            {% else %}
+                {% for role in location.list %}
+                    <p class="remote">{{ role.name|smartquote }} at {{ role.location|smartquote }}:
+                    <span class="person">{% for person in role.people %}
+                        {{ person.fullname|smartquote }}{% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                        {% if role.guest %}{{ role.guest|smartquote }}{% endif %}
+                    {% endfor %}</span>
+                    {% if role.description %}<cite>({{ role.description|smartquote }})</cite>{% endif %}
+                    </p>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+        </div>
+
+    {% endfor %}
+
+{% endfor %}
+
+{% block "postscript" %}
+<h1>Notes</h1>
+{% endblock "postscript" %}
+
+</body>
+</html>

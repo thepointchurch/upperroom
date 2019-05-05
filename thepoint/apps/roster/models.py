@@ -1,6 +1,7 @@
 from datetime import date, datetime, time, timedelta
 
 from django.db import models
+from django.forms.models import model_to_dict
 from django.utils.translation import ugettext_lazy as _
 
 from ..directory.models import Person
@@ -43,6 +44,28 @@ class Meeting(models.Model):
     def __str__(self):
         return str(self.date)
 
+    def merged_roles(self):
+        def my_model_to_dict(i):
+            j = model_to_dict(i)
+            j['role'] = i.role
+            j['name'] = i.role.name
+            j['order'] = i.role.order
+            j['location'] = i.location.name if i.location else ''  # '' required for regroup to work in the template
+            return j
+
+        parents = {}
+        for c in self.roles.filter(role__parent__isnull=False):
+            if (c.role.parent, c.location, c.guest, c.description) not in parents:
+                parents[(c.role.parent, c.location, c.guest, c.description)] = []
+            parents[(c.role.parent, c.location, c.guest, c.description)].append(c)
+        parent_roles = []
+        for (role, location, guest, description), people in parents.items():
+            parent_role = my_model_to_dict(Role(meeting=self, role=role))
+            [parent_role['people'].extend(list(p.people.all())) for p in people]
+            parent_roles.append(parent_role)
+        return sorted([my_model_to_dict(r) for r in self.roles.filter(role__parent__isnull=True)] + parent_roles,
+                      key=lambda x: x['order'])
+
 
 class Location(models.Model):
     name = models.CharField(
@@ -79,6 +102,14 @@ class RoleType(models.Model):
     end_time = models.TimeField(
         default=time(10, 0),
         verbose_name=_('end time'),
+    )
+    parent = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='children',
+        verbose_name=_('parent'),
     )
 
     class Meta:
@@ -130,6 +161,7 @@ class Role(models.Model):
     role = models.ForeignKey(
         RoleType,
         on_delete=models.PROTECT,
+        limit_choices_to=models.Q(children__isnull=True),
         related_name='roles',
         verbose_name=_('role'),
     )
@@ -148,8 +180,8 @@ class Role(models.Model):
         verbose_name=_('location'),
     )
 
-    current_objects = CurrentRoleManager()
     objects = models.Manager()
+    current_objects = CurrentRoleManager()
 
     class Meta:
         ordering = ['role']
