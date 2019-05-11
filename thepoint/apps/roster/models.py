@@ -103,6 +103,13 @@ class RoleType(models.Model):
         default=time(10, 0),
         verbose_name=_('end time'),
     )
+    servers = models.ManyToManyField(
+        Person,
+        blank=True,
+        limit_choices_to={'is_current': True},
+        related_name='role_types',
+        verbose_name=_('servers'),
+    )
     parent = models.ForeignKey(
         'self',
         null=True,
