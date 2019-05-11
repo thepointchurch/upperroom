@@ -7,6 +7,17 @@ from django.utils.translation import ugettext_lazy as _
 from ..directory.models import Person
 
 
+DAYS_OF_THE_WEEK = (
+    (1, _('Sunday')),
+    (2, _('Monday')),
+    (3, _('Tuesday')),
+    (4, _('Wednesday')),
+    (5, _('Thursday')),
+    (6, _('Friday')),
+    (7, _('Saturday')),
+)
+
+
 def next_empty_meeting_date():
     try:
         max = Meeting.objects.latest().date
@@ -231,3 +242,50 @@ class Role(models.Model):
     def save(self, *args, **kwargs):
         self.revision += 1
         super(Role, self).save(*args, **kwargs)
+
+
+class MeetingTemplate(models.Model):
+    name = models.CharField(
+        max_length=30,
+        verbose_name=_('name'),
+    )
+    week_day = models.SmallIntegerField(
+        null=True,
+        blank=True,
+        choices=DAYS_OF_THE_WEEK,
+        verbose_name=_('week day'),
+    )
+    roles = models.ManyToManyField(
+        RoleType,
+        through='RoleTypeTemplateMapping',
+        blank=True,
+        related_name='templates',
+        verbose_name=_('roles'),
+    )
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = _('meeting template')
+        verbose_name_plural = _('meeting templates')
+
+    def __str__(self):
+        return self.name
+
+
+class RoleTypeTemplateMapping(models.Model):
+    template = models.ForeignKey(
+        MeetingTemplate,
+        on_delete=models.CASCADE,
+    )
+    role_type = models.ForeignKey(
+        RoleType,
+        on_delete=models.CASCADE,
+    )
+    order = models.SmallIntegerField(
+        null=True,
+        blank=True,
+        verbose_name=_('order'),
+    )
+
+    def __str__(self):
+        return self.role_type.name

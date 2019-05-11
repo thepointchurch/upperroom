@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.forms import ModelForm, ModelMultipleChoiceField
 from django.utils.translation import ugettext_lazy as _
 
-from .models import Location, Meeting, Role, RoleType
+from .models import Location, Meeting, MeetingTemplate, Role, RoleType, RoleTypeTemplateMapping, DAYS_OF_THE_WEEK
 from ..directory.models import Person
 
 
@@ -36,20 +36,9 @@ class WeekdayListFilter(admin.SimpleListFilter):
 
     def lookups(self, request, model_admin):
         qs = model_admin.get_queryset(request)
-        if qs.filter(date__week_day=1).exists():
-            yield ('1', _('Sunday'))
-        if qs.filter(date__week_day=2).exists():
-            yield ('2', _('Monday'))
-        if qs.filter(date__week_day=3).exists():
-            yield ('3', _('Tuesday'))
-        if qs.filter(date__week_day=4).exists():
-            yield ('4', _('Wednesday'))
-        if qs.filter(date__week_day=5).exists():
-            yield ('5', _('Thursday'))
-        if qs.filter(date__week_day=6).exists():
-            yield ('6', _('Friday'))
-        if qs.filter(date__week_day=7).exists():
-            yield ('7', _('Saturday'))
+        for week_day_id, week_day in DAYS_OF_THE_WEEK:
+            if qs.filter(date__week_day=week_day_id).exists():
+                yield (week_day_id, week_day)
 
     def queryset(self, request, queryset):
         try:
@@ -73,6 +62,18 @@ class MeetingAdmin(admin.ModelAdmin):
         return qs
 
 
+class RoleTypeMappingInline(admin.TabularInline):
+    model = RoleTypeTemplateMapping
+    extra = 1
+    verbose_name = 'role type'
+    verbose_name_plural = 'role types'
+
+
+class MeetingTemplateAdmin(admin.ModelAdmin):
+    inlines = [RoleTypeMappingInline]
+
+
 admin.site.register(Meeting, MeetingAdmin)
 admin.site.register(Location)
 admin.site.register(RoleType)
+admin.site.register(MeetingTemplate, MeetingTemplateAdmin)
