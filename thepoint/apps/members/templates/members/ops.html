@@ -4,5 +4,6 @@
 
 <ul>
 {% if user.is_staff %}<li><a href="{% url 'admin:index' %}">Admin site</a></li>{% endif %}
+{% if perms.roster.add_meeting %}<li><a href="{% url 'roster:builder' %}">Roster Builder</a></li>{% endif %}
 <li><a href="{% url "members:password_change" %}">Change your password</a></li>
 </ul>

@@ -1,15 +1,20 @@
 import io
 
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
+from django.db import transaction
+from django.forms import models
 from django.http import FileResponse
+from django.shortcuts import get_object_or_404
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from django.views import generic
 from weasyprint import HTML
 
-from .models import Meeting, Role
-from ..directory.models import Person
+from .forms import meetingbuilderformset_factory
+from .models import Meeting, Role, MeetingTemplate, next_empty_meeting_date
 from ..utils.mixin import NeverCacheMixin
 
 
@@ -39,6 +44,7 @@ class PublicPersonList(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super(PublicPersonList, self).get_context_data(**kwargs)
+        from ..directory.models import Person
         context['person'] = Person.objects.get(id=self.person)
         return context
 
@@ -78,3 +84,59 @@ class RosterPdf(generic.TemplateView):
                             content_type='application/pdf',
                             as_attachment=True,
                             filename='%s %s %s.pdf' % (context['site_name'], _('Roster'), context['year']))
+
+
+class BuilderView(PermissionRequiredMixin, generic.edit.CreateView):
+    model = Meeting
+    permission_required = ('roster.add_meeting', 'roster.add_role')
+    template_name = 'roster/builder.html'
+    fields = ['date']
+
+    def get_context_data(self, **kwargs):
+        if self.request.GET and 'template' in self.request.GET:
+            self.builder_template = get_object_or_404(MeetingTemplate, id=self.request.GET.get('template'))
+        else:
+            self.builder_template = MeetingTemplate.objects.order_by('is_default', 'name').first()
+        if self.request.GET and 'by_age' in self.request.GET:
+            self.sort_by_age = True
+        else:
+            self.sort_by_age = False
+
+        data = super(BuilderView, self).get_context_data(**kwargs)
+
+        if self.request.POST:
+            data['roles'] = meetingbuilderformset_factory()(self.request.POST)
+        else:
+            data['builder_templates'] = MeetingTemplate.objects.all()
+            data['sort_by_age'] = self.sort_by_age
+            if self.builder_template:
+                data['roles'] = meetingbuilderformset_factory(self.builder_template.roles.count())(initial=[
+                    {'role': r} for r in self.builder_template.roles.all()
+                    ], form_kwargs={'sort_by_age': self.sort_by_age})
+                data['builder_template'] = self.builder_template
+
+        return data
+
+    def get_form_class(self):
+        return models.modelform_factory(self.model, fields=self.fields, help_texts={'date': 'foobar'})
+
+    def get_initial(self):
+        try:
+            return {'date': next_empty_meeting_date(self.builder_template.week_day)}
+        except AttributeError:
+            return {}
+
+    def get_success_url(self):
+        return '%s?template=%d' % (reverse('roster:builder'), self.builder_template.id)
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        roles = context['roles']
+        with transaction.atomic():
+            self.object = form.save()
+            if roles.is_valid():
+                roles.instance = self.object
+                roles.save()
+        messages.success(self.request, _('Added %s meeting on %s') % (self.builder_template.name,
+                                                                      self.object.date.strftime('%A %w %B %Y')))
+        return super(BuilderView, self).form_valid(form)

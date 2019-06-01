@@ -25,4 +25,7 @@ urlpatterns = [
     path('task/<int:pk>.ics',
          views.PersonTaskList.as_view(),
          name='task'),
+    path('builder',
+         views.BuilderView.as_view(),
+         name='builder'),
 ]

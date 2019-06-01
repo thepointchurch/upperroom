@@ -379,6 +379,12 @@ div#body {
     display: block;
 }
 
+p.success {
+    text-align: left;
+    color: rgb(0,128,0);
+    font-weight: 600;
+}
+
 p.error {
     text-align: left;
     color: red;
@@ -391,7 +397,12 @@ p.error:before {
 }
 
 ul.errorlist {
+    margin: 0;
     color: red;
+}
+
+ul.errorlist li {
+    margin: 0;
 }
 
 p.message {

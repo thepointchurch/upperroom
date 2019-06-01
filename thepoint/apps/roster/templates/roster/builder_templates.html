@@ -1,0 +1,14 @@
+{% if builder_templates %}
+<p>Choose a meeting template to create:</p>
+<form action="" method="get">
+<select name="template">
+{% for template in builder_templates %}
+<option value="{{ template.id }}">{{ template.name }}</option>
+{% endfor %}
+</select>
+<input type="hidden" name="by_age" value="1">
+<input type="submit" value="Create">
+</form>
+{% else %}
+<p class="error">No meeting templates found. You must <a href="{% url 'admin:roster_meetingtemplate_add' %}">create a template</a> before using the Roster Builder.</p>
+{% endif %}

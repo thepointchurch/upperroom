@@ -4,8 +4,6 @@ from django.db import models
 from django.forms.models import model_to_dict
 from django.utils.translation import ugettext_lazy as _
 
-from ..directory.models import Person
-
 
 DAYS_OF_THE_WEEK = (
     (1, _('Sunday')),
@@ -18,16 +16,15 @@ DAYS_OF_THE_WEEK = (
 )
 
 
-def next_empty_meeting_date():
+def next_empty_meeting_date(weekday=None):
+    if weekday is None:
+        weekday = 1
     try:
-        max = Meeting.objects.latest().date
-    except:
-        max = None
-    if not max:
-        max = date.today()
-    if max.weekday() == 6:
+        max = Meeting.objects.filter(date__week_day=weekday).latest().date
         return max + timedelta(7)
-    return max + timedelta(6 - max.weekday())
+    except:
+        max = date.today()
+        return max + timedelta((6 - max.weekday()) % 6)
 
 
 class CurrentManager(models.Manager):
@@ -115,11 +112,15 @@ class RoleType(models.Model):
         verbose_name=_('end time'),
     )
     servers = models.ManyToManyField(
-        Person,
+        'directory.Person',
         blank=True,
         limit_choices_to={'is_current': True},
         related_name='role_types',
         verbose_name=_('servers'),
+    )
+    order_by_age = models.BooleanField(
+        default=True,
+        verbose_name=_('order by age'),
     )
     parent = models.ForeignKey(
         'self',
@@ -164,7 +165,7 @@ class Role(models.Model):
     )
 
     people = models.ManyToManyField(
-        Person,
+        'directory.Person',
         blank=True,
         limit_choices_to={'is_current': True},
         related_name='roles',
@@ -248,6 +249,10 @@ class MeetingTemplate(models.Model):
     name = models.CharField(
         max_length=30,
         verbose_name=_('name'),
+    )
+    is_default = models.BooleanField(
+        default=False,
+        verbose_name=_('is default'),
     )
     week_day = models.SmallIntegerField(
         null=True,

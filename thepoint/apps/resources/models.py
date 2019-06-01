@@ -10,7 +10,6 @@ from django.urls import resolve, reverse
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
-from ..directory.models import Person
 from ..utils.storages.attachment import attachment_url
 
 logger = logging.getLogger(__name__)
@@ -134,7 +133,7 @@ class Resource(FeaturedMixin, models.Model):
     )
 
     author = models.ForeignKey(
-        Person,
+        'directory.Person',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
