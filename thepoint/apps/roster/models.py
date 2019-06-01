@@ -69,7 +69,8 @@ class Meeting(models.Model):
         parent_roles = []
         for (role, location, guest, description), people in parents.items():
             parent_role = my_model_to_dict(Role(meeting=self, role=role))
-            [parent_role['people'].extend(list(p.people.all())) for p in people]
+            for p in people:
+                parent_role['people'].extend(list(p.people.all()))
             parent_roles.append(parent_role)
         return sorted([my_model_to_dict(r) for r in self.roles.filter(role__parent__isnull=True)] + parent_roles,
                       key=lambda x: x['order'])

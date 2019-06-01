@@ -88,19 +88,19 @@ if args.title:
 if args.speaker:
     metadata += ['-metadata', 'artist=%s' % args.speaker]
 
-subprocess.run(tuple(['ffmpeg',
-                      '-hide_banner',
-                      '-y',
-                      '-i', args.input_file,
-                      '-ac', '1',
-                      '-c:a', 'libmp3lame',
-                      '-b:a', args.bit_rate,
-                      '-ar', str(args.sample_rate),
-                      '-af', ('loudnorm=linear=true:'
-                              'measured_I={input_i}:'
-                              'measured_LRA={input_lra}:'
-                              'measured_tp={input_tp}:'
-                              'measured_thresh={input_thresh},'
-                              'lowpass={lowpass},'
-                              'highpass={highpass}').format(**stats),
-                      ] + metadata + [args.output_file]))
+subprocess.run(['ffmpeg',
+                '-hide_banner',
+                '-y',
+                '-i', args.input_file,
+                '-ac', '1',
+                '-c:a', 'libmp3lame',
+                '-b:a', args.bit_rate,
+                '-ar', str(args.sample_rate),
+                '-af', ('loudnorm=linear=true:'
+                        'measured_I={input_i}:'
+                        'measured_LRA={input_lra}:'
+                        'measured_tp={input_tp}:'
+                        'measured_thresh={input_thresh},'
+                        'lowpass={lowpass},'
+                        'highpass={highpass}').format(**stats),
+                ] + metadata + [args.output_file])

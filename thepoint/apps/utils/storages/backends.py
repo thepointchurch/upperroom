@@ -34,7 +34,7 @@ class S3Boto3StorageOffload(S3Boto3Storage):
         url = urlsplit(url)
         if self.custom_domain:
             domain = self.custom_domain
-            url_path = '/'.join([x for x in url.path.split('/') if x != self.custom_domain])
+            url_path = '/'.join(x for x in url.path.split('/') if x != self.custom_domain)
         else:
             domain = url.netloc
             url_path = url.path
