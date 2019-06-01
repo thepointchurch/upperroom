@@ -216,7 +216,7 @@ class Resource(FeaturedMixin, models.Model):
 
     def clean(self):
         if self.is_published and not self.published:
-            self.published = self.modified
+            self.published = self.modified or timezone.now()
 
     def get_absolute_url(self):
         # should we search for conflicting URLs?
