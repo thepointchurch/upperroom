@@ -14,7 +14,7 @@
 <option value="{{ template.id }}"{% if builder_template.id == template.id %} selected{% endif %}>{{ template.name }}</option>
 {% endfor %}
 </select>
-template. <input type="checkbox" name="by_age" value="1" title="{% trans "Sort by last used" %}" style="margin: 0 1em;" onchange="this.form.submit()"{% if sort_by_age %} checked{% endif %}></p>
+template. <input type="checkbox" name="by_name" value="1" title="{% trans "Sort by name" %}" style="margin: 0 1em;" onchange="this.form.submit()"{% if not sort_by_age %} checked{% endif %}></p>
 </form>
 
 

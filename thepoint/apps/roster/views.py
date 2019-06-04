@@ -96,11 +96,11 @@ class BuilderView(PermissionRequiredMixin, generic.edit.CreateView):
         if self.request.GET and 'template' in self.request.GET:
             self.builder_template = get_object_or_404(MeetingTemplate, id=self.request.GET.get('template'))
         else:
-            self.builder_template = MeetingTemplate.objects.order_by('is_default', 'name').first()
-        if self.request.GET and 'by_age' in self.request.GET:
-            self.sort_by_age = True
-        else:
+            self.builder_template = MeetingTemplate.objects.order_by('-is_default', 'name').first()
+        if self.request.GET and 'by_name' in self.request.GET:
             self.sort_by_age = False
+        else:
+            self.sort_by_age = True
 
         data = super(BuilderView, self).get_context_data(**kwargs)
 
