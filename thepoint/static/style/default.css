@@ -466,13 +466,17 @@ form {
 }
 
 form table {
-    border-collapse: collapse;
+    border-spacing: 0.2rem;
     table-layout: auto;
     width: 100%;
 }
 
 form table tr {
     height: auto;
+}
+
+form table th {
+    text-align: left;
 }
 
 form table td {
@@ -486,13 +490,34 @@ form table td p {
     text-align: right;
 }
 
-form table td input[type=submit], form table td input[type=reset] {
+form input[type=submit], form input[type=reset] {
     float: right;
 }
 
 form table.passwd {
     width: auto;
     margin: auto;
+}
+
+input, textarea, select option {
+    font-family: 'Fira Sans', 'Verdana', sans-serif;
+    font-weight: 300;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline-color: rgb(170,50,0);
+}
+
+select option:checked {
+    font-weight: 600;
+}
+
+::selection {
+    background-color: rgb(207,174,81);
+}
+
+::-moz-selection {
+    background-color: rgb(207,174,81);
 }
 
 iframe.calendar {

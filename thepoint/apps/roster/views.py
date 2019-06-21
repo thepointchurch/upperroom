@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
 from django.db import transaction
-from django.forms import models
+from django.forms import models, TextInput
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -118,7 +118,14 @@ class BuilderView(PermissionRequiredMixin, generic.edit.CreateView):
         return data
 
     def get_form_class(self):
-        return models.modelform_factory(self.model, fields=self.fields, help_texts={'date': 'foobar'})
+        return models.modelform_factory(self.model,
+                                        fields=self.fields,
+                                        widgets={'date': TextInput(attrs={'title': 'YYYY-MM-DD'})})
+
+    def get_form_kwargs(self):
+        kwargs = super(BuilderView, self).get_form_kwargs()
+        kwargs['label_suffix'] = ''
+        return kwargs
 
     def get_initial(self):
         try:
