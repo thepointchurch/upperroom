@@ -57,3 +57,7 @@ div#navbar-member ul li a[href="/poi/"]:before {
 div#navbar-member ul li a[href="/members/logout"]:before {
     content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m 15.014242,21 h 4 a 2,2 0 0 0 2,-2 V 5 a 2,2 0 0 0 -2,-2 h -4'/%3E%3Cpolyline points='8 17 3 12 8 7'/%3E%3Cline x1='3.0142424' y1='12' x2='15.014242' y2='12'/%3E%3C/svg%3E");
 }
+
+div#navbar-member ul li a[href="/policies-and-procedures"]:before {
+    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'%3E%3C/path%3E%3C/svg%3E");
+}
