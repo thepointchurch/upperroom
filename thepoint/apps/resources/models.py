@@ -73,6 +73,11 @@ class Tag(FeaturedMixin, models.Model):
         verbose_name=_('exclusive'),
     )
 
+    is_private = models.BooleanField(
+        default=False,
+        verbose_name=_('private'),
+    )
+
     objects = models.Manager()
     featured_objects = FeaturedManager()
 
@@ -502,11 +507,11 @@ class ResourceFeed(models.Model):
                                   self.artwork.file.name)
 
 
-def get_featured_items():
+def get_featured_items(private=False):
     featured_items = list(chain(
-        Tag.featured_objects.all(),
+        Tag.featured_objects.filter(is_private=private),
         (Resource.featured_objects
-         .filter(is_published=True, is_private=False)
+         .filter(is_published=True, is_private=private)
          .exclude(slug__in=Tag.featured_objects.values('slug'))
          ),
     ))
@@ -516,8 +521,3 @@ def get_featured_items():
         logger.debug('Failed to sort featured items')
 
     return featured_items
-
-
-def get_featured_private_items():
-    return Resource.featured_objects.filter(
-        is_published=True, is_private=True).order_by('priority')
