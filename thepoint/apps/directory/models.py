@@ -111,7 +111,10 @@ class Family(models.Model):
 
     def __str__(self):
         members = []
-        for member in self.members.filter(is_current=True):
+        q = self.members.all()
+        if self.is_current:
+            q = q.filter(is_current=True)
+        for member in q:
             members.append(member.name)
         return '%s (%s)' % (self.name, ', '.join(members))
 
