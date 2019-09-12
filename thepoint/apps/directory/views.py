@@ -166,7 +166,7 @@ class PrintView(PermissionRequiredMixin, generic.TemplateView):
                                     )
         return context
 
-    def _render_to_response(self, context, **response_kwargs):
+    def render_to_response(self, context, **response_kwargs):
         response = super(PrintView, self).render_to_response(context, **response_kwargs)
         return FileResponse(io.BytesIO(HTML(string=response.render().content, encoding='utf-8').write_pdf()),
                             content_type='application/pdf',
