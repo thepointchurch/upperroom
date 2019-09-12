@@ -62,6 +62,7 @@ class FamilyAdmin(admin.ModelAdmin):
         (_('Address'), {'fields': ('street', 'suburb', 'postcode')}),
         (_('Contact'), {'fields': ('email', 'phone_home', 'phone_mobile')}),
         (_('Marriage'), {'fields': ('anniversary', 'husband', 'wife')}),
+        (_('Photo'), {'fields': ('photo',)}),
         (_('Advanced options'), {'classes': ('collapse',),
                                  'fields': ('is_current',)}),
     )

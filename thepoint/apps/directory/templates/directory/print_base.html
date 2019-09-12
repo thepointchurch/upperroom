@@ -1,0 +1,98 @@
+{% load smartquote %}
+<head>
+<title>{{ site_name }} Directory {{ year }}</title>
+<meta name="dcterms.created" content="{% now 'c' %}" />
+<meta name="dcterms.modified" content="{% now 'c' %}" />
+<style type="text/css">
+{% block "stylesheet" %}
+@page {
+    size: A5;
+    margin: 1cm 1cm 1cm 2.5cm;
+
+    @bottom-right {
+        font-family: "Fira Sans";
+        font-size: 6pt;
+        font-weight: 200;
+        margin-bottom: 0.7cm;
+        content: '{{ month }} {{ year }}';
+    }
+}
+
+@page:first {
+    @bottom-right {
+        content: normal;
+    }
+}
+
+body {
+    margin: 0;
+}
+
+h1 {
+    margin-top: 0;
+    bookmark-level: none;
+    page-break-before: always;
+}
+
+h2 {
+    bookmark-level: 1;
+}
+
+h3 {
+    bookmark-level: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+div.family {
+    page-break-before: always;
+    bookmark-level: 2;
+    bookmark-label: attr(name);
+}
+
+div.family img {
+    max-height: 8cm;
+    max-width: 100%;
+}
+
+div.family .img {
+    height: 8cm;
+}
+
+.siblings {
+    font-style: italic;
+}
+{% endblock "stylesheet" %}
+</style>
+</head>
+<body>
+
+{% block "titlepage" %}
+<h1>{{ site_name }} Directory of Family &amp; Friends<span class="year">{{ year }}</span></h1>
+{% endblock "titlepage" %}
+
+<h2 style="position: absolute; left: 30cm; bottom: 0;">Families</h2>
+
+{% for family in families %}
+<div class="family" name="{{ family }}">
+{% include "directory/print_family.html" %}
+</div>
+{% endfor %}
+
+<h2 style="page-break-before: always">Birthdays</h2>
+
+{% block "birthdays" %}
+{% include "directory/birthday_list_detail.html" %}
+{% endblock "birthdays" %}
+
+<h2 style="page-break-before: always">Anniveraries</h2>
+
+{% block "anniversaries" %}
+{% include "directory/anniversary_list_detail.html" %}
+{% endblock "anniversaries" %}
+
+</body>
+</html>

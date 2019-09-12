@@ -1,12 +1,17 @@
+import io
+import time
+
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
-from django.http import Http404
+from django.http import FileResponse, Http404
 from django.shortcuts import redirect
+from django.utils.dates import MONTHS
 from django.utils.translation import ugettext as _
 from django.views import generic
+from weasyprint import HTML
 
 from .forms import FamilyForm, PersonInlineFormSet
 from .models import Family, Person
@@ -110,9 +115,60 @@ class AnniversaryView(LoginRequiredMixin, generic.ListView):
                 )
 
 
+class FamilyPhotoView(LoginRequiredMixin, generic.DetailView):
+    model = Family
+
+    def get(self, request, *args, **kwargs):
+        family = self.get_object()
+        return attachment_response(family.photo.file, False, content_type='image/jpeg')
+
+
+class FamilyThumbnailView(LoginRequiredMixin, generic.DetailView):
+    model = Family
+
+    def get(self, request, *args, **kwargs):
+        family = self.get_object()
+        return attachment_response(family.photo_thumbnail.file, False, content_type='image/jpeg')
+
+
+directory_file_name = 'directory/directory.pdf'
+
+
 class PdfView(LoginRequiredMixin, generic.View):
     def get(self, request, *args, **kwargs):
         title = _('%(site)s Directory') % {'site': get_current_site(request).name}
-        return attachment_response('directory/directory.pdf',
+        return attachment_response(directory_file_name,
                                    filename=('%s.pdf' % title),
                                    content_type='application/pdf')
+
+
+class PrintView(PermissionRequiredMixin, generic.TemplateView):
+    permission_required = 'directory.add_family'
+    template_name = 'directory/print.html'
+
+    def get_context_data(self, **kwargs):
+        month = self.request.GET.get('month') or time.localtime().tm_mon
+        month = MONTHS[month]
+        year = self.request.GET.get('year') or time.localtime().tm_year
+        year = int(year)
+
+        context = super(PrintView, self).get_context_data(**kwargs)
+        context['site_name'] = get_current_site(None).name
+        context['contact_email'] = settings.DIRECTORY_EMAIL
+        context['month'] = month
+        context['year'] = year
+        context['families'] = Family.current_objects.all()
+        context['birthdays'] = Person.current_objects.all().exclude(birthday__isnull=True)
+        context['anniversaries'] = (Family.current_objects
+                                    .filter(anniversary__isnull=False)
+                                    .filter(husband__isnull=False)
+                                    .filter(wife__isnull=False)
+                                    )
+        return context
+
+    def _render_to_response(self, context, **response_kwargs):
+        response = super(PrintView, self).render_to_response(context, **response_kwargs)
+        return FileResponse(io.BytesIO(HTML(string=response.render().content, encoding='utf-8').write_pdf()),
+                            content_type='application/pdf',
+                            as_attachment=True,
+                            filename='%s %s %s.pdf' % (context['site_name'], _('Directory'), context['year']))

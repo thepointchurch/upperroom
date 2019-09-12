@@ -167,26 +167,8 @@ ol.footnotes {
     border-top: 1px solid;
 }
 
-table.family {
-    border-collapse: collapse;
-    width: 100%;
-    table-layout: fixed;
-}
-
-table.family td {
-    border: 0 solid;
-    vertical-align: top;
-}
-
-table.family td p {
-    margin-top: 0;
-    text-align: left;
-}
-
-table.family td img {
-    margin: 0;
-    border: 1px solid black;
-    float: right;
+div.family {
+    flex-direction: column;
 }
 
 @page {

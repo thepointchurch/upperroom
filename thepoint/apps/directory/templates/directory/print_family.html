@@ -1,0 +1,28 @@
+{% load smartquote %}
+<div class="img">{% if family.photo %}<img src="data:image/jpeg;base64,{{ family.photo_base64 }}"/>{% endif %}</div>
+
+<h3>{{ family.name }}</h3>
+
+{% for person in family.spouses.all %}
+{% if forloop.first %}<p class="family_names">{% else %} &amp; {% endif %}
+{{ person.name|smartquote }}{% if person.surname_override %} {{ person.surname_override|smartquote }}{% endif %}
+{% if forloop.last %}</p>{% endif %}
+{% endfor %}
+
+{% for person in family.siblings.all %}{% if forloop.first %}<p class="{% if family.spouses.all %}siblings{% else %}family_names{% endif %}">{% else %}, {% endif %}{{ person.name_with_suffix|smartquote }}{% if person.surname_override %} {{ person.surname_override|smartquote }}{% endif %}{% if forloop.last %}</p>{% endif %}{% endfor %}
+
+{% if family.street and family.suburb and family.postcode %}{% with family.street|add:" "|add:family.suburb|add:" "|add:family.postcode as address_url %}<p class="address"><a href="https://www.google.com.au/maps/place/{{ address_url|urlencode:"" }}">{{ family.street|smartquote }}<br />
+{{ family.suburb|smartquote }} {{ family.postcode }}</p></p>{% endwith %}{% endif %}
+
+{% if family.phone_home %}<p class="phone"><span class="label">Home:</span> <a href="tel:{{ family.phone_home_intl }}">{{ family.phone_home }}</a></p>{% endif %}
+{% if family.phone_mobile %}<p class="phone"><span class="label">Mobile:</span> <a href="tel:{{ family.phone_mobile_intl }}">{{ family.phone_mobile }}</a></p>{% endif %}
+{% if family.email %}<p class="email"><span class="label">Email:</span> <a href="mailto:{{ family.email }}">{{ family.email }}</a></p>{% endif %}
+
+<dl class="person_details">
+{% for person in family.current_members.all %}{% if person.phone_mobile or person.phone_mobile or person.phone_work or person.email %}
+<dt>{{ person.name_with_suffix|smartquote }}</dt>
+{% if person.phone_mobile %}<dd><span class="label">Mobile:</span> <a href="tel:{{ person.phone_mobile_intl }}">{{ person.phone_mobile }}</a></dd>{% endif %}
+{% if person.phone_work %}<dd><span class="label">Work:</span> <a href="tel:{{ person.phone_work_intl }}">{{ person.phone_work }}</a></dd>{% endif %}
+{% if person.email %}<dd><span class="label">Email:</span> <a href="mailto:{{ person.email }}">{{ person.email }}</a></dd>{% endif %}
+{% endif %}{% endfor %}
+</dl>

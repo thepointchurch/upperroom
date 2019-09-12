@@ -439,26 +439,57 @@ table td {
     padding: 0;
 }
 
-table.family {
-    border-collapse: collapse;
+div.family {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     width: 100%;
-    table-layout: fixed;
 }
 
-table.family td {
-    border: 0;
-    vertical-align: top;
+div.family a {
+    color: initial;
 }
 
-table.family td p {
-    margin-top: 0;
+div.family a:hover {
+    color: rgb(200,0,0);
+}
+
+div.family h3 {
+    width: 100%;
+}
+
+.family_people, .family_address, .family_photo {
+    padding: 1rem;
+    flex: 1 1 0;
+}
+
+div.family .family_people p {
+    margin: 0;
+    white-space: nowrap;
+}
+
+div.family .family_people a {
+    color: rgb(170,50,0);
+}
+
+div.family .family_people .label {
+    font-weight: 400;
+}
+
+div.family .family_address p {
+    margin: 0;
     text-align: left;
 }
 
-table.family td img {
+div.family .family_address dl {
     margin: 0;
-    border: 1px solid black;
-    float: right;
+}
+
+div.family .family_photo img {
+    max-height: 240px;
+    max-width: 320px;
+    border: 0;
+    margin: 0;
 }
 
 form {
@@ -585,6 +616,15 @@ div.splash > h3 {
         content: '⎼⎼';
         font-size: 1rem;
         font-weight: 300;
+    }
+
+    div.family {
+        flex-direction: column;
+    }
+
+    .div.family family_photo img {
+        max-width: 100%;
+        margin: 0;
     }
 }
 

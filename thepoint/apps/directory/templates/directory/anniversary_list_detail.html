@@ -1,0 +1,15 @@
+{% load smartquote %}
+
+{% regroup anniversaries|dictsort:"anniversarydate" by anniversary|date:"F" as anniversary_by_month %}
+
+{% for month in anniversary_by_month %}
+    <h3>{{ month.grouper }}</h3>
+    {% regroup month.list by anniversary.day as anniversary_by_month_day %}
+    <ul class="anniversaries">
+    {% for day in anniversary_by_month_day %}
+        <li><strong>{{ day.grouper }}</strong>{% for family in day.list %} {{ family.husband.name|smartquote }} &amp; {{ family.wife.name|smartquote }} {{ family.name|smartquote }} ({{ family.anniversary|date:"Y" }}){% if not forloop.last %},{% endif %}{% endfor %}</li>
+    {% endfor %}
+    </ul>
+{% empty %}
+    <p>No anniversaries were found.</p>
+{% endfor %}

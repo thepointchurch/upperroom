@@ -1,3 +1,5 @@
+import base64
+import re
 from datetime import date
 
 from django.conf import settings
@@ -10,6 +12,14 @@ class CurrentManager(models.Manager):
     def get_queryset(self):
         return super(CurrentManager,
                      self).get_queryset().filter(is_current=True)
+
+
+def get_family_photo_filename(instance, filename):
+    return 'directory/family/%d/photo.jpg' % instance.id
+
+
+def get_family_thumbnail_filename(instance, filename):
+    return 'directory/family/%d/thumbnail.jpg' % instance.id
 
 
 class Family(models.Model):
@@ -79,6 +89,18 @@ class Family(models.Model):
         verbose_name=_('anniversary'),
     )
 
+    photo = models.ImageField(
+        null=True,
+        blank=True,
+        upload_to=get_family_photo_filename,
+    )
+    photo_thumbnail = models.ImageField(
+        null=True,
+        blank=True,
+        editable=False,
+        upload_to=get_family_thumbnail_filename,
+    )
+
     objects = models.Manager()
     current_objects = CurrentManager()
 
@@ -89,15 +111,15 @@ class Family(models.Model):
 
     def __str__(self):
         members = []
-        for member in self.members.all():
+        for member in self.members.filter(is_current=True):
             members.append(member.name)
         return '%s (%s)' % (self.name, ', '.join(members))
 
     def spouse_ids(self):
         ids = []
-        if self.husband:
+        if self.husband and self.husband.is_current:
             ids.append(self.husband.id)
-        if self.wife:
+        if self.wife and self.wife.is_current:
             ids.append(self.wife.id)
         return ids
 
@@ -128,8 +150,20 @@ class Family(models.Model):
             return age
 
     @property
+    def phone_home_intl(self):
+        return re.sub(r'^0', '+61', self.phone_home.replace(' ', ''))
+
+    @property
+    def phone_mobile_intl(self):
+        return re.sub(r'^0', '+61', self.phone_mobile.replace(' ', ''))
+
+    @property
     def first_letter(self):
         return self.name[0].lower()
+
+    @property
+    def photo_base64(self):
+        return base64.b64encode(self.photo.file.file.read()).decode('ascii')
 
     def get_absolute_url(self):
         return reverse('directory:detail', kwargs={'pk': self.pk})
@@ -259,6 +293,14 @@ class Person(models.Model):
     @property
     def birthdate(self):
         return self.birthday.replace(year=2000)
+
+    @property
+    def phone_mobile_intl(self):
+        return re.sub(r'^0', '+61', self.phone_mobile.replace(' ', ''))
+
+    @property
+    def phone_work_intl(self):
+        return re.sub(r'^0', '+61', self.phone_work.replace(' ', ''))
 
     @property
     def has_roster(self):
