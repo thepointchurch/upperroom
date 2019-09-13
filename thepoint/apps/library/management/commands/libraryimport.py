@@ -9,7 +9,7 @@ from ...models import Book
 
 class Command(BaseCommand):
     args = '< books.csv'
-    help = _('Import books into the library through a CSV file on stdin.')
+    help = 'Import books into the library through a CSV file on stdin.'
 
     def add_arguments(self, parser):
         parser.add_argument('--refresh',

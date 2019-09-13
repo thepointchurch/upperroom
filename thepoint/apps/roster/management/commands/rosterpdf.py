@@ -16,7 +16,7 @@ def this_year():
 
 
 class Command(BaseCommand):
-    help = _('Generate a PDF version of the roster.')
+    help = 'Generate a PDF version of the roster.'
 
     def add_arguments(self, parser):
         parser.add_argument('-y', '--year',

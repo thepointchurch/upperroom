@@ -33,7 +33,7 @@ def _get_role_map(roles):
 
 
 class Command(BaseCommand):
-    help = _('Send notification emails for a coming meeting.')
+    help = 'Send notification emails for a coming meeting.'
 
     def add_arguments(self, parser):
         parser.add_argument('-d', '--date',

@@ -23,7 +23,7 @@ def this_month():
 
 
 class Command(BaseCommand):
-    help = _('Generate a PDF version of the directory.')
+    help = 'Generate a PDF version of the directory.'
 
     def add_arguments(self, parser):
         parser.add_argument('-y', '--year',
