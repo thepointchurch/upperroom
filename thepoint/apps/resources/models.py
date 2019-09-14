@@ -8,6 +8,7 @@ from django.db import models
 from django.http import Http404
 from django.urls import resolve, reverse
 from django.utils import timezone
+from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
 from ..utils.storages.attachment import attachment_url
@@ -199,15 +200,15 @@ class Resource(FeaturedMixin, models.Model):
     def __str__(self):
         return self.title
 
-    @property
+    @cached_property
     def alternates(self):
         return self.attachments.filter(kind=Attachment.KIND_ALTERNATE)
 
-    @property
+    @cached_property
     def inlines(self):
         return self.attachments.filter(kind=Attachment.KIND_INLINE)
 
-    @property
+    @cached_property
     def content(self):
         content = self.body
         content += '\n'
@@ -311,25 +312,25 @@ class Attachment(models.Model):
     def __str__(self):
         return self.title
 
-    @property
+    @cached_property
     def clean_title(self):
         return self.title.translate(Attachment._utf_translate)
 
-    @property
+    @cached_property
     def extension(self):
         try:
             return '.' + self.file.name.split('.')[-1]
         except IndexError:
             return None
 
-    @property
+    @cached_property
     def format(self):
         if self.extension:
             return self.extension.lstrip('.').upper()
         else:
             return 'Unknown'
 
-    @property
+    @cached_property
     def is_podcast_audio(self):
         if self.mime_type.split('/')[0] != 'audio':
             return False
@@ -344,7 +345,7 @@ class Attachment(models.Model):
     def is_private(self):
         return self.resource.is_private
 
-    @property
+    @cached_property
     def size(self):
         return self.file.size
 
@@ -492,15 +493,15 @@ class ResourceFeed(models.Model):
     def __str__(self):
         return self.title
 
-    @property
+    @cached_property
     def mime_types(self):
         return self.mime_type_list.split(',') if self.mime_type_list else []
 
-    @property
+    @cached_property
     def categories(self):
         return [c.strip() for c in self.category_list.split(',')] if self.category_list else []
 
-    @property
+    @cached_property
     def image_url(self):
         if self.artwork:
             return attachment_url(reverse('resources:feed_artwork', kwargs={'slug': self.slug}),

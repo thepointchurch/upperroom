@@ -5,6 +5,7 @@ from datetime import date
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
+from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -126,23 +127,23 @@ class Family(models.Model):
             ids.append(self.wife.id)
         return ids
 
-    @property
+    @cached_property
     def current_members(self):
         return self.members.filter(is_current=True)
 
-    @property
+    @cached_property
     def spouses(self):
         return self.current_members.filter(id__in=self.spouse_ids())
 
-    @property
+    @cached_property
     def siblings(self):
         return self.current_members.exclude(id__in=self.spouse_ids())
 
-    @property
+    @cached_property
     def anniversarydate(self):
         return self.anniversary.replace(year=2000)
 
-    @property
+    @cached_property
     def anniversary_age(self):
         if self.anniversary:
             today = date.today()
@@ -164,7 +165,7 @@ class Family(models.Model):
     def first_letter(self):
         return self.name[0].lower()
 
-    @property
+    @cached_property
     def photo_base64(self):
         return base64.b64encode(self.photo.file.file.read()).decode('ascii')
 
@@ -305,7 +306,7 @@ class Person(models.Model):
     def phone_work_intl(self):
         return re.sub(r'^0', '+61', self.phone_work.replace(' ', ''))
 
-    @property
+    @cached_property
     def has_roster(self):
         if self.roles.count() > 0:
             return True
