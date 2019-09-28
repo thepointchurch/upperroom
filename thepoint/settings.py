@@ -136,6 +136,10 @@ if os.getenv('STATICFILES_BUCKET', None) or os.getenv('MEDIAFILES_BUCKET', None)
 
     AWS_DEFAULT_ACL = None
 
+    AWS_S3_OBJECT_PARAMETERS = {
+        'CacheControl': 'max-age=86400',
+    }
+
 
 class AddSyslogTagFilter(logging.Filter):
     def __init__(self, tag):
