@@ -59,6 +59,7 @@ class Meeting(models.Model):
             j['name'] = i.role.name
             j['order'] = i.role.order
             j['location'] = i.location.name if i.location else ''  # '' required for regroup to work in the template
+            j['print'] = i.role.include_in_print
             return j
 
         parents = {}
@@ -118,6 +119,10 @@ class RoleType(models.Model):
         limit_choices_to={'is_current': True},
         related_name='role_types',
         verbose_name=_('servers'),
+    )
+    include_in_print = models.BooleanField(
+        default=True,
+        verbose_name=_('include in printout'),
     )
     order_by_age = models.BooleanField(
         default=True,

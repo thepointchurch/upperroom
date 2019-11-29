@@ -65,7 +65,7 @@ a {
         {% regroup meeting.merged_roles|dictsort:"location" by location as role_location %}
         {% for location in role_location %}
             {% if not location.grouper %}
-                {% for role in location.list %}
+                {% for role in location.list %}{% if role.print %}
                     <p><span class="role">{{ role.name|smartquote }}:</span>
                     <span class="person role_{{ role.role.id }}">{% for person in role.people %}
                         {{ person.fullname|smartquote }}{% if not forloop.last %}, {% endif %}
@@ -74,9 +74,9 @@ a {
                     {% endfor %}</span>
                     {% if role.description %}<span class="description"> &mdash; {{ role.description|smartquote }}</span>{% endif %}
                     </p>
-                {% endfor %}
+                {% endif %}{% endfor %}
             {% else %}
-                {% for role in location.list %}
+                {% for role in location.list %}{% if role.print %}
                     <p class="remote">{{ role.name|smartquote }} at {{ role.location|smartquote }}:
                     <span class="person">{% for person in role.people %}
                         {{ person.fullname|smartquote }}{% if not forloop.last %}, {% endif %}
@@ -85,7 +85,7 @@ a {
                     {% endfor %}</span>
                     {% if role.description %}<cite>({{ role.description|smartquote }})</cite>{% endif %}
                     </p>
-                {% endfor %}
+                {% endif %}{% endfor %}
             {% endif %}
         {% endfor %}
         </div>
