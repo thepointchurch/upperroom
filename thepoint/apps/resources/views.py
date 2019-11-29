@@ -62,8 +62,11 @@ class RedirectToAttachment(Exception):
 class ResourcePermissionMixin(UserPassesTestMixin):
     def test_func(self):
         obj = self.get_object()
-        return self.request.user.is_authenticated or (not obj.is_private and
-                                                      any(not t.is_private for t in obj.tags.all()))
+        if isinstance(obj, Attachment):
+            return self.request.user.is_authenticated or not obj.is_private
+        else:
+            return self.request.user.is_authenticated or (not obj.is_private and
+                                                          any(not t.is_private for t in obj.tags.all()))
 
 
 class ResourceDetail(ResourcePermissionMixin, generic.DetailView):
