@@ -9,7 +9,7 @@ from django.forms import models, TextInput
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views import generic
 from weasyprint import HTML
 

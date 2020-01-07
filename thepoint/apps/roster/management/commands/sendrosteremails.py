@@ -5,7 +5,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core import mail
 from django.core.management.base import BaseCommand, CommandError
 from django.template.loader import get_template
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from ...models import Role
 

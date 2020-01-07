@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.forms import ModelForm, ModelMultipleChoiceField
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from .models import Location, Meeting, MeetingTemplate, Role, RoleType, RoleTypeTemplateMapping, DAYS_OF_THE_WEEK
 from ..directory.models import Person

@@ -9,7 +9,7 @@ from django.http import Http404
 from django.urls import resolve, reverse
 from django.utils import timezone
 from django.utils.functional import cached_property
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from ..utils.storages.attachment import attachment_url
 

@@ -8,7 +8,7 @@ from django.core.mail import send_mail
 from django.db.models.signals import pre_save
 from django.dispatch import Signal, receiver
 from django.template.loader import get_template
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from PIL import Image
 
 from .models import Family, get_family_photo_filename, get_family_thumbnail_filename

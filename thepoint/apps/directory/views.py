@@ -9,7 +9,7 @@ from django.db.models import Q
 from django.http import FileResponse, Http404
 from django.shortcuts import redirect
 from django.utils.dates import MONTHS
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.views import generic
 from weasyprint import HTML
 
