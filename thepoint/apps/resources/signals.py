@@ -31,6 +31,8 @@ def delete_file(file_object):
 
 @receiver(post_save, sender=Resource)
 def resource_post_save(sender, instance, **kwargs):
+    if kwargs.get('raw'):
+        return
     for attachment in instance.attachments.all():
         if isinstance(attachment.file.file, S3Boto3StorageFile):
             was_private = getattr(instance, 'was_private', None)
@@ -53,6 +55,8 @@ def resource_pre_save(sender, instance, **kwargs):
 
 @receiver(pre_save, sender=Attachment)
 def attachment_pre_save(sender, instance, **kwargs):
+    if kwargs.get('raw'):
+        return
     if isinstance(instance.file.file, UploadedFile):
         # Work to be done when a new file is uploaded
         instance.file_new = True
@@ -70,6 +74,8 @@ def attachment_pre_save(sender, instance, **kwargs):
 
 @receiver(post_save, sender=Attachment)
 def attachment_post_save(sender, instance, **kwargs):
+    if kwargs.get('raw'):
+        return
     if getattr(instance, 'file_new', False) and not instance.resource.is_private:
         set_s3_file_acl(instance.file, 'public-read')
 
@@ -82,6 +88,8 @@ def attachment_post_delete(sender, instance, **kwargs):
 
 @receiver(pre_save, sender=ResourceFeed)
 def feed_pre_save(sender, instance, **kwargs):
+    if kwargs.get('raw'):
+        return
     try:
         old_artwork = sender.objects.get(id=instance.id).artwork
     except ObjectDoesNotExist:
@@ -103,6 +111,8 @@ def feed_pre_save(sender, instance, **kwargs):
 
 @receiver(post_save, sender=ResourceFeed)
 def feed_post_save(sender, instance, **kwargs):
+    if kwargs.get('raw'):
+        return
     if instance.artwork and isinstance(instance.artwork.file, S3Boto3StorageFile):
         if getattr(instance, 'artwork_new', False):
             if not is_s3_file_public(instance.artwork):

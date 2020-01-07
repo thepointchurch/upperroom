@@ -35,6 +35,9 @@ def notify_on_fupdate(sender, instance, **kwargs):
 
 @receiver(pre_save, sender=Family)
 def family_pre_save(sender, instance, **kwargs):
+    if kwargs.get('raw'):
+        return
+
     try:
         old_instance = sender.objects.get(id=instance.id)
     except Family.DoesNotExist:
