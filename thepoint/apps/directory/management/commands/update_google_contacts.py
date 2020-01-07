@@ -104,41 +104,46 @@ class GooglePeopleService(object):
 
     def get_contacts(self):
         contacts = dict()
+        next_page = 0
 
-        for person in self.service.people().connections()\
-                .list(resourceName='people/me',
-                      personFields='names,emailAddresses,memberships,userDefined'
-                      ).execute().get('connections', []):
-            directory_id, given_name, surname, suffix, email = None, None, None, None, None
+        while next_page is not None:
+            x = self.service.people().connections().list(resourceName='people/me',
+                                                         pageToken=next_page if next_page else None,
+                                                         personFields='names,emailAddresses,memberships,userDefined'
+                                                         ).execute()
+            for person in x.get('connections', []):
+                directory_id, given_name, surname, suffix, email = None, None, None, None, None
 
-            for d in person.get('userDefined', []):
-                if d['key'] == 'directory_id':
-                    directory_id = d['value']
+                for d in person.get('userDefined', []):
+                    if d['key'] == 'directory_id':
+                        directory_id = d['value']
 
-            names = person.get('names', [])
-            if names:
-                given_name = names[0].get('givenName')
-                surname = names[0].get('familyName')
-                s = names[0].get('honorificSuffix')
-                if s:
-                    suffix = s
+                names = person.get('names', [])
+                if names:
+                    given_name = names[0].get('givenName')
+                    surname = names[0].get('familyName')
+                    s = names[0].get('honorificSuffix')
+                    if s:
+                        suffix = s
 
-            for address in person.get('emailAddresses', []):
-                if address['metadata'].get('primary', False):
-                    email = address['value']
-                    break
+                for address in person.get('emailAddresses', []):
+                    if address['metadata'].get('primary', False):
+                        email = address['value']
+                        break
 
-            p = Contact(directory_id, given_name, surname, suffix, email)
-            p.google_id = person['resourceName']
-            p.google_etag = person['etag']
+                p = Contact(directory_id, given_name, surname, suffix, email)
+                p.google_id = person['resourceName']
+                p.google_etag = person['etag']
 
-            for group in person.get('memberships', []):
-                if 'contactGroupMembership' in group:
-                    gid = group['contactGroupMembership']['contactGroupId']
-                    if gid not in ['myContacts', 'starred']:
-                        p.add_group(gid)
+                for group in person.get('memberships', []):
+                    if 'contactGroupMembership' in group:
+                        gid = group['contactGroupMembership']['contactGroupId']
+                        if gid not in ['myContacts', 'starred']:
+                            p.add_group(gid)
 
-            contacts[p.id] = p
+                contacts[p.id] = p
+
+            next_page = x.get('nextPageToken')
 
         return contacts
 
