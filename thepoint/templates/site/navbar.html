@@ -19,7 +19,7 @@
 {% for item in featured_private_items %}
 <li><a href="{{ item.get_absolute_url }}" class="nav-{{ item.slug }}"{% if item.description %} title="{{ item.description|smartquote }}"{% endif %}>{{ item.title|smartquote }}</a></li>
 {% endfor %}
-<li><a href="{% url 'directory:index' %}" class="nav-directory" title="A directory of Members and Friends of The Point.">Directory</a></li>
+{% if perms.directory.can_view %}<li><a href="{% url 'directory:index' %}" class="nav-directory" title="A directory of Members and Friends of The Point.">Directory</a></li>{% endif %}
 <li><a href="{% url 'calendar' %}" class="nav-calendar" title="A calendar of Events at The Point.">Calendar</a></li>
 <li><a href="{% url 'roster:index' %}" class="nav-roster" title="The Sunday Assembly Roster.">Roster</a></li>
 <li><a href="{% url 'library:index' %}" class="nav-library" title="Search the The Point’s Library.">Library</a></li>

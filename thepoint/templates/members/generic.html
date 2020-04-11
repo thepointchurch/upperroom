@@ -1,7 +1,7 @@
 <p>The following resources are available for Members and Friends of The Point. If you have any comments or suggestions for improvements or the usefulness of this resource, please contact the <a href="mailto:{{ webmaster_email }}">webmaster</a>.</p>
 
 <ul style="line-height: 200%;">
-<li><strong><a href="{% url "directory:index" %}">Members Directory</a></strong> Directory of family and friends.</li>
+{% if perms.directory.can_view %}<li><strong><a href="{% url "directory:index" %}">Members Directory</a></strong> Directory of family and friends.</li>{% endif %}
 <li><strong><a href="{% url "calendar" %}">Event Calendar</a></strong> A calendar of church events.</li>
 <li><strong><a href="{% url "roster:index" %}">Sunday Morning Roster</a></strong> Roster for Sunday morning meetings.</li>
 <li><strong><a href="{% url "library:index" %}">Library</a></strong> Search the church library.</li>

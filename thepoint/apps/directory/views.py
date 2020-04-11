@@ -2,7 +2,7 @@ import io
 import time
 
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
@@ -19,8 +19,9 @@ from .signals import family_updated
 from ..utils.storages.attachment import attachment_response
 
 
-class IndexView(LoginRequiredMixin, generic.ListView):
+class IndexView(PermissionRequiredMixin, generic.ListView):
     template_name = 'directory/index.html'
+    permission_required = 'directory.can_view'
     queryset = Family.current_objects.all()
 
     def get_context_data(self, **kwargs):
@@ -29,22 +30,25 @@ class IndexView(LoginRequiredMixin, generic.ListView):
         return context
 
 
-class LetterView(LoginRequiredMixin, generic.ListView):
+class LetterView(PermissionRequiredMixin, generic.ListView):
     model = Family
     template_name = 'directory/family_letter.html'
+    permission_required = 'directory.can_view'
 
     def get_queryset(self):
         self.letter = self.kwargs['letter']
         return Family.current_objects.filter(name__istartswith=self.letter)
 
 
-class DetailView(LoginRequiredMixin, generic.DetailView):
+class DetailView(PermissionRequiredMixin, generic.DetailView):
     model = Family
+    permission_required = 'directory.can_view'
 
 
-class SearchView(LoginRequiredMixin, generic.ListView):
+class SearchView(PermissionRequiredMixin, generic.ListView):
     model = Family
     template_name = 'directory/family_search.html'
+    permission_required = 'directory.can_view'
 
     def get_queryset(self):
         self.search_type = self.request.GET.get('type', 'By Name')
@@ -64,9 +68,10 @@ class SearchView(LoginRequiredMixin, generic.ListView):
                 ).distinct()
 
 
-class FamilyEditView(LoginRequiredMixin, generic.edit.UpdateView):
+class FamilyEditView(PermissionRequiredMixin, generic.edit.UpdateView):
     model = Family
     form_class = FamilyForm
+    permission_required = 'directory.can_view'
 
     def get_success_url(self):
         return self.get_object().get_absolute_url()
@@ -101,13 +106,15 @@ class FamilyEditView(LoginRequiredMixin, generic.edit.UpdateView):
             return self.render_to_response(self.get_context_data(form=form))
 
 
-class BirthdayView(LoginRequiredMixin, generic.ListView):
+class BirthdayView(PermissionRequiredMixin, generic.ListView):
     template_name = 'directory/birthday_list.html'
+    permission_required = 'directory.can_view'
     queryset = Person.current_objects.all().exclude(birthday__isnull=True)
 
 
-class AnniversaryView(LoginRequiredMixin, generic.ListView):
+class AnniversaryView(PermissionRequiredMixin, generic.ListView):
     template_name = 'directory/anniversary_list.html'
+    permission_required = 'directory.can_view'
     queryset = (Family.current_objects
                 .filter(anniversary__isnull=False)
                 .filter(husband__isnull=False)
@@ -115,16 +122,18 @@ class AnniversaryView(LoginRequiredMixin, generic.ListView):
                 )
 
 
-class FamilyPhotoView(LoginRequiredMixin, generic.DetailView):
+class FamilyPhotoView(PermissionRequiredMixin, generic.DetailView):
     model = Family
+    permission_required = 'directory.can_view'
 
     def get(self, request, *args, **kwargs):
         family = self.get_object()
         return attachment_response(family.photo.file, False, content_type='image/jpeg')
 
 
-class FamilyThumbnailView(LoginRequiredMixin, generic.DetailView):
+class FamilyThumbnailView(PermissionRequiredMixin, generic.DetailView):
     model = Family
+    permission_required = 'directory.can_view'
 
     def get(self, request, *args, **kwargs):
         family = self.get_object()
@@ -134,7 +143,9 @@ class FamilyThumbnailView(LoginRequiredMixin, generic.DetailView):
 directory_file_name = 'directory/directory.pdf'
 
 
-class PdfView(LoginRequiredMixin, generic.View):
+class PdfView(PermissionRequiredMixin, generic.View):
+    permission_required = 'directory.can_view'
+
     def get(self, request, *args, **kwargs):
         title = _('%(site)s Directory') % {'site': get_current_site(request).name}
         return attachment_response(directory_file_name,
@@ -145,6 +156,7 @@ class PdfView(LoginRequiredMixin, generic.View):
 class PrintView(PermissionRequiredMixin, generic.TemplateView):
     permission_required = 'directory.add_family'
     template_name = 'directory/print.html'
+    permission_required = 'directory.can_view'
 
     def get_context_data(self, **kwargs):
         month = self.request.GET.get('month') or time.localtime().tm_mon

@@ -109,6 +109,9 @@ class Family(models.Model):
         ordering = ['name']
         verbose_name = _('family')
         verbose_name_plural = _('families')
+        permissions = [
+            ('can_view', 'Can view the directory'),
+        ]
 
     def __str__(self):
         members = []

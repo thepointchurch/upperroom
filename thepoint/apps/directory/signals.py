@@ -1,11 +1,12 @@
 from io import BytesIO
 
 from django.conf import settings
+from django.contrib.auth.models import User, Group
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.base import ContentFile
 from django.core.mail import send_mail
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
 from django.dispatch import Signal, receiver
 from django.template.loader import get_template
 from django.utils.translation import gettext as _
@@ -79,3 +80,12 @@ def family_pre_save(sender, instance, **kwargs):
         f.close()
     else:
         instance.photo_thumbnail = None
+
+
+@receiver(post_save, sender=User)
+def add_user_to_member_group(sender, instance, created, **kwargs):
+    if created:
+        try:
+            instance.groups.add(Group.objects.get(name='Member'))
+        except Group.DoesNotExist:
+            pass
