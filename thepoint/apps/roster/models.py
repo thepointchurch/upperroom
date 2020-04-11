@@ -52,6 +52,12 @@ class Meeting(models.Model):
     def __str__(self):
         return str(self.date)
 
+    def save(self, *args, **kwargs):
+        # Update roles when the meeting is updated
+        for role in self.roles.all():
+            role.save()
+        super(Meeting, self).save(*args, **kwargs)
+
     def merged_roles(self):
         def my_model_to_dict(i):
             j = model_to_dict(i)
