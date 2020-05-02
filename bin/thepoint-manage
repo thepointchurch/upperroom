@@ -1,3 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
-python -m thepoint $@
+# Convert _FILE style environment variables
+while IFS='=' read -r n v; do
+    str_arg="${n%_FILE}"
+    if [ "$n" != "$str_arg" ]; then
+        export "$str_arg"="$(cat $v)"
+    fi
+done <<< $(env)
+
+exec python -m thepoint $@

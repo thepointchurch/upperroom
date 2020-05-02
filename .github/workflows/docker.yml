@@ -1,0 +1,109 @@
+name: Docker Image
+
+on:
+  push:
+    branches:
+      - master
+      - testing
+    tags:
+      - '**'
+    paths-ignore:
+      - '.github/**'
+      - '.gitignore'
+  schedule:
+    - cron: '0 18 * * 5'
+
+env:
+  IMAGE_NAME: thepoint
+
+jobs:
+  push:
+    runs-on: ubuntu-latest
+
+    if: github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        run: |
+          if echo "${{ github.ref }}" | grep -q /tags/; then
+              VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          else
+              VERSION="${{ github.sha }}"
+          fi
+          docker build . --file Dockerfile --tag image --build-arg version="$VERSION" --build-arg build_date="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+
+      - name: Log into registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+
+      - name: Push image
+        run: |
+          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+
+          if [ "$VERSION" == "testing" ]; then
+              docker tag image $IMAGE_ID:testing
+              docker push $IMAGE_ID:testing
+          else
+              if [ "$VERSION" != "master" ]; then
+                  docker tag image $IMAGE_ID:$VERSION
+                  docker push $IMAGE_ID:$VERSION
+              fi
+
+              docker tag image $IMAGE_ID:latest
+              docker push $IMAGE_ID:latest
+          fi
+  rebuild:
+    runs-on: ubuntu-latest
+
+    if: github.event_name == 'schedule'
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Build image
+        run: |
+          COMMIT_LATEST=$(git rev-parse HEAD)
+          echo COMMIT_LATEST $COMMIT_LATEST
+          docker build . --file Dockerfile --tag latest --build-arg version="$(git rev-parse --short HEAD)" --build-arg build_date="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          git fetch -q --all --tags
+          VERSION=$(git describe --abbrev=0 --tags)
+          echo VERSION $VERSION
+          echo ::set-env name=VERSION::$VERSION
+          git checkout -q $VERSION -b latest
+          COMMIT_TAGGED=$(git rev-parse HEAD)
+          echo COMMIT_TAGGED $COMMIT_TAGGED
+          docker build . --file Dockerfile --tag image --build-arg version="$VERSION" --build-arg build_date="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          if [ "$COMMIT_LATEST" != "$COMMIT_TAGGED" ]; then
+              INCLUDE_LATEST=yes
+              echo ::set-env name=INCLUDE_LATEST::$INCLUDE_LATEST
+          fi
+
+      - name: Log into registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+
+      - name: Push image
+        run: |
+          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+
+          INCLUDE_LATEST=$INCLUDE_LATEST
+
+          docker tag image $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$VERSION
+
+          if [ "$INCLUDE_LATEST" == 'yes' ]; then
+              docker tag image $IMAGE_ID:latest
+              docker push $IMAGE_ID:latest
+          fi
