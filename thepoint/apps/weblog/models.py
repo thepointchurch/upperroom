@@ -126,9 +126,11 @@ def get_attachment_filename(instance, filename):
         extension = '.' + filename.split('.')[-1]
     except IndexError:
         extension = ''
-    return 'weblog/attachment/%s/%s%s' % (instance.entry.slug,
-                                          instance.slug,
-                                          extension)
+    return 'weblog/attachment/%d/%d/%s/%s%s' % (instance.entry.created.year,
+                                                instance.entry.created.month,
+                                                instance.entry.slug,
+                                                instance.slug,
+                                                extension)
 
 
 class Attachment(models.Model):
