@@ -1,6 +1,8 @@
 import os
 from setuptools import find_packages, setup
 
+import thepoint
+
 with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
     README = readme.read()
 
@@ -8,7 +10,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='thepoint',
-    version='2.2.0',
+    version=thepoint.__version__,
     license=open('LICENSE').read(),
     description='''A Django project for The Point Church's website.''',
     long_description=README,
@@ -25,7 +27,7 @@ setup(
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Django',
-        'Framework :: Django :: 2.2',
+        'Framework :: Django :: 3.0',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
         'Operating System :: OS Independent',
