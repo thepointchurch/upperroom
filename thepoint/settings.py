@@ -22,6 +22,7 @@ INSTALLED_APPS = (
     'thepoint.apps.members.apps.MembersConfig',
     'thepoint.apps.newsletter.apps.NewsletterConfig',
     'thepoint.apps.resources.apps.ResourcesConfig',
+    'thepoint.apps.weblog.apps.WeblogConfig',
     'robots',
     'thepoint.apps.roster.apps.RosterConfig',
     'thepoint.apps.splash.apps.SplashConfig',

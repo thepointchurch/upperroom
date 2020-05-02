@@ -17,6 +17,8 @@ urlpatterns = [
     path('resources/', include('thepoint.apps.resources.urls', namespace='resources')),
     path('roster/', include('thepoint.apps.roster.urls', namespace='roster')),
 
+    path('news/', include('thepoint.apps.weblog.urls', namespace='news')),
+
     path('admin/', admin.site.urls),
 
     path('robots.txt', include('robots.urls')),
