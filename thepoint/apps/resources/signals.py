@@ -76,7 +76,8 @@ def attachment_pre_save(sender, instance, **kwargs):
 def attachment_post_save(sender, instance, **kwargs):
     if kwargs.get('raw'):
         return
-    if getattr(instance, 'file_new', False) and not instance.resource.is_private:
+    if getattr(instance, 'file_new', False) and not instance.resource.is_private \
+            and isinstance(instance.file.file, S3Boto3StorageFile):
         set_s3_file_acl(instance.file, 'public-read')
 
 
