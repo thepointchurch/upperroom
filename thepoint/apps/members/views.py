@@ -1,4 +1,6 @@
 import logging
+import platform
+import sys
 from datetime import date, timedelta
 
 from django.conf import settings
@@ -16,6 +18,11 @@ from django.views import generic
 
 from ..directory.models import Person
 from ..roster.models import Role
+
+if sys.version_info >= (3, 8):
+    from importlib import metadata as importlib_metadata
+else:
+    import importlib_metadata
 
 
 logger = logging.getLogger(__name__)
@@ -106,3 +113,15 @@ class CreateConfirmView(LoginRequiredMixin, generic.edit.CreateView):
         messages.success(request, _('Your account has been set up successfully.'))
 
         return result
+
+
+class TechDetailsView(LoginRequiredMixin, generic.TemplateView):
+    template_name = 'members/tech_details.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(TechDetailsView, self).get_context_data(**kwargs)
+        context['python_version'] = sys.version
+        context['platform'] = platform.platform()
+        context['packages'] = {dist.metadata['Name']: dist.version
+                               for dist in importlib_metadata.distributions()}
+        return context

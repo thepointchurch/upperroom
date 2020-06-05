@@ -39,4 +39,7 @@ urlpatterns = [
     path('create/<int:pk>',
          views.CreateConfirmView.as_view(),
          name='create_confirm'),
+    path('tech',
+         auth.views.TechDetailsView.as_view(),
+         name='tech'),
 ]
