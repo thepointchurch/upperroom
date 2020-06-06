@@ -4,6 +4,7 @@
 
 {% block heading %}Tech Details{% endblock heading %}
 
+{% block content %}
 <table>
 <tr><td><b>Platform</b></td><td>{{ platform }}</td></tr>
 <tr><td><b>Python</b></td><td>{{ python_version }}</td></tr>
@@ -11,3 +12,4 @@
 <tr><td>{{ package }}</td><td>{{ version }}</td></tr>
 {% endfor %}
 </table>
+{% endblock content %}
