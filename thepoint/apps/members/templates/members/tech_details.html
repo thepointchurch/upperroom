@@ -8,7 +8,7 @@
 <table>
 <tr><td><b>Platform</b></td><td>{{ platform }}</td></tr>
 <tr><td><b>Python</b></td><td>{{ python_version }}</td></tr>
-{% for package, version in packages.items %}
+{% for package, version in packages.items|dictsort:0 %}
 <tr><td>{{ package }}</td><td>{{ version }}</td></tr>
 {% endfor %}
 </table>
