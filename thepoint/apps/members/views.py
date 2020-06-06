@@ -122,6 +122,7 @@ class TechDetailsView(LoginRequiredMixin, generic.TemplateView):
         context = super(TechDetailsView, self).get_context_data(**kwargs)
         context['python_version'] = sys.version
         context['platform'] = platform.platform()
-        context['packages'] = {dist.metadata['Name']: dist.version
+        context['packages'] = {dist.metadata['Name']: {'version': dist.version,
+                                                       'url': dist.metadata.get('Home-page')}
                                for dist in importlib_metadata.distributions()}
         return context
