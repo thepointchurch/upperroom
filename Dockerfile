@@ -34,6 +34,7 @@ COPY --from=compile-image /opt/venv /opt/venv
 COPY --from=font-image /usr/share/fonts/truetype/msttcorefonts /usr/local/share/fonts /usr/local/share/fonts/
 COPY entrypoint.sh /entrypoint.sh
 COPY . /code/
+COPY gunicorn.conf /etc/gunicorn.conf
 RUN pip install --no-deps /code/ && rm -rf /code \
     && apt-get -y update \
     && apt-get install -y --no-install-recommends \
@@ -52,7 +53,7 @@ EXPOSE 8000/tcp
 USER django:django
 WORKDIR /django
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["gunicorn", "-b", "0.0.0.0:8000", "--forwarded-allow-ips", "*", "--worker-tmp-dir", "/dev/shm", "thepoint.wsgi"]
+CMD ["gunicorn", "-b", "0.0.0.0:8000", "--config", "/etc/gunicorn.conf", "thepoint.wsgi"]
 
 HEALTHCHECK --interval=5m --timeout=3s CMD curl -fsS http://localhost:8000/ || exit 1
 

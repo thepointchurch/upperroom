@@ -1,4 +1,3 @@
-import logging
 import os
 
 BASE_DIR = os.path.dirname(__file__)
@@ -146,112 +145,32 @@ if os.getenv('STATICFILES_BUCKET', None) or os.getenv('MEDIAFILES_BUCKET', None)
     }
 
 
-class AddSyslogTagFilter(logging.Filter):
-    def __init__(self, tag):
-        self.tag = tag
-
-    def filter(self, record):
-        record.tag = self.tag
-        return True
-
-
-if os.getenv('SYSLOG_TAG', ''):
-    if DEBUG:
-        level = 'DEBUG'
-    else:
-        level = 'INFO'
-
-    LOGGING = {
-        'version': 1,
-        'disable_existing_loggers': True,
-        'filters': {
-            'add_syslog_tag': {
-                '()': AddSyslogTagFilter,
-                'tag': os.getenv('SYSLOG_TAG', ''),
-            },
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {
+            'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
         },
-        'formatters': {
-            'syslog': {
-                'format': ('django_%(tag)s[%(process)d]: '
-                           '%(name)s [%(levelname)s] %(message)s')
-            },
+    },
+    'handlers': {
+        'default': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'standard'
         },
-        'handlers': {
-            'syslog': {
-                'level': level,
-                'class': 'logging.handlers.SysLogHandler',
-                'address': '/dev/log',
-                'formatter': 'syslog',
-                'filters': ['add_syslog_tag'],
-            },
+        'null': {
+            'class': 'logging.NullHandler',
         },
-        'loggers': {
-            'root': {
-                'handlers': ['syslog'],
-                'level': level,
-            },
-            'django': {
-                'handlers': ['syslog'],
-                'level': level,
-                'propagate': False,
-            },
-            'django.request': {
-                'handlers': ['syslog'],
-                'level': level,
-                'propagate': False,
-            },
-            'django.security': {
-                'handlers': ['syslog'],
-                'level': level,
-                'propagate': False,
-            },
-            'gunicorn.access': {
-                'handlers': ['syslog'],
-                'level': level,
-                'propagate': False,
-            },
-            'gunicorn.error': {
-                'handlers': ['syslog'],
-                'level': level,
-                'propagate': False,
-            },
-            'py.warnings': {
-                'handlers': ['syslog'],
-                'level': level,
-                'propagate': False,
-            },
-        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['default'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+        'django.db': {
+            'handlers': ['null'],
+            'propagate': False,
+        },
     }
-
-else:
-    LOGGING = {
-        'version': 1,
-        'disable_existing_loggers': False,
-        'formatters': {
-            'standard': {
-                'format': '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
-            },
-        },
-        'handlers': {
-            'default': {
-                'level': 'DEBUG',
-                'class': 'logging.StreamHandler',
-                'formatter': 'standard'
-            },
-            'null': {
-                'level': 'DEBUG',
-                'class': 'logging.NullHandler',
-            },
-        },
-        'loggers': {
-            '': {
-                'handlers': ['default'],
-                'level': 'DEBUG',
-            },
-            'django.db': {
-                'handlers': ['null'],
-                'level': 'DEBUG',
-                'propagate': False,
-            },
-        }
-    }
+}
