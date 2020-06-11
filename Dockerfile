@@ -56,7 +56,7 @@ WORKDIR /django
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["gunicorn", "-b", "0.0.0.0:8000", "--config", "/etc/gunicorn.py", "thepoint.wsgi"]
 
-HEALTHCHECK --interval=5m --timeout=3s CMD curl -fsS http://localhost:8000/ || exit 1
+HEALTHCHECK --interval=5m --timeout=3s CMD curl -fsS -o /dev/null http://localhost:8000/ || exit 1
 
 ARG version
 ARG build_date
