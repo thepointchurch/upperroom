@@ -468,7 +468,7 @@ div.family .family_people p {
     white-space: nowrap;
 }
 
-div.family .family_people a {
+div.family .family_people a, div.family .links a {
     color: rgb(170,50,0);
 }
 
