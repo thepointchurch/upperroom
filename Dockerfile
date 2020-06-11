@@ -38,6 +38,7 @@ COPY gunicorn.py /etc/gunicorn.py
 RUN pip install --no-deps /code/ && rm -rf /code \
     && apt-get -y update \
     && apt-get install -y --no-install-recommends \
+        bzip2 \
         curl \
         netcat-traditional \
         libpq5 \
