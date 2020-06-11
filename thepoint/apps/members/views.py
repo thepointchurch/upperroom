@@ -42,6 +42,7 @@ class IndexView(LoginRequiredMixin, generic.TemplateView):
         except:
             pass
         context['webmaster_email'] = settings.WEBMASTER_EMAIL
+        context['search_query'] = None
         return context
 
 
