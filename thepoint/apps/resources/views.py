@@ -52,6 +52,11 @@ class ResourceList(generic.ListView):
             resources = resources.filter(is_private=False)
         return resources
 
+    def get_context_data(self, **kwargs):
+        context = super(ResourceList, self).get_context_data(**kwargs)
+        context['tag'] = None
+        return context
+
 
 class RedirectToAttachment(Exception):
     def __init__(self, attachment):
