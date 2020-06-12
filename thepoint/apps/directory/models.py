@@ -107,6 +107,10 @@ class Family(models.Model):
 
     class Meta:
         ordering = ['name']
+        indexes = [
+            models.Index(fields=['name']),
+            models.Index(fields=['is_current']),
+        ]
         verbose_name = _('family')
         verbose_name_plural = _('families')
         permissions = [
@@ -273,6 +277,10 @@ class Person(models.Model):
 
     class Meta:
         ordering = ['order', 'id', 'name']   # I wish there was a better way
+        indexes = [
+            models.Index(fields=['order', 'id', 'name']),
+            models.Index(fields=['is_current']),
+        ]
         verbose_name = _('person')
         verbose_name_plural = _('people')
 

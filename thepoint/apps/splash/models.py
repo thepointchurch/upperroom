@@ -45,6 +45,10 @@ class Splash(models.Model):
 
     class Meta:
         ordering = ['url', 'position', 'order', 'title']
+        indexes = [
+            models.Index(fields=['is_current', 'position']),
+            models.Index(fields=['url', 'position', 'order', 'title']),
+        ]
         verbose_name = _('splash')
         verbose_name_plural = _('splashes')
 

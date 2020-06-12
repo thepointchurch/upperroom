@@ -133,6 +133,9 @@ class Issue(models.Model):
     class Meta:
         ordering = ['-date']
         get_latest_by = 'date'
+        indexes = [
+            models.Index(fields=['date']),
+        ]
         verbose_name = _('issue')
         verbose_name_plural = _('issues')
 

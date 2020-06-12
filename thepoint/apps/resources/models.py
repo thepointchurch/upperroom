@@ -26,6 +26,9 @@ class FeaturedMixin(models.Model):
 
     class Meta:
         abstract = True
+        indexes = [
+            models.Index(fields=['priority']),
+        ]
 
     @property
     def is_featured(self):
@@ -84,6 +87,11 @@ class Tag(FeaturedMixin, models.Model):
 
     class Meta:
         ordering = ['name']
+        indexes = [
+            models.Index(fields=['name']),
+            models.Index(fields=['is_exclusive']),
+            models.Index(fields=['is_private']),
+        ]
         verbose_name = _('tag')
         verbose_name_plural = _('tags')
 
@@ -194,6 +202,11 @@ class Resource(FeaturedMixin, models.Model):
     class Meta:
         ordering = ['-published']
         get_latest_by = 'published'
+        indexes = [
+            models.Index(fields=['published']),
+            models.Index(fields=['is_published']),
+            models.Index(fields=['is_private']),
+        ]
         verbose_name = _('resource')
         verbose_name_plural = _('resources')
 
@@ -306,6 +319,9 @@ class Attachment(models.Model):
     class Meta:
         ordering = ['resource']
         unique_together = ('resource', 'slug')
+        indexes = [
+            models.Index(fields=['kind']),
+        ]
         verbose_name = _('attachment')
         verbose_name_plural = _('attachments')
 

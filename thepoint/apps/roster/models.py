@@ -145,6 +145,9 @@ class RoleType(models.Model):
 
     class Meta:
         ordering = ['order']
+        indexes = [
+            models.Index(fields=['order']),
+        ]
         verbose_name = _('role type')
         verbose_name_plural = _('role types')
 

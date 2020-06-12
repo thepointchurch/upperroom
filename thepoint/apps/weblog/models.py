@@ -77,6 +77,10 @@ class WeblogEntry(models.Model):
     class Meta:
         ordering = ['-published']
         get_latest_by = 'published'
+        indexes = [
+            models.Index(fields=['published']),
+            models.Index(fields=['is_published']),
+        ]
         verbose_name = _('weblog entry')
         verbose_name_plural = _('weblog entries')
 
@@ -179,6 +183,9 @@ class Attachment(models.Model):
     class Meta:
         ordering = ['entry']
         unique_together = ('entry', 'slug')
+        indexes = [
+            models.Index(fields=['entry_id', 'kind']),
+        ]
         verbose_name = _('attachment')
         verbose_name_plural = _('attachments')
 

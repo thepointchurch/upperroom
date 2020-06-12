@@ -53,6 +53,9 @@ class Keyword(models.Model):
 
     class Meta:
         ordering = ['order', 'value']
+        indexes = [
+            models.Index(fields=['order', 'value']),
+        ]
         verbose_name = _('Keyword')
         verbose_name_plural = _('Keywords')
 
