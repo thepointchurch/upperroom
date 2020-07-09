@@ -145,6 +145,10 @@ if os.getenv('STATICFILES_BUCKET', None) or os.getenv('MEDIAFILES_BUCKET', None)
     }
 
 
+if os.getenv('AWS_DEFAULT_REGION', None):
+    AWS_DEFAULT_REGION = os.getenv('AWS_DEFAULT_REGION')
+
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
