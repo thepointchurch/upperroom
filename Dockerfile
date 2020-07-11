@@ -46,6 +46,7 @@ RUN pip install --no-deps /code/ && rm -rf /code \
         libgdk-pixbuf2.0-0 \
         libpango-1.0-0 \
         libpangocairo-1.0-0 \
+        postgresql-client \
     && apt-get clean && rm -rf /var/lib/apt/lists/* \
     && useradd -md /django -s /bin/bash django
 
