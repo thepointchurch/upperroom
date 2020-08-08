@@ -1,12 +1,13 @@
 import os
+from pathlib import Path
 from setuptools import find_packages, setup
 
 import thepoint
 
-with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
+with (Path(__file__) / 'README.md').open() as readme:
     README = readme.read()
 
-os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
+os.chdir(Path(__file__).resolve(strict=True).parent)
 
 setup(
     name='thepoint',
@@ -20,20 +21,21 @@ setup(
     author='Craig Holyoak',
     author_email='craig@helmsdeep.org',
     install_requires=[
-        'Django>=3.0',
+        'Django>=3.1',
         'django-storages',
     ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Django',
-        'Framework :: Django :: 3.0',
+        'Framework :: Django :: 3.1',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],

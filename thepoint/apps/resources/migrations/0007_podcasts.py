@@ -99,5 +99,5 @@ class Migration(migrations.Migration):
                                        null=True,
                                        verbose_name='published'),
         ),
-        migrations.RunPython(set_published_from_created),
+        migrations.RunPython(set_published_from_created, elidable=True),
     ]

@@ -1,6 +1,6 @@
 import json
 import logging
-import os.path
+from pathlib import Path
 
 from django.core.management.base import BaseCommand
 from django.utils.translation import gettext_lazy as _
@@ -61,7 +61,7 @@ class GooglePeopleService(object):
     def __init__(self, secrets_file, credentials=None, dry_run=False):
         self.dry_run = dry_run
 
-        if credentials and os.path.isfile(credentials):
+        if credentials and Path(credentials).is_file():
             with open(credentials, 'r') as f:
                 creds_data = json.load(f)
             creds = Credentials(creds_data['token'])

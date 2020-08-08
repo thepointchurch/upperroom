@@ -1,6 +1,7 @@
 import os
+from pathlib import Path
 
-BASE_DIR = os.path.dirname(__file__)
+BASE_DIR = Path(__file__).resolve(strict=True).parent
 
 SECRET_KEY = os.environ['SECRET_KEY']
 
@@ -80,23 +81,23 @@ DEFAULT_FROM_EMAIL = WEBMASTER_EMAIL
 LOGIN_URL = '/members/login'
 LOGIN_REDIRECT_URL = '/members/'
 
-MEDIA_ROOT = os.path.join('.', 'media')
+MEDIA_ROOT = Path('.') / 'media'
 
 STATIC_URL = os.getenv('STATIC_URL', '/static/')
-STATIC_ROOT = os.path.join('.', 'static')
+STATIC_ROOT = Path('.') / 'static'
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+    BASE_DIR / 'static',
 )
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'templates'),
+            BASE_DIR / 'templates',
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -106,6 +107,7 @@ TEMPLATES = [
                 'django.template.context_processors.i18n',
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
+                'django.template.context_processors.request',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
                 'thepoint.apps.extendedsites.context_processors.site',

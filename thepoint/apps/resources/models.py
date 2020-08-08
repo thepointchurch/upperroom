@@ -2,7 +2,6 @@ import logging
 from itertools import chain
 
 import mutagen
-from django.contrib.postgres.fields import JSONField
 from django.core.validators import RegexValidator
 from django.db import models
 from django.http import Http404
@@ -310,7 +309,7 @@ class Attachment(models.Model):
         related_name='attachments',
         verbose_name=_('resource'),
     )
-    metadata = JSONField(
+    metadata = models.JSONField(
         null=True,
         blank=True,
         verbose_name=_('metadata'),

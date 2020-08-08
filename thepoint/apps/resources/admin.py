@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.forms import ModelForm
 from django.forms.widgets import Textarea
@@ -49,9 +48,9 @@ class AttachmentInline(admin.TabularInline):
         models.TextField: {'widget': Textarea(
                            attrs={'rows': 3,
                                   'cols': 40})},
-        JSONField: {'widget': Textarea(
-                    attrs={'rows': 3,
-                           'cols': 20})},
+        models.JSONField: {'widget': Textarea(
+                           attrs={'rows': 3,
+                                  'cols': 20})},
     }
 
 

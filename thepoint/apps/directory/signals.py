@@ -16,7 +16,7 @@ from .models import Family, get_family_photo_filename, get_family_thumbnail_file
 from ..resources.signals import delete_file
 
 
-family_updated = Signal(providing_args=['instance'])
+family_updated = Signal()
 
 
 @receiver(family_updated)

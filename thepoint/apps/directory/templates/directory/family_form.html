@@ -4,9 +4,6 @@
 
 {% block stylesheets %}
 <link rel="stylesheet" type="text/css" href="{% static 'style/directory_form.css' %}" />
-<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
-<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 {% endblock stylesheets %}
 
 {% block title %}{{ block.super }}: {{ family.name|smartquote }}: Edit{% endblock title %}
@@ -33,7 +30,7 @@
 {% endfor %}
 </tr></thead>
 {% endif %}
-<tr class="{% cycle 'row1' 'row2' %}">
+<tr>
 {% for field in person_form.visible_fields %}
 <td>
 {% if forloop.first %}
