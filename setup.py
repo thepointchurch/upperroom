@@ -4,15 +4,18 @@ from setuptools import find_packages, setup
 
 import thepoint
 
-with (Path(__file__) / 'README.md').open() as readme:
+os.chdir(Path(__file__).resolve(strict=True).parent)
+
+with open('README.md') as readme:
     README = readme.read()
 
-os.chdir(Path(__file__).resolve(strict=True).parent)
+with open('LICENSE') as license:
+    LICENSE = license.read()
 
 setup(
     name='thepoint',
     version=thepoint.__version__,
-    license=open('LICENSE').read(),
+    license=LICENSE,
     description='''A Django project for The Point Church's website.''',
     long_description=README,
     packages=find_packages(),
