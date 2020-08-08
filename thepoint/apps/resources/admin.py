@@ -100,6 +100,7 @@ class ResourceAdmin(admin.ModelAdmin):
     model = Resource
     form = ResourceForm
     inlines = [AttachmentInline]
+    ordering = ('title',)
     list_filter = ('tags', 'created', 'published', 'modified', 'is_published', 'is_private')
     search_fields = ['title', 'description', 'body']
     prepopulated_fields = {'slug': ('title',)}
