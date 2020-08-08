@@ -3,7 +3,7 @@
 <div id="header-inner">
 <div id="header-inner-inner">
 <h1>{{ site.name }}</h1>
-{% if site.extra.subtitle %}{{ site.extra.subtitle|markdown:"safe,smarty" }}{% endif %}
+{% if site.extra and site.extra.subtitle %}{{ site.extra.subtitle|markdown:"safe,smarty" }}{% endif %}
 </div>
 </div>
 </div>
