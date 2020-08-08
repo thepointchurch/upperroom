@@ -109,6 +109,7 @@ class AttachmentView(ResourcePermissionMixin, generic.DetailView):
 class AuthorList(generic.ListView):
     template_name = 'resources/author.html'
     paginate_by = 10
+    ordering = ['-published']
 
     def get_queryset(self):
         self.author = get_object_or_404(
