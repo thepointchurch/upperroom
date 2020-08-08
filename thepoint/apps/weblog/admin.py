@@ -15,8 +15,8 @@ class AttachmentForm(ModelForm):
         try:
             if self.instance.mime_type != cleaned_data['file'].content_type:
                 self.instance.mime_type = cleaned_data['file'].content_type
-        except AttributeError:
-            # No new file was uploaded (cleaned_data['file'].content_type missing)
+        except (AttributeError, KeyError):
+            # No new file was uploaded (cleaned_data['file'] missing)
             pass
 
         return cleaned_data
