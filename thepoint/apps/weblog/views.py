@@ -20,7 +20,10 @@ class WeblogDetail(LoginRequiredMixin, generic.DetailView):
     template_name = 'weblog/weblog_detail.html'
 
     def get_queryset(self):
-        return WeblogEntry.published_objects.all()
+        if self.request.user.is_staff:
+            return WeblogEntry.objects.all()
+        else:
+            return WeblogEntry.published_objects.all()
 
     def get_object(self, **kwargs):
         obj = super(WeblogDetail, self).get_object(**kwargs)

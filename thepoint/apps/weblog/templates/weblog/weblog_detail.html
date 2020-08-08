@@ -2,9 +2,9 @@
 {% load markup %}
 {% load smartquote %}
 
-{% block title %}{{ block.super }}: {{ object.title|smartquote }}{% endblock title %}
+{% block title %}{{ block.super }}: {{ object.title|smartquote }}{% if not weblog.is_published %} [DRAFT]{% endif %}{% endblock title %}
 
-{% block heading %}{{ object.title|smartquote }}{% endblock heading %}
+{% block heading %}{{ object.title|smartquote }}{% if not weblog.is_published %} [DRAFT]{% endif %}{% endblock heading %}
 
 {% block content %}
 

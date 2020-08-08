@@ -78,7 +78,10 @@ class ResourceDetail(ResourcePermissionMixin, generic.DetailView):
     model = Resource
 
     def get_queryset(self):
-        return Resource.published_objects.all()
+        if self.request.user.is_staff:
+            return Resource.objects.all()
+        else:
+            return Resource.published_objects.all()
 
     def get_object(self, **kwargs):
         obj = super(ResourceDetail, self).get_object(**kwargs)
