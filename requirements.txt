@@ -63,4 +63,5 @@ uritemplate==3.0.1
 urllib3==1.25.10
 WeasyPrint==51
 webencodings==0.5.1
+yafg==0.3
 zipp==3.1.0

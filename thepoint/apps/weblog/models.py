@@ -173,6 +173,11 @@ class Attachment(models.Model):
         default=KIND_INLINE,
         verbose_name=_('kind'),
     )
+    description = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name=_('description'),
+    )
     entry = models.ForeignKey(
         WeblogEntry,
         on_delete=models.CASCADE,
@@ -211,6 +216,11 @@ class Attachment(models.Model):
             return 'Unknown'
 
     def markdown_link(self, slug=False):
-        return '[%s]: %s' % (self.slug if slug else self.title,
-                             reverse('weblog:attachment',
-                                     kwargs={'pk': self.id}))
+        if self.description:
+            description = ' "%s"' % self.description
+        else:
+            description = ''
+        return '[%s]: %s%s' % (self.slug if slug else self.title,
+                               reverse('weblog:attachment',
+                                       kwargs={'pk': self.id}),
+                               description)

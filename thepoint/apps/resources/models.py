@@ -365,9 +365,14 @@ class Attachment(models.Model):
         return self.file.size
 
     def markdown_link(self, slug=False):
-        return '[%s]: %s' % (self.slug if slug else self.title,
-                             reverse('resources:attachment',
-                                     kwargs={'pk': self.id}))
+        if self.description:
+            description = ' "%s"' % self.description
+        else:
+            description = ''
+        return '[%s]: %s%s' % (self.slug if slug else self.title,
+                               reverse('resources:attachment',
+                                       kwargs={'pk': self.id}),
+                               description)
 
     def update_metadata(self):
         if self.mime_type.split('/')[0] == 'audio':

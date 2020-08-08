@@ -233,6 +233,21 @@ img.right {
     float: right;
 }
 
+figure {
+    margin: 0.4rem;
+    max-width: 100%;
+}
+figure > img {
+    display: block;
+    margin: 0 auto;
+}
+figure > figcaption {
+    margin-top: 0.5em;
+    font-size: 0.8rem;
+    color: rgb(85,85,85);
+    text-align: center;
+}
+
 div#navbar {
     display: block;
     margin: 0.3rem 0;
