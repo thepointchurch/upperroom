@@ -16,10 +16,11 @@ from weasyprint import HTML
 from .forms import FamilyForm, PersonInlineFormSet
 from .models import Family, Person
 from .signals import family_updated
+from ..utils.mixin import NeverCacheMixin, VaryOnCookieMixin
 from ..utils.storages.attachment import attachment_response
 
 
-class IndexView(PermissionRequiredMixin, generic.ListView):
+class IndexView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
     template_name = 'directory/index.html'
     permission_required = 'directory.can_view'
     queryset = Family.current_objects.all()
@@ -30,7 +31,7 @@ class IndexView(PermissionRequiredMixin, generic.ListView):
         return context
 
 
-class LetterView(PermissionRequiredMixin, generic.ListView):
+class LetterView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
     model = Family
     template_name = 'directory/family_letter.html'
     permission_required = 'directory.can_view'
@@ -40,12 +41,12 @@ class LetterView(PermissionRequiredMixin, generic.ListView):
         return Family.current_objects.filter(name__istartswith=self.letter)
 
 
-class DetailView(PermissionRequiredMixin, generic.DetailView):
+class DetailView(VaryOnCookieMixin, PermissionRequiredMixin, generic.DetailView):
     model = Family
     permission_required = 'directory.can_view'
 
 
-class SearchView(PermissionRequiredMixin, generic.ListView):
+class SearchView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
     model = Family
     template_name = 'directory/family_search.html'
     permission_required = 'directory.can_view'
@@ -68,7 +69,7 @@ class SearchView(PermissionRequiredMixin, generic.ListView):
                 ).distinct()
 
 
-class FamilyEditView(PermissionRequiredMixin, generic.edit.UpdateView):
+class FamilyEditView(NeverCacheMixin, PermissionRequiredMixin, generic.edit.UpdateView):
     model = Family
     form_class = FamilyForm
     permission_required = 'directory.can_view'
@@ -106,13 +107,13 @@ class FamilyEditView(PermissionRequiredMixin, generic.edit.UpdateView):
             return self.render_to_response(self.get_context_data(form=form))
 
 
-class BirthdayView(PermissionRequiredMixin, generic.ListView):
+class BirthdayView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
     template_name = 'directory/birthday_list.html'
     permission_required = 'directory.can_view'
     queryset = Person.current_objects.all().exclude(birthday__isnull=True)
 
 
-class AnniversaryView(PermissionRequiredMixin, generic.ListView):
+class AnniversaryView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
     template_name = 'directory/anniversary_list.html'
     permission_required = 'directory.can_view'
     queryset = (Family.current_objects
@@ -122,7 +123,7 @@ class AnniversaryView(PermissionRequiredMixin, generic.ListView):
                 )
 
 
-class FamilyPhotoView(PermissionRequiredMixin, generic.DetailView):
+class FamilyPhotoView(NeverCacheMixin, PermissionRequiredMixin, generic.DetailView):
     model = Family
     permission_required = 'directory.can_view'
 
@@ -131,7 +132,7 @@ class FamilyPhotoView(PermissionRequiredMixin, generic.DetailView):
         return attachment_response(family.photo.file, False, content_type='image/jpeg')
 
 
-class FamilyThumbnailView(PermissionRequiredMixin, generic.DetailView):
+class FamilyThumbnailView(NeverCacheMixin, PermissionRequiredMixin, generic.DetailView):
     model = Family
     permission_required = 'directory.can_view'
 
@@ -143,7 +144,7 @@ class FamilyThumbnailView(PermissionRequiredMixin, generic.DetailView):
 directory_file_name = 'directory/directory.pdf'
 
 
-class PdfView(PermissionRequiredMixin, generic.View):
+class PdfView(NeverCacheMixin, PermissionRequiredMixin, generic.View):
     permission_required = 'directory.can_view'
 
     def get(self, request, *args, **kwargs):
@@ -153,7 +154,7 @@ class PdfView(PermissionRequiredMixin, generic.View):
                                    content_type='application/pdf')
 
 
-class PrintView(PermissionRequiredMixin, generic.TemplateView):
+class PrintView(NeverCacheMixin, PermissionRequiredMixin, generic.TemplateView):
     permission_required = 'directory.add_family'
     template_name = 'directory/print.html'
     permission_required = 'directory.can_view'

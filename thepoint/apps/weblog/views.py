@@ -4,10 +4,11 @@ from django.views import generic
 
 from .models import Attachment, WeblogEntry
 from ..resources.views import RedirectToAttachment
+from ..utils.mixin import NeverCacheMixin, VaryOnCookieMixin
 from ..utils.storages.attachment import attachment_response
 
 
-class WeblogList(LoginRequiredMixin, generic.ListView):
+class WeblogList(VaryOnCookieMixin, LoginRequiredMixin, generic.ListView):
     template_name = 'weblog/index.html'
     paginate_by = 10
 
@@ -15,7 +16,7 @@ class WeblogList(LoginRequiredMixin, generic.ListView):
         return WeblogEntry.published_objects.all()
 
 
-class WeblogDetail(LoginRequiredMixin, generic.DetailView):
+class WeblogDetail(VaryOnCookieMixin, LoginRequiredMixin, generic.DetailView):
     model = WeblogEntry
     template_name = 'weblog/weblog_detail.html'
 
@@ -38,7 +39,7 @@ class WeblogDetail(LoginRequiredMixin, generic.DetailView):
             return redirect('weblog:attachment', pk=e.attachment.id)
 
 
-class AttachmentView(LoginRequiredMixin, generic.DetailView):
+class AttachmentView(NeverCacheMixin, LoginRequiredMixin, generic.DetailView):
     model = Attachment
 
     def get(self, request, *args, **kwargs):

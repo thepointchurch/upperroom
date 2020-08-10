@@ -3,13 +3,14 @@ from django.db.models import Q
 from django.views import generic
 
 from .models import Book
+from ..utils.mixin import NeverCacheMixin, VaryOnCookieMixin
 
 
-class IndexView(LoginRequiredMixin, generic.TemplateView):
+class IndexView(VaryOnCookieMixin, LoginRequiredMixin, generic.TemplateView):
     template_name = 'library/index.html'
 
 
-class SearchView(LoginRequiredMixin, generic.ListView):
+class SearchView(NeverCacheMixin, LoginRequiredMixin, generic.ListView):
     model = Book
     template_name = 'library/book_list.html'
 

@@ -15,10 +15,10 @@ from weasyprint import HTML
 
 from .forms import meetingbuilderformset_factory
 from .models import Meeting, Role, MeetingTemplate, next_empty_meeting_date
-from ..utils.mixin import NeverCacheMixin
+from ..utils.mixin import NeverCacheMixin, VaryOnCookieMixin
 
 
-class MeetingIndex(LoginRequiredMixin, generic.ListView):
+class MeetingIndex(VaryOnCookieMixin, LoginRequiredMixin, generic.ListView):
     model = Meeting
     allow_future = True
     template_name = 'roster/index.html'
@@ -27,7 +27,7 @@ class MeetingIndex(LoginRequiredMixin, generic.ListView):
         return Meeting.current_objects.all()[:5]
 
 
-class MonthlyMeetingView(LoginRequiredMixin, generic.MonthArchiveView):
+class MonthlyMeetingView(VaryOnCookieMixin, LoginRequiredMixin, generic.MonthArchiveView):
     model = Meeting
     allow_future = True
     date_field = 'date'
@@ -49,7 +49,7 @@ class PublicPersonList(generic.ListView):
         return context
 
 
-class PersonList(LoginRequiredMixin, PublicPersonList):
+class PersonList(VaryOnCookieMixin, LoginRequiredMixin, PublicPersonList):
     pass
 
 
@@ -63,7 +63,8 @@ class PersonEventList(NeverCacheMixin, PublicPersonList):
     content_type = 'text/calendar'
 
 
-class RosterPdf(generic.TemplateView):
+class RosterPdf(NeverCacheMixin, PermissionRequiredMixin, generic.TemplateView):
+    permission_required = ('roster.add_meeting',)
     template_name = "roster/pdf.html"
 
     def get_context_data(self, **kwargs):
@@ -86,7 +87,7 @@ class RosterPdf(generic.TemplateView):
                             filename='%s %s %s.pdf' % (context['site_name'], _('Roster'), context['year']))
 
 
-class BuilderView(PermissionRequiredMixin, generic.edit.CreateView):
+class BuilderView(NeverCacheMixin, PermissionRequiredMixin, generic.edit.CreateView):
     model = Meeting
     permission_required = ('roster.add_meeting', 'roster.add_role')
     template_name = 'roster/builder.html'

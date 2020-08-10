@@ -41,15 +41,18 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE = (
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.contrib.redirects.middleware.RedirectFallbackMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'thepoint.apps.resources.middleware.ResourceFallbackMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 ROOT_URLCONF = 'thepoint.urls'
@@ -126,6 +129,35 @@ PASSWORD_HASHERS = (
 )
 
 ROBOTS_CACHE_TIMEOUT = 60*60*24
+
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
+for cache_var in ('BACKEND',
+                  'KEY_FUNCTION',
+                  'KEY_PREFIX',
+                  'LOCATION',
+                  'OPTIONS',
+                  'TIMEOUT',
+                  'VERSION',
+                  ):
+    value = os.getenv('CACHE_%s' % cache_var, None)
+    if value:
+        if cache_var == 'LOCATION' and value.count(' ') > 0:
+            value = value.split(' ')
+        if cache_var == 'TIMEOUT':
+            value = int(value)
+            CACHE_MIDDLEWARE_SECONDS = value
+        if cache_var == 'OPTIONS':
+            import json
+            value = json.loads(value)
+        CACHES['default'][cache_var] = value
+
+CACHE_MIDDLEWARE_ALIAS = 'default'
+CACHE_MIDDLEWARE_KEY_PREFIX = ''
 
 
 if os.getenv('STATICFILES_BUCKET', None) or os.getenv('MEDIAFILES_BUCKET', None):

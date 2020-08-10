@@ -6,10 +6,11 @@ from django.views import generic
 
 from .models import Attachment, Resource, ResourceFeed, Tag
 from ..directory.models import Person
+from ..utils.mixin import NeverCacheMixin, VaryOnCookieMixin
 from ..utils.storages.attachment import attachment_response
 
 
-class TagList(generic.ListView):
+class TagList(VaryOnCookieMixin, generic.ListView):
     template_name = 'resources/tag.html'
 
     def get_queryset(self):
@@ -39,7 +40,7 @@ class TagList(generic.ListView):
         return context
 
 
-class ResourceList(generic.ListView):
+class ResourceList(VaryOnCookieMixin, generic.ListView):
     template_name = 'resources/index.html'
     paginate_by = 10
 
@@ -74,7 +75,7 @@ class ResourcePermissionMixin(UserPassesTestMixin):
                                                           any(not t.is_private for t in obj.tags.all()))
 
 
-class ResourceDetail(ResourcePermissionMixin, generic.DetailView):
+class ResourceDetail(VaryOnCookieMixin, ResourcePermissionMixin, generic.DetailView):
     model = Resource
 
     def get_queryset(self):
@@ -96,7 +97,7 @@ class ResourceDetail(ResourcePermissionMixin, generic.DetailView):
             return redirect('resources:attachment', pk=e.attachment.id)
 
 
-class AttachmentView(ResourcePermissionMixin, generic.DetailView):
+class AttachmentView(NeverCacheMixin, ResourcePermissionMixin, generic.DetailView):
     model = Attachment
 
     def get(self, request, *args, **kwargs):
@@ -106,7 +107,7 @@ class AttachmentView(ResourcePermissionMixin, generic.DetailView):
                                    content_type=attachment.mime_type)
 
 
-class AuthorList(generic.ListView):
+class AuthorList(VaryOnCookieMixin, generic.ListView):
     template_name = 'resources/author.html'
     paginate_by = 10
     ordering = ['-published']
@@ -127,7 +128,7 @@ class AuthorList(generic.ListView):
         return context
 
 
-class FeedArtworkView(generic.DetailView):
+class FeedArtworkView(NeverCacheMixin, generic.DetailView):
     model = ResourceFeed
 
     def get(self, request, *args, **kwargs):

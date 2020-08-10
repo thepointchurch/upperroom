@@ -18,6 +18,7 @@ from django.views import generic
 
 from ..directory.models import Person
 from ..roster.models import Role
+from ..utils.mixin import NeverCacheMixin, VaryOnCookieMixin
 
 if sys.version_info >= (3, 8):
     from importlib import metadata as importlib_metadata
@@ -28,7 +29,7 @@ else:
 logger = logging.getLogger(__name__)
 
 
-class IndexView(LoginRequiredMixin, generic.TemplateView):
+class IndexView(VaryOnCookieMixin, LoginRequiredMixin, generic.TemplateView):
     template_name = 'members/index.html'
 
     def get_context_data(self, **kwargs):
@@ -53,7 +54,7 @@ def not_a_guest(user):
         raise PermissionDenied
 
 
-class CreateView(LoginRequiredMixin, generic.ListView):
+class CreateView(NeverCacheMixin, LoginRequiredMixin, generic.ListView):
     model = Person
     template_name = 'members/create_search.html'
 
@@ -69,7 +70,7 @@ class CreateView(LoginRequiredMixin, generic.ListView):
                 Q(family__name__icontains=self.query)).distinct()
 
 
-class CreateConfirmView(LoginRequiredMixin, generic.edit.CreateView):
+class CreateConfirmView(NeverCacheMixin, LoginRequiredMixin, generic.edit.CreateView):
     model = User
     form_class = UserCreationForm
     template_name = 'members/create_form.html'
@@ -116,7 +117,7 @@ class CreateConfirmView(LoginRequiredMixin, generic.edit.CreateView):
         return result
 
 
-class TechDetailsView(LoginRequiredMixin, generic.TemplateView):
+class TechDetailsView(NeverCacheMixin, LoginRequiredMixin, generic.TemplateView):
     template_name = 'members/tech_details.html'
 
     def get_context_data(self, **kwargs):

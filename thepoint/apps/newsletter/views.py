@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.views import generic
 
 from .models import Issue, Publication
+from ..utils.mixin import NeverCacheMixin, VaryOnCookieMixin
 from ..utils.storages.attachment import attachment_response
 
 
@@ -15,7 +16,7 @@ class PublicationMixin(UserPassesTestMixin):
                 self.request.user.is_authenticated)
 
 
-class IndexView(PublicationMixin, generic.ListView):
+class IndexView(VaryOnCookieMixin, PublicationMixin, generic.ListView):
     template_name = 'newsletter/index.html'
     paginate_by = 10
 
@@ -28,7 +29,7 @@ class IndexView(PublicationMixin, generic.ListView):
         return context
 
 
-class DetailView(PublicationMixin, generic.DetailView):
+class DetailView(NeverCacheMixin, PublicationMixin, generic.DetailView):
     model = Issue
 
     def get_queryset(self):
