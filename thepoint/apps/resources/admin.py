@@ -129,7 +129,13 @@ class ResourceFeedAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
 
     fieldsets = (
-        (None, {'fields': ('title', 'slug', 'description')}),
+        (None, {'fields': ('title', 'slug', 'description'),
+                'description': _('<dl>'
+                                 '<dt>To insert inline links:</dt>'
+                                 '<dd><code>[text][slug]</code></dd>'
+                                 '<dt>To insert inline images:</dt>'
+                                 '<dd><code>![alt][slug]</code></dd>'
+                                 '</dl>')}),
         (_('Optional'), {'classes': ('collapse',),
                          'fields': ('tags', 'show_children', 'mime_type_list', 'category_list', 'copyright')}),
         (_('Podcast'), {'classes': ('collapse',),
