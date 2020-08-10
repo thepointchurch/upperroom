@@ -44,6 +44,7 @@ class AttachmentInline(admin.TabularInline):
     extra = 0
     readonly_fields = ('mime_type',)
     prepopulated_fields = {'slug': ('title',)}
+    fields = ('file', 'title', 'slug', 'kind', 'description', 'metadata', 'mime_type')
     formfield_overrides = {
         models.TextField: {'widget': Textarea(
                            attrs={'rows': 3,
