@@ -31,7 +31,7 @@ jobs:
               VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
           else
               VERSION="${{ github.sha }}"
-              sed "s/^\(__version__ = '.\+\)'$/\1-$(git rev-parse --short HEAD)/" thepoint/__init__.py
+              sed -i "s/^\(__version__ = '.\+\)'$/\1-$(git rev-parse --short HEAD)/" thepoint/__init__.py
           fi
           docker build . --file Dockerfile --tag image --build-arg version="$VERSION" --build-arg build_date="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
 
