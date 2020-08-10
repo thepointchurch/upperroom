@@ -19,8 +19,13 @@ class RoleInlineForm(ModelForm):
 
 class RoleInline(admin.TabularInline):
     model = Role
-    extra = 8
     form = RoleInlineForm
+
+    def get_extra(self, request, obj=None, **kwargs):
+        if obj:
+            return 1
+        else:
+            return 8
 
     def get_queryset(self, request):
         qs = self.model.objects.get_queryset()
