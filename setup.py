@@ -1,17 +1,28 @@
 import os
+import subprocess
+from pathlib import Path
 from setuptools import find_packages, setup
 
 import thepoint
 
-with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
+os.chdir(Path(__file__).resolve(strict=True).parent)
+
+with open('README.md') as readme:
     README = readme.read()
 
-os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
+with open('LICENSE') as license:
+    LICENSE = license.read()
+
+VERSION = thepoint.__version__
+try:
+    VERSION = subprocess.check_output(('git', 'describe', '--tags')).strip().decode()
+except (OSError, subprocess.CalledProcessError):
+    pass
 
 setup(
     name='thepoint',
-    version=thepoint.__version__,
-    license=open('LICENSE').read(),
+    version=VERSION,
+    license=LICENSE,
     description='''A Django project for The Point Church's website.''',
     long_description=README,
     packages=find_packages(),
@@ -34,6 +45,7 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],
