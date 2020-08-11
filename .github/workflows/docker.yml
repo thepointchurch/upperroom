@@ -27,13 +27,7 @@ jobs:
 
       - name: Build image
         run: |
-          if echo "${{ github.ref }}" | grep -q /tags/; then
-              VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-          else
-              VERSION="${{ github.sha }}"
-              sed -i "s/^\(__version__ = '.\+\)'$/\1-$(git rev-parse --short HEAD)/" thepoint/__init__.py
-          fi
-          docker build . --file Dockerfile --tag image --build-arg version="$VERSION" --build-arg build_date="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          docker build . --file Dockerfile --tag image --build-arg version="$(git describe --tags)" --build-arg build_date="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
 
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
@@ -43,18 +37,18 @@ jobs:
           IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
 
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          GITREF=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
 
           echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$VERSION
+          echo GITREF=$GITREF
 
-          if [ "$VERSION" == "testing" ]; then
+          if [ "$GITREF" == "testing" ]; then
               docker tag image $IMAGE_ID:testing
               docker push $IMAGE_ID:testing
           else
-              if [ "$VERSION" != "master" ]; then
-                  docker tag image $IMAGE_ID:$VERSION
-                  docker push $IMAGE_ID:$VERSION
+              if [ "$GITREF" != "master" ]; then
+                  docker tag image $IMAGE_ID:$GITREF
+                  docker push $IMAGE_ID:$GITREF
               fi
 
               docker tag image $IMAGE_ID:latest
@@ -72,17 +66,15 @@ jobs:
 
       - name: Build image
         run: |
-          COMMIT_LATEST=$(git rev-parse HEAD)
-          echo COMMIT_LATEST $COMMIT_LATEST
-          docker build . --file Dockerfile --tag latest --build-arg version="$(git rev-parse --short HEAD)" --build-arg build_date="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          echo COMMIT_LATEST $(git rev-parse HEAD)
+          docker build . --file Dockerfile --tag latest --build-arg version="$(git describe --tags)" --build-arg build_date="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
           git fetch -q --all --tags
           VERSION=$(git describe --abbrev=0 --tags)
           echo VERSION $VERSION
           echo ::set-env name=VERSION::$VERSION
           git checkout -q $VERSION -b latest
-          COMMIT_TAGGED=$(git rev-parse HEAD)
-          echo COMMIT_TAGGED $COMMIT_TAGGED
-          docker build . --file Dockerfile --tag image --build-arg version="$VERSION" --build-arg build_date="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          echo COMMIT_TAGGED $(git rev-parse HEAD)
+          docker build . --file Dockerfile --tag image --build-arg version="$(git describe --tags)" --build-arg build_date="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
 
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin

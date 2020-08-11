@@ -1,4 +1,5 @@
 import os
+import subprocess
 from pathlib import Path
 from setuptools import find_packages, setup
 
@@ -12,9 +13,15 @@ with open('README.md') as readme:
 with open('LICENSE') as license:
     LICENSE = license.read()
 
+VERSION = thepoint.__version__
+try:
+    VERSION = subprocess.check_output(('git', 'describe', '--tags')).strip().decode()
+except (OSError, subprocess.CalledProcessError):
+    pass
+
 setup(
     name='thepoint',
-    version=thepoint.__version__,
+    version=VERSION,
     license=LICENSE,
     description='''A Django project for The Point Church's website.''',
     long_description=README,
