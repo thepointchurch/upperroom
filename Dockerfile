@@ -8,7 +8,7 @@ RUN python -m venv /opt/venv
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PATH="/opt/venv/bin:$PATH"
 COPY requirements.txt .
-RUN pip install --upgrade pip
+RUN pip install --upgrade pip wheel
 RUN pip install -r requirements.txt
 
 

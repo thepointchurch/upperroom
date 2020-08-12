@@ -12,15 +12,16 @@ on:
       - '.gitignore'
   schedule:
     - cron: '0 18 * * 5'
+  workflow_dispatch:
 
 env:
   IMAGE_NAME: thepoint
 
 jobs:
-  push:
+  build_branch:
     runs-on: ubuntu-latest
 
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
 
     steps:
       - uses: actions/checkout@v2
@@ -30,6 +31,18 @@ jobs:
       - name: Build image
         run: |
           docker build . --file Dockerfile --tag image --build-arg version="$(git describe --tags)" --build-arg build_date="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          if [ "$BRANCH" == "master" ]; then
+              COMMIT_LATEST=$(git rev-parse HEAD)
+              git fetch -q --all --tags
+              TAG=$(git describe --abbrev=0 --tags)
+              echo TAG=$TAG
+              git checkout -q $TAG -b latest
+              COMMIT_TAGGED=$(git rev-parse HEAD)
+              if [ "$COMMIT_LATEST" != "$COMMIT_TAGGED" ]; then
+                  echo ::set-env name=TAG::$TAG
+                  docker build . --file Dockerfile --tag tagged --build-arg version="$(git describe --tags)" --build-arg build_date="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+              fi
+          fi
 
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
@@ -39,24 +52,29 @@ jobs:
           IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
 
-          GITREF=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          BRANCH=$(git branch --show-current)
 
           echo IMAGE_ID=$IMAGE_ID
-          echo GITREF=$GITREF
+          echo BRANCH=$BRANCH
 
-          if [ "$GITREF" == "testing" ]; then
+          if [ "$BRANCH" == "testing" ]; then
               docker tag image $IMAGE_ID:testing
               docker push $IMAGE_ID:testing
-          else
-              if [ "$GITREF" != "master" ]; then
-                  docker tag image $IMAGE_ID:$GITREF
-                  docker push $IMAGE_ID:$GITREF
-              fi
-
+          elif [ "$BRANCH" == "master" ]; then
               docker tag image $IMAGE_ID:latest
               docker push $IMAGE_ID:latest
+
+              if [ -n "$TAG" ]; then
+                  echo TAG=$TAG
+                  docker tag tagged $IMAGE_ID:$TAG
+                  docker push $IMAGE_ID:$TAG
+              fi
+          else
+              echo unknown branch $BRANCH
+              exit 1
           fi
-  rebuild:
+
+  rebuild_master:
     runs-on: ubuntu-latest
 
     if: github.event_name == 'schedule'
@@ -81,16 +99,39 @@ jobs:
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
 
-      - name: Push image
+      - name: Push images
         run: |
           IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-
-          echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$VERSION
 
           docker tag image $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
 
           docker tag latest $IMAGE_ID:latest
           docker push $IMAGE_ID:latest
+
+  rebuild_testing:
+    runs-on: ubuntu-latest
+
+    if: github.event_name == 'schedule'
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: testing
+
+      - name: Build image
+        run: |
+          docker build . --file Dockerfile --tag image --build-arg version="$(git describe --tags)" --build-arg build_date="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+
+      - name: Log into registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+
+      - name: Push images
+        run: |
+          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+
+          docker tag image $IMAGE_ID:testing
+          docker push $IMAGE_ID:testing
