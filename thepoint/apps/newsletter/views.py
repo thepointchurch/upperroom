@@ -2,9 +2,9 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.shortcuts import get_object_or_404
 from django.views import generic
 
-from .models import Issue, Publication
 from ..utils.mixin import NeverCacheMixin, VaryOnCookieMixin
 from ..utils.storages.attachment import attachment_response
+from .models import Issue, Publication
 
 
 class PublicationMixin(UserPassesTestMixin):

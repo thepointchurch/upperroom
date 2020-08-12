@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
 from django.db import transaction
-from django.forms import models, TextInput
+from django.forms import TextInput, models
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -13,9 +13,9 @@ from django.utils.translation import gettext_lazy as _
 from django.views import generic
 from weasyprint import HTML
 
-from .forms import meetingbuilderformset_factory
-from .models import Meeting, Role, MeetingTemplate, next_empty_meeting_date
 from ..utils.mixin import NeverCacheMixin, VaryOnCookieMixin
+from .forms import meetingbuilderformset_factory
+from .models import Meeting, MeetingTemplate, Role, next_empty_meeting_date
 
 
 class MeetingIndex(VaryOnCookieMixin, LoginRequiredMixin, generic.ListView):

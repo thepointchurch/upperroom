@@ -2,10 +2,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
 from django.views import generic
 
-from .models import Attachment, WeblogEntry
 from ..resources.views import RedirectToAttachment
 from ..utils.mixin import NeverCacheMixin, VaryOnCookieMixin
 from ..utils.storages.attachment import attachment_response
+from .models import Attachment, WeblogEntry
 
 
 class WeblogList(VaryOnCookieMixin, LoginRequiredMixin, generic.ListView):

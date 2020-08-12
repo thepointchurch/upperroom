@@ -6,8 +6,8 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.feedgenerator import Atom1Feed, Enclosure, Rss201rev2Feed
 
-from .models import Resource, ResourceFeed
 from ..utils.storages.attachment import attachment_url
+from .models import Resource, ResourceFeed
 
 
 class MaybePodcastFeed(Rss201rev2Feed):
@@ -18,7 +18,7 @@ class MaybePodcastFeed(Rss201rev2Feed):
             attrs['version'] = '2.0'
         return attrs
 
-    def add_root_elements(self, handler):
+    def add_root_elements(self, handler):  # NOQA: C901
         super(MaybePodcastFeed, self).add_root_elements(handler)
         if self.feed['is_podcast']:
             if self.feed['subtitle']:

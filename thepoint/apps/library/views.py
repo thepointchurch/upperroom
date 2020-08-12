@@ -2,8 +2,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.views import generic
 
-from .models import Book
 from ..utils.mixin import NeverCacheMixin, VaryOnCookieMixin
+from .models import Book
 
 
 class IndexView(VaryOnCookieMixin, LoginRequiredMixin, generic.TemplateView):

@@ -6,7 +6,6 @@ import subprocess
 import sys
 import time
 
-
 parser = argparse.ArgumentParser(description='Normalise a podcast file.')
 parser.add_argument('--low-pass',
                     dest='low_pass',

@@ -14,7 +14,7 @@ class ResourceFallbackMiddleware:
         response = self.process_response(request, response)
         return response
 
-    def process_response(self, request, response):
+    def process_response(self, request, response):  # NOQA: C901
         if response.status_code != 404:
             return response
         try:
@@ -26,14 +26,14 @@ class ResourceFallbackMiddleware:
                                                slug=slug).render()
             except AttributeError:
                 return response
-            except:
+            except Exception:
                 pass
 
             try:
                 Resource.featured_objects.get(slug=slug)
                 return views.ResourceDetail.as_view()(request,
                                                       slug=slug).render()
-            except:
+            except Exception:
                 pass
 
             return response

@@ -1,20 +1,19 @@
 from io import BytesIO
 
 from django.conf import settings
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group, User
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.base import ContentFile
 from django.core.mail import send_mail
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import Signal, receiver
 from django.template.loader import get_template
 from django.utils.translation import gettext as _
 from PIL import Image
 
-from .models import Family, get_family_photo_filename, get_family_thumbnail_filename
 from ..resources.signals import delete_file
-
+from .models import Family, get_family_photo_filename, get_family_thumbnail_filename
 
 family_updated = Signal()
 
@@ -34,7 +33,7 @@ def notify_on_fupdate(sender, instance, **kwargs):
               )
 
 
-@receiver(pre_save, sender=Family)
+@receiver(pre_save, sender=Family)  # NOQA: C901
 def family_pre_save(sender, instance, **kwargs):
     if kwargs.get('raw'):
         return

@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.core.files.storage import default_storage
-from django.http import HttpResponseRedirect, FileResponse
+from django.http import FileResponse, HttpResponseRedirect
 
 
 def attachment_response(file_obj, as_attachment=True, filename='', content_type=None):

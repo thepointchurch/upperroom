@@ -13,11 +13,11 @@ from django.utils.translation import gettext as _
 from django.views import generic
 from weasyprint import HTML
 
+from ..utils.mixin import NeverCacheMixin, VaryOnCookieMixin
+from ..utils.storages.attachment import attachment_response
 from .forms import FamilyForm, PersonInlineFormSet
 from .models import Family, Person
 from .signals import family_updated
-from ..utils.mixin import NeverCacheMixin, VaryOnCookieMixin
-from ..utils.storages.attachment import attachment_response
 
 
 class IndexView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):

@@ -6,8 +6,8 @@ from datetime import date, timedelta
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, logout
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q
@@ -40,7 +40,7 @@ class IndexView(VaryOnCookieMixin, LoginRequiredMixin, generic.TemplateView):
                                     .filter(meeting__date__lte=(date.today() +
                                                                 timedelta(days=60)))
                                     )
-        except:
+        except Exception:
             pass
         context['webmaster_email'] = settings.WEBMASTER_EMAIL
         context['search_query'] = None
@@ -50,7 +50,7 @@ class IndexView(VaryOnCookieMixin, LoginRequiredMixin, generic.TemplateView):
 def not_a_guest(user):
     try:
         return user.is_authenticated and (user.is_staff or user.person)
-    except:
+    except Exception:
         raise PermissionDenied
 
 

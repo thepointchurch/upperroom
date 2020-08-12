@@ -4,7 +4,6 @@ from django.db import models
 from django.forms.models import model_to_dict
 from django.utils.translation import gettext_lazy as _
 
-
 DAYS_OF_THE_WEEK = (
     (1, _('Sunday')),
     (2, _('Monday')),
@@ -22,7 +21,7 @@ def next_empty_meeting_date(weekday=None):
     try:
         max = Meeting.objects.filter(date__week_day=weekday).latest().date
         return max + timedelta(7)
-    except:
+    except Exception:
         max = date.today()
         return max + timedelta((6 - max.weekday()) % 6)
 

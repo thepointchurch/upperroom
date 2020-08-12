@@ -10,7 +10,6 @@ from googleapiclient.discovery import build
 
 from ...models import Person
 
-
 logger = logging.getLogger()
 logger.setLevel(logging.WARNING)
 
@@ -102,7 +101,7 @@ class GooglePeopleService(object):
             return self.service.contactGroups().get(resourceName=resource_name,
                                                     maxMembers=max_members).execute()['memberResourceNames']
 
-    def get_contacts(self):
+    def get_contacts(self):  # NOQA: C901
         contacts = dict()
         next_page = 0
 

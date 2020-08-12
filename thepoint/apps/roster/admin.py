@@ -2,8 +2,10 @@ from django.contrib import admin
 from django.forms import ModelForm, ModelMultipleChoiceField
 from django.utils.translation import gettext_lazy as _
 
-from .models import Location, Meeting, MeetingTemplate, Role, RoleType, RoleTypeTemplateMapping, DAYS_OF_THE_WEEK
 from ..directory.models import Person
+from .models import (
+    DAYS_OF_THE_WEEK, Location, Meeting, MeetingTemplate, Role, RoleType, RoleTypeTemplateMapping,
+)
 
 
 class RoleInlineForm(ModelForm):
@@ -48,7 +50,7 @@ class WeekdayListFilter(admin.SimpleListFilter):
     def queryset(self, request, queryset):
         try:
             return queryset.filter(date__week_day=int(self.value()))
-        except:
+        except Exception:
             pass
 
 

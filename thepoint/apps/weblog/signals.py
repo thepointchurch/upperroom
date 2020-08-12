@@ -3,8 +3,8 @@ from django.core.files.uploadedfile import UploadedFile
 from django.db.models.signals import post_delete, pre_save
 from django.dispatch import receiver
 
-from .models import Attachment
 from ..resources.signals import delete_file
+from .models import Attachment
 
 
 @receiver(pre_save, sender=Attachment)

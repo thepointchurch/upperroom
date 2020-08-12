@@ -4,10 +4,10 @@ from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
 from django.views import generic
 
-from .models import Attachment, Resource, ResourceFeed, Tag
 from ..directory.models import Person
 from ..utils.mixin import NeverCacheMixin, VaryOnCookieMixin
 from ..utils.storages.attachment import attachment_response
+from .models import Attachment, Resource, ResourceFeed, Tag
 
 
 class TagList(VaryOnCookieMixin, generic.ListView):
