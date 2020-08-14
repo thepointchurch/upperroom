@@ -121,10 +121,17 @@ class TechDetailsView(NeverCacheMixin, LoginRequiredMixin, generic.TemplateView)
     template_name = 'members/tech_details.html'
 
     def get_context_data(self, **kwargs):
+        key_map = {
+            __name__.split('.')[0]: 0,
+            'Django': 1,
+        }
+
         context = super(TechDetailsView, self).get_context_data(**kwargs)
         context['python_version'] = sys.version
         context['platform'] = platform.platform()
-        context['packages'] = {dist.metadata['Name']: {'version': dist.version,
-                                                       'url': dist.metadata.get('Home-page')}
-                               for dist in importlib_metadata.distributions()}
+        context['packages'] = [{'name': dist.metadata['Name'],
+                                'version': dist.version,
+                                'url': dist.metadata.get('Home-page'),
+                                'key': (key_map.get(dist.metadata['Name'], 99), dist.metadata['Name'])}
+                               for dist in importlib_metadata.distributions()]
         return context

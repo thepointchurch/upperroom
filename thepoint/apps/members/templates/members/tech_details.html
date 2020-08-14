@@ -8,8 +8,8 @@
 <table>
 <tr><td><b>Platform</b></td><td>{{ platform }}</td></tr>
 <tr><td><b>Python</b></td><td>{{ python_version }}</td></tr>
-{% for package, metadata in packages.items|dictsort:0 %}
-<tr><td>{% if metadata.url %}<a href="{{ metadata.url }}">{{ package }}</a>{% else %}{{ package }}{% endif %}</td><td>{{ metadata.version }}</td></tr>
+{% for package in packages|dictsort:"key" %}
+<tr><td>{% if package.url %}<a href="{{ package.url }}">{{ package.name }}</a>{% else %}{{ package.name }}{% endif %}</td><td>{{ package.version }}</td></tr>
 {% endfor %}
 </table>
 {% endblock content %}
