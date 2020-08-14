@@ -1,7 +1,7 @@
 FROM python:3.8-slim AS compile-image
 RUN apt-get -y update
 RUN apt-get install -y --no-install-recommends \
-    build-essential gcc python3-dev libpq-dev libmemcached-dev
+    build-essential gcc python3-dev libpq-dev libmemcached-dev zlib1g-dev
 RUN apt-get clean
 RUN rm -rf /var/lib/apt/lists/*
 RUN python -m venv /opt/venv
