@@ -78,7 +78,7 @@ jobs:
   rebuild_master:
     runs-on: ubuntu-latest
 
-    if: github.event_name == 'schedule' && github.ref == 'refs/heads/master'
+    if: github.event_name == 'schedule'
 
     steps:
       - uses: actions/checkout@v2
@@ -116,7 +116,7 @@ jobs:
   rebuild_testing:
     runs-on: ubuntu-latest
 
-    if: github.event_name == 'schedule' && github.ref == 'refs/heads/testing'
+    if: github.event_name == 'schedule'
 
     steps:
       - uses: actions/checkout@v2
