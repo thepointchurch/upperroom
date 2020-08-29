@@ -371,7 +371,6 @@ label[for="navbar-member-trigger"], p#navbar-member-trigger {
     padding-right: 35px;
     font-weight: 600;
     line-height: 30px;
-    vertical-align: middle;
     display: block;
 }
 
@@ -655,7 +654,7 @@ div.splash > h3 {
         height: 30px;
         top: 170px;
         right: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300px' height='30px' viewBox='0 0 300 30'%3E%3Crect width='300' height='30' fill='black' opacity='0.8'/%3E%3Cpath d='M274,4 L296,4 M274,15 L296,15 M274,26 L296,26' stroke-width='6' stroke-linecap='round' stroke='white'/%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300px' height='30px' viewBox='0 0 300 30'%3E%3Crect width='300' height='30' fill='black' opacity='0.8'/%3E%3Cpath d='M274,4 L296,4 M274,15 L296,15 M274,26 L296,26' stroke-width='6' stroke-linecap='round' stroke='white'/%3E%3C/svg%3E");
         background-position: right;
         background-repeat: no-repeat;
         color: white;
@@ -664,7 +663,6 @@ div.splash > h3 {
         padding-right: 35px;
         font-weight: 600;
         line-height: 30px;
-        vertical-align: middle;
         display: block;
     }
 
@@ -673,7 +671,7 @@ div.splash > h3 {
     }
 
     input#navbar-trigger:checked + label[for="navbar-trigger"] {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300px' height='30px' viewBox='0 0 300 30'%3E%3Crect width='300' height='30' fill='black' opacity='0.8'/%3E%3Cpath d='M296,4 L274,26 M274,4 L296,26' stroke-width='6' stroke-linecap='round' stroke='white'/%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300px' height='30px' viewBox='0 0 300 30'%3E%3Crect width='300' height='30' fill='black' opacity='0.8'/%3E%3Cpath d='M296,4 L274,26 M274,4 L296,26' stroke-width='6' stroke-linecap='round' stroke='white'/%3E%3C/svg%3E");
     }
 }
 

@@ -8,35 +8,36 @@ from .models import Family, Person
 class PersonForm(ModelForm):
     class Meta:
         model = Person
-        fields = ['name',
-                  'suffix',
-                  'surname_override',
-                  'gender',
-                  'birthday',
-                  'email',
-                  'phone_mobile',
-                  'phone_work',
-                  'is_current']
-        widgets = {'birthday': DateInput(attrs={'type': 'date'})}
+        fields = [
+            "name",
+            "suffix",
+            "surname_override",
+            "gender",
+            "birthday",
+            "email",
+            "phone_mobile",
+            "phone_work",
+            "is_current",
+        ]
+        widgets = {"birthday": DateInput(attrs={"type": "date"})}
 
 
-PersonInlineFormSet = inlineformset_factory(Family,
-                                            Person,
-                                            form=PersonForm,
-                                            extra=1,
-                                            can_delete=False)
+PersonInlineFormSet = inlineformset_factory(Family, Person, form=PersonForm, extra=1, can_delete=False)
 
-FamilyForm = modelform_factory(Family,
-                               form=AdminFamilyForm,
-                               fields=['name',
-                                       'street',
-                                       'suburb',
-                                       'postcode',
-                                       'phone_home',
-                                       'phone_mobile',
-                                       'email',
-                                       'husband',
-                                       'wife',
-                                       'anniversary'],
-                               widgets={'anniversary':
-                                        DateInput(attrs={'type': 'date'})})
+FamilyForm = modelform_factory(
+    Family,
+    form=AdminFamilyForm,
+    fields=[
+        "name",
+        "street",
+        "suburb",
+        "postcode",
+        "phone_home",
+        "phone_mobile",
+        "email",
+        "husband",
+        "wife",
+        "anniversary",
+    ],
+    widgets={"anniversary": DateInput(attrs={"type": "date"})},
+)

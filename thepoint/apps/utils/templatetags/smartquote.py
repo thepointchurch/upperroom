@@ -6,18 +6,14 @@ register = template.Library()
 
 
 def multiple_replace(text, adict):
-    rx = re.compile('|'.join(map(re.escape, adict)))
+    matcher = re.compile("|".join(map(re.escape, adict)))
 
     def one_xlat(match):
         return adict[match.group(0)]
 
-    return rx.sub(one_xlat, text if isinstance(text, str) else str(text))
+    return matcher.sub(one_xlat, text if isinstance(text, str) else str(text))
 
 
 @register.filter
 def smartquote(value):
-    return multiple_replace(value, {
-        "'": '’',
-        ' "': ' “',
-        '" ': '” ',
-    })
+    return multiple_replace(value, {"'": "’", ' "': " “", '" ': "” "})

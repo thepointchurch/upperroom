@@ -4,8 +4,8 @@ from .models import Splash
 
 
 class SplashAdmin(admin.ModelAdmin):
-    list_filter = ('is_current', 'is_private', 'position')
-    search_fields = ['title', 'content']
+    list_filter = ("is_current", "is_private", "position")
+    search_fields = ["title", "content"]
 
 
 admin.site.register(Splash, SplashAdmin)

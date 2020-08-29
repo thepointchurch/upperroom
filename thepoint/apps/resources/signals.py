@@ -9,8 +9,10 @@ from .models import Attachment, Resource, ResourceFeed
 
 def is_s3_file_public(file_object):
     for grant in file_object.file.obj.Acl().grants:
-        if grant['Permission'] == 'READ' and \
-                grant['Grantee']['URI'] == 'http://acs.amazonaws.com/groups/global/AllUsers':
+        if (
+            grant["Permission"] == "READ"
+            and grant["Grantee"]["URI"] == "http://acs.amazonaws.com/groups/global/AllUsers"
+        ):
             return True
     return False
 
@@ -20,9 +22,9 @@ def set_s3_file_acl(file_object, acl):
 
 
 def delete_file(file_object):
-    if hasattr(file_object, 'storage'):
+    if hasattr(file_object, "storage"):
         try:
-            if hasattr(file_object, 'path'):
+            if hasattr(file_object, "path"):
                 file_object.storage.delete(file_object.path)
         except NotImplementedError:
             # S3 storage uses `name`, not `path`
@@ -31,22 +33,24 @@ def delete_file(file_object):
 
 @receiver(post_save, sender=Resource)
 def resource_post_save(sender, instance, **kwargs):
-    if kwargs.get('raw'):
+    _ = sender
+    if kwargs.get("raw"):
         return
     for attachment in instance.attachments.all():
         if isinstance(attachment.file.file, S3Boto3StorageFile):
-            was_private = getattr(instance, 'was_private', None)
+            was_private = getattr(instance, "was_private", None)
             if was_private is not None and was_private != instance.is_private:
                 if is_s3_file_public(attachment.file):
                     if instance.is_private:
-                        set_s3_file_acl(attachment.file, 'private')
+                        set_s3_file_acl(attachment.file, "private")
                 else:
                     if not instance.is_private:
-                        set_s3_file_acl(attachment.file, 'public-read')
+                        set_s3_file_acl(attachment.file, "public-read")
 
 
 @receiver(pre_save, sender=Resource)
 def resource_pre_save(sender, instance, **kwargs):
+    _ = sender
     try:
         instance.was_private = sender.objects.get(id=instance.id).is_private
     except ObjectDoesNotExist:
@@ -55,7 +59,8 @@ def resource_pre_save(sender, instance, **kwargs):
 
 @receiver(pre_save, sender=Attachment)
 def attachment_pre_save(sender, instance, **kwargs):
-    if kwargs.get('raw'):
+    _ = sender
+    if kwargs.get("raw"):
         return
     if isinstance(instance.file.file, UploadedFile):
         # Work to be done when a new file is uploaded
@@ -74,22 +79,28 @@ def attachment_pre_save(sender, instance, **kwargs):
 
 @receiver(post_save, sender=Attachment)
 def attachment_post_save(sender, instance, **kwargs):
-    if kwargs.get('raw'):
+    _ = sender
+    if kwargs.get("raw"):
         return
-    if getattr(instance, 'file_new', False) and not instance.resource.is_private \
-            and isinstance(instance.file.file, S3Boto3StorageFile):
-        set_s3_file_acl(instance.file, 'public-read')
+    if (
+        getattr(instance, "file_new", False)
+        and not instance.resource.is_private
+        and isinstance(instance.file.file, S3Boto3StorageFile)
+    ):
+        set_s3_file_acl(instance.file, "public-read")
 
 
 @receiver(post_delete, sender=Attachment)
 def attachment_post_delete(sender, instance, **kwargs):
+    _ = sender
     if instance.file:
         delete_file(instance.file)
 
 
 @receiver(pre_save, sender=ResourceFeed)
 def feed_pre_save(sender, instance, **kwargs):
-    if kwargs.get('raw'):
+    _ = sender
+    if kwargs.get("raw"):
         return
     try:
         old_artwork = sender.objects.get(id=instance.id).artwork
@@ -112,15 +123,17 @@ def feed_pre_save(sender, instance, **kwargs):
 
 @receiver(post_save, sender=ResourceFeed)
 def feed_post_save(sender, instance, **kwargs):
-    if kwargs.get('raw'):
+    _ = sender
+    if kwargs.get("raw"):
         return
     if instance.artwork and isinstance(instance.artwork.file, S3Boto3StorageFile):
-        if getattr(instance, 'artwork_new', False):
+        if getattr(instance, "artwork_new", False):
             if not is_s3_file_public(instance.artwork):
-                set_s3_file_acl(instance.artwork, 'public-read')
+                set_s3_file_acl(instance.artwork, "public-read")
 
 
 @receiver(post_delete, sender=ResourceFeed)
 def feed_post_delete(sender, instance, **kwargs):
+    _ = sender
     if instance.artwork:
         delete_file(instance.artwork)

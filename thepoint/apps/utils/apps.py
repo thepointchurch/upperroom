@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class UtilsConfig(AppConfig):
-    name = 'thepoint.apps.utils'
+    name = "thepoint.apps.utils"

@@ -1,7 +1,8 @@
 from io import BytesIO
 
 from django.conf import settings
-from django.contrib.auth.models import Group, User
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.base import ContentFile
@@ -19,23 +20,19 @@ family_updated = Signal()
 
 
 @receiver(family_updated)
-def notify_on_fupdate(sender, instance, **kwargs):
-    send_mail(_('%(site)s Directory Update') % {'site': get_current_site(None).name},
-              get_template('directory/update_notify.txt').render({
-                  'family': instance,
-              }),
-              settings.WEBMASTER_EMAIL,
-              [settings.DIRECTORY_EMAIL],
-              html_message=get_template('directory/update_notify.html')
-              .render({
-                  'family': instance,
-              })
-              )
+def notify_on_fupdate(sender, instance, **kwargs):  # pylint: disable=unused-argument
+    send_mail(
+        _("%(site)s Directory Update") % {"site": get_current_site(None).name},
+        get_template("directory/update_notify.txt").render({"family": instance}),
+        settings.WEBMASTER_EMAIL,
+        [settings.DIRECTORY_EMAIL],
+        html_message=get_template("directory/update_notify.html").render({"family": instance}),
+    )
 
 
 @receiver(pre_save, sender=Family)  # NOQA: C901
-def family_pre_save(sender, instance, **kwargs):
-    if kwargs.get('raw'):
+def family_pre_save(sender, instance, **kwargs):  # pylint: disable=unused-argument
+    if kwargs.get("raw"):
         return
 
     try:
@@ -60,31 +57,33 @@ def family_pre_save(sender, instance, **kwargs):
         pass
 
     if instance.photo:
-        image = Image.open(instance.photo).convert('RGB')
+        image = Image.open(instance.photo).convert("RGB")
 
-        image.thumbnail(getattr(settings, 'DIRECTORY_IMAGE_MAX', (1000, 1000)))
+        image.thumbnail(getattr(settings, "DIRECTORY_IMAGE_MAX", (1000, 1000)))
 
-        f = BytesIO()
-        image.save(f, 'JPEG')
-        f.seek(0)
-        instance.photo.save(get_family_photo_filename(instance, None), ContentFile(f.read()), save=False)
-        f.close()
+        jpg = BytesIO()
+        image.save(jpg, "JPEG")
+        jpg.seek(0)
+        instance.photo.save(get_family_photo_filename(instance, None), ContentFile(jpg.read()), save=False)
+        jpg.close()
 
-        image.thumbnail(getattr(settings, 'DIRECTORY_THUMBNAIL_MAX', (240, 240)))
+        image.thumbnail(getattr(settings, "DIRECTORY_THUMBNAIL_MAX", (240, 240)))
 
-        f = BytesIO()
-        image.save(f, 'JPEG')
-        f.seek(0)
-        instance.photo_thumbnail.save(get_family_thumbnail_filename(instance, None), ContentFile(f.read()), save=False)
-        f.close()
+        jpg = BytesIO()
+        image.save(jpg, "JPEG")
+        jpg.seek(0)
+        instance.photo_thumbnail.save(
+            get_family_thumbnail_filename(instance, None), ContentFile(jpg.read()), save=False
+        )
+        jpg.close()
     else:
         instance.photo_thumbnail = None
 
 
-@receiver(post_save, sender=User)
-def add_user_to_member_group(sender, instance, created, **kwargs):
+@receiver(post_save, sender=get_user_model())
+def add_user_to_member_group(sender, instance, created, **kwargs):  # pylint: disable=unused-argument
     if created:
         try:
-            instance.groups.add(Group.objects.get(name='Member'))
+            instance.groups.add(Group.objects.get(name="Member"))
         except Group.DoesNotExist:
             pass

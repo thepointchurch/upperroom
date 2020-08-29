@@ -1,22 +1,21 @@
+# pylint: disable=modelform-uses-exclude
+
 from django.contrib import admin
 from django.forms import ModelForm, ModelMultipleChoiceField
 from django.utils.translation import gettext_lazy as _
 
 from ..directory.models import Person
-from .models import (
-    DAYS_OF_THE_WEEK, Location, Meeting, MeetingTemplate, Role, RoleType, RoleTypeTemplateMapping,
-)
+from .models import DAYS_OF_THE_WEEK, Location, Meeting, MeetingTemplate, Role, RoleType, RoleTypeTemplateMapping
 
 
 class RoleInlineForm(ModelForm):
     people = ModelMultipleChoiceField(
-        required=False,
-        queryset=Person.current_objects.order_by('family__name', 'name'),
-        label=_('People'))
+        required=False, queryset=Person.current_objects.order_by("family__name", "name"), label=_("People")
+    )
 
     class Meta:
         model = Role
-        exclude = ('revision',)
+        exclude = ("revision",)
 
 
 class RoleInline(admin.TabularInline):
@@ -26,8 +25,7 @@ class RoleInline(admin.TabularInline):
     def get_extra(self, request, obj=None, **kwargs):
         if obj:
             return 1
-        else:
-            return 8
+        return 8
 
     def get_queryset(self, request):
         qs = self.model.objects.get_queryset()
@@ -38,8 +36,8 @@ class RoleInline(admin.TabularInline):
 
 
 class WeekdayListFilter(admin.SimpleListFilter):
-    title = _('weekday')
-    parameter_name = 'weekday'
+    title = _("weekday")
+    parameter_name = "weekday"
 
     def lookups(self, request, model_admin):
         qs = model_admin.get_queryset(request)
@@ -50,16 +48,17 @@ class WeekdayListFilter(admin.SimpleListFilter):
     def queryset(self, request, queryset):
         try:
             return queryset.filter(date__week_day=int(self.value()))
-        except Exception:
+        except Exception:  # pylint: disable=broad-except
             pass
 
 
 class MeetingAdmin(admin.ModelAdmin):
     inlines = [RoleInline]
-    list_filter = ('date', WeekdayListFilter,)
-    search_fields = ['date',
-                     'roles__people__name',
-                     'roles__people__family__name']
+    list_filter = (
+        "date",
+        WeekdayListFilter,
+    )
+    search_fields = ["date", "roles__people__name", "roles__people__family__name"]
 
     def get_queryset(self, request):
         qs = self.model.objects.get_queryset()
@@ -72,8 +71,8 @@ class MeetingAdmin(admin.ModelAdmin):
 class RoleTypeMappingInline(admin.TabularInline):
     model = RoleTypeTemplateMapping
     extra = 1
-    verbose_name = 'role type'
-    verbose_name_plural = 'role types'
+    verbose_name = "role type"
+    verbose_name_plural = "role types"
 
 
 class MeetingTemplateAdmin(admin.ModelAdmin):

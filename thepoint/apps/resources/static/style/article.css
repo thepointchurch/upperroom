@@ -19,6 +19,7 @@ p.intro {
 p.pull {
     padding: 1rem;
     margin: 1.5rem;
+    background: rgb(225,225,225);
     background: rgba(0,0,0,0.1);
 }
 
@@ -31,9 +32,7 @@ table > p, table > blockquote, table > ul, table > ol, table > dl, table > form 
 }
 
 div#index > h3 {
-    margin-top: 2rem;
-    margin-left: 2rem;
-    margin-right: 2rem;
+    margin: 2rem;
     margin-bottom: inherit;
 }
 

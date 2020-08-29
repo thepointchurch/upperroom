@@ -9,7 +9,7 @@ from .models import Attachment
 
 @receiver(pre_save, sender=Attachment)
 def attachment_pre_save(sender, instance, **kwargs):
-    if kwargs.get('raw'):
+    if kwargs.get("raw"):
         return
     if isinstance(instance.file.file, UploadedFile):
         # Work to be done when a new file is uploaded
@@ -27,5 +27,6 @@ def attachment_pre_save(sender, instance, **kwargs):
 
 @receiver(post_delete, sender=Attachment)
 def attachment_post_delete(sender, instance, **kwargs):
+    _ = sender
     if instance.file:
         delete_file(instance.file)

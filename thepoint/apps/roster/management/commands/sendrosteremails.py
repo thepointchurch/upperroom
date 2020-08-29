@@ -9,11 +9,11 @@ from django.utils.translation import gettext_lazy as _
 
 from ...models import Role
 
-_alert_interval = 3  # days
+_ALERT_INTERVAL = 3  # days
 
 
 def meeting_date():
-    return date.today() + timedelta(days=_alert_interval)
+    return date.today() + timedelta(days=_ALERT_INTERVAL)
 
 
 def _get_role_map(roles):
@@ -33,35 +33,30 @@ def _get_role_map(roles):
 
 
 class Command(BaseCommand):
-    help = 'Send notification emails for a coming meeting.'
+    help = "Send notification emails for a coming meeting."
 
     def add_arguments(self, parser):
-        parser.add_argument('-d', '--date',
-                            dest='date',
-                            default=meeting_date(),
-                            help=_('The meeting date to send notifications for'))
-        parser.add_argument('--test',
-                            action='store_true',
-                            dest='test',
-                            default=False,
-                            help=_('Send emails to the console only'))
+        parser.add_argument(
+            "-d", "--date", dest="date", default=meeting_date(), help=_("The meeting date to send notifications for")
+        )
+        parser.add_argument(
+            "--test", action="store_true", dest="test", default=False, help=_("Send emails to the console only")
+        )
 
     def handle(self, *args, **options):
-        d = options['date']
+        notification_date = options["date"]
 
-        if not isinstance(d, date):
+        if not isinstance(notification_date, date):
             try:
-                d = datetime.strptime(d, '%Y-%m-%d').date()
-            except:
-                raise CommandError('Badly formatted date: %s' %
-                                   options['date'])
+                notification_date = datetime.strptime(notification_date, "%Y-%m-%d").date()
+            except ValueError as exc:
+                raise CommandError("Badly formatted date: %s" % options["date"]) from exc
 
-        role_map = _get_role_map(Role.objects.filter(meeting__date=d)
-                                             .exclude(people__isnull=True))
+        role_map = _get_role_map(Role.objects.filter(meeting__date=notification_date).exclude(people__isnull=True))
 
         backend = None
-        if options['test']:
-            backend = 'django.core.mail.backends.console.EmailBackend'
+        if options["test"]:
+            backend = "django.core.mail.backends.console.EmailBackend"
 
         connection = mail.get_connection(backend)
         connection.open()
@@ -71,17 +66,17 @@ class Command(BaseCommand):
         site_name = get_current_site(None).name
 
         for person, roles in role_map.items():
-            messages.append(mail.EmailMessage(
-                _('%(site)s Roster Notification') % {
-                    'site': site_name,
-                },
-                get_template('roster/reminder.txt').render({
-                    'person': person,
-                    'date': d,
-                    'role_list': roles,
-                }),
-                settings.ROSTER_EMAIL,
-                [person.find_email()], connection=connection))
+            messages.append(
+                mail.EmailMessage(
+                    _("%(site)s Roster Notification") % {"site": site_name},
+                    get_template("roster/reminder.txt").render(
+                        {"person": person, "date": notification_date, "role_list": roles}
+                    ),
+                    settings.ROSTER_EMAIL,
+                    [person.find_email()],
+                    connection=connection,
+                )
+            )
 
         connection.send_messages(messages)
         connection.close()
