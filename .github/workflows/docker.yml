@@ -33,6 +33,8 @@ jobs:
 
       - name: Set version
         id: version
+        env:
+          PYTHONPATH=.
         run: |
           from version import update_version
           print('::set-output name=version::%s' % update_version())
