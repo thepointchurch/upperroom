@@ -1,15 +1,16 @@
 FROM python:3.8-slim AS compile-image
-RUN apt-get -y update
-RUN apt-get install -y --no-install-recommends \
-    build-essential gcc python3-dev libpq-dev libmemcached-dev zlib1g-dev
-RUN apt-get clean
-RUN rm -rf /var/lib/apt/lists/*
-RUN python -m venv /opt/venv
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PATH="/opt/venv/bin:$PATH"
-COPY requirements.txt .
-RUN pip install --upgrade pip wheel
-RUN pip install -r requirements.txt
+RUN apt-get -y update && apt-get install -y --no-install-recommends \
+    build-essential gcc python3-dev libpq-dev libmemcached-dev zlib1g-dev && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* && \
+    python -m venv /opt/venv && /opt/venv/bin/pip install --upgrade pip
+RUN pip install poetry=="1.0.10"
+COPY . /code/
+WORKDIR /code
+ENV POETRY_VIRTUALENVS_IN_PROJECT=true \
+    POETRY_NO_INTERACTION=1 \
+    PYTHONDONTWRITEBYTECODE=1
+RUN poetry install --no-dev --no-root -E aws -E cache -E pgsql
+RUN poetry build --format wheel && .venv/bin/pip install dist/*.whl
 
 
 FROM debian:buster-slim as font-image
@@ -21,34 +22,31 @@ RUN apt-get install -y --no-install-recommends \
     ttf-mscorefonts-installer
 WORKDIR /usr/local/share/fonts
 RUN wget -qO - https://github.com/mozilla/Fira/archive/4.106.tar.gz | tar -xvzf - Fira-4.106/otf --strip-components=2
-RUN apt-get clean
-RUN rm -rf /var/lib/apt/lists/*
 
 
 FROM python:3.8-slim AS build-image
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
-ENV PATH="/opt/venv/bin:$PATH"
-ENV DJANGO_SETTINGS_MODULE=thepoint.settings
-COPY --from=compile-image /opt/venv /opt/venv
-COPY --from=font-image /usr/share/fonts/truetype/msttcorefonts /usr/local/share/fonts /usr/local/share/fonts/
-COPY entrypoint.sh /entrypoint.sh
-COPY . /code/
-COPY gunicorn.py /etc/gunicorn.py
-RUN pip install --no-deps /code/ && rm -rf /code \
-    && apt-get -y update \
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PATH="/opt/venv/bin:$PATH" \
+    DJANGO_SETTINGS_MODULE=thepoint.settings
+RUN apt-get -y update \
     && apt-get install -y --no-install-recommends \
         bzip2 \
         curl \
-        netcat-traditional \
         libpq5 \
         libcairo2 \
         libgdk-pixbuf2.0-0 \
+        libmemcached-tools \
         libpango-1.0-0 \
         libpangocairo-1.0-0 \
+        netcat-traditional \
         postgresql-client \
     && apt-get clean && rm -rf /var/lib/apt/lists/* \
-    && useradd -md /django -s /bin/bash django
+    && useradd -md /django -s /bin/bash -u 8000 django
+COPY --from=compile-image /code/.venv /opt/venv
+COPY --from=font-image /usr/share/fonts/truetype/msttcorefonts /usr/local/share/fonts /usr/local/share/fonts/
+COPY entrypoint.sh /entrypoint.sh
+COPY gunicorn.py /etc/gunicorn.py
 
 EXPOSE 8000/tcp
 

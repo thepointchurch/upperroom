@@ -1,2 +1,7 @@
 Dockerfile
+icon.*
 .git
+.github
+.gitignore
+**/__pycache__
+version.py
