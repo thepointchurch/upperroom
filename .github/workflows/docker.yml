@@ -57,9 +57,9 @@ jobs:
               docker tag image $IMAGE_ID:${{ steps.version.outputs.version }}
               docker push $IMAGE_ID:${{ steps.version.outputs.version }}
 
-              docker tag latest $IMAGE_ID:latest
+              docker tag image $IMAGE_ID:latest
               docker push $IMAGE_ID:latest
           elif [ "$BRANCH" = "testing" ]; then
-              docker tag latest $IMAGE_ID:$BRANCH
+              docker tag image $IMAGE_ID:$BRANCH
               docker push $IMAGE_ID:$BRANCH
           fi
