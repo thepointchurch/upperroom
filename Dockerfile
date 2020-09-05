@@ -1,16 +1,16 @@
 FROM python:3.8-slim AS compile-image
 RUN apt-get -y update && apt-get install -y --no-install-recommends \
     build-essential gcc python3-dev libpq-dev libmemcached-dev zlib1g-dev && \
-    apt-get clean && rm -rf /var/lib/apt/lists/* && \
-    python -m venv /opt/venv && /opt/venv/bin/pip install --upgrade pip
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN pip install poetry=="1.0.10"
-COPY . /code/
-WORKDIR /code
+COPY . /django/
+WORKDIR /django
 ENV POETRY_VIRTUALENVS_IN_PROJECT=true \
     POETRY_NO_INTERACTION=1 \
     PYTHONDONTWRITEBYTECODE=1
 RUN poetry install --no-dev --no-root -E aws -E cache -E pgsql
 RUN poetry build --format wheel && .venv/bin/pip install dist/*.whl
+RUN find .venv -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
 
 
 FROM debian:buster-slim as font-image
@@ -27,7 +27,7 @@ RUN wget -qO - https://github.com/mozilla/Fira/archive/4.106.tar.gz | tar -xvzf 
 FROM python:3.8-slim AS build-image
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PATH="/opt/venv/bin:$PATH" \
+    PATH="/django/.venv/bin:$PATH" \
     DJANGO_SETTINGS_MODULE=thepoint.settings
 RUN apt-get -y update \
     && apt-get install -y --no-install-recommends \
@@ -43,7 +43,7 @@ RUN apt-get -y update \
         postgresql-client \
     && apt-get clean && rm -rf /var/lib/apt/lists/* \
     && useradd -md /django -s /bin/bash -u 8000 django
-COPY --from=compile-image /code/.venv /opt/venv
+COPY --from=compile-image /django/.venv /django/.venv
 COPY --from=font-image /usr/share/fonts/truetype/msttcorefonts /usr/local/share/fonts /usr/local/share/fonts/
 COPY entrypoint.sh /entrypoint.sh
 COPY gunicorn.py /etc/gunicorn.py
