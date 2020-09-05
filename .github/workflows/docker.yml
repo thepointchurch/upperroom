@@ -18,124 +18,46 @@ env:
   IMAGE_NAME: thepoint
 
 jobs:
-  build_branch:
+  build:
     runs-on: ubuntu-latest
-
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
 
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - run: python -m pip install tomlkit
+
+      - name: Set version
+        id: version
+        run: |
+          from version import update_version
+          print('::set-output name=version::%s' % update_version())
+        shell: python
+
       - name: Build image
         run: |
-          python3 -c 'from version import update_version; update_version()'
-          docker build . --file Dockerfile --tag image --build-arg version="$(git describe --tags)" --build-arg build_date="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-          BRANCH=$(git branch --show-current)
-          echo ::set-env name=BRANCH::$BRANCH
+          docker build . --file Dockerfile --tag image --build-arg version="${{ steps.version.outputs.version }}" --build-arg build_date="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+
+      - name: Log into registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+
+      - name: Push images
+        run: |
+          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+
+          BRANCH="$(git branch --show-current)"
           if [ "$BRANCH" = "master" ]; then
-              COMMIT_LATEST=$(git rev-parse HEAD)
-              TAG=$(git describe --abbrev=0 --tags)
-              echo TAG=$TAG
-              git reset --hard
-              git checkout -q $TAG -b "master-$TAG"
-              COMMIT_TAGGED=$(git rev-parse HEAD)
-              if [ "$COMMIT_LATEST" != "$COMMIT_TAGGED" ]; then
-                  echo ::set-env name=TAG::$TAG
-                  docker build . --file Dockerfile --tag tagged --build-arg version="$(git describe --tags)" --build-arg build_date="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-              fi
-          fi
+              docker tag image $IMAGE_ID:${{ steps.version.outputs.version }}
+              docker push $IMAGE_ID:${{ steps.version.outputs.version }}
 
-      - name: Log into registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-
-      - name: Push image
-        run: |
-          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-
-          echo IMAGE_ID=$IMAGE_ID
-          echo BRANCH=$BRANCH
-
-          if [ "$BRANCH" = "testing" ]; then
-              docker tag image $IMAGE_ID:testing
-              docker push $IMAGE_ID:testing
-          elif [ "$BRANCH" = "master" ]; then
-              docker tag image $IMAGE_ID:latest
+              docker tag latest $IMAGE_ID:latest
               docker push $IMAGE_ID:latest
-
-              if [ -n "$TAG" ]; then
-                  echo TAG=$TAG
-                  docker tag tagged $IMAGE_ID:$TAG
-                  docker push $IMAGE_ID:$TAG
-              fi
-          else
-              echo unknown branch $BRANCH
-              exit 1
+          elif [ "$BRANCH" = "testing" ]; then
+              docker tag latest $IMAGE_ID:$BRANCH
+              docker push $IMAGE_ID:$BRANCH
           fi
-
-  rebuild_master:
-    runs-on: ubuntu-latest
-
-    if: github.event_name == 'schedule'
-
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          ref: master
-
-      - name: Build image
-        run: |
-          python3 -c 'from version import update_version; update_version()'
-          echo COMMIT_LATEST $(git rev-parse HEAD)
-          docker build . --file Dockerfile --tag latest --build-arg version="$(git describe --tags)" --build-arg build_date="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-          TAG=$(git describe --abbrev=0 --tags)
-          echo TAG=$TAG
-          echo ::set-env name=TAG::$TAG
-          git reset --hard
-          git checkout -q $TAG -b "master-$TAG"
-          echo COMMIT_TAGGED $(git rev-parse HEAD)
-          docker build . --file Dockerfile --tag image --build-arg version="$(git describe --tags)" --build-arg build_date="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-
-      - name: Log into registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-
-      - name: Push images
-        run: |
-          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-
-          docker tag image $IMAGE_ID:$TAG
-          docker push $IMAGE_ID:$TAG
-
-          docker tag latest $IMAGE_ID:latest
-          docker push $IMAGE_ID:latest
-
-  rebuild_testing:
-    runs-on: ubuntu-latest
-
-    if: github.event_name == 'schedule'
-
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          ref: testing
-
-      - name: Build image
-        run: |
-          python3 -c 'from version import update_version; update_version()'
-          docker build . --file Dockerfile --tag image --build-arg version="$(git describe --tags)" --build-arg build_date="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-
-      - name: Log into registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
-
-      - name: Push images
-        run: |
-          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-
-          docker tag image $IMAGE_ID:testing
-          docker push $IMAGE_ID:testing

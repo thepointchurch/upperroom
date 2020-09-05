@@ -25,6 +25,7 @@ def get_version():
 def update_version():
     version = get_version()
     subprocess.check_call(('sed', '-i', "s/^__version__ = .*$/__version__ = '%s'/" % version, 'thepoint/__init__.py'))
+    return version
 
 
 if __name__ == '__main__':
