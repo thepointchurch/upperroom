@@ -1,0 +1,44 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - run: python -m pip install poetry
+
+      - name: Install Dependencies
+        run: |
+          poetry install --no-dev
+
+      - name: Set version
+        id: version
+        run: |
+          from version import update_version
+          print('::set-output name=version::%s' % update_version())
+        shell: python
+
+      - name: Build Wheel
+        run: |
+          poetry build --format wheel
+
+      - name: Upload wheel
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_name: thepoint-${{ steps.version.outputs.version }}-py3-none-any.whl
+          asset_path: dist/thepoint-{{ steps.version.outputs.version }}-py3-none-any.whl
+          asset_content_type: application/zip
