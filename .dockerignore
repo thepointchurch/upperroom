@@ -4,4 +4,6 @@ icon.*
 .github
 .gitignore
 **/__pycache__
+**/tests.py
+**/tests/
 version.py

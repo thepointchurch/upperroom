@@ -30,6 +30,11 @@ classifiers = [
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
 ]
 
+exclude = [
+    "**/tests.py",
+    "**/tests",
+]
+
 [tool.poetry.dependencies]
 python = "^3.7"
 
@@ -77,6 +82,8 @@ pgsql = [
 pre-commit = "^2.6"
 pylint = "^2.5"
 pylint-django = "^2.3"
+pytest = "^6.0"
+pytest-django = "^3.9"
 tomlkit = "^<1.0"
 
 [tool.poetry.scripts]
@@ -122,3 +129,10 @@ ensure_newline_before_comments = true
 [tool.black]
 line-length = 119
 include = '\.pyi?$'
+
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+DJANGO_SETTINGS_MODULE = "thepoint.settings"
+python_files = "tests.py tests/*.py"
