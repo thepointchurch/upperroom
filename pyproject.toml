@@ -79,6 +79,7 @@ pgsql = [
 ]
 
 [tool.poetry.dev-dependencies]
+coverage = "^5.2"
 pre-commit = "^2.6"
 pylint = "^2.5"
 pylint-django = "^2.3"
@@ -136,3 +137,4 @@ minversion = "6.0"
 addopts = "-ra -q"
 DJANGO_SETTINGS_MODULE = "thepoint.settings"
 python_files = "tests.py tests/*.py"
+filterwarnings = "ignore::django.utils.deprecation.RemovedInDjango40Warning"
