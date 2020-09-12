@@ -30,6 +30,7 @@ class IndexView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["directory_email"] = settings.DIRECTORY_EMAIL
+        context["search_query"] = ""
         return context
 
 
@@ -38,9 +39,13 @@ class LetterView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
     template_name = "directory/family_letter.html"
     permission_required = "directory.can_view"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["letter"] = self.kwargs["letter"]
+        return context
+
     def get_queryset(self):
-        letter = self.kwargs["letter"]
-        return Family.current_objects.filter(name__istartswith=letter)
+        return Family.current_objects.filter(name__istartswith=self.kwargs["letter"])
 
 
 class DetailView(VaryOnCookieMixin, PermissionRequiredMixin, generic.DetailView):
@@ -53,19 +58,26 @@ class SearchView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
     template_name = "directory/family_search.html"
     permission_required = "directory.can_view"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["search_type"] = self.request.GET.get("type", "By Name")
+        context["search_query"] = self.request.GET.get("query", "")
+        return context
+
     def get_queryset(self):
         search_type = self.request.GET.get("type", "By Name")
         search_query = self.request.GET.get("query", "")
 
-        query = search_query
         if search_type == "By Location":
             return Family.current_objects.filter(
-                Q(street__icontains=query) | Q(suburb__icontains=query) | Q(postcode__icontains=query)
+                Q(street__icontains=search_query)
+                | Q(suburb__icontains=search_query)
+                | Q(postcode__icontains=search_query)
             ).distinct()
         return Family.current_objects.filter(
-            Q(name__icontains=query)
+            Q(name__icontains=search_query)
             | (
-                (Q(members__name__icontains=query) | Q(members__surname_override__icontains=query))
+                (Q(members__name__icontains=search_query) | Q(members__surname_override__icontains=search_query))
                 & Q(members__is_current=True)
             )
         ).distinct()

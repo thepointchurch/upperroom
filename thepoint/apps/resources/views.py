@@ -115,17 +115,16 @@ class AuthorList(VaryOnCookieMixin, generic.ListView):
     ordering = ["-published"]
 
     def get_queryset(self):
-        self.author = get_object_or_404(  # pylint: disable=attribute-defined-outside-init
-            Person, id=self.kwargs.get("pk", None)
-        )
+        author = get_object_or_404(Person, id=self.kwargs.get("pk", None))
 
         if self.request.user.is_authenticated:
-            return self.author.resources.filter(is_published=True, show_author=True)
-        return self.author.resources.filter(is_published=True, show_author=True, is_private=False)
+            return author.resources.filter(is_published=True, show_author=True)
+        return author.resources.filter(is_published=True, show_author=True, is_private=False)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["author"] = self.author
+        context["author"] = get_object_or_404(Person, id=self.kwargs.get("pk", None))
+        context["tag"] = None
         return context
 
 

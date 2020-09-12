@@ -41,14 +41,13 @@ class PublicPersonList(generic.ListView):
     template_name = "roster/person_list.html"
 
     def get_queryset(self):
-        self.person = self.kwargs["pk"]  # pylint: disable=attribute-defined-outside-init
-        return Role.current_objects.filter(people__id=self.person)
+        return Role.current_objects.filter(people__id=self.kwargs["pk"])
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         from ..directory.models import Person  # pylint: disable=import-outside-toplevel
 
-        context["person"] = Person.objects.get(id=self.person)
+        context["person"] = Person.objects.get(id=self.kwargs["pk"])
         return context
 
 

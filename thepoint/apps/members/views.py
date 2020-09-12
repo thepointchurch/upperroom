@@ -43,6 +43,7 @@ class IndexView(VaryOnCookieMixin, LoginRequiredMixin, generic.TemplateView):
             pass
         context["webmaster_email"] = settings.WEBMASTER_EMAIL
         context["search_query"] = None
+        context["person"] = getattr(self.request.user, "person", None)
         return context
 
 
@@ -56,6 +57,11 @@ def not_a_guest(user):
 class CreateView(NeverCacheMixin, LoginRequiredMixin, generic.ListView):
     model = Person
     template_name = "members/create_search.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["query"] = self.request.GET.get("query", "")
+        return context
 
     def get_queryset(self):
         query = self.request.GET.get("query", "")

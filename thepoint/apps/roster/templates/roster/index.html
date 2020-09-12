@@ -3,7 +3,7 @@
 {% block content %}
 
 <p class="links">[ Previous |
-{% with next_month=meeting_list|dictsortreversed:"date"|first %}{% if next_month.date %}
+{% with next_month=meeting_list|dictsortreversed:"date"|first %}{% if next_month and next_month.date %}
 <a href="{% url 'roster:meeting_month' next_month.date|date:"Y" next_month.date|date:"n" %}">Next</a>
 {% else %} Next {% endif %}{% endwith %}
 ]</p>

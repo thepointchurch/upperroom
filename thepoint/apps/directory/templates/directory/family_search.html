@@ -1,6 +1,6 @@
 {% extends "directory/base.html" %}
 
-{% block title %}{{ block.super }}: Search {{ view.search_type }}: {{ view.search_query }}{% endblock title %}
+{% block title %}{{ block.super }}: Search {{ search_type }}: {{ search_query }}{% endblock title %}
 
 {% block heading %}{{ block.super }}: Search{% endblock heading %}
 
@@ -9,6 +9,6 @@
 {% for family in family_list %}
 {% include "directory/family.html" %}
 {% empty %}
-<p>Nothing found for query string "{{view.search_query}}".</p>
+<p>Nothing found for query string "{{search_query}}".</p>
 {% endfor %}
 {% endblock content %}
