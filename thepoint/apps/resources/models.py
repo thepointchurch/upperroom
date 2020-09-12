@@ -156,6 +156,12 @@ class Resource(FeaturedMixin, models.Model):
             content += "\n%s" % attachment.markdown_link()
         return content
 
+    @cached_property
+    def is_private_full(self):
+        if self.is_private:
+            return True
+        return any(tag.is_private for tag in self.tags.all())
+
     def clean(self):
         if self.is_published and not self.published:
             self.published = self.modified or timezone.now()
@@ -248,7 +254,7 @@ class Attachment(models.Model):
 
     @property
     def is_private(self):
-        return self.resource.is_private
+        return self.resource.is_private_full
 
     @cached_property
     def size(self):

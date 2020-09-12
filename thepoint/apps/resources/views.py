@@ -71,9 +71,7 @@ class ResourcePermissionMixin(UserPassesTestMixin):
         obj = self.get_object()
         if isinstance(obj, Attachment):
             return self.request.user.is_authenticated or not obj.is_private
-        return self.request.user.is_authenticated or (
-            not obj.is_private and any(not t.is_private for t in obj.tags.all())
-        )
+        return self.request.user.is_authenticated or not obj.is_private_full
 
 
 class ResourceDetail(VaryOnCookieMixin, ResourcePermissionMixin, generic.DetailView):
