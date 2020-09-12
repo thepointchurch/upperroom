@@ -15,15 +15,15 @@ from .models import Attachment, Resource, ResourceFeed, Tag
 class TagList(VaryOnCookieMixin, generic.ListView):
     template_name = "resources/tag.html"
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.tag = None
+
     def get_queryset(self):
         if self.request.user.is_authenticated:
-            self.tag = get_object_or_404(  # pylint: disable=attribute-defined-outside-init
-                Tag, slug=self.kwargs.get("slug", None)
-            )
+            self.tag = get_object_or_404(Tag, slug=self.kwargs.get("slug", None))
         else:
-            self.tag = get_object_or_404(  # pylint: disable=attribute-defined-outside-init
-                Tag.objects.filter(is_private=False), slug=self.kwargs.get("slug", None)
-            )
+            self.tag = get_object_or_404(Tag.objects.filter(is_private=False), slug=self.kwargs.get("slug", None))
 
         resources = self.tag.resources.filter(is_published=True, parent__isnull=True).exclude(
             published__gt=timezone.now()

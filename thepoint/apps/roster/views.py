@@ -96,15 +96,15 @@ class BuilderView(NeverCacheMixin, PermissionRequiredMixin, generic.edit.CreateV
     template_name = "roster/builder.html"
     fields = ["date"]
 
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.builder_template = None
+
     def get_context_data(self, **kwargs):
         if self.request.GET and "template" in self.request.GET:
-            self.builder_template = get_object_or_404(  # NOQA: E501 pylint: disable=attribute-defined-outside-init
-                MeetingTemplate, id=self.request.GET.get("template")
-            )
+            self.builder_template = get_object_or_404(MeetingTemplate, id=self.request.GET.get("template"))
         else:
-            self.builder_template = MeetingTemplate.objects.order_by(  # NOQA: E501 pylint: disable=attribute-defined-outside-init
-                "-is_default", "name"
-            ).first()
+            self.builder_template = MeetingTemplate.objects.order_by("-is_default", "name").first()
         if self.request.GET and "by_name" in self.request.GET:
             sort_by_age = False
         else:
