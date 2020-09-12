@@ -15,7 +15,7 @@ def import_file_env():
     for arg, value in os.environ.items():
         if arg.endswith("_FILE"):
             try:
-                with open(value, "r") as argfile:
+                with open(value, "r", encoding="utf8") as argfile:
                     os.environ[arg[:-5]] = argfile.read().strip()
             except FileNotFoundError:
                 continue
