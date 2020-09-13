@@ -22,7 +22,7 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get install -y --no-install-recommends build-essential gcc python3-dev libpq-dev libmemcached-dev zlib1g-dev
-          poetry install --no-dev -E aws -E cache -E pgsql -E google
+          poetry install -E aws -E cache -E pgsql -E google
 
       - name: Set version
         id: version
