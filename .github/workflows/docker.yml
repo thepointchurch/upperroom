@@ -48,6 +48,10 @@ jobs:
 
       - name: Run tests
         id: test
+        env:
+          SECRET_KEY: secret
+          DB_ENGINE: django.db.backends.sqlite3
+          DB_NAME: /tmp/test.sqlite3
         run: |
           poetry run pytest
 
