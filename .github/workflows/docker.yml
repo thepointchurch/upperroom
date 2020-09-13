@@ -29,10 +29,12 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: 3.8
-      - run: python -m pip install poetry wheel
+      - run: python -m pip install poetry
 
       - name: Install Dependencies
         run: |
+          sudo apt-get update -y
+          sudo apt-get install -y --no-install-recommends build-essential gcc python3-dev libpq-dev libmemcached-dev zlib1g-dev
           poetry install --no-dev -E aws -E cache -E pgsql -E google
 
       - name: Set version
