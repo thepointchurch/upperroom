@@ -10,23 +10,31 @@ To set up a development environment:
 
 2. Clone the `testing` repository:
 
-        git clone -branch testing https://github.com/thepointchurch/thepoint.git
-        cd thepoint
+    ```
+    git clone -branch testing https://github.com/thepointchurch/thepoint.git
+    cd thepoint
+    ```
 
 3. Set up the poetry environment:
 
-        poetry install -E aws -E cache -E pgsql -E google
-        poetry run pre-commit install
-        poetry shell
+    ```
+    poetry install -E aws -E cache -E pgsql -E google
+    poetry run pre-commit install
+    poetry shell
+    ```
 
 4. Export config variables:
 
-        export DEBUG='True'
-        export DB_ENGINE='django.db.backends.sqlite3'
-        export DB_NAME='thepoint.sqlite3'
-        export SECRET_KEY='12345678'
-        export DJANGO_SETTINGS_MODULE=thepoint.settings
+    ```
+    export DEBUG='True'
+    export DB_ENGINE='django.db.backends.sqlite3'
+    export DB_NAME='thepoint.sqlite3'
+    export SECRET_KEY='12345678'
+    export DJANGO_SETTINGS_MODULE=thepoint.settings
+    ```
 
 5. Start a test server:
 
-        thepoint runserver
+    ```
+    thepoint runserver
+    ```
