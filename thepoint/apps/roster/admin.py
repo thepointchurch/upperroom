@@ -1,5 +1,7 @@
 # pylint: disable=modelform-uses-exclude
 
+import datetime
+
 from django.contrib import admin
 from django.forms import ModelForm, ModelMultipleChoiceField
 from django.utils.translation import gettext_lazy as _
@@ -52,8 +54,16 @@ class WeekdayListFilter(admin.SimpleListFilter):
             pass
 
 
+def action_delete_past_meetings(modeladmin, request, queryset):  # pylint: disable=unused-argument
+    queryset.delete(date__lt=datetime.date.today())
+
+
+action_delete_past_meetings.short_description = _("Delete past meetings")
+
+
 class MeetingAdmin(admin.ModelAdmin):
     inlines = [RoleInline]
+    date_hierarchy = "date"
     list_filter = (
         "date",
         WeekdayListFilter,
@@ -61,11 +71,26 @@ class MeetingAdmin(admin.ModelAdmin):
     search_fields = ["date", "roles__people__name", "roles__people__family__name"]
 
     def get_queryset(self, request):
-        qs = self.model.objects.get_queryset()
-        ordering = self.get_ordering(request)
-        if ordering:
-            qs = qs.order_by(*ordering)
-        return qs
+        return self.model.objects.filter(date__gte=datetime.date.today())
+
+
+class PastMeeting(Meeting):
+    class Meta:
+        proxy = True
+
+
+class PastMeetingAdmin(MeetingAdmin):
+    def get_queryset(self, request):
+        return self.model.objects.filter(date__lt=datetime.date.today())
+
+    def has_add_permission(self, request):  # pylint: disable=unused-argument
+        return False
+
+    def has_change_permission(self, request, obj=None):  # pylint: disable=unused-argument
+        return False
+
+    def has_delete_permission(self, request, obj=None):  # pylint: disable=unused-argument
+        return False
 
 
 class RoleTypeMappingInline(admin.TabularInline):
@@ -80,6 +105,7 @@ class MeetingTemplateAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Meeting, MeetingAdmin)
+admin.site.register(PastMeeting, PastMeetingAdmin)
 admin.site.register(Location)
 admin.site.register(RoleType)
 admin.site.register(MeetingTemplate, MeetingTemplateAdmin)
