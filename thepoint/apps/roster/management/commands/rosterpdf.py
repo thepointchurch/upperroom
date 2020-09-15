@@ -1,4 +1,3 @@
-import sys
 from datetime import date
 
 from django.conf import settings
@@ -51,4 +50,4 @@ class Command(BaseCommand):
             with open(output, "wb") as pdf:
                 pdf.write(pdf_data)
         else:
-            sys.stdout.buffer.write(pdf_data)
+            self.stdout.write(pdf_data, ending="")
