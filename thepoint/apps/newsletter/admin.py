@@ -23,6 +23,7 @@ class IssueAdmin(admin.ModelAdmin):
     form = IssueForm
     list_filter = ("date", "publication")
     search_fields = ["date"]
+    date_hierarchy = "date"
 
 
 admin.site.register(Publication)

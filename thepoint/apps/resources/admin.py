@@ -102,6 +102,7 @@ class ResourceAdmin(admin.ModelAdmin):
     ordering = ("title",)
     list_filter = ("tags", "created", "published", "modified", "is_published", "is_private")
     search_fields = ["title", "description", "body"]
+    date_hierarchy = "published"
     prepopulated_fields = {"slug": ("title",)}
     actions = [action_publish, action_unpublish, action_mark_private, action_mark_public]
 

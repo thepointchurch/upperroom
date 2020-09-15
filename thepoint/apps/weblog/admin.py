@@ -75,6 +75,7 @@ class WeblogAdmin(admin.ModelAdmin):
     inlines = [AttachmentInline]
     list_filter = ("created", "published", "modified", "is_published")
     search_fields = ["title", "description", "body"]
+    date_hierarchy = "published"
     prepopulated_fields = {"slug": ("title",)}
     actions = [action_publish, action_unpublish]
     readonly_fields = ("created", "modified")
