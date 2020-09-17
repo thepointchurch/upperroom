@@ -1,24 +1,37 @@
-import subprocess
+import sys
+from pathlib import Path
+
+import semantic_version
+from git import GitError, Repo
 
 
-def get_version():
+def get_version(check_migrations=False):
     try:
-        branch = subprocess.check_output(("git", "rev-parse", "--abbrev-ref", "HEAD")).strip().decode()
-        long_version = subprocess.check_output(("git", "describe", "--tags", "--long")).strip().decode()
-        version, rev, commit = long_version.rsplit("-", 2)
-        if rev == "0":
-            return version
+        repo = Repo()
 
-        if branch.startswith("master"):
+        version, rev, commit = repo.git.describe("--tags", "--long").rsplit("-", 2)
+
+        if rev == "0":
+            return str(semantic_version.Version(version))
+
+        if repo.active_branch.name.startswith("master"):
             local = ""
         else:
-            local = "+" + branch + "." + commit
+            local = "+" + repo.active_branch.name + "." + commit
         if version.count(".") == 1:
             version += ".0"
-        return version + "-r" + rev + local
-    except (ImportError, OSError, subprocess.CalledProcessError):
-        import sys  # pylint: disable=import-outside-toplevel
+        version = semantic_version.Version(version + "-r" + rev + local)
 
+        if check_migrations and any(
+            map(
+                lambda p: "migrations" in Path(p.a_path).parts,
+                sorted(repo.tags, key=lambda t: t.commit.committed_date)[-1].commit.diff().iter_change_type("A"),
+            )
+        ):
+            print("Migrations added, so a minor release is required: %s" % version.next_minor(), file=sys.stderr)
+
+        return str(version)
+    except GitError:
         sys.path.append(".")
 
         import thepoint  # pylint: disable=import-outside-toplevel
@@ -39,4 +52,4 @@ def update_version(version=None):
 
 
 if __name__ == "__main__":
-    print(get_version())
+    print(get_version(check_migrations="--check-migrations" in sys.argv))
