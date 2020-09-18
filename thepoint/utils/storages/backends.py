@@ -1,3 +1,5 @@
+# pylint: disable=no-member
+
 from urllib.parse import urlsplit
 
 from django.conf import settings
@@ -22,12 +24,12 @@ class S3Boto3StorageOffload(S3Boto3Storage):  # pylint: disable=abstract-method
     except (AttributeError, NameError):
         offload = False
 
-    def url(self, name, parameters=None, expire=None):
+    def url(self, name, parameters=None, expire=None, http_method=None):
         # Generate the S3 offload URL but enforce our protocol and domain
         name = self._normalize_name(self._clean_name(name))
         params = parameters.copy() if parameters else {}
         params["Bucket"] = self.bucket.name
-        params["Key"] = self._encode_name(name)
+        params["Key"] = name
         url = self.bucket.meta.client.generate_presigned_url(
             "get_object", Params=params, ExpiresIn=self.querystring_expire
         )
