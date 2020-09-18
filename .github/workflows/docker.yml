@@ -36,15 +36,7 @@ jobs:
           sudo apt-get update -y
           sudo apt-get install -y --no-install-recommends build-essential gcc python3-dev libpq-dev libmemcached-dev zlib1g-dev
           poetry install -E aws -E cache -E pgsql -E google
-
-      - name: Set version
-        id: version
-        env:
-          PYTHONPATH: .
-        run: |
-          from version import update_version
-          print('::set-output name=version::%s' % update_version())
-        shell: python
+          poetry run python -c 'from version import update_version; print(update_version())'
 
       - name: Run tests
         id: test

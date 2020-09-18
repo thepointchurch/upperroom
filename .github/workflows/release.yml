@@ -28,10 +28,7 @@ jobs:
         id: version
         env:
           PYTHONPATH: .
-        run: |
-          from version import update_version
-          print('::set-output name=version::%s' % update_version())
-        shell: python
+        run: poetry run python -c 'from version import update_version; print("::set-output name=version::%s" % update_version())'
 
       - name: Run tests
         id: test
