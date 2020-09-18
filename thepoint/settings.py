@@ -17,17 +17,17 @@ SITE_ID = int(os.getenv("SITE_ID", 1))
 
 
 INSTALLED_APPS = (
-    "thepoint.apps.directory.apps.DirectoryConfig",
-    "thepoint.apps.extendedsites.apps.ExtendedSitesConfig",
-    "thepoint.apps.library.apps.LibraryConfig",
-    "thepoint.apps.members.apps.MembersConfig",
-    "thepoint.apps.newsletter.apps.NewsletterConfig",
-    "thepoint.apps.resources.apps.ResourcesConfig",
-    "thepoint.apps.weblog.apps.WeblogConfig",
+    "thepoint.directory.apps.DirectoryConfig",
+    "thepoint.extendedsites.apps.ExtendedSitesConfig",
+    "thepoint.library.apps.LibraryConfig",
+    "thepoint.members.apps.MembersConfig",
+    "thepoint.newsletter.apps.NewsletterConfig",
+    "thepoint.resources.apps.ResourcesConfig",
+    "thepoint.weblog.apps.WeblogConfig",
     "robots",
-    "thepoint.apps.roster.apps.RosterConfig",
-    "thepoint.apps.splash.apps.SplashConfig",
-    "thepoint.apps.utils.apps.UtilsConfig",
+    "thepoint.roster.apps.RosterConfig",
+    "thepoint.splash.apps.SplashConfig",
+    "thepoint.utils.apps.UtilsConfig",
     "django_markwhat",
     "django.contrib.admin.apps.AdminConfig",
     "django.contrib.auth.apps.AuthConfig",
@@ -52,7 +52,7 @@ MIDDLEWARE = (
     "django.contrib.flatpages.middleware.FlatpageFallbackMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "thepoint.apps.resources.middleware.ResourceFallbackMiddleware",
+    "thepoint.resources.middleware.ResourceFallbackMiddleware",
     "django.middleware.cache.FetchFromCacheMiddleware",
 )
 
@@ -110,9 +110,9 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
-                "thepoint.apps.extendedsites.context_processors.site",
-                "thepoint.apps.resources.context_processors.featured_tags",
-                "thepoint.apps.splash.context_processors.splashes",
+                "thepoint.extendedsites.context_processors.site",
+                "thepoint.resources.context_processors.featured_tags",
+                "thepoint.splash.context_processors.splashes",
             ],
         },
     },
@@ -159,11 +159,11 @@ if os.getenv("STATICFILES_BUCKET", None) or os.getenv("MEDIAFILES_BUCKET", None)
     INSTALLED_APPS += ("storages",)
 
     STATICFILES_BUCKET = os.getenv("STATICFILES_BUCKET", "static.%s" % ALLOWED_HOSTS[0])
-    STATICFILES_STORAGE = "thepoint.apps.utils.storages.backends.S3StaticStorage"
+    STATICFILES_STORAGE = "thepoint.utils.storages.backends.S3StaticStorage"
 
     MEDIAFILES_OFFLOAD = True
     MEDIAFILES_BUCKET = os.getenv("MEDIAFILES_BUCKET", "media.%s" % ALLOWED_HOSTS[0])
-    DEFAULT_FILE_STORAGE = "thepoint.apps.utils.storages.backends.S3MediaStorage"
+    DEFAULT_FILE_STORAGE = "thepoint.utils.storages.backends.S3MediaStorage"
 
     AWS_DEFAULT_ACL = None
 
