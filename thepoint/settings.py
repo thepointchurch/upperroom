@@ -16,7 +16,7 @@ ALLOWED_HOSTS = os.getenv("VHOST", "*").split()
 SITE_ID = int(os.getenv("SITE_ID", 1))
 
 
-INSTALLED_APPS = (
+INSTALLED_APPS = [
     "thepoint.directory.apps.DirectoryConfig",
     "thepoint.extendedsites.apps.ExtendedSitesConfig",
     "thepoint.library.apps.LibraryConfig",
@@ -39,9 +39,9 @@ INSTALLED_APPS = (
     "django.contrib.messages.apps.MessagesConfig",
     "django.contrib.sitemaps.apps.SiteMapsConfig",
     "django.contrib.staticfiles.apps.StaticFilesConfig",
-)
+]
 
-MIDDLEWARE = (
+MIDDLEWARE = [
     "django.middleware.cache.UpdateCacheMiddleware",
     "django.contrib.redirects.middleware.RedirectFallbackMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -54,7 +54,7 @@ MIDDLEWARE = (
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "thepoint.resources.middleware.ResourceFallbackMiddleware",
     "django.middleware.cache.FetchFromCacheMiddleware",
-)
+]
 
 ROOT_URLCONF = "thepoint.urls"
 WSGI_APPLICATION = "thepoint.wsgi.application"
@@ -174,6 +174,12 @@ if os.getenv("STATICFILES_BUCKET", None) or os.getenv("MEDIAFILES_BUCKET", None)
 
 if os.getenv("AWS_DEFAULT_REGION", None):
     AWS_DEFAULT_REGION = os.getenv("AWS_DEFAULT_REGION")
+
+
+if DEBUG:
+    INSTALLED_APPS.append("debug_toolbar")
+    MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
+    INTERNAL_IPS = ["127.0.0.1"]
 
 
 LOGGING = {

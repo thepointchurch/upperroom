@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.flatpages.views import flatpage
 from django.contrib.sitemaps.views import sitemap
@@ -26,3 +27,8 @@ urlpatterns = [
     path("contact", vary_on_cookie(flatpage), {"url": "/contact/"}, name="contact"),
     path("copyright", vary_on_cookie(flatpage), {"url": "/copyright/"}, name="copyright"),
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+
+    urlpatterns = [path("debug/", include(debug_toolbar.urls))] + urlpatterns

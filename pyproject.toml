@@ -80,6 +80,7 @@ pgsql = [
 
 [tool.poetry.dev-dependencies]
 coverage = "^5.2"
+django-debug-toolbar = "^2.2"
 gitpython = "^3.1"
 pre-commit = "^2.6"
 pylint = "^2.5"
