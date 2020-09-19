@@ -72,8 +72,7 @@ jobs:
 
       - name: Build image
         run: |
-          if [ "$(git branch --show-current)" = "testing" ]; then DEBUG="yes"; else DEBUG="no"; fi
-          docker build . --file Dockerfile --tag image --build-arg version="${{ steps.version.outputs.version }}" --build-arg build_date="$(date -u +'%Y-%m-%dT%H:%M:%SZ')" --build-arg debug="$DEBUG"
+          docker build . --file Dockerfile --tag image --build-arg version="${{ steps.version.outputs.version }}" --build-arg build_date="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
 
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin

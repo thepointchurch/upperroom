@@ -28,7 +28,7 @@ urlpatterns = [
     path("copyright", vary_on_cookie(flatpage), {"url": "/copyright/"}, name="copyright"),
 ]
 
-if settings.DEBUG:
+if settings.DEBUG_TOOLBAR:
     import debug_toolbar
 
     urlpatterns = [path("debug/", include(debug_toolbar.urls))] + urlpatterns

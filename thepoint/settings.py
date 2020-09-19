@@ -176,10 +176,13 @@ if os.getenv("AWS_DEFAULT_REGION", None):
     AWS_DEFAULT_REGION = os.getenv("AWS_DEFAULT_REGION")
 
 
-if DEBUG:
+if DEBUG and os.getenv("DEBUG_TOOLBAR"):
     INSTALLED_APPS.append("debug_toolbar")
     MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
     INTERNAL_IPS = ["127.0.0.1"]
+    DEBUG_TOOLBAR = True
+else:
+    DEBUG_TOOLBAR = False
 
 
 LOGGING = {

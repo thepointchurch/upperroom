@@ -8,9 +8,7 @@ WORKDIR /django
 ENV POETRY_VIRTUALENVS_IN_PROJECT=true \
     POETRY_NO_INTERACTION=1 \
     PYTHONDONTWRITEBYTECODE=1
-ARG debug=no
-RUN poetry install --no-dev --no-root -E aws -E cache -E pgsql \
-    && if [ "x$debug" = "xyes" ]; then .venv/bin/pip install django-debug-toolbar; fi
+RUN poetry install --no-dev --no-root -E aws -E cache -E pgsql
 RUN poetry build --format wheel && .venv/bin/pip install dist/*.whl
 RUN find .venv -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
 
