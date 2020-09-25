@@ -1,8 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Prefetch
 from django.shortcuts import redirect
 from django.views import generic
 
 from ..resources.views import RedirectToAttachment
+from ..utils.func import IsNotEmpty
 from ..utils.mixin import NeverCacheMixin, VaryOnCookieMixin
 from ..utils.storages.attachment import attachment_response
 from .models import Attachment, WeblogEntry
@@ -13,7 +15,27 @@ class WeblogList(VaryOnCookieMixin, LoginRequiredMixin, generic.ListView):  # py
     paginate_by = 10
 
     def get_queryset(self):
-        return WeblogEntry.published_objects.all()
+        return (
+            WeblogEntry.published_objects.select_related("author__family")
+            .prefetch_related(
+                Prefetch("attachments", queryset=Attachment.alternates.order_by(), to_attr="alternates"),
+                Prefetch("attachments", queryset=Attachment.inlines.order_by(), to_attr="inlines"),
+            )
+            .only(
+                "title",
+                "slug",
+                "description",
+                "show_author",
+                "created",
+                "published",
+                "show_date",
+                "author__name",
+                "author__suffix",
+                "author__surname_override",
+                "author__family__name",
+            )
+            .annotate(has_body=IsNotEmpty("body"))
+        )
 
 
 class WeblogDetail(VaryOnCookieMixin, LoginRequiredMixin, generic.DetailView):
@@ -22,8 +44,29 @@ class WeblogDetail(VaryOnCookieMixin, LoginRequiredMixin, generic.DetailView):
 
     def get_queryset(self):
         if self.request.user.is_staff:
-            return WeblogEntry.objects.all()
-        return WeblogEntry.published_objects.all()
+            manager = WeblogEntry.objects
+        else:
+            manager = WeblogEntry.published_objects
+        return (
+            manager.select_related("author__family")
+            .prefetch_related(
+                Prefetch("attachments", queryset=Attachment.alternates.order_by(), to_attr="alternates"),
+                Prefetch("attachments", queryset=Attachment.inlines.order_by(), to_attr="inlines"),
+            )
+            .only(
+                "title",
+                "description",
+                "body",
+                "show_author",
+                "is_published",
+                "published",
+                "show_date",
+                "author__name",
+                "author__suffix",
+                "author__surname_override",
+                "author__family__name",
+            )
+        )
 
     def get_object(self, **kwargs):  # pylint: disable=arguments-differ
         obj = super().get_object(**kwargs)
@@ -48,3 +91,6 @@ class AttachmentView(NeverCacheMixin, LoginRequiredMixin, generic.DetailView):
             filename=(attachment.clean_title + attachment.extension),
             content_type=attachment.mime_type,
         )
+
+    def get_queryset(self):
+        return Attachment.objects.only("id")

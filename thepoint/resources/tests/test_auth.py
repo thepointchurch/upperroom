@@ -49,23 +49,23 @@ class TestResourcesAuthenticationRequired(TestCase):
         attachment = self.resource.attachments.create(title="Test", slug="test", file=self.mock_file)
         url = reverse("resources:attachment", kwargs={"pk": attachment.id})
         response = self.client.get(url)
-        self.assertRedirects(response, settings.LOGIN_URL + "?next=" + url)
+        self.assertEqual(response.status_code, 404)
 
     def test_authentication_required_attachment_tagged(self):
         tagged_attachment = self.tagged_resource.attachments.create(title="Test", slug="test", file=self.mock_file)
         url = reverse("resources:attachment", kwargs={"pk": tagged_attachment.id})
         response = self.client.get(url)
-        self.assertRedirects(response, settings.LOGIN_URL + "?next=" + url)
+        self.assertEqual(response.status_code, 404)
 
     def test_authentication_required_detail(self):
         url = reverse("resources:detail", kwargs={"slug": self.resource.slug})
         response = self.client.get(url)
-        self.assertRedirects(response, settings.LOGIN_URL + "?next=" + url)
+        self.assertEqual(response.status_code, 404)
 
     def test_authentication_required_detail_tagged(self):
         url = reverse("resources:detail", kwargs={"slug": self.tagged_resource.slug})
         response = self.client.get(url)
-        self.assertRedirects(response, settings.LOGIN_URL + "?next=" + url)
+        self.assertEqual(response.status_code, 404)
 
     def test_authentication_required_tag(self):
         response = self.client.get(reverse("resources:tag", kwargs={"slug": self.tag.slug}))

@@ -17,15 +17,19 @@ class MeetingBuilderRoleForm(forms.ModelForm):
         if not self.is_bound:
             self.role_type = self.initial["role"]
             if sort_by_age and self.role_type.order_by_age:
-                qs = self.role_type.servers.annotate(
-                    age=Max(
-                        "roles__meeting__date",
-                        filter=Q(roles__role=self.role_type)
-                        | (Q(roles__role__parent__isnull=False) & Q(roles__role__parent=self.role_type.parent)),
+                qs = (
+                    self.role_type.servers.select_related("family")
+                    .annotate(
+                        age=Max(
+                            "roles__meeting__date",
+                            filter=Q(roles__role=self.role_type)
+                            | (Q(roles__role__parent__isnull=False) & Q(roles__role__parent=self.role_type.parent)),
+                        )
                     )
-                ).order_by("age", "name")
+                    .order_by("age", "name")
+                )
             else:
-                qs = self.role_type.servers.order_by("family__name", "name")
+                qs = self.role_type.servers.order_by("family__name", "name").select_related("family")
             self.fields["people"].queryset = qs
 
 

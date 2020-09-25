@@ -25,7 +25,7 @@ from .signals import family_updated
 class IndexView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
     template_name = "directory/index.html"
     permission_required = "directory.can_view"
-    queryset = Family.current_objects.all()
+    queryset = Family.current_objects.select_related(None).prefetch_related(None).only("name")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -51,6 +51,9 @@ class LetterView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
 class DetailView(VaryOnCookieMixin, PermissionRequiredMixin, generic.DetailView):
     model = Family
     permission_required = "directory.can_view"
+
+    def get_queryset(self):
+        return Family.current_objects.all()
 
 
 class SearchView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
@@ -121,7 +124,9 @@ class FamilyEditView(NeverCacheMixin, PermissionRequiredMixin, generic.edit.Upda
 class BirthdayView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
     template_name = "directory/birthday_list.html"
     permission_required = "directory.can_view"
-    queryset = Person.current_objects.all().exclude(birthday__isnull=True)
+    queryset = Person.current_objects.exclude(birthday__isnull=True).only(
+        "name", "suffix", "surname_override", "family__name", "birthday"
+    )
 
 
 class AnniversaryView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
@@ -131,6 +136,17 @@ class AnniversaryView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListVi
         Family.current_objects.filter(anniversary__isnull=False)
         .filter(husband__isnull=False)
         .filter(wife__isnull=False)
+        .prefetch_related(None)
+        .only(
+            "name",
+            "husband__name",
+            "husband__suffix",
+            "husband__surname_override",
+            "wife__name",
+            "wife__suffix",
+            "wife__surname_override",
+            "anniversary",
+        )
     )
 
 
@@ -142,6 +158,9 @@ class FamilyPhotoView(NeverCacheMixin, PermissionRequiredMixin, generic.DetailVi
         family = self.get_object()
         return attachment_response(family.photo.file, False, content_type="image/jpeg")
 
+    def get_queryset(self):
+        return Family.current_objects.select_related(None).prefetch_related(None).only("id")
+
 
 class FamilyThumbnailView(NeverCacheMixin, PermissionRequiredMixin, generic.DetailView):
     model = Family
@@ -150,6 +169,9 @@ class FamilyThumbnailView(NeverCacheMixin, PermissionRequiredMixin, generic.Deta
     def get(self, request, *args, **kwargs):
         family = self.get_object()
         return attachment_response(family.photo_thumbnail.file, False, content_type="image/jpeg")
+
+    def get_queryset(self):
+        return Family.current_objects.select_related(None).prefetch_related(None).only("id")
 
 
 DIRECTORY_FILE_NAME = "directory/directory.pdf"
@@ -180,11 +202,24 @@ class PrintView(NeverCacheMixin, PermissionRequiredMixin, generic.TemplateView):
         context["month"] = month
         context["year"] = year
         context["families"] = Family.current_objects.all()
-        context["birthdays"] = Person.current_objects.all().exclude(birthday__isnull=True)
+        context["birthdays"] = Person.current_objects.exclude(birthday__isnull=True).only(
+            "name", "suffix", "surname_override", "family__name", "birthday"
+        )
         context["anniversaries"] = (
             Family.current_objects.filter(anniversary__isnull=False)
             .filter(husband__isnull=False)
             .filter(wife__isnull=False)
+            .prefetch_related(None)
+            .only(
+                "name",
+                "husband__name",
+                "husband__suffix",
+                "husband__surname_override",
+                "wife__name",
+                "wife__suffix",
+                "wife__surname_override",
+                "anniversary",
+            )
         )
         return context
 

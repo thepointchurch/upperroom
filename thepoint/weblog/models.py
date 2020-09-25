@@ -105,6 +105,16 @@ def get_attachment_filename(instance, filename):
     )
 
 
+class AttachmentAlternateManager(models.Manager):  # pylint: disable=too-few-public-methods
+    def get_queryset(self):
+        return super().get_queryset().filter(kind=Attachment.KIND_ALTERNATE)
+
+
+class AttachmentInlineManager(models.Manager):  # pylint: disable=too-few-public-methods
+    def get_queryset(self):
+        return super().get_queryset().filter(kind=Attachment.KIND_INLINE)
+
+
 class Attachment(models.Model):
     KIND_ALTERNATE = "A"
     KIND_INLINE = "I"
@@ -124,6 +134,10 @@ class Attachment(models.Model):
     entry = models.ForeignKey(
         WeblogEntry, on_delete=models.CASCADE, related_name="attachments", verbose_name=_("entry"),
     )
+
+    objects = models.Manager()
+    alternates = AttachmentAlternateManager()
+    inlines = AttachmentInlineManager()
 
     class Meta:
         ordering = ["entry"]

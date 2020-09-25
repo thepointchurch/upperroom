@@ -20,7 +20,7 @@ class IndexView(VaryOnCookieMixin, PublicationMixin, generic.ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return self.publication.issues.all()
+        return self.publication.issues.only("date", "description", "publication")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

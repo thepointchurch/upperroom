@@ -28,7 +28,12 @@ def next_empty_meeting_date(weekday=None):
 
 class CurrentManager(models.Manager):  # pylint: disable=too-few-public-methods
     def get_queryset(self):
-        return super().get_queryset().filter(date__gte=date.today())
+        return (
+            super()
+            .get_queryset()
+            .filter(date__gte=date.today())
+            .prefetch_related("roles__people__family", "roles__role", "roles__location")
+        )
 
 
 class Meeting(models.Model):

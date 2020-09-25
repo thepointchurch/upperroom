@@ -41,7 +41,11 @@ class PublicPersonList(generic.ListView):
     template_name = "roster/person_list.html"
 
     def get_queryset(self):
-        return Role.current_objects.filter(people__id=self.kwargs["pk"])
+        return (
+            Role.current_objects.filter(people__id=self.kwargs["pk"])
+            .select_related("meeting", "role", "location")
+            .prefetch_related("people")
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -77,7 +81,11 @@ class RosterPdf(NeverCacheMixin, PermissionRequiredMixin, generic.TemplateView):
         context["site_name"] = get_current_site(None).name
         context["contact_email"] = settings.ROSTER_EMAIL
         context["year"] = year
-        context["meeting_list"] = Meeting.objects.all().filter(date__year=year, date__week_day=week_day)
+        context["meeting_list"] = (
+            Meeting.objects.all()
+            .filter(date__year=year, date__week_day=week_day)
+            .prefetch_related("roles__people__family", "roles__role", "roles__location")
+        )
         return context
 
     def render_to_response(self, context, **response_kwargs):
@@ -119,7 +127,12 @@ class BuilderView(NeverCacheMixin, PermissionRequiredMixin, generic.edit.CreateV
             data["sort_by_age"] = sort_by_age
             if self.builder_template:
                 data["roles"] = meetingbuilderformset_factory(self.builder_template.roles.count())(
-                    initial=[{"role": r} for r in self.builder_template.roles.all()],
+                    initial=[
+                        {"role": r}
+                        for r in self.builder_template.roles.prefetch_related(
+                            "servers__family", "parent__servers__family"
+                        )
+                    ],
                     form_kwargs={"sort_by_age": sort_by_age},
                 )
                 data["builder_template"] = self.builder_template

@@ -9,9 +9,15 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
 
-class CurrentManager(models.Manager):  # pylint: disable=too-few-public-methods
+class FamilyCurrentManager(models.Manager):  # pylint: disable=too-few-public-methods
     def get_queryset(self):
-        return super().get_queryset().filter(is_current=True)
+        return (
+            super()
+            .get_queryset()
+            .filter(is_current=True)
+            .select_related("husband", "wife")
+            .prefetch_related("members",)
+        )
 
 
 def get_family_photo_filename(instance, filename):  # pylint: disable=unused-argument
@@ -46,7 +52,7 @@ class Family(models.Model):
     )
 
     objects = models.Manager()
-    current_objects = CurrentManager()
+    current_objects = FamilyCurrentManager()
 
     class Meta:
         ordering = ["name"]
@@ -134,6 +140,11 @@ class Family(models.Model):
             member.save()
 
 
+class PersonCurrentManager(models.Manager):  # pylint: disable=too-few-public-methods
+    def get_queryset(self):
+        return super().get_queryset().filter(is_current=True).select_related("family")
+
+
 class Person(models.Model):
     GENDER_MALE = "M"
     GENDER_FEMALE = "F"
@@ -161,7 +172,7 @@ class Person(models.Model):
     is_current = models.BooleanField(default=True, verbose_name=_("current"))
 
     objects = models.Manager()
-    current_objects = CurrentManager()
+    current_objects = PersonCurrentManager()
 
     class Meta:
         ordering = ["order", "id", "name"]  # I wish there was a better way

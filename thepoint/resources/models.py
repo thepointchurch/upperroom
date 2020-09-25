@@ -191,6 +191,16 @@ def get_attachment_filename(instance, filename):
     return "resource/attachment/%s/%s%s" % (instance.resource.slug, instance.slug, extension)
 
 
+class AttachmentAlternateManager(models.Manager):  # pylint: disable=too-few-public-methods
+    def get_queryset(self):
+        return super().get_queryset().filter(kind=Attachment.KIND_ALTERNATE)
+
+
+class AttachmentInlineManager(models.Manager):  # pylint: disable=too-few-public-methods
+    def get_queryset(self):
+        return super().get_queryset().filter(kind=Attachment.KIND_INLINE)
+
+
 class Attachment(models.Model):
     KIND_ALTERNATE = "A"
     KIND_INLINE = "I"
@@ -211,6 +221,10 @@ class Attachment(models.Model):
         Resource, on_delete=models.CASCADE, related_name="attachments", verbose_name=_("resource"),
     )
     metadata = models.JSONField(null=True, blank=True, verbose_name=_("metadata"))
+
+    objects = models.Manager()
+    alternates = AttachmentAlternateManager()
+    inlines = AttachmentInlineManager()
 
     class Meta:
         ordering = ["resource"]
@@ -391,11 +405,11 @@ class ResourceFeed(models.Model):
 def get_featured_items(private=False):
     featured_items = list(
         chain(
-            Tag.featured_objects.filter(is_private=private),
+            Tag.featured_objects.filter(is_private=private).only("slug", "name", "description", "priority"),
             (
-                Resource.featured_objects.filter(is_published=True, is_private=private).exclude(
-                    slug__in=Tag.featured_objects.values("slug")
-                )
+                Resource.featured_objects.filter(is_published=True, is_private=private)
+                .exclude(slug__in=Tag.featured_objects.values("slug"))
+                .only("slug", "title", "description", "priority")
             ),
         )
     )

@@ -20,20 +20,10 @@ class ResourceFallbackMiddleware:
         try:
             slug = request.path_info.strip("/")
 
-            try:
-                Tag.featured_objects.get(slug=slug)
+            if Tag.featured_objects.filter(slug=slug).only("slug"):
                 return views.TagList.as_view()(request, slug=slug).render()
-            except AttributeError:
-                return response
-            except Exception:  # pylint: disable=broad-except
-                pass
-
-            try:
-                Resource.featured_objects.get(slug=slug)
+            if Resource.featured_objects.filter(slug=slug).only("slug"):
                 return views.ResourceDetail.as_view()(request, slug=slug).render()
-            except Exception:  # pylint: disable=broad-except
-                pass
-
             return response
 
         except Http404:

@@ -36,8 +36,21 @@ class IndexView(VaryOnCookieMixin, LoginRequiredMixin, generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         try:
-            context["role_list"] = Role.current_objects.filter(people__id=self.request.user.person.id).filter(
-                meeting__date__lte=(date.today() + timedelta(days=60))
+            context["role_list"] = (
+                Role.current_objects.filter(people__id=self.request.user.person.id)
+                .filter(meeting__date__lte=(date.today() + timedelta(days=60)))
+                .select_related("meeting", "role", "location",)
+                .prefetch_related("people", "people__family",)
+                .only(
+                    "description",
+                    "meeting__date",
+                    "role__name",
+                    "location__name",
+                    "people__name",
+                    "people__suffix",
+                    "people__surname_override",
+                    "people__family__name",
+                )
             )
         except Exception:  # pylint: disable=broad-except
             pass
@@ -72,6 +85,7 @@ class CreateView(NeverCacheMixin, LoginRequiredMixin, generic.ListView):
             Person.current_objects.filter(user__isnull=True)
             .filter(Q(name__icontains=query) | Q(surname_override__icontains=query) | Q(family__name__icontains=query))
             .distinct()
+            .only("name", "suffix", "surname_override", "family__name")
         )
 
 
@@ -83,7 +97,10 @@ class CreateConfirmView(NeverCacheMixin, LoginRequiredMixin, generic.edit.Create
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["person"] = get_object_or_404(Person, pk=self.kwargs.get(self.pk_url_kwarg, None))
+        context["person"] = get_object_or_404(
+            Person.current_objects.select_related("family").only("name", "suffix", "surname_override", "family__name"),
+            pk=self.kwargs.get(self.pk_url_kwarg, None),
+        )
         return context
 
     def post(self, request, *args, **kwargs):

@@ -56,11 +56,24 @@ class Command(BaseCommand):
                 "month": month,
                 "year": year,
                 "families": Family.current_objects.all(),
-                "birthdays": Person.current_objects.all().exclude(birthday__isnull=True),
+                "birthdays": Person.current_objects.exclude(birthday__isnull=True).only(
+                    "name", "suffix", "surname_override", "family__name", "birthday"
+                ),
                 "anniversaries": (
                     Family.current_objects.filter(anniversary__isnull=False)
                     .filter(husband__isnull=False)
                     .filter(wife__isnull=False)
+                    .prefetch_related(None)
+                    .only(
+                        "name",
+                        "husband__name",
+                        "husband__suffix",
+                        "husband__surname_override",
+                        "wife__name",
+                        "wife__suffix",
+                        "wife__surname_override",
+                        "anniversary",
+                    )
                 ),
             }
         )

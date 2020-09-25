@@ -35,5 +35,13 @@ class Splash(models.Model):
 
 def get_splashes(request, position):
     if request.user.is_authenticated:
-        return Splash.objects.filter(is_current=True, url=request.path, position=position)
-    return Splash.objects.filter(is_current=True, url=request.path, position=position, is_private=False)
+        return (
+            Splash.objects.filter(is_current=True, url=request.path, position=position)
+            .order_by("order", "title")
+            .only("title", "content")
+        )
+    return (
+        Splash.objects.filter(is_current=True, url=request.path, position=position, is_private=False)
+        .order_by("order", "title")
+        .only("title", "content")
+    )

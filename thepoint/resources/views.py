@@ -1,12 +1,13 @@
 # pylint: disable=too-many-ancestors
 
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.db.models import Prefetch
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
 from django.views import generic
 
 from ..directory.models import Person
+from ..utils.func import IsNotEmpty
 from ..utils.mixin import NeverCacheMixin, VaryOnCookieMixin
 from ..utils.storages.attachment import attachment_response
 from .models import Attachment, Resource, ResourceFeed, Tag
@@ -21,12 +22,37 @@ class TagList(VaryOnCookieMixin, generic.ListView):
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
-            self.tag = get_object_or_404(Tag, slug=self.kwargs.get("slug", None))
+            queryset = Tag.objects.all()
         else:
-            self.tag = get_object_or_404(Tag.objects.filter(is_private=False), slug=self.kwargs.get("slug", None))
+            queryset = Tag.objects.filter(is_private=False)
+        self.tag = get_object_or_404(
+            queryset.prefetch_related(
+                Prefetch("feeds", queryset=ResourceFeed.objects.only("title", "slug", "is_podcast"))
+            ).only("name", "description", "priority"),
+            slug=self.kwargs.get("slug", None),
+        )
 
-        resources = self.tag.resources.filter(is_published=True, parent__isnull=True).exclude(
-            published__gt=timezone.now()
+        resources = (
+            self.tag.resources.filter(is_published=True, parent__isnull=True)
+            .exclude(published__gt=timezone.now())
+            .select_related("author__family")
+            .prefetch_related(
+                Prefetch("attachments", queryset=Attachment.alternates.order_by(), to_attr="alternates"),
+                Prefetch("attachments", queryset=Attachment.inlines.order_by(), to_attr="inlines"),
+            )
+            .only(
+                "title",
+                "slug",
+                "description",
+                "show_author",
+                "published",
+                "show_date",
+                "author__name",
+                "author__suffix",
+                "author__surname_override",
+                "author__family__name",
+            )
+            .annotate(has_body=IsNotEmpty("body"))
         )
         if not self.request.user.is_authenticated:
             resources = resources.filter(is_private=False)
@@ -52,7 +78,26 @@ class ResourceList(VaryOnCookieMixin, generic.ListView):
         resources = Resource.published_objects.filter(parent__isnull=True).exclude(tags__is_exclusive=True)
         if not self.request.user.is_authenticated:
             resources = resources.filter(is_private=False)
-        return resources
+        return (
+            resources.select_related("author__family")
+            .prefetch_related(
+                Prefetch("attachments", queryset=Attachment.alternates.order_by(), to_attr="alternates"),
+                Prefetch("attachments", queryset=Attachment.inlines.order_by(), to_attr="inlines"),
+            )
+            .only(
+                "title",
+                "slug",
+                "description",
+                "show_author",
+                "published",
+                "show_date",
+                "author__name",
+                "author__suffix",
+                "author__surname_override",
+                "author__family__name",
+            )
+            .annotate(has_body=IsNotEmpty("body"))
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -66,24 +111,44 @@ class RedirectToAttachment(Exception):
         self.attachment = attachment
 
 
-class ResourcePermissionMixin(UserPassesTestMixin):
-    def test_func(self):
-        obj = self.get_object()
-        if isinstance(obj, Attachment):
-            return self.request.user.is_authenticated or not obj.is_private
-        return self.request.user.is_authenticated or not obj.is_private_full
-
-
-class ResourceDetail(VaryOnCookieMixin, ResourcePermissionMixin, generic.DetailView):
+class ResourceDetail(VaryOnCookieMixin, generic.DetailView):
     model = Resource
 
     def get_queryset(self):
         if self.request.user.is_staff:
-            return Resource.objects.all()
-        return Resource.published_objects.all()
+            queryset = Resource.objects
+        elif self.request.user.is_authenticated:
+            queryset = Resource.published_objects
+        else:
+            queryset = Resource.published_objects.filter(is_private=False)
+        return (
+            queryset.select_related("author__family")
+            .prefetch_related(
+                Prefetch(
+                    "children",
+                    queryset=Resource.objects.prefetch_related(
+                        Prefetch("attachments", queryset=Attachment.alternates.order_by(), to_attr="alternates")
+                    ),
+                ),
+                Prefetch("attachments", queryset=Attachment.alternates.order_by(), to_attr="alternates"),
+                Prefetch("attachments", queryset=Attachment.inlines.order_by(), to_attr="inlines"),
+            )
+            .only(
+                "title",
+                "body",
+                "show_author",
+                "is_published",
+                "author__name",
+                "author__suffix",
+                "author__surname_override",
+                "author__family__name",
+            )
+        )
 
     def get_object(self, **kwargs):  # pylint: disable=arguments-differ
         obj = super().get_object(**kwargs)
+        if not self.request.user.is_authenticated and any(x.is_private for x in obj.tags.all()):
+            raise Http404("Access Denied")
         if not obj.body and obj.attachments.count() == 1:
             raise RedirectToAttachment(obj.attachments.first())
         return obj
@@ -95,8 +160,16 @@ class ResourceDetail(VaryOnCookieMixin, ResourcePermissionMixin, generic.DetailV
             return redirect("resources:attachment", pk=exc.attachment.id)
 
 
-class AttachmentView(NeverCacheMixin, ResourcePermissionMixin, generic.DetailView):
+class AttachmentView(NeverCacheMixin, generic.DetailView):
     model = Attachment
+
+    def get_object(self, **kwargs):  # pylint: disable=arguments-differ
+        obj = super().get_object(**kwargs)
+        if not self.request.user.is_authenticated and (
+            obj.resource.is_private or any(x.is_private for x in obj.resource.tags.only("is_private"))
+        ):
+            raise Http404("Access Denied")
+        return obj
 
     def get(self, request, *args, **kwargs):
         attachment = self.get_object()
@@ -106,6 +179,9 @@ class AttachmentView(NeverCacheMixin, ResourcePermissionMixin, generic.DetailVie
             content_type=attachment.mime_type,
         )
 
+    def get_queryset(self):
+        return Attachment.objects.select_related("resource").only("id", "resource__is_private")
+
 
 class AuthorList(VaryOnCookieMixin, generic.ListView):
     template_name = "resources/author.html"
@@ -113,15 +189,44 @@ class AuthorList(VaryOnCookieMixin, generic.ListView):
     ordering = ["-published"]
 
     def get_queryset(self):
-        author = get_object_or_404(Person, id=self.kwargs.get("pk", None))
+        resources = (
+            Resource.published_objects.filter(author__id=self.kwargs.get("pk", None))
+            .select_related("author__family")
+            .prefetch_related(
+                Prefetch(
+                    "children",
+                    queryset=Resource.objects.prefetch_related(
+                        Prefetch("attachments", queryset=Attachment.alternates.order_by(), to_attr="alternates")
+                    ),
+                ),
+                Prefetch("attachments", queryset=Attachment.alternates.order_by(), to_attr="alternates"),
+                Prefetch("attachments", queryset=Attachment.inlines.order_by(), to_attr="inlines"),
+            )
+            .only(
+                "title",
+                "slug",
+                "description",
+                "show_author",
+                "published",
+                "show_date",
+                "author__name",
+                "author__suffix",
+                "author__surname_override",
+                "author__family__name",
+            )
+            .annotate(has_body=IsNotEmpty("body"))
+        )
 
         if self.request.user.is_authenticated:
-            return author.resources.filter(is_published=True, show_author=True)
-        return author.resources.filter(is_published=True, show_author=True, is_private=False)
+            return resources.filter(is_published=True, show_author=True)
+        return resources.filter(is_published=True, show_author=True, is_private=False)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["author"] = get_object_or_404(Person, id=self.kwargs.get("pk", None))
+        context["author"] = get_object_or_404(
+            Person.objects.select_related("family").only("name", "suffix", "surname_override", "family__name"),
+            id=self.kwargs.get("pk", None),
+        )
         context["tag"] = None
         return context
 
