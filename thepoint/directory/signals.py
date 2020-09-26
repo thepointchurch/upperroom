@@ -4,6 +4,8 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.cache import InvalidCacheBackendError, caches
+from django.core.cache.utils import make_template_fragment_key
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.base import ContentFile
 from django.core.mail import send_mail
@@ -87,3 +89,10 @@ def add_user_to_member_group(sender, instance, created, **kwargs):  # pylint: di
             instance.groups.add(Group.objects.get(name="Member"))
         except Group.DoesNotExist:
             pass
+
+    print("should clear navbar user cache for %r" % instance)
+    try:
+        cache = caches["template_fragments"]
+    except InvalidCacheBackendError:
+        cache = caches["default"]
+    cache.delete(make_template_fragment_key("navbar_user", [instance]))

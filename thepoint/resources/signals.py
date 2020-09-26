@@ -1,10 +1,12 @@
+from django.core.cache import InvalidCacheBackendError, caches
+from django.core.cache.utils import make_template_fragment_key
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.uploadedfile import UploadedFile
-from django.db.models.signals import post_delete, post_save, pre_save
+from django.db.models.signals import post_delete, post_save, pre_delete, pre_save
 from django.dispatch import receiver
 from storages.backends.s3boto3 import S3Boto3StorageFile
 
-from .models import Attachment, Resource, ResourceFeed
+from .models import Attachment, Resource, ResourceFeed, Tag
 
 
 def is_s3_file_public(file_object):
@@ -31,6 +33,22 @@ def delete_file(file_object):
             file_object.storage.delete(file_object.name)
 
 
+def clear_navbar_cache():
+    try:
+        cache = caches["template_fragments"]
+    except InvalidCacheBackendError:
+        cache = caches["default"]
+    cache.delete(make_template_fragment_key("navbar_featured"))
+    cache.delete(make_template_fragment_key("navbar_featured_private"))
+
+
+@receiver(post_delete, sender=Resource)
+def resource_post_delete(sender, instance, **kwargs):
+    _ = sender
+    if getattr(instance, "was_featured", None) or instance.is_featured:
+        clear_navbar_cache()
+
+
 @receiver(post_save, sender=Resource)
 def resource_post_save(sender, instance, **kwargs):
     _ = sender
@@ -46,6 +64,17 @@ def resource_post_save(sender, instance, **kwargs):
                 else:
                     if not instance.is_private:
                         set_s3_file_acl(attachment.file, "public-read")
+    if getattr(instance, "was_featured", None) or instance.is_featured:
+        clear_navbar_cache()
+
+
+@receiver(pre_delete, sender=Resource)
+def resource_pre_delete(sender, instance, **kwargs):
+    _ = sender
+    try:
+        instance.was_featured = sender.objects.get(id=instance.id).is_featured
+    except ObjectDoesNotExist:
+        instance.was_featured = not instance.is_featured
 
 
 @receiver(pre_save, sender=Resource)
@@ -55,6 +84,10 @@ def resource_pre_save(sender, instance, **kwargs):
         instance.was_private = sender.objects.get(id=instance.id).is_private
     except ObjectDoesNotExist:
         instance.was_private = not instance.is_private
+    try:
+        instance.was_featured = sender.objects.get(id=instance.id).is_featured
+    except ObjectDoesNotExist:
+        instance.was_featured = not instance.is_featured
 
 
 @receiver(pre_save, sender=Attachment)
@@ -95,6 +128,38 @@ def attachment_post_delete(sender, instance, **kwargs):
     _ = sender
     if instance.file:
         delete_file(instance.file)
+
+
+@receiver(pre_delete, sender=Tag)
+def tag_pre_delete(sender, instance, **kwargs):
+    _ = sender
+    try:
+        instance.was_featured = sender.objects.get(id=instance.id).is_featured
+    except ObjectDoesNotExist:
+        instance.was_featured = not instance.is_featured
+
+
+@receiver(pre_save, sender=Tag)
+def tag_pre_save(sender, instance, **kwargs):
+    _ = sender
+    try:
+        instance.was_featured = sender.objects.get(id=instance.id).is_featured
+    except ObjectDoesNotExist:
+        instance.was_featured = not instance.is_featured
+
+
+@receiver(post_delete, sender=Tag)
+def tag_post_delete(sender, instance, **kwargs):
+    _ = sender
+    if getattr(instance, "was_featured", None) or instance.is_featured:
+        clear_navbar_cache()
+
+
+@receiver(post_save, sender=Tag)
+def tag_post_save(sender, instance, **kwargs):
+    _ = sender
+    if getattr(instance, "was_featured", None) or instance.is_featured:
+        clear_navbar_cache()
 
 
 @receiver(pre_save, sender=ResourceFeed)

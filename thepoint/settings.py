@@ -128,7 +128,13 @@ PASSWORD_HASHERS = (
 ROBOTS_CACHE_TIMEOUT = 60 * 60 * 24
 
 
-CACHES = {"default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"}}
+CACHES = {
+    "default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"},
+    "template_fragments": {
+        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
+        "KEY_PREFIX": "template_fragments",
+    },
+}
 for cache_var in (
     "BACKEND",
     "KEY_FUNCTION",
@@ -150,6 +156,8 @@ for cache_var in (
 
             value = json.loads(value)
         CACHES["default"][cache_var] = value
+        if cache_var in ("BACKEND", "LOCATION"):
+            CACHES["template_fragments"][cache_var] = value
 
 CACHE_MIDDLEWARE_ALIAS = "default"
 CACHE_MIDDLEWARE_KEY_PREFIX = ""

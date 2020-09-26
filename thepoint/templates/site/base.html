@@ -4,6 +4,7 @@
 {% load static %}
 {% load smartquote %}
 {% load markup %}
+{% load cache %}
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
@@ -30,13 +31,13 @@
 <div id="body">
 {% include "site/messages.html" %}
 
-{% if splashes_above %}{% include "splash/splash.html" with splashes=splashes_above %}{% endif %}
+{% cache None splashes_above request.path %}{% if splashes_above %}{% include "splash/splash.html" with splashes=splashes_above %}{% endif %}{% endcache %}
 
 <h2>{% block heading %}{% endblock heading %}</h2>
 
 {% block content %}{% endblock content %}
 
-{% if splashes_below %}{% include "splash/splash.html" with splashes=splashes_below %}{% endif %}
+{% cache None splashes_below request.path %}{% if splashes_below %}{% include "splash/splash.html" with splashes=splashes_below %}{% endif %}{% endcache %}
 </div>
 
 {% endblock body %}

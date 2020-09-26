@@ -1,5 +1,4 @@
 import logging
-from itertools import chain
 
 import mutagen
 from django.core.validators import RegexValidator
@@ -402,20 +401,46 @@ class ResourceFeed(models.Model):
         return None
 
 
-def get_featured_items(private=False):
-    featured_items = list(
-        chain(
-            Tag.featured_objects.filter(is_private=private).only("slug", "name", "description", "priority"),
-            (
-                Resource.featured_objects.filter(is_published=True, is_private=private)
-                .exclude(slug__in=Tag.featured_objects.values("slug"))
-                .only("slug", "title", "description", "priority")
-            ),
-        )
+class FeaturedItem(models.Model):
+    TYPE_RESOURCE = "R"
+    TYPE_TAG = "T"
+    TYPE_CHOICES = (
+        (TYPE_RESOURCE, _("Resource")),
+        (TYPE_TAG, _("Tag")),
     )
-    try:
-        featured_items.sort(key=lambda X: X.priority)
-    except TypeError:
-        logger.debug("Failed to sort featured items")
 
-    return featured_items
+    title = models.CharField(max_length=64)
+    slug = models.SlugField(primary_key=True)
+    description = models.TextField(null=True, blank=True)
+    priority = models.PositiveSmallIntegerField(null=True, blank=True)
+    is_private = models.BooleanField()
+    type = models.CharField(max_length=1, choices=TYPE_CHOICES)
+
+    class Meta:
+        managed = False
+        db_table = "resources_featureditem"
+
+    def get_absolute_url(self):
+        if self.type == "R":
+            url = "/%s" % self.slug
+            try:
+                resolve(url)
+            except Http404:
+                return url
+            return reverse("resources:detail", kwargs={"slug": self.slug})
+        if self.type == "T":
+            url = "/%s/" % self.slug
+            try:
+                resolve(url)
+            except Http404:
+                return url
+            return reverse("resources:tag", kwargs={"slug": self.slug})
+        return self.slug
+
+
+def get_featured_items(private=False):
+    return (
+        FeaturedItem.objects.filter(is_private=private)
+        .order_by("priority")
+        .only("slug", "title", "description", "type")
+    )
