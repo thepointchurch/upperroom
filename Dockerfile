@@ -1,6 +1,6 @@
 FROM python:3.8-slim AS compile-image
 RUN apt-get -y update && apt-get install -y --no-install-recommends \
-    build-essential gcc python3-dev libpq-dev libmemcached-dev zlib1g-dev && \
+    build-essential gcc python3-dev libpq-dev zlib1g-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN pip install poetry=="1.0.10" wheel
 COPY . /django/
@@ -36,7 +36,6 @@ RUN apt-get -y update \
         libpq5 \
         libcairo2 \
         libgdk-pixbuf2.0-0 \
-        libmemcached-tools \
         libpango-1.0-0 \
         libpangocairo-1.0-0 \
         netcat-traditional \

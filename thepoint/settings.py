@@ -159,6 +159,10 @@ for cache_var in (
         if cache_var in ("BACKEND", "LOCATION"):
             CACHES["template_fragments"][cache_var] = value
 
+if "dummy" not in CACHES["default"]["BACKEND"]:
+    SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+    SESSION_CACHE_ALIAS = "default"
+
 CACHE_MIDDLEWARE_ALIAS = "default"
 CACHE_MIDDLEWARE_KEY_PREFIX = ""
 

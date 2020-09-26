@@ -58,7 +58,8 @@ django-storages = { version = "^1.9", optional = true }
 google-api-python-client = { version = "^1.10", optional = true }
 google-auth-oauthlib = { version = "^0.4", optional = true }
 psycopg2 = { version = "^2.8", optional = true }
-pylibmc = { version = "^1.6", optional = true }
+redis = { version = "^3.5", optional = true }
+django-redis = { version = "^4.12", optional = true }
 
 [tool.poetry.extras]
 aws = [
@@ -68,7 +69,8 @@ aws = [
     "django-storages",
 ]
 cache = [
-    "pylibmc",
+    "django-redis",
+    "redis",
 ]
 google = [
     "google-api-python-client",
