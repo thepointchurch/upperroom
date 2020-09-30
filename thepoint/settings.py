@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages.apps.MessagesConfig",
     "django.contrib.sitemaps.apps.SiteMapsConfig",
     "django.contrib.staticfiles.apps.StaticFilesConfig",
+    "cacheops",
 ]
 
 MIDDLEWARE = [
@@ -134,6 +135,7 @@ CACHES = {
         "BACKEND": "django.core.cache.backends.dummy.DummyCache",
         "KEY_PREFIX": "template_fragments",
     },
+    "sessions": {"BACKEND": "django.core.cache.backends.dummy.DummyCache", "KEY_PREFIX": "sessions"},
 }
 for cache_var in (
     "BACKEND",
@@ -158,10 +160,42 @@ for cache_var in (
         CACHES["default"][cache_var] = value
         if cache_var in ("BACKEND", "LOCATION"):
             CACHES["template_fragments"][cache_var] = value
+            CACHES["sessions"][cache_var] = value
 
-if "dummy" not in CACHES["default"]["BACKEND"]:
+if "dummy" not in CACHES["sessions"]["BACKEND"]:
     SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-    SESSION_CACHE_ALIAS = "default"
+    SESSION_CACHE_ALIAS = "sessions"
+
+CACHEOPS_DEFAULTS = {
+    "timeout": CACHES["default"].get("TIMEOUT", 60 * 60 * 24),
+}
+
+CACHEOPS = {
+    "auth.user": {"ops": "get", "timeout": 60 * 15},
+    "auth.*": {"ops": ("fetch", "get")},
+    "auth.permission": {"ops": "all"},
+    "directory.*": {"ops": "all"},
+    "extendedsites.*": {"ops": "all"},
+    "library.*": {"ops": "all"},
+    "newsletter.*": {"ops": "all"},
+    "resources.*": {"ops": "all"},
+    "roster.*": {"ops": "all"},
+    "splash.*": {"ops": "all"},
+    "weblog.*": {"ops": "all"},
+    "flatpages.*": {"ops": "all"},
+    "redirects.*": {"ops": "all"},
+    "robots.*": {"ops": "all"},
+    "sites.*": {"ops": "all"},
+}
+
+if "redis" in CACHES["default"].get("LOCATION", ""):
+    CACHEOPS_REDIS = CACHES["default"]["LOCATION"]
+    CACHEOPS_ENABLED = bool(os.getenv("CACHEOPS_ENABLED", False))
+else:
+    CACHEOPS_ENABLED = False
+CACHEOPS_DEGRADE_ON_FAILURE = True
+DJANGO_REDIS_IGNORE_EXCEPTIONS = True
+DJANGO_REDIS_LOG_IGNORED_EXCEPTIONS = True
 
 CACHE_MIDDLEWARE_ALIAS = "default"
 CACHE_MIDDLEWARE_KEY_PREFIX = ""
