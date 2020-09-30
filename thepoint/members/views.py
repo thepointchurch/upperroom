@@ -55,7 +55,7 @@ class IndexView(VaryOnCookieMixin, LoginRequiredMixin, generic.TemplateView):
         except Exception:  # pylint: disable=broad-except
             pass
         context["webmaster_email"] = settings.WEBMASTER_EMAIL
-        context["search_query"] = None
+        context["search_query"] = ""
         context["person"] = getattr(self.request.user, "person", None)
         return context
 
