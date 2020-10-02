@@ -87,31 +87,6 @@ tests_no_zope = ["coverage (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0
 
 [[package]]
 category = "main"
-description = "Universal Command Line Environment for AWS."
-name = "awscli"
-optional = true
-python-versions = "*"
-version = "1.18.149"
-
-[package.dependencies]
-botocore = "1.18.8"
-docutils = ">=0.10,<0.16"
-s3transfer = ">=0.3.0,<0.4.0"
-
-[package.dependencies.PyYAML]
-python = "<3.4.0 || >=3.5.0"
-version = ">=3.10,<5.4"
-
-[package.dependencies.colorama]
-python = "<3.4.0 || >=3.5.0"
-version = ">=0.2.5,<0.4.4"
-
-[package.dependencies.rsa]
-python = "<3.4.0 || >=3.5.0"
-version = ">=3.1.2,<=4.5.0"
-
-[[package]]
-category = "main"
 description = "Modern password hashing for your software and your servers"
 name = "bcrypt"
 optional = false
@@ -132,10 +107,10 @@ description = "The AWS SDK for Python"
 name = "boto3"
 optional = true
 python-versions = "*"
-version = "1.15.8"
+version = "1.15.10"
 
 [package.dependencies]
-botocore = ">=1.18.8,<1.19.0"
+botocore = ">=1.18.10,<1.19.0"
 jmespath = ">=0.7.1,<1.0.0"
 s3transfer = ">=0.3.0,<0.4.0"
 
@@ -145,7 +120,7 @@ description = "Low-level, data-driven core of boto 3."
 name = "botocore"
 optional = true
 python-versions = "*"
-version = "1.18.8"
+version = "1.18.10"
 
 [package.dependencies]
 jmespath = ">=0.7.1,<1.0.0"
@@ -235,9 +210,9 @@ python-versions = "*"
 version = "3.0.4"
 
 [[package]]
-category = "main"
+category = "dev"
 description = "Cross-platform colored terminal text."
-marker = "python_version != \"3.4\" or sys_platform == \"win32\""
+marker = "sys_platform == \"win32\""
 name = "colorama"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
@@ -293,7 +268,7 @@ description = "A high-level Python Web framework that encourages rapid developme
 name = "django"
 optional = false
 python-versions = ">=3.6"
-version = "3.1.1"
+version = "3.1.2"
 
 [package.dependencies]
 asgiref = ">=3.2.10,<3.3.0"
@@ -404,14 +379,6 @@ libcloud = ["apache-libcloud"]
 sftp = ["paramiko"]
 
 [[package]]
-category = "main"
-description = "Docutils -- Python Documentation Utilities"
-name = "docutils"
-optional = true
-python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
-version = "0.15.2"
-
-[[package]]
 category = "dev"
 description = "A platform independent file lock."
 name = "filelock"
@@ -444,7 +411,7 @@ description = "Python Git Library"
 name = "gitpython"
 optional = false
 python-versions = ">=3.4"
-version = "3.1.8"
+version = "3.1.9"
 
 [package.dependencies]
 gitdb = ">=4.0.1,<5"
@@ -958,7 +925,7 @@ python-versions = "*"
 version = "2020.1"
 
 [[package]]
-category = "main"
+category = "dev"
 description = "YAML parser and emitter for Python"
 name = "pyyaml"
 optional = false
@@ -1012,11 +979,11 @@ rsa = ["oauthlib (>=3.0.0)"]
 [[package]]
 category = "main"
 description = "Pure-Python RSA implementation"
-marker = "python_version != \"3.4\""
+marker = "python_version >= \"3.5\""
 name = "rsa"
 optional = true
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4"
-version = "4.5"
+python-versions = ">=3.5, <4"
+version = "4.6"
 
 [package.dependencies]
 pyasn1 = ">=0.1.3"
@@ -1149,7 +1116,7 @@ description = "Virtual Python Environment builder"
 name = "virtualenv"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,>=2.7"
-version = "20.0.31"
+version = "20.0.32"
 
 [package.dependencies]
 appdirs = ">=1.4.3,<2"
@@ -1159,7 +1126,7 @@ six = ">=1.9.0,<2"
 
 [package.dependencies.importlib-metadata]
 python = "<3.8"
-version = ">=0.12,<2"
+version = ">=0.12,<3"
 
 [package.extras]
 docs = ["proselint (>=0.10.2)", "sphinx (>=3)", "sphinx-argparse (>=0.2.5)", "sphinx-rtd-theme (>=0.4.3)", "towncrier (>=19.9.0rc1)"]
@@ -1245,13 +1212,13 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["pytest (>=3.5,<3.7.3 || >3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake8", "pytest-cov", "jaraco.test (>=3.2.0)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy"]
 
 [extras]
-aws = ["awscli", "boto3", "django-amazon-ses", "django-storages"]
+aws = ["boto3", "django-amazon-ses", "django-storages"]
 cache = ["django-cacheops", "django-redis", "redis"]
 google = ["google-api-python-client", "google-auth-oauthlib"]
 pgsql = ["psycopg2"]
 
 [metadata]
-content-hash = "8e2cecc36580155cf2e210bda5ecfb41c87fa62a1f11d51e65941c3582dae7aa"
+content-hash = "25fff574035ddae1a7606fdd40d516548229e17d7185a6d13aa825abef3b2bb1"
 lock-version = "1.0"
 python-versions = "^3.7"
 
@@ -1294,10 +1261,6 @@ attrs = [
     {file = "attrs-20.2.0-py2.py3-none-any.whl", hash = "sha256:fce7fc47dfc976152e82d53ff92fa0407700c21acd20886a13777a0d20e655dc"},
     {file = "attrs-20.2.0.tar.gz", hash = "sha256:26b54ddbbb9ee1d34d5d3668dd37d6cf74990ab23c828c2888dccdceee395594"},
 ]
-awscli = [
-    {file = "awscli-1.18.149-py2.py3-none-any.whl", hash = "sha256:0ed995efae671be381f3b00408675a946705b56f88b0710eb633a348a448699d"},
-    {file = "awscli-1.18.149.tar.gz", hash = "sha256:21946b75f97c8ab3a2b12b801afd38255678cae3850d45faefc92e3032b582d0"},
-]
 bcrypt = [
     {file = "bcrypt-3.2.0-cp36-abi3-macosx_10_9_x86_64.whl", hash = "sha256:c95d4cbebffafcdd28bd28bb4e25b31c50f6da605c81ffd9ad8a3d1b2ab7b1b6"},
     {file = "bcrypt-3.2.0-cp36-abi3-manylinux1_x86_64.whl", hash = "sha256:63d4e3ff96188e5898779b6057878fecf3f11cfe6ec3b313ea09955d587ec7a7"},
@@ -1308,12 +1271,12 @@ bcrypt = [
     {file = "bcrypt-3.2.0.tar.gz", hash = "sha256:5b93c1726e50a93a033c36e5ca7fdcd29a5c7395af50a6892f5d9e7c6cfbfb29"},
 ]
 boto3 = [
-    {file = "boto3-1.15.8-py2.py3-none-any.whl", hash = "sha256:348cddfd56be6c8b759544f99d20d633cc6a65d346651700ad8ac93a5214c032"},
-    {file = "boto3-1.15.8.tar.gz", hash = "sha256:c4ccd1f260660603f965bcc145de87e09dd1229040784fe119cd08caeb00dbe9"},
+    {file = "boto3-1.15.10-py2.py3-none-any.whl", hash = "sha256:b12e251dc2adeb020118f1f19f50929359a9586a23012d6a890f8357b9b84e5c"},
+    {file = "boto3-1.15.10.tar.gz", hash = "sha256:04ce4665dee58c89b0eee784bbb480fb4346a7baeb1d5611f676ae21fd3f553a"},
 ]
 botocore = [
-    {file = "botocore-1.18.8-py2.py3-none-any.whl", hash = "sha256:53a778e6b715ad2ae39bf98e088962e8d524133fb458d83f080964254adc9885"},
-    {file = "botocore-1.18.8.tar.gz", hash = "sha256:07b399997d8050d3ed1150d4d657b46558999f75246eb5b02cee78b9798b3bd5"},
+    {file = "botocore-1.18.10-py2.py3-none-any.whl", hash = "sha256:5e5bb69e5a5f8a992bd994c1faa302b44d8ba97860e042794e5a8f67e9de4f2a"},
+    {file = "botocore-1.18.10.tar.gz", hash = "sha256:33083dc87ba7b4dae8ecd4b019896a5e5cb2626808f52450b6a79def8a54023b"},
 ]
 cachetools = [
     {file = "cachetools-4.1.1-py3-none-any.whl", hash = "sha256:513d4ff98dd27f85743a8dc0e92f55ddb1b49e060c2d5961512855cda2c01a98"},
@@ -1429,8 +1392,8 @@ distlib = [
     {file = "distlib-0.3.1.zip", hash = "sha256:edf6116872c863e1aa9d5bb7cb5e05a022c519a4594dc703843343a9ddd9bff1"},
 ]
 django = [
-    {file = "Django-3.1.1-py3-none-any.whl", hash = "sha256:b5fbb818e751f660fa2d576d9f40c34a4c615c8b48dd383f5216e609f383371f"},
-    {file = "Django-3.1.1.tar.gz", hash = "sha256:59c8125ca873ed3bdae9c12b146fbbd6ed8d0f743e4cf5f5817af50c51f1fc2f"},
+    {file = "Django-3.1.2-py3-none-any.whl", hash = "sha256:c93c28ccf1d094cbd00d860e83128a39e45d2c571d3b54361713aaaf9a94cac4"},
+    {file = "Django-3.1.2.tar.gz", hash = "sha256:a2127ad0150ec6966655bedf15dbbff9697cc86d61653db2da1afa506c0b04cc"},
 ]
 django-amazon-ses = [
     {file = "django-amazon-ses-4.0.0.tar.gz", hash = "sha256:d6c86d0d379ed675592e2538070f4d66cb143664e387b9c48bbb4b69f62937ea"},
@@ -1463,11 +1426,6 @@ django-storages = [
     {file = "django-storages-1.10.1.tar.gz", hash = "sha256:652275ab7844538c462b62810276c0244866f345878256a9e0e86f5b1283ae18"},
     {file = "django_storages-1.10.1-py3-none-any.whl", hash = "sha256:12de8fb2605b9b57bfaf54b075280d7cbb3b3ee1ca4bc9b9add147af87fe3a2c"},
 ]
-docutils = [
-    {file = "docutils-0.15.2-py2-none-any.whl", hash = "sha256:9e4d7ecfc600058e07ba661411a2b7de2fd0fafa17d1a7f7361cd47b1175c827"},
-    {file = "docutils-0.15.2-py3-none-any.whl", hash = "sha256:6c4f696463b79f1fb8ba0c594b63840ebd41f059e92b31957c46b74a4599b6d0"},
-    {file = "docutils-0.15.2.tar.gz", hash = "sha256:a2aeea129088da402665e92e0b25b04b073c04b2dce4ab65caaa38b7ce2e1a99"},
-]
 filelock = [
     {file = "filelock-3.0.12-py3-none-any.whl", hash = "sha256:929b7d63ec5b7d6b71b0fa5ac14e030b3f70b75747cef1b10da9b879fef15836"},
     {file = "filelock-3.0.12.tar.gz", hash = "sha256:18d82244ee114f543149c66a6e0c14e9c4f8a1044b5cdaadd0f82159d6a6ff59"},
@@ -1481,8 +1439,8 @@ gitdb = [
     {file = "gitdb-4.0.5.tar.gz", hash = "sha256:c9e1f2d0db7ddb9a704c2a0217be31214e91a4fe1dea1efad19ae42ba0c285c9"},
 ]
 gitpython = [
-    {file = "GitPython-3.1.8-py3-none-any.whl", hash = "sha256:1858f4fd089abe92ae465f01d5aaaf55e937eca565fb2c1fce35a51b5f85c910"},
-    {file = "GitPython-3.1.8.tar.gz", hash = "sha256:080bf8e2cf1a2b907634761c2eaefbe83b69930c94c66ad11b65a8252959f912"},
+    {file = "GitPython-3.1.9-py3-none-any.whl", hash = "sha256:138016d519bf4dd55b22c682c904ed2fd0235c3612b2f8f65ce218ff358deed8"},
+    {file = "GitPython-3.1.9.tar.gz", hash = "sha256:a03f728b49ce9597a6655793207c6ab0da55519368ff5961e4a74ae475b9fa8e"},
 ]
 google-api-core = [
     {file = "google-api-core-1.22.2.tar.gz", hash = "sha256:779107f17e0fef8169c5239d56a8fbff03f9f72a3893c0c9e5842ec29dfedd54"},
@@ -1784,8 +1742,8 @@ requests-oauthlib = [
     {file = "requests_oauthlib-1.3.0-py3.7.egg", hash = "sha256:fa6c47b933f01060936d87ae9327fead68768b69c6c9ea2109c48be30f2d4dbc"},
 ]
 rsa = [
-    {file = "rsa-4.5-py2.py3-none-any.whl", hash = "sha256:35c5b5f6675ac02120036d97cf96f1fde4d49670543db2822ba5015e21a18032"},
-    {file = "rsa-4.5.tar.gz", hash = "sha256:4d409f5a7d78530a4a2062574c7bd80311bc3af29b364e293aa9b03eea77714f"},
+    {file = "rsa-4.6-py3-none-any.whl", hash = "sha256:6166864e23d6b5195a5cfed6cd9fed0fe774e226d8f854fcb23b7bbef0350233"},
+    {file = "rsa-4.6.tar.gz", hash = "sha256:109ea5a66744dd859bf16fe904b8d8b627adafb9408753161e766a92e7d681fa"},
 ]
 s3transfer = [
     {file = "s3transfer-0.3.3-py2.py3-none-any.whl", hash = "sha256:2482b4259524933a022d59da830f51bd746db62f047d6eb213f2f8855dcb8a13"},
@@ -1860,8 +1818,8 @@ urllib3 = [
     {file = "urllib3-1.25.10.tar.gz", hash = "sha256:91056c15fa70756691db97756772bb1eb9678fa585d9184f24534b100dc60f4a"},
 ]
 virtualenv = [
-    {file = "virtualenv-20.0.31-py2.py3-none-any.whl", hash = "sha256:e0305af10299a7fb0d69393d8f04cb2965dda9351140d11ac8db4e5e3970451b"},
-    {file = "virtualenv-20.0.31.tar.gz", hash = "sha256:43add625c53c596d38f971a465553f6318decc39d98512bc100fa1b1e839c8dc"},
+    {file = "virtualenv-20.0.32-py2.py3-none-any.whl", hash = "sha256:9160a8f6196afcb8bb91405b5362651f302ee8e810fc471f5f9ce9a06b070298"},
+    {file = "virtualenv-20.0.32.tar.gz", hash = "sha256:3d427459dfe5ec3241a6bad046b1d10c0e445940e013c81946458987c7c7e255"},
 ]
 weasyprint = [
     {file = "WeasyPrint-51-py3-none-any.whl", hash = "sha256:469974f6e74b1eef71dc56a9b80cc17621f319234d2a4ab656ddd0fd9e66c27f"},
