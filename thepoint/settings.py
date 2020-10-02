@@ -131,11 +131,6 @@ ROBOTS_CACHE_TIMEOUT = 60 * 60 * 24
 
 CACHES = {
     "default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"},
-    "template_fragments": {
-        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
-        "KEY_PREFIX": "template_fragments",
-    },
-    "sessions": {"BACKEND": "django.core.cache.backends.dummy.DummyCache", "KEY_PREFIX": "sessions"},
 }
 for cache_var in (
     "BACKEND",
@@ -158,13 +153,10 @@ for cache_var in (
 
             value = json.loads(value)
         CACHES["default"][cache_var] = value
-        if cache_var in ("BACKEND", "LOCATION"):
-            CACHES["template_fragments"][cache_var] = value
-            CACHES["sessions"][cache_var] = value
 
-if "dummy" not in CACHES["sessions"]["BACKEND"]:
+if "dummy" not in CACHES["default"]["BACKEND"]:
     SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-    SESSION_CACHE_ALIAS = "sessions"
+    SESSION_CACHE_ALIAS = "default"
 
 CACHEOPS_DEFAULTS = {
     "timeout": CACHES["default"].get("TIMEOUT", 60 * 60 * 24),
