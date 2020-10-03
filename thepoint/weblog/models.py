@@ -168,13 +168,9 @@ class Attachment(models.Model):
             return self.extension.lstrip(".").upper()
         return "Unknown"
 
-    def markdown_link(self, slug=False):
+    def markdown_link(self):
         if self.description:
             description = ' "%s"' % self.description
         else:
             description = ""
-        return "[%s]: %s%s" % (
-            self.slug if slug else self.title,
-            reverse("weblog:attachment", kwargs={"pk": self.id}),
-            description,
-        )
+        return "[%s]: %s%s" % (self.slug, reverse("weblog:attachment", kwargs={"pk": self.id}), description)
