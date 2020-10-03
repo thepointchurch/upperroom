@@ -632,6 +632,10 @@ div.splash > h3 {
         font-weight: 300;
     }
 
+    p, blockquote, ul, ol, dl {
+        text-align: left;
+    }
+
     div.family {
         flex-direction: column;
     }
