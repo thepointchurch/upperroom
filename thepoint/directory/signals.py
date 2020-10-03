@@ -90,7 +90,6 @@ def add_user_to_member_group(sender, instance, created, **kwargs):  # pylint: di
         except Group.DoesNotExist:
             pass
 
-    print("should clear navbar user cache for %r" % instance)
     try:
         cache = caches["template_fragments"]
     except InvalidCacheBackendError:
