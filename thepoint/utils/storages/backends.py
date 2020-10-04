@@ -3,7 +3,7 @@
 from urllib.parse import urlsplit
 
 from django.conf import settings
-from storages.backends.s3boto3 import S3Boto3Storage
+from storages.backends.s3boto3 import S3Boto3Storage  # pylint: disable=import-error
 
 _STATIC_CUSTOM_DOMAIN = None
 if "." in settings.STATICFILES_BUCKET:
@@ -14,7 +14,7 @@ if "." in settings.MEDIAFILES_BUCKET:
     _MEDIA_CUSTOM_DOMAIN = settings.MEDIAFILES_BUCKET
 
 
-class S3StaticStorage(S3Boto3Storage):  # pylint: disable=abstract-method
+class S3StaticStorage(S3Boto3Storage):  # pylint: disable=abstract-method,too-few-public-methods
     def get_default_settings(self):
         defaults = super().get_default_settings()
         defaults["bucket_name"] = settings.STATICFILES_BUCKET
@@ -25,13 +25,14 @@ class S3StaticStorage(S3Boto3Storage):  # pylint: disable=abstract-method
         return defaults
 
 
-class S3Boto3StorageOffload(S3Boto3Storage):  # pylint: disable=abstract-method
+class S3Boto3StorageOffload(S3Boto3Storage):  # pylint: disable=abstract-method,too-few-public-methods
     try:
         offload = settings.MEDIAFILES_OFFLOAD
     except (AttributeError, NameError):
         offload = False
 
     def url(self, name, parameters=None, expire=None, http_method=None):
+        _, _ = expire, http_method
         # Generate the S3 offload URL but enforce our protocol and domain
         name = self._normalize_name(self._clean_name(name))
         params = parameters.copy() if parameters else {}

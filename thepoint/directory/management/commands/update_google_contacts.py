@@ -6,9 +6,9 @@ from pathlib import Path
 
 from django.core.management.base import BaseCommand
 from django.utils.translation import gettext_lazy as _
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
+from google.oauth2.credentials import Credentials  # pylint: disable=import-error
+from google_auth_oauthlib.flow import InstalledAppFlow  # pylint: disable=import-error
+from googleapiclient.discovery import build  # pylint: disable=import-error
 
 from ...models import Person
 
