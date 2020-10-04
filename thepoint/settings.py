@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     "django.contrib.messages.apps.MessagesConfig",
     "django.contrib.sitemaps.apps.SiteMapsConfig",
     "django.contrib.staticfiles.apps.StaticFilesConfig",
-    "cacheops",
 ]
 
 MIDDLEWARE = [
@@ -185,6 +184,8 @@ if "redis" in CACHES["default"].get("LOCATION", ""):
     CACHEOPS_ENABLED = bool(os.getenv("CACHEOPS_ENABLED", False))
 else:
     CACHEOPS_ENABLED = False
+if CACHEOPS_ENABLED:
+    INSTALLED_APPS.append("cacheops")
 CACHEOPS_DEGRADE_ON_FAILURE = True
 DJANGO_REDIS_IGNORE_EXCEPTIONS = True
 DJANGO_REDIS_LOG_IGNORED_EXCEPTIONS = True

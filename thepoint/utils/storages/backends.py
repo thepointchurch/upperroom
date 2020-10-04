@@ -9,13 +9,20 @@ _STATIC_CUSTOM_DOMAIN = None
 if "." in settings.STATICFILES_BUCKET:
     _static_custom_domain = settings.STATICFILES_BUCKET
 
-S3StaticStorage = lambda: S3Boto3Storage(  # NOQA: E731
-    bucket_name=settings.STATICFILES_BUCKET,
-    querystring_auth=False,
-    secure_urls=False,
-    url_protocol="",
-    custom_domain=_STATIC_CUSTOM_DOMAIN,
-)
+_MEDIA_CUSTOM_DOMAIN = None
+if "." in settings.MEDIAFILES_BUCKET:
+    _MEDIA_CUSTOM_DOMAIN = settings.MEDIAFILES_BUCKET
+
+
+class S3StaticStorage(S3Boto3Storage):  # pylint: disable=abstract-method
+    def get_default_settings(self):
+        defaults = super().get_default_settings()
+        defaults["bucket_name"] = settings.STATICFILES_BUCKET
+        defaults["querystring_auth"] = False
+        defaults["secure_urls"] = False
+        defaults["url_protocol"] = ""
+        defaults["custom_domain"] = _STATIC_CUSTOM_DOMAIN
+        return defaults
 
 
 class S3Boto3StorageOffload(S3Boto3Storage):  # pylint: disable=abstract-method
@@ -43,16 +50,14 @@ class S3Boto3StorageOffload(S3Boto3Storage):  # pylint: disable=abstract-method
         return "%s//%s%s?%s" % (self.url_protocol, domain, url_path, url.query)
 
 
-_MEDIA_CUSTOM_DOMAIN = None
-if "." in settings.MEDIAFILES_BUCKET:
-    _MEDIA_CUSTOM_DOMAIN = settings.MEDIAFILES_BUCKET
-
-S3MediaStorage = lambda: S3Boto3StorageOffload(  # NOQA: E731
-    bucket_name=settings.MEDIAFILES_BUCKET,
-    querystring_auth=True,
-    querystring_expire=300,
-    default_acl="private",
-    secure_urls=False,
-    url_protocol="",
-    custom_domain=_MEDIA_CUSTOM_DOMAIN,
-)
+class S3MediaStorage(S3Boto3StorageOffload):  # pylint: disable=abstract-method
+    def get_default_settings(self):
+        defaults = super().get_default_settings()
+        defaults["bucket_name"] = settings.MEDIAFILES_BUCKET
+        defaults["querystring_auth"] = True
+        defaults["querystring_expire"] = 300
+        defaults["default_acl"] = "private"
+        defaults["secure_urls"] = False
+        defaults["url_protocol"] = ""
+        defaults["custom_domain"] = _MEDIA_CUSTOM_DOMAIN
+        return defaults

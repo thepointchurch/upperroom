@@ -4,33 +4,17 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.uploadedfile import UploadedFile
 from django.db.models.signals import post_delete, post_save, pre_delete, pre_save
 from django.dispatch import receiver
-from storages.backends.s3boto3 import S3Boto3StorageFile
 
+from ..utils.storages import delete_s3_file, is_s3_file, is_s3_file_public, set_s3_file_acl
 from .models import Attachment, Resource, ResourceFeed, Tag
-
-
-def is_s3_file_public(file_object):
-    for grant in file_object.file.obj.Acl().grants:
-        if (
-            grant["Permission"] == "READ"
-            and grant["Grantee"]["URI"] == "http://acs.amazonaws.com/groups/global/AllUsers"
-        ):
-            return True
-    return False
-
-
-def set_s3_file_acl(file_object, acl):
-    file_object.file.obj.Acl().put(ACL=acl)
 
 
 def delete_file(file_object):
     if hasattr(file_object, "storage"):
-        try:
-            if hasattr(file_object, "path"):
-                file_object.storage.delete(file_object.path)
-        except NotImplementedError:
-            # S3 storage uses `name`, not `path`
-            file_object.storage.delete(file_object.name)
+        if is_s3_file(file_object):
+            delete_s3_file(file_object)
+        elif hasattr(file_object, "path"):
+            file_object.storage.delete(file_object.path)
 
 
 def clear_navbar_cache():
@@ -55,7 +39,7 @@ def resource_post_save(sender, instance, **kwargs):
     if kwargs.get("raw"):
         return
     for attachment in instance.attachments.all():
-        if isinstance(attachment.file.file, S3Boto3StorageFile):
+        if is_s3_file(attachment.file):
             was_private = getattr(instance, "was_private", None)
             if was_private is not None and was_private != instance.is_private:
                 if is_s3_file_public(attachment.file):
@@ -115,11 +99,7 @@ def attachment_post_save(sender, instance, **kwargs):
     _ = sender
     if kwargs.get("raw"):
         return
-    if (
-        getattr(instance, "file_new", False)
-        and not instance.resource.is_private
-        and isinstance(instance.file.file, S3Boto3StorageFile)
-    ):
+    if getattr(instance, "file_new", False) and not instance.resource.is_private and is_s3_file(instance.file):
         set_s3_file_acl(instance.file, "public-read")
 
 
@@ -191,7 +171,7 @@ def feed_post_save(sender, instance, **kwargs):
     _ = sender
     if kwargs.get("raw"):
         return
-    if instance.artwork and isinstance(instance.artwork.file, S3Boto3StorageFile):
+    if instance.artwork and is_s3_file(instance.artwork):
         if getattr(instance, "artwork_new", False):
             if not is_s3_file_public(instance.artwork):
                 set_s3_file_acl(instance.artwork, "public-read")
