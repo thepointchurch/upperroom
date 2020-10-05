@@ -7,3 +7,4 @@ icon.*
 **/tests.py
 **/tests/
 version.py
+data/

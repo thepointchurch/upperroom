@@ -85,10 +85,12 @@ DEFAULT_FROM_EMAIL = WEBMASTER_EMAIL
 LOGIN_URL = "/members/login"
 LOGIN_REDIRECT_URL = "/members/"
 
-MEDIA_ROOT = Path(".") / "media"
+DATA_ROOT = Path(".") / "data"
+
+MEDIA_ROOT = DATA_ROOT / "media"
 
 STATIC_URL = os.getenv("STATIC_URL", "/static/")
-STATIC_ROOT = Path(".") / "static"
+STATIC_ROOT = DATA_ROOT / "static"
 STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",

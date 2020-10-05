@@ -41,7 +41,8 @@ RUN apt-get -y update \
         netcat-traditional \
         postgresql-client \
     && apt-get clean && rm -rf /var/lib/apt/lists/* \
-    && useradd -md /django -s /bin/bash -u 8000 django
+    && useradd -md /django -s /bin/bash -u 8000 django \
+    && mkdir -p /django/data && chown 8000:8000 /django/data
 COPY --from=compile-image /django/.venv /django/.venv
 COPY --from=font-image /usr/share/fonts/truetype/msttcorefonts /usr/local/share/fonts /usr/local/share/fonts/
 COPY entrypoint.sh /entrypoint.sh
@@ -53,6 +54,7 @@ USER django:django
 WORKDIR /django
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["gunicorn", "-b", "0.0.0.0:8000", "--config", "/etc/gunicorn.py", "thepoint.wsgi"]
+VOLUME /django/data
 
 HEALTHCHECK --interval=5m --timeout=3s CMD curl -fsS -o /dev/null http://localhost:8000/ || exit 1
 
