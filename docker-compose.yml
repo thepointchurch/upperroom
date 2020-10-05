@@ -1,0 +1,76 @@
+version: '3.1'
+services:
+  db:
+    image: postgres:12-alpine
+    container_name: "db_dev"
+    environment:
+      POSTGRES_USER: thepoint
+      POSTGRES_PASSWORD: "12345678"
+    restart: unless-stopped
+    volumes:
+      - "/data/postgres_dev:/var/lib/postgresql/data"
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_READ_SEARCH
+      - FOWNER
+      - SETGID
+      - SETUID
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /run/postgresql
+    networks:
+      backend:
+  django:
+    image: "thepoint:latest"
+    container_name: "django_dev"
+    environment:
+      SECRET_KEY: "12345678"
+      GUNICORN_CMD_ARGS: "--workers=1 --threads=2"
+      DB_ENGINE: "django.db.backends.postgresql"
+      DB_NAME: thepoint
+      DB_USER: thepoint
+      DB_PASSWORD: "12345678"
+      DB_HOST: db
+      DB_PORT: 5432
+      DEBUG: "'True'"
+      VHOST: "localhost docker"
+    restart: unless-stopped
+    volumes:
+      - "/data/django_dev5:/django/data"
+    cap_drop:
+      - ALL
+    depends_on:
+      - db
+    networks:
+      backend:
+      frontend:
+        aliases:
+          - "django_dev"
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - 80:80
+    volumes:
+      - /data/nginx.conf:/etc/nginx/nginx.conf:ro
+      - "/data/django_dev:/data"
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - NET_BIND_SERVICE
+      - SETGID
+      - SETUID
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx
+      - /docker-entrypoint.d
+    networks:
+      frontend:
+networks:
+  backend:
+  frontend:
