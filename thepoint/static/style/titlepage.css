@@ -172,7 +172,7 @@ div.splash p {
     }
 }
 
-@media screen and (max-width: 600px and min-height: 750px) {
+@media screen and (max-width: 600px) and (min-height: 750px) {
     div#header {
         height: 75vw;
     }

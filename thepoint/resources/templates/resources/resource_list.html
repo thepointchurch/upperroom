@@ -1,0 +1,29 @@
+{% load markup %}
+{% load smartquote %}
+<div id="index">
+{% for resource in resource_list %}
+<h3><a href="{% url "resources:detail" resource.slug %}">{{ resource.title|smartquote }}</a></h3>
+{% if tag and tag.show_date or resource.show_date or resource.author and resource.show_author %}<p class="metadata">{% if resource.author and resource.show_author %}{{ resource.author }}{% if tag and tag.show_date or resource.show_date %} on {% endif %}{% endif %}{% if tag and tag.show_date or resource.show_date %}{{ resource.published|date:"j/n/Y" }}{% endif %}</p>{% endif %}
+{% if resource.description %}{{ resource.description|markdown:"safe,smarty" }}{% endif %}
+<p class="links">[
+{% if resource.has_body %}<a href="{% url "resources:detail" resource.slug %}">read</a>{% endif %}
+{% for attachment in resource.alternates %}
+{% if resource.has_body or not forloop.first %}| {% endif %}<a href="{% url 'resources:attachment' attachment.id %}">{{ attachment.format }}</a>
+{% endfor %}
+]</p>
+{% empty %}
+<p>There were no resources found.</p>
+{% endfor %}
+
+{% if is_paginated %}
+<p class="links">[
+{% if page_obj.has_previous %}
+<a href="?page={{ page_obj.previous_page_number }}">Previous</a> |
+{% endif %}
+Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+{% if page_obj.has_next %}
+| <a href="?page={{ page_obj.next_page_number }}">Next</a>
+{% endif %}
+]</p>
+{% endif %}
+</div>

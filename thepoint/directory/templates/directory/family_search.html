@@ -1,0 +1,14 @@
+{% extends "directory/base.html" %}
+
+{% block title %}{{ block.super }}: Search {{ search_type }}: {{ search_query }}{% endblock title %}
+
+{% block heading %}{{ block.super }}: Search{% endblock heading %}
+
+{% block content %}
+{% include "directory/search_form.html" %}
+{% for family in family_list %}
+{% include "directory/family.html" %}
+{% empty %}
+<p>Nothing found for query string "{{search_query}}".</p>
+{% endfor %}
+{% endblock content %}

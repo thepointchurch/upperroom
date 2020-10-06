@@ -1,0 +1,95 @@
+p#author {
+    text-align: right;
+}
+
+p.option {
+    color: rgb(150,150,150);
+    padding-left: 2rem;
+}
+
+p.intro {
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    padding: 0.5rem;
+    text-align: justify;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+p.pull {
+    padding: 1rem;
+    margin: 1.5rem;
+    background: rgb(225,225,225);
+    background: rgba(0,0,0,0.1);
+}
+
+div#body > p, div#body > blockquote, div#body > ul, div#body > ol, div#body > dl, div#body > form, div#body > table {
+    margin: 2rem 5rem;
+}
+
+table > p, table > blockquote, table > ul, table > ol, table > dl, table > form {
+    margin: 1rem;
+}
+
+div#index > h3 {
+    margin: 2rem;
+    margin-bottom: inherit;
+}
+
+div#index > h3:first-child {
+    margin-top: 0;
+}
+
+div#index > h3 > a:hover {
+    text-decoration: none;
+}
+
+div#index > p {
+    margin: 1rem 5rem;
+}
+
+div#index > p.metadata, div#index > p.links {
+    margin-top: 0.2rem;
+    margin-bottom: 0;
+}
+
+div#index > p.links {
+    margin-top: 0.8rem;
+    margin-bottom: 0.8rem;
+}
+
+@media screen and (max-width: 640px) {
+    div#body {
+        padding: 0;
+    }
+
+    div#body > h3 {
+        margin-left: 0.8rem;
+        margin-right: 0.8rem;
+    }
+
+    div#body > p, div#body > blockquote, div#body > ul, div#body > ol, div#body > dl, div#body > form, div#body > table {
+        margin: 0.8rem;
+    }
+
+    div#index > h3 {
+        margin-left: 0.8rem;
+        margin-right: 0.8rem;
+    }
+
+    div#index > p {
+        margin-left: 0.8rem;
+        margin-right: 0.8rem;
+    }
+}
+
+@media print {
+    div#body > p, div#body > blockquote, div#body > ul, div#body > ol, div#body > dl, div#body > form, div#body > table {
+        margin: 16pt 0;
+    }
+
+    div#body > p#author {
+        font-size: 9pt;
+        margin-top: 0;
+    }
+}

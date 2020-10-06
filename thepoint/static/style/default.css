@@ -233,6 +233,21 @@ img.right {
     float: right;
 }
 
+figure {
+    margin: 0.4rem;
+    max-width: 100%;
+}
+figure > img {
+    display: block;
+    margin: 0 auto;
+}
+figure > figcaption {
+    margin-top: 0.5em;
+    font-size: 0.8rem;
+    color: rgb(85,85,85);
+    text-align: center;
+}
+
 div#navbar {
     display: block;
     margin: 0.3rem 0;
@@ -284,7 +299,7 @@ div#navbar ul li a:hover:before {
 div#navbar-member {
     color: white;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect width='1' height='1' fill='black' opacity='0.8'/%3E%3C/svg%3E");
-    background-size: 100px 100px;
+    background-size: 2000px 2000px;
     display: none;
     position: absolute;
     top: 30px;
@@ -330,7 +345,7 @@ div#navbar-member ul a {
 
 div#navbar-member ul li a:hover {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect width='1' height='1' fill='rgb(170,50,0)' opacity='0.8'/%3E%3C/svg%3E");
-    background-size: 100px 100px;
+    background-size: 2000px 2000px;
 }
 
 input#navbar-trigger, input#navbar-member-trigger {
@@ -356,7 +371,6 @@ label[for="navbar-member-trigger"], p#navbar-member-trigger {
     padding-right: 35px;
     font-weight: 600;
     line-height: 30px;
-    vertical-align: middle;
     display: block;
 }
 
@@ -618,6 +632,10 @@ div.splash > h3 {
         font-weight: 300;
     }
 
+    p, blockquote, ul, ol, dl {
+        text-align: left;
+    }
+
     div.family {
         flex-direction: column;
     }
@@ -640,7 +658,7 @@ div.splash > h3 {
         height: 30px;
         top: 170px;
         right: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300px' height='30px' viewBox='0 0 300 30'%3E%3Crect width='300' height='30' fill='black' opacity='0.8'/%3E%3Cpath d='M274,4 L296,4 M274,15 L296,15 M274,26 L296,26' stroke-width='6' stroke-linecap='round' stroke='white'/%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300px' height='30px' viewBox='0 0 300 30'%3E%3Crect width='300' height='30' fill='black' opacity='0.8'/%3E%3Cpath d='M274,4 L296,4 M274,15 L296,15 M274,26 L296,26' stroke-width='6' stroke-linecap='round' stroke='white'/%3E%3C/svg%3E");
         background-position: right;
         background-repeat: no-repeat;
         color: white;
@@ -649,7 +667,6 @@ div.splash > h3 {
         padding-right: 35px;
         font-weight: 600;
         line-height: 30px;
-        vertical-align: middle;
         display: block;
     }
 
@@ -658,7 +675,7 @@ div.splash > h3 {
     }
 
     input#navbar-trigger:checked + label[for="navbar-trigger"] {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300px' height='30px' viewBox='0 0 300 30'%3E%3Crect width='300' height='30' fill='black' opacity='0.8'/%3E%3Cpath d='M296,4 L274,26 M274,4 L296,26' stroke-width='6' stroke-linecap='round' stroke='white'/%3E%3C/svg%3E");
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300px' height='30px' viewBox='0 0 300 30'%3E%3Crect width='300' height='30' fill='black' opacity='0.8'/%3E%3Cpath d='M296,4 L274,26 M274,4 L296,26' stroke-width='6' stroke-linecap='round' stroke='white'/%3E%3C/svg%3E");
     }
 }
 

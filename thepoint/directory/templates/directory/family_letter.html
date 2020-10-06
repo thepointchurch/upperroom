@@ -1,0 +1,15 @@
+{% extends "directory/base.html" %}
+
+{% block title %}{{ block.super }}: {{ letter|upper }}{% endblock title %}
+
+{% block heading %}{{ block.super }}: {{ letter|upper }}{% endblock heading %}
+
+{% block content %}
+
+{% for family in family_list %}
+{% include "directory/family.html" %}
+{% empty %}
+<p>Nothing found.</p>
+{% endfor %}
+
+{% endblock content %}

@@ -1,32 +1,55 @@
-import subprocess
+import sys
+from pathlib import Path
+
+import semantic_version
+from git import GitError, Repo
 
 
-def get_version():
+def get_version(check_migrations=False):
     try:
-        branch = subprocess.check_output(('git', 'rev-parse', '--abbrev-ref', 'HEAD')).strip().decode()
-        long_version = subprocess.check_output(('git', 'describe', '--tags', '--long')).strip().decode()
-        version, rev, commit = long_version.rsplit('-', 2)
-        if rev == '0':
-            return version
-        if branch.startswith('master'):
-            if version.count('.') == 1:
-                return version + '.0-r' + rev
-            else:
-                return version + '-r' + rev
+        repo = Repo()
+
+        version, rev, commit = repo.git.describe("--tags", "--long").rsplit("-", 2)
+
+        if rev == "0":
+            return str(semantic_version.Version(version))
+
+        if repo.active_branch.name.startswith("master"):
+            local = ""
         else:
-            return long_version
-    except (ImportError, OSError, subprocess.CalledProcessError):
-        import sys
-        sys.path.append('.')
-        import thepoint
+            local = "+" + repo.active_branch.name + "." + commit
+        if version.count(".") == 1:
+            version += ".0"
+        version = semantic_version.Version(version + "-r" + rev + local)
+
+        if check_migrations and any(
+            map(
+                lambda p: "migrations" in Path(p.a_path).parts,
+                sorted(repo.tags, key=lambda t: t.commit.committed_date)[-1].commit.diff().iter_change_type("A"),
+            )
+        ):
+            print("Migrations added, so a minor release is required: %s" % version.next_minor(), file=sys.stderr)
+
+        return str(version)
+    except GitError:
+        sys.path.append(".")
+
+        import thepoint  # pylint: disable=import-outside-toplevel
+
         return thepoint.__version__
 
 
-def update_version():
-    version = get_version()
-    subprocess.check_call(('sed', '-i', "s/^__version__ = .*$/__version__ = '%s'/" % version, 'thepoint/__init__.py'))
-    return version
+def update_version(version=None):
+    from tomlkit import dumps, loads  # pylint: disable=import-outside-toplevel
+
+    with open("pyproject.toml") as config_file:
+        config = loads(config_file.read())
+    config["tool"]["poetry"]["version"] = version or get_version()
+    with open("pyproject.toml", "w") as config_file:
+        config_file.write(dumps(config))
+
+    return config["tool"]["poetry"]["version"]
 
 
-if __name__ == '__main__':
-    print(get_version())
+if __name__ == "__main__":
+    print(get_version(check_migrations="--check-migrations" in sys.argv))

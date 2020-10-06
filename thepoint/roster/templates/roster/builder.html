@@ -1,0 +1,56 @@
+{% extends "roster/base.html" %}
+{% load i18n %}
+
+{% block title %}{{ block.super }}: Builder{% endblock title %}
+
+{% block heading %}Roster Builder{% endblock heading %}
+
+{% block content %}
+{% if builder_template %}
+<form method="get" style="margin: 0; padding: 0;">
+<p>Using the
+<select name="template" onchange="this.form.submit()">
+{% for template in builder_templates %}
+<option value="{{ template.id }}"{% if builder_template.id == template.id %} selected{% endif %}>{{ template.name }}</option>
+{% endfor %}
+</select>
+template. <input type="checkbox" name="by_name" value="1" title="{% translate "Sort by name" %}" style="margin: 0 1em;" onchange="this.form.submit()"{% if not sort_by_age %} checked{% endif %}></p>
+</form>
+
+
+<form method="post">
+{% csrf_token %}
+<table>
+{{ form.as_table }}
+</table>
+{{ roles.management_form }}
+<table>
+    {% for t in roles %}
+        {% if forloop.first %}
+        <tr><th/>
+            {% for field in t.visible_fields %}
+            <th>{{ field.label }}</th>
+            {% endfor %}
+        </tr>
+        {% endif %}
+        <tr><th>{{ t.role_type }}</th>
+        {% for field in t.visible_fields %}
+            <td>
+            {% if forloop.first %}{% for hidden in t.hidden_fields %}{{ hidden }}{% endfor %}{% endif %}
+            {{ field.errors.as_ul }}
+            {{ field }}
+            </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
+<input type="submit" value="Add">
+</form>
+
+
+
+
+{% else %}
+{% include "roster/builder_templates.html" %}
+{% endif %}
+{% endblock content %}

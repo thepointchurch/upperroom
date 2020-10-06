@@ -4,11 +4,12 @@
 {% load static %}
 {% load smartquote %}
 {% load markup %}
+{% load cache %}
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
-{% if site.extra.description %}<meta name="description" content="{{ site.extra.description }}" />{% endif %}
-{% if site.extra.keywords.all %}<meta name="keywords" content="{{ site.extra.keywords.all|join:', ' }}" />{% endif %}
+{% if extended_site and extended_site.description %}<meta name="description" content="{{ extended_site.description }}" />{% endif %}
+{% if extended_site and extended_site.keywords.all %}<meta name="keywords" content="{{ extended_site.keywords.all|join:', ' }}" />{% endif %}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{% block title %}{{ site.name }}{% endblock title %}</title>
 <link rel="stylesheet" type="text/css" href="{% static 'style/default.css' %}" title="Default" />
@@ -30,13 +31,13 @@
 <div id="body">
 {% include "site/messages.html" %}
 
-{% if splashes_above %}{% include "splash/splash.html" with splashes=splashes_above %}{% endif %}
+{% cache None splashes_above request.path %}{% if splashes_above %}{% include "splash/splash.html" with splashes=splashes_above %}{% endif %}{% endcache %}
 
 <h2>{% block heading %}{% endblock heading %}</h2>
 
 {% block content %}{% endblock content %}
 
-{% if splashes_below %}{% include "splash/splash.html" with splashes=splashes_below %}{% endif %}
+{% cache None splashes_below request.path %}{% if splashes_below %}{% include "splash/splash.html" with splashes=splashes_below %}{% endif %}{% endcache %}
 </div>
 
 {% endblock body %}

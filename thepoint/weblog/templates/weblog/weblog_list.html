@@ -1,0 +1,29 @@
+{% load markup %}
+{% load smartquote %}
+<div id="index">
+{% for entry in weblogentry_list %}
+<h3><a href="{% url "weblog:detail" entry.created.year entry.created.month entry.slug %}">{{ entry.title|smartquote }}</a></h3>
+{% if entry.show_date or entry.author and entry.show_author %}<p class="metadata">{% if entry.author and entry.show_author %}{{ entry.author }}{% if entry.show_date %} on {% endif %}{% endif %}{% if entry.show_date %}{{ entry.published|date:"j/n/Y" }}{% endif %}</p>{% endif %}
+{% if entry.description %}{{ entry.description_attach|markdown:"safe,smarty" }}{% endif %}
+{% if entry.has_body or entry.alternates %}<p class="links">[
+{% if entry.has_body %}<a href="{% url "weblog:detail" entry.created.year entry.created.month entry.slug %}">read</a>{% endif %}
+{% for attachment in entry.alternates %}
+{% if entry.has_body or not forloop.first %}| {% endif %}<a href="{% url 'weblog:attachment' attachment.id %}">{{ attachment.format }}</a>
+{% endfor %}
+]</p>{% endif %}
+{% empty %}
+<p>There were no items found.</p>
+{% endfor %}
+
+{% if is_paginated %}
+<p class="links">[
+{% if page_obj.has_previous %}
+<a href="?page={{ page_obj.previous_page_number }}">Previous</a> |
+{% endif %}
+Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+{% if page_obj.has_next %}
+| <a href="?page={{ page_obj.next_page_number }}">Next</a>
+{% endif %}
+]</p>
+{% endif %}
+</div>

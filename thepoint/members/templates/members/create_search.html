@@ -1,0 +1,32 @@
+{% extends "members/create.html" %}
+{% load smartquote %}
+
+{% block content %}
+
+{% if user.person %}<p>You already have an account.</p>{% else %}
+
+{% if person_list.count > 0 %}
+<p>Select a person to create an account for, or try another search:</p>
+{% else %}
+<p>Search for the person you wish to create an account for:</p>
+{% endif %}
+
+<form method="get" action="">
+<input type="text" name="query" value="{{ query }}" size="32" />
+<input type="submit" value="Search" />
+</form>
+
+{% for person in person_list %}
+<p><a href="{% url "members:create_confirm" person.id %}">{{ person.fullname|smartquote }}</a></p>
+{% empty %}
+{% if request.GET.query %}
+<p class="error">No available person was found matching your search terms: {{ query }}</p>
+<p>Either no person exists that matches, or the person already has an account associated with it. Try <a href="{% url "members:password_reset" %}">resetting the password</a> if the account exists.</p>
+{% endif %}
+{% endfor %}
+
+{% endif %}
+
+<p class="links">[ <a href="{% url "members:index" %}">Back Home</a> ]</p>
+
+{% endblock content %}

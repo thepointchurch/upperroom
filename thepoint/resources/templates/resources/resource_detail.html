@@ -1,0 +1,24 @@
+{% extends "resources/base.html" %}
+{% load markup %}
+{% load smartquote %}
+
+{% block title %}{{ block.super }}: {{ resource.title|smartquote }}{% if not resource.is_published %} [DRAFT]{% endif %}{% endblock title %}
+
+{% block heading %}{{ resource.title|smartquote }}{% if not resource.is_published %} [DRAFT]{% endif %}{% endblock heading %}
+
+{% block content %}
+
+{% if resource.author and resource.show_author %}<p id="author">By <a href="{% url 'resources:author' resource.author.id %}">{{ resource.author.fullname|smartquote }}</a></p>{% endif %}
+
+{% if resource.alternates.count > 0 %}
+<p class="option">This resource is also available in
+{% regroup resource.alternates.all by format as formats %}
+{% for format in formats %}
+{% with a=format.list|first %}<a href="{% url 'resources:attachment' a.id %}">{{ format.grouper }}</a>{% endwith %}{% if not forloop.last %}{% if forloop.revcounter0 == 1 %} or{% else %},{% endif %}{% endif %}
+{% endfor %}
+format.</p>
+{% endif %}
+
+{{ resource.content|markdown:"extra,smarty,toc,yafg" }}
+
+{% endblock content %}

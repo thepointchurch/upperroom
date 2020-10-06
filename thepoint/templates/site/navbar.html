@@ -1,7 +1,9 @@
 {% load smartquote %}
 {% load static %}
+{% load cache %}
 <input type="checkbox" id="navbar-trigger"/><label for="navbar-trigger">Menu</label>
 <div id="navbar">
+{% cache None navbar_featured %}
 <ul>
 <li><a href="{% url 'home' %}" class="nav-home">Home</a></li>
 {% for item in featured_items %}
@@ -10,10 +12,12 @@
 <li><a href="{% url 'resources:index' %}" class="nav-resources" title="Publications from The Point on various Biblical topics.">Resources</a></li>
 <li><a href="{% url 'contact' %}" class="nav-contact" title="Would you like to know more about The Point? Get our contact details and meeting times here.">Contact</a></li>
 </ul>
+{% endcache %}
 </div>
 {% if user.is_authenticated %}
 <input type="checkbox" id="navbar-member-trigger"/><label for="navbar-member-trigger">Members’ Area</label>
 <div id="navbar-member">
+{% cache None navbar_featured_private %}
 <ul>
 <li><a href="{% url 'members:index' %}" class="nav-members">Members’ Home</a></li>
 {% for item in featured_private_items %}
@@ -28,7 +32,8 @@
 <li><a href="https://www.youtube.com/channel/UCqijp2IhhMN7irdU1TXe5Kw" class="nav-youtube" title="YouTube Channel">YouTube</a></li>
 <li><a href="{% url 'members:logout' %}" class="nav-logout" title="Log out of the Members’ Area.">Logout</a></li>
 </ul>
-<p class="logon">You are logged in as {{ user.get_full_name }}</p>
+{% endcache %}
+{% cache None navbar_user request.user.username %}<p class="logon">You are logged in as {{ user.get_full_name }}</p>{% endcache %}
 </div>
 {% else %}
 <a href="{% url 'members:index' %}" title="Login to the Members’ area."><p id="navbar-member-trigger">Member Login</p></a>
