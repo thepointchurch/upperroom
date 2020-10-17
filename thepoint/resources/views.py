@@ -149,7 +149,11 @@ class ResourceDetail(VaryOnCookieMixin, generic.DetailView):
         obj = super().get_object(**kwargs)
         if not self.request.user.is_authenticated and any(x.is_private for x in obj.tags.all()):
             raise Http404("Access Denied")
-        if not obj.body and obj.attachments.count() == 1:
+        try:
+            count = obj.alternates.count()
+        except TypeError:
+            count = len(obj.atlternates)
+        if not obj.body and count == 1:
             raise RedirectToAttachment(obj.attachments.first())
         return obj
 

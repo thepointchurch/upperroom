@@ -70,7 +70,11 @@ class WeblogDetail(VaryOnCookieMixin, LoginRequiredMixin, generic.DetailView):
 
     def get_object(self, **kwargs):  # pylint: disable=arguments-differ
         obj = super().get_object(**kwargs)
-        if not obj.body and obj.alternates.count() == 1:
+        try:
+            count = obj.alternates.count()
+        except TypeError:
+            count = len(obj.alternates)
+        if not obj.body and count == 1:
             raise RedirectToAttachment(obj.alternates.first())
         return obj
 
