@@ -26,13 +26,21 @@ class AttachmentInline(admin.TabularInline):
     model = Attachment
     form = AttachmentForm
     extra = 0
-    readonly_fields = ("mime_type",)
+    readonly_fields = (
+        "drag_handle",
+        "mime_type",
+    )
     prepopulated_fields = {"slug": ("title",)}
-    fields = ("file", "title", "slug", "kind", "description", "mime_type")
+    fields = ("drag_handle", "file", "title", "slug", "kind", "description", "mime_type")
     ordering = ("title", "slug")
     formfield_overrides = {
         models.TextField: {"widget": Textarea(attrs={"rows": 3, "cols": 40})},
     }
+
+    def drag_handle(self, obj):  # pylint: disable=no-self-use,unused-argument
+        return ""
+
+    drag_handle.short_description = ""
 
 
 class WeblogEntryForm(ModelForm):
@@ -92,12 +100,21 @@ class WeblogAdmin(admin.ModelAdmin):
                     "<dt>To insert inline images:</dt>"
                     "<dd><code>![alt][slug]</code></dd>"
                     "</dl>"
+                    "<p>You can also drag-and-drop attachments to insert links at the current cursor point.</p>"
                 ),
             },
         ),
         (_("Timestamps"), {"classes": ("collapse",), "fields": ("published", "created", "modified")}),
         (_("Advanced"), {"classes": ("collapse",), "fields": ("show_date", "show_author", "author")}),
     )
+
+    class Media:
+        js = (
+            "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js",
+            "scripts/weblog/admin_attachment_title.js",
+            "scripts/weblog/admin_dnd.js",
+        )
+        css = {"all": ("style/admin/weblog.css",)}
 
     def get_changeform_initial_data(self, request):
         get_data = super().get_changeform_initial_data(request)

@@ -45,13 +45,22 @@ class AttachmentInline(admin.TabularInline):
     model = Attachment
     form = AttachmentForm
     extra = 0
-    readonly_fields = ("mime_type",)
+    readonly_fields = (
+        "drag_handle",
+        "mime_type",
+    )
     prepopulated_fields = {"slug": ("title",)}
-    fields = ("file", "title", "slug", "kind", "description", "metadata", "mime_type")
+    fields = ("drag_handle", "file", "title", "slug", "kind", "description", "metadata", "mime_type")
     formfield_overrides = {
         models.TextField: {"widget": Textarea(attrs={"rows": 3, "cols": 40})},
         models.JSONField: {"widget": Textarea(attrs={"rows": 3, "cols": 20})},
     }
+    classes = ("attachments",)
+
+    def drag_handle(self, obj):  # pylint: disable=no-self-use,unused-argument
+        return ""
+
+    drag_handle.short_description = ""
 
 
 def action_publish(modeladmin, request, queryset):  # pylint: disable=unused-argument
@@ -82,6 +91,33 @@ def action_mark_public(modeladmin, request, queryset):  # pylint: disable=unused
 action_mark_public.short_description = _("Mark selected resources as public")
 
 
+class ChildResourceInline(admin.TabularInline):
+    model = Resource
+    fk_name = "parent"
+    readonly_fields = ("drag_handle",)
+    fields = ("drag_handle", "title", "slug", "description")
+    verbose_name = "children"
+    verbose_name_plural = "children"
+    view_on_site = False
+    extra = 0
+    max_num = 0
+    classes = ("children",)
+
+    def has_add_permission(self, request, obj=None):  # pylint: disable=unused-argument
+        return False
+
+    def has_change_permission(self, request, obj=None):  # pylint: disable=unused-argument
+        return False
+
+    def has_delete_permission(self, request, obj=None):  # pylint: disable=unused-argument
+        return False
+
+    def drag_handle(self, obj):  # pylint: disable=no-self-use,unused-argument
+        return ""
+
+    drag_handle.short_description = ""
+
+
 class ResourceForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -107,7 +143,22 @@ class ResourceAdmin(admin.ModelAdmin):
     actions = [action_publish, action_unpublish, action_mark_private, action_mark_public]
 
     fieldsets = (
-        (None, {"fields": ("title", "slug", "description", "body")}),
+        (
+            None,
+            {
+                "fields": ("title", "slug", "description", "body"),
+                "description": _(
+                    "<dl>"
+                    "<dt>To insert inline links:</dt>"
+                    "<dd><code>[text][slug]</code></dd>"
+                    "<dt>To insert inline images:</dt>"
+                    "<dd><code>![alt][slug]</code></dd>"
+                    "</dl>"
+                    "<p>You can also drag-and-drop attachments and child resources "
+                    "to insert links at the current cursor point.</p>"
+                ),
+            },
+        ),
         (_("Tags"), {"classes": ("collapse",), "fields": ("tags",)}),
         (_("Author"), {"classes": ("collapse",), "fields": ("author", "show_author")}),
         (_("Featured"), {"classes": ("collapse",), "fields": ("priority",)}),
@@ -117,6 +168,20 @@ class ResourceAdmin(admin.ModelAdmin):
         ),
     )
 
+    class Media:
+        js = (
+            "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js",
+            "scripts/resources/admin_attachment_title.js",
+            "scripts/resources/admin_dnd.js",
+        )
+        css = {"all": ("style/admin/resources.css",)}
+
+    def get_inlines(self, request, obj):
+        inlines = super().get_inlines(request, obj)
+        if obj and obj.children.count() and ChildResourceInline not in inlines:
+            inlines.append(ChildResourceInline)
+        return inlines
+
 
 class ResourceFeedAdmin(admin.ModelAdmin):
     model = ResourceFeed
@@ -125,20 +190,7 @@ class ResourceFeedAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("title",)}
 
     fieldsets = (
-        (
-            None,
-            {
-                "fields": ("title", "slug", "description"),
-                "description": _(
-                    "<dl>"
-                    "<dt>To insert inline links:</dt>"
-                    "<dd><code>[text][slug]</code></dd>"
-                    "<dt>To insert inline images:</dt>"
-                    "<dd><code>![alt][slug]</code></dd>"
-                    "</dl>"
-                ),
-            },
-        ),
+        (None, {"fields": ("title", "slug", "description")}),
         (
             _("Optional"),
             {
