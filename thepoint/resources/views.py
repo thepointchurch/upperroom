@@ -152,7 +152,7 @@ class ResourceDetail(VaryOnCookieMixin, generic.DetailView):
         try:
             count = obj.alternates.count()
         except TypeError:
-            count = len(obj.atlternates)
+            count = len(obj.alternates)
         if not obj.body and count == 1:
             raise RedirectToAttachment(obj.attachments.first())
         return obj
