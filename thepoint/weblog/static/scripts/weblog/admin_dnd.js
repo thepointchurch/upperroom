@@ -1,6 +1,6 @@
 function get_md(row) {
     var slug = row.children(".field-slug").children("input").val().trim();
-    var description = row.children(".field-description").children("textarea").val().trim();
+    var title = row.children(".field-title").children("input").val().trim();
     var prefix = "";
     var mime_type = "";
     try {
@@ -11,7 +11,7 @@ function get_md(row) {
     if (row.children(".field-kind").children("select").val().trim() == "I" && mime_type == "image") {
         prefix = "!";
     }
-    return prefix + "[" + description + "][" + slug + "]";
+    return prefix + "[" + title + "][" + slug + "]";
 }
 
 (function($) {

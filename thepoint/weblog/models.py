@@ -65,7 +65,7 @@ class WeblogEntry(models.Model):
     def description_attach(self):
         content = self.description
         content += "\n"
-        for attachment in self.inlines:
+        for attachment in self.attachments.all():
             content += "\n%s" % attachment.markdown_link()
         return content
 
@@ -73,7 +73,7 @@ class WeblogEntry(models.Model):
     def body_attach(self):
         content = self.body
         content += "\n"
-        for attachment in self.inlines:
+        for attachment in self.attachments.all():
             content += "\n%s" % attachment.markdown_link()
         return content
 

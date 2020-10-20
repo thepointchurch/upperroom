@@ -1,13 +1,13 @@
 function get_md(row) {
     var slug = "";
-    var description = "";
+    var title = "";
     var prefix = "";
 
     var classes = row.attr("class").split(/\s+/);
     if (classes.includes("dynamic-attachments")) {
         console.log("attach");
         slug = row.children(".field-slug").children("input").val().trim();
-        description = row.children(".field-description").children("textarea").val().trim();
+        title = row.children(".field-title").children("input").val().trim();
         var mime_type = "";
         try {
             mime_type = row.children(".field-file").find("input").get(0).files[0].type.split("/")[0];
@@ -20,9 +20,9 @@ function get_md(row) {
     } else if (classes.includes("dynamic-children")) {
         console.log("child");
         slug = row.children(".field-slug").text().trim();
-        description = row.children(".field-title").text().trim();
+        title = row.children(".field-title").text().trim();
     }
-    return prefix + "[" + description + "][" + slug + "]";
+    return prefix + "[" + title + "][" + slug + "]";
 }
 
 (function($) {

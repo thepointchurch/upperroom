@@ -95,7 +95,7 @@ class ChildResourceInline(admin.TabularInline):
     model = Resource
     fk_name = "parent"
     readonly_fields = ("drag_handle",)
-    fields = ("drag_handle", "title", "slug", "description")
+    fields = ("drag_handle", "title", "slug")
     verbose_name = "children"
     verbose_name_plural = "children"
     view_on_site = False

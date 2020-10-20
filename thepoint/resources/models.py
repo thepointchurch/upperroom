@@ -151,7 +151,7 @@ class Resource(FeaturedMixin, models.Model):
             content += "\n%s" % child.markdown_link()
             for child_alt in child.alternates:
                 content += "\n%s" % child_alt.markdown_link()
-        for attachment in self.inlines:
+        for attachment in self.attachments.all():
             content += "\n%s" % attachment.markdown_link()
         return content
 
