@@ -62,5 +62,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_name: thepoint-${{ steps.version.outputs.version }}-py3-none-any.whl
-          asset_path: ./dist/thepoint-{{ steps.version.outputs.version }}-py3-none-any.whl
+          asset_path: ./dist/thepoint-${{ steps.version.outputs.version }}-py3-none-any.whl
           asset_content_type: application/zip
