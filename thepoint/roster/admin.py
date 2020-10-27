@@ -93,6 +93,16 @@ class PastMeetingAdmin(MeetingAdmin):
         return False
 
 
+class RoleTypeAdmin(admin.ModelAdmin):
+    actions = ["empty_role_type_servers"]
+
+    def empty_role_type_servers(self, request, queryset):  # pylint: disable=no-self-use,unused-argument
+        for role_type in queryset.all():
+            role_type.servers.clear()
+
+    empty_role_type_servers.short_description = _("Empty servers from role types")
+
+
 class RoleTypeMappingInline(admin.TabularInline):
     model = RoleTypeTemplateMapping
     extra = 1
@@ -107,5 +117,5 @@ class MeetingTemplateAdmin(admin.ModelAdmin):
 admin.site.register(Meeting, MeetingAdmin)
 admin.site.register(PastMeeting, PastMeetingAdmin)
 admin.site.register(Location)
-admin.site.register(RoleType)
+admin.site.register(RoleType, RoleTypeAdmin)
 admin.site.register(MeetingTemplate, MeetingTemplateAdmin)
