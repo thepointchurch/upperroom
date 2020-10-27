@@ -63,34 +63,6 @@ class AttachmentInline(admin.TabularInline):
     drag_handle.short_description = ""
 
 
-def action_publish(modeladmin, request, queryset):  # pylint: disable=unused-argument
-    queryset.update(is_published=True)
-
-
-action_publish.short_description = _("Publish selected resources")
-
-
-def action_unpublish(modeladmin, request, queryset):  # pylint: disable=unused-argument
-    queryset.update(is_published=False)
-
-
-action_unpublish.short_description = _("Unpublish selected resources")
-
-
-def action_mark_private(modeladmin, request, queryset):  # pylint: disable=unused-argument
-    queryset.update(is_private=True)
-
-
-action_mark_private.short_description = _("Mark selected resources as private")
-
-
-def action_mark_public(modeladmin, request, queryset):  # pylint: disable=unused-argument
-    queryset.update(is_private=False)
-
-
-action_mark_public.short_description = _("Mark selected resources as public")
-
-
 class ChildResourceInline(admin.TabularInline):
     model = Resource
     fk_name = "parent"
@@ -140,7 +112,7 @@ class ResourceAdmin(admin.ModelAdmin):
     search_fields = ["title", "description", "body"]
     date_hierarchy = "published"
     prepopulated_fields = {"slug": ("title",)}
-    actions = [action_publish, action_unpublish, action_mark_private, action_mark_public]
+    actions = ["publish", "unpublish", "mark_private", "mark_public"]
 
     fieldsets = (
         (
@@ -181,6 +153,26 @@ class ResourceAdmin(admin.ModelAdmin):
         if obj and obj.children.count() and ChildResourceInline not in inlines:
             inlines.append(ChildResourceInline)
         return inlines
+
+    def publish(self, request, queryset):  # pylint: disable=no-self-use,unused-argument
+        queryset.update(is_published=True)
+
+    publish.short_description = _("Publish selected resources")
+
+    def unpublish(self, request, queryset):  # pylint: disable=no-self-use,unused-argument
+        queryset.update(is_published=False)
+
+    unpublish.short_description = _("Unpublish selected resources")
+
+    def mark_private(self, request, queryset):  # pylint: disable=no-self-use,unused-argument
+        queryset.update(is_private=True)
+
+    mark_private.short_description = _("Mark selected resources as private")
+
+    def mark_public(self, request, queryset):  # pylint: disable=no-self-use,unused-argument
+        queryset.update(is_private=False)
+
+    mark_public.short_description = _("Mark selected resources as public")
 
 
 class ResourceFeedAdmin(admin.ModelAdmin):

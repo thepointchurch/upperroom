@@ -54,13 +54,6 @@ class WeekdayListFilter(admin.SimpleListFilter):
             pass
 
 
-def action_delete_past_meetings(modeladmin, request, queryset):  # pylint: disable=unused-argument
-    queryset.delete(date__lt=datetime.date.today())
-
-
-action_delete_past_meetings.short_description = _("Delete past meetings")
-
-
 class MeetingAdmin(admin.ModelAdmin):
     inlines = [RoleInline]
     date_hierarchy = "date"
@@ -72,6 +65,11 @@ class MeetingAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         return self.model.objects.filter(date__gte=datetime.date.today())
+
+    def delete_past_meetings(self, request, queryset):  # pylint: disable=no-self-use,unused-argument
+        queryset.delete(date__lt=datetime.date.today())
+
+    delete_past_meetings.short_description = _("Delete past meetings")
 
 
 class PastMeeting(Meeting):

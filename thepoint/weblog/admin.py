@@ -63,20 +63,6 @@ class WeblogEntryForm(ModelForm):
             )
 
 
-def action_publish(modeladmin, request, queryset):  # pylint: disable=unused-argument
-    queryset.update(is_published=True)
-
-
-action_publish.short_description = _("Publish selected " + str(WeblogEntry._meta.verbose_name_plural))
-
-
-def action_unpublish(modeladmin, request, queryset):  # pylint: disable=unused-argument
-    queryset.update(is_published=False)
-
-
-action_unpublish.short_description = _("Unpublish selected " + str(WeblogEntry._meta.verbose_name_plural))
-
-
 class WeblogAdmin(admin.ModelAdmin):
     model = WeblogEntry
     form = WeblogEntryForm
@@ -85,7 +71,7 @@ class WeblogAdmin(admin.ModelAdmin):
     search_fields = ["title", "description", "body"]
     date_hierarchy = "published"
     prepopulated_fields = {"slug": ("title",)}
-    actions = [action_publish, action_unpublish]
+    actions = ["publish", "unpublish"]
     readonly_fields = ("created", "modified")
 
     fieldsets = (
@@ -123,6 +109,16 @@ class WeblogAdmin(admin.ModelAdmin):
         except Person.DoesNotExist:
             pass
         return get_data
+
+    def publish(self, request, queryset):  # pylint: disable=no-self-use,unused-argument
+        queryset.update(is_published=True)
+
+    publish.short_description = _("Publish selected " + str(WeblogEntry._meta.verbose_name_plural))
+
+    def unpublish(self, request, queryset):  # pylint: disable=no-self-use,unused-argument
+        queryset.update(is_published=False)
+
+    unpublish.short_description = _("Unpublish selected " + str(WeblogEntry._meta.verbose_name_plural))
 
 
 admin.site.register(WeblogEntry, WeblogAdmin)

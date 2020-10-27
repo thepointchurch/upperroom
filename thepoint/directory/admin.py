@@ -26,30 +26,12 @@ class FamilyForm(forms.ModelForm):
         self.fields["wife"].queryset = Person.objects.filter(family__exact=self.instance.id).filter(gender__exact="F")
 
 
-def action_mark_current(modeladmin, request, queryset):  # pylint: disable=unused-argument
-    for family in queryset.all():
-        family.is_current = True
-        family.save()
-
-
-action_mark_current.short_description = _("Mark selected families as current")
-
-
-def action_unmark_current(modeladmin, request, queryset):  # pylint: disable=unused-argument
-    for family in queryset.all():
-        family.is_current = False
-        family.save()
-
-
-action_unmark_current.short_description = _("Mark selected families as not current")
-
-
 class FamilyAdmin(admin.ModelAdmin):
     inlines = [PersonInline]
     list_filter = ("is_current",)
     search_fields = ["name", "members__name"]
     form = FamilyForm
-    actions = [action_mark_current, action_unmark_current]
+    actions = ["action_mark_current", "action_unmark_current"]
 
     fieldsets = (
         (None, {"fields": ("name",)}),
@@ -63,6 +45,20 @@ class FamilyAdmin(admin.ModelAdmin):
     def save_related(self, request, form, formsets, change):
         super().save_related(request, form, formsets, change)
         family_updated.send(sender=form.instance.__class__, instance=form.instance)
+
+    def mark_current(self, request, queryset):  # pylint: disable=no-self-use,unused-argument
+        for family in queryset.all():
+            family.is_current = True
+            family.save()
+
+    mark_current.short_description = _("Mark selected families as current")
+
+    def unmark_current(self, request, queryset):  # pylint: disable=no-self-use,unused-argument
+        for family in queryset.all():
+            family.is_current = False
+            family.save()
+
+    unmark_current.short_description = _("Mark selected families as not current")
 
 
 class PersonAdmin(admin.ModelAdmin):
