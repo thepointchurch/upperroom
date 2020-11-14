@@ -1,8 +1,8 @@
-FROM python:3.8-slim AS compile-image
+FROM python:3.9-slim AS compile-image
 RUN apt-get -y update && apt-get install -y --no-install-recommends \
     build-essential gcc python3-dev libpq-dev zlib1g-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
-RUN pip install poetry=="1.1.3" wheel
+RUN pip install poetry=="1.1.4" wheel
 COPY . /django/
 WORKDIR /django
 ENV POETRY_VIRTUALENVS_IN_PROJECT=true \
@@ -24,7 +24,7 @@ WORKDIR /usr/local/share/fonts
 RUN wget -qO - https://github.com/mozilla/Fira/archive/4.106.tar.gz | tar -xvzf - Fira-4.106/otf --strip-components=2
 
 
-FROM python:3.8-slim AS build-image
+FROM python:3.9-slim AS build-image
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/django/.venv/bin:$PATH" \
