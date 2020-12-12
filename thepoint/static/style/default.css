@@ -393,19 +393,39 @@ div#body {
     display: block;
 }
 
-p.success {
+.messages a {
+    color: inherit;
+}
+
+.messages p.info {
+    text-align: left;
+    font-weight: 600;
+}
+
+.messages p.success {
     text-align: left;
     color: rgb(0,128,0);
     font-weight: 600;
 }
 
-p.error {
+.messages p.warning {
     text-align: left;
-    color: red;
+    color: rgb(255,140,0);
     font-weight: 600;
 }
 
-p.error:before {
+.messages p.warning:before {
+    content: "Warning: ";
+    font-weight: 600;
+}
+
+.messages p.error {
+    text-align: left;
+    color: rgb(255,0,0);
+    font-weight: 600;
+}
+
+.messages p.error:before {
     content: "Error: ";
     font-weight: 600;
 }
