@@ -1,19 +1,36 @@
-# pylint: disable=invalid-envvar-default
-
-import os
 from pathlib import Path
+
+import environ
+
+env = environ.Env(
+    AWS_DEFAULT_REGION=(str, None),
+    CACHE_TIMEOUT=(int, 300),
+    CACHE_URL=(str, "dummycache://"),
+    CACHEOPS_ENABLED=(bool, False),
+    DEBUG=(bool, False),
+    DEBUG_TOOLBAR=(bool, False),
+    EMAIL_URL=(str, "consolemail://"),
+    EMAIL_BACKEND=(str, None),
+    MEDIAFILES_BUCKET=(str, None),
+    SITE_ID=(int, 1),
+    STATIC_URL=(str, "/static/"),
+    STATICFILES_BUCKET=(str, None),
+    VHOST=(str, "*"),
+)
+environ.Env.read_env()
+
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent
 
-SECRET_KEY = os.environ["SECRET_KEY"]
+SECRET_KEY = env("SECRET_KEY")
 
-DEBUG = bool(os.getenv("DEBUG", False))
+DEBUG = env("DEBUG")
 
-EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
+EMAIL_BACKEND = env.email(backend=env("EMAIL_BACKEND"))["EMAIL_BACKEND"]
 
-ALLOWED_HOSTS = os.getenv("VHOST", "*").split()
+ALLOWED_HOSTS = env("VHOST").split()
 
-SITE_ID = int(os.getenv("SITE_ID", 1))
+SITE_ID = env("SITE_ID")
 
 
 INSTALLED_APPS = [
@@ -60,14 +77,7 @@ ROOT_URLCONF = "thepoint.urls"
 WSGI_APPLICATION = "thepoint.wsgi.application"
 
 DATABASES = {
-    "default": {
-        "ENGINE": os.environ["DB_ENGINE"],
-        "NAME": os.environ["DB_NAME"],
-        "USER": os.environ.get("DB_USER"),
-        "PASSWORD": os.environ.get("DB_PASSWORD"),
-        "HOST": os.environ.get("DB_HOST"),
-        "PORT": os.environ.get("DB_PORT"),
-    }
+    "default": env.db(),
 }
 
 LANGUAGE_CODE = "en-us"
@@ -89,7 +99,7 @@ DATA_ROOT = Path(".") / "data"
 
 MEDIA_ROOT = DATA_ROOT / "media"
 
-STATIC_URL = os.getenv("STATIC_URL", "/static/")
+STATIC_URL = env("STATIC_URL")
 STATIC_ROOT = DATA_ROOT / "static"
 STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",
@@ -131,29 +141,9 @@ ROBOTS_CACHE_TIMEOUT = 60 * 60 * 24
 
 
 CACHES = {
-    "default": {"BACKEND": "django.core.cache.backends.dummy.DummyCache"},
+    "default": env.cache(),
 }
-for cache_var in (
-    "BACKEND",
-    "KEY_FUNCTION",
-    "KEY_PREFIX",
-    "LOCATION",
-    "OPTIONS",
-    "TIMEOUT",
-    "VERSION",
-):
-    value = os.getenv("CACHE_%s" % cache_var, None)
-    if value:
-        if cache_var == "LOCATION" and value.count(" ") > 0:
-            value = value.split(" ")
-        if cache_var == "TIMEOUT":
-            value = int(value)
-            CACHE_MIDDLEWARE_SECONDS = value
-        if cache_var == "OPTIONS":
-            import json
-
-            value = json.loads(value)
-        CACHES["default"][cache_var] = value
+CACHES["default"]["TIMEOUT"] = env("CACHE_TIMEOUT")
 
 if "dummy" not in CACHES["default"]["BACKEND"]:
     SESSION_ENGINE = "django.contrib.sessions.backends.cache"
@@ -183,7 +173,7 @@ CACHEOPS = {
 
 if "redis" in CACHES["default"].get("LOCATION", ""):
     CACHEOPS_REDIS = CACHES["default"]["LOCATION"]
-    CACHEOPS_ENABLED = bool(os.getenv("CACHEOPS_ENABLED", False))
+    CACHEOPS_ENABLED = env("CACHEOPS_ENABLED")
 else:
     CACHEOPS_ENABLED = False
 if CACHEOPS_ENABLED:
@@ -196,14 +186,14 @@ CACHE_MIDDLEWARE_ALIAS = "default"
 CACHE_MIDDLEWARE_KEY_PREFIX = ""
 
 
-if os.getenv("STATICFILES_BUCKET", None) or os.getenv("MEDIAFILES_BUCKET", None):
+if env("STATICFILES_BUCKET") or env("MEDIAFILES_BUCKET"):
     INSTALLED_APPS += ("storages",)
 
-    STATICFILES_BUCKET = os.getenv("STATICFILES_BUCKET", "static.%s" % ALLOWED_HOSTS[0])
+    STATICFILES_BUCKET = env("STATICFILES_BUCKET")
     STATICFILES_STORAGE = "thepoint.utils.storages.backends.S3StaticStorage"
 
     MEDIAFILES_OFFLOAD = True
-    MEDIAFILES_BUCKET = os.getenv("MEDIAFILES_BUCKET", "media.%s" % ALLOWED_HOSTS[0])
+    MEDIAFILES_BUCKET = env("MEDIAFILES_BUCKET")
     DEFAULT_FILE_STORAGE = "thepoint.utils.storages.backends.S3MediaStorage"
 
     AWS_DEFAULT_ACL = None
@@ -213,11 +203,10 @@ if os.getenv("STATICFILES_BUCKET", None) or os.getenv("MEDIAFILES_BUCKET", None)
     }
 
 
-if os.getenv("AWS_DEFAULT_REGION", None):
-    AWS_DEFAULT_REGION = os.getenv("AWS_DEFAULT_REGION")
+AWS_DEFAULT_REGION = env("AWS_DEFAULT_REGION")
 
 
-if DEBUG and os.getenv("DEBUG_TOOLBAR"):
+if DEBUG and env("DEBUG_TOOLBAR"):
     INSTALLED_APPS.append("debug_toolbar")
     MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
     INTERNAL_IPS = ["127.0.0.1"]

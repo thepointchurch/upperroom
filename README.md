@@ -27,10 +27,20 @@ To set up a development environment:
 
     ```
     export DEBUG='True'
-    export DB_ENGINE='django.db.backends.sqlite3'
-    export DB_NAME='thepoint.sqlite3'
+    export DATABASE_URL='sqlite:///thepoint.sqlite3'
     export SECRET_KEY='12345678'
     export DJANGO_SETTINGS_MODULE=thepoint.settings
+    ```
+
+    or place them in a an environment file at `thepoint/.env`:
+
+    ```
+    cat >thepoint/.env <<DEV_ENV
+    DEBUG='True'
+    DATABASE_URL='sqlite:///thepoint.sqlite3'
+    SECRET_KEY='12345678'
+    DJANGO_SETTINGS_MODULE=thepoint.settings
+    DEV_ENV
     ```
 
 5. Start a test server:

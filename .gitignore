@@ -2,5 +2,6 @@
 .*.swp
 *.egg-info/
 .coverage
+.env
 data/
 dist/
