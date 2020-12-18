@@ -23,13 +23,11 @@ file_env() {
 }
 
 file_env 'SECRET_KEY'
-file_env 'DB_ENGINE' 'django.db.backends.postgresql'
-file_env 'DB_NAME'
-file_env 'DB_USER'
-file_env 'DB_PASSWORD'
+file_env 'DATABASE_URL'
 
-if [ "$DB_ENGINE" = 'django.db.backends.postgresql' ]; then
-    while ! nc -z $DB_HOST $DB_PORT; do
+if [[ "$DATABASE_URL" =~ ^psql: ]]; then
+    DB_CONN=$(/django/.venv/bin/python -c 'import environ; env = environ.Env(); environ.Env.read_env(); db = env.db(); print(db["HOST"], db["PORT"])')
+    while ! nc -z $DB_CONN; do
         sleep 0.1
     done
 fi
