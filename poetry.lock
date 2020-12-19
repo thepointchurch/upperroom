@@ -71,20 +71,20 @@ typecheck = ["mypy"]
 
 [[package]]
 name = "boto3"
-version = "1.16.39"
+version = "1.16.40"
 description = "The AWS SDK for Python"
 category = "main"
 optional = true
 python-versions = "*"
 
 [package.dependencies]
-botocore = ">=1.19.39,<1.20.0"
+botocore = ">=1.19.40,<1.20.0"
 jmespath = ">=0.7.1,<1.0.0"
 s3transfer = ">=0.3.0,<0.4.0"
 
 [[package]]
 name = "botocore"
-version = "1.19.39"
+version = "1.19.40"
 description = "Low-level, data-driven core of boto 3."
 category = "main"
 optional = true
@@ -1160,12 +1160,12 @@ bcrypt = [
     {file = "bcrypt-3.2.0.tar.gz", hash = "sha256:5b93c1726e50a93a033c36e5ca7fdcd29a5c7395af50a6892f5d9e7c6cfbfb29"},
 ]
 boto3 = [
-    {file = "boto3-1.16.39-py2.py3-none-any.whl", hash = "sha256:c7556b0861d982b71043fbc0df024644320c817ad796391c442d0c2f15a77223"},
-    {file = "boto3-1.16.39.tar.gz", hash = "sha256:a05614300fd404c7952a55ae92e106b9400ae65886425aaab3104527be833848"},
+    {file = "boto3-1.16.40-py2.py3-none-any.whl", hash = "sha256:bbe380ee554cfc998528320578ca2ec152aea3243dd8e82119bc644deb49ec6b"},
+    {file = "boto3-1.16.40.tar.gz", hash = "sha256:75326882aa68e003452dcd8f0fcee0339ff63624115927fb71a6b5d15535ace5"},
 ]
 botocore = [
-    {file = "botocore-1.19.39-py2.py3-none-any.whl", hash = "sha256:449e4196160ff58ee27d2a626a7ce4cfff2640fe1806d7a279e73a30ad286347"},
-    {file = "botocore-1.19.39.tar.gz", hash = "sha256:e0d0386098a072abd7b6c087e6149d997377c969a823ebe01b3f5bfabe9bfac0"},
+    {file = "botocore-1.19.40-py2.py3-none-any.whl", hash = "sha256:bb0e4cc5e364785ff8fc380d74ad57dec9857a4093608633616d0acfe84caadc"},
+    {file = "botocore-1.19.40.tar.gz", hash = "sha256:ebfa880ac8cb8132dc6657902bf546f52cf2c43278570f60c8f8a0f894556555"},
 ]
 cachetools = [
     {file = "cachetools-4.2.0-py3-none-any.whl", hash = "sha256:c6b07a6ded8c78bf36730b3dc452dfff7d95f2a12a2fed856b1a0cb13ca78c61"},
