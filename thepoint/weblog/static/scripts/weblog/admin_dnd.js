@@ -1,6 +1,6 @@
 function get_md(row) {
-    var slug = row.children(".field-slug").children("input").val().trim();
-    var title = row.children(".field-title").children("input").val().trim();
+    var slug = row.children(".field-slug").find("input").val().trim();
+    var title = row.children(".field-title").find("input").val().trim();
     var prefix = "";
     var mime_type = "";
     try {
@@ -8,7 +8,7 @@ function get_md(row) {
     } catch(e) {
         mime_type = row.children(".field-mime_type").text().trim().split("/")[0];
     }
-    if (row.children(".field-kind").children("select").val().trim() == "I" && mime_type == "image") {
+    if (row.children(".field-kind").find("select").val().trim() == "I" && mime_type == "image") {
         prefix = "!";
     }
     return prefix + "[" + title + "][" + slug + "]";

@@ -1,15 +1,53 @@
-td.field-drag_handle {
+fieldset.children td.field-drag_handle {
     cursor: grab;
-}
-
-td.field-drag_handle:after {
     content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='3' y1='12' x2='21' y2='12'%3E%3C/line%3E%3Cline x1='3' y1='6' x2='21' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='18' x2='21' y2='18'%3E%3C/line%3E%3C/svg%3E");
 }
 
-.inline-group .tabular tr.has_original td {
+.inline-group .tabular fieldset.children tr.has_original td {
     padding: 8px;
 }
 
-th.original, td.original {
+fieldset.children th.original, td.original {
     display: none;
+}
+
+fieldset.children th.column-drag_handle {
+    width: 1px;
+}
+
+.dynamic-attachments > fieldset {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.dynamic-attachments > fieldset > .form-row {
+    flex-grow: 1;
+    border-bottom: 0;
+}
+
+.dynamic-attachments > fieldset > .form-row label {
+    width: auto;
+    padding: 0;
+}
+
+.dynamic-attachments > fieldset > .field-drag_handle {
+    flex-grow: 0;
+    padding-right: 0;
+    cursor: grab;
+    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='3' y1='12' x2='21' y2='12'%3E%3C/line%3E%3Cline x1='3' y1='6' x2='21' y2='6'%3E%3C/line%3E%3Cline x1='3' y1='18' x2='21' y2='18'%3E%3C/line%3E%3C/svg%3E");
+}
+
+.dynamic-attachments > fieldset > .form-row > div {
+    display: flex;
+    flex-direction: column;
+}
+
+.dynamic-attachments > fieldset > .form-row > div > p.file-upload {
+    margin-left: 0;
+}
+
+@media screen and (max-width: 767px) {
+    .dynamic-attachments > fieldset > .field-drag_handle {
+        padding-right: 0.5em;
+    }
 }

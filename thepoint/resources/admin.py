@@ -41,7 +41,7 @@ class AttachmentForm(ModelForm):
         return cleaned_data
 
 
-class AttachmentInline(admin.TabularInline):
+class AttachmentInline(admin.StackedInline):
     model = Attachment
     form = AttachmentForm
     extra = 0

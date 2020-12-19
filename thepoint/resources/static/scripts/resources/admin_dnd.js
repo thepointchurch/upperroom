@@ -5,20 +5,18 @@ function get_md(row) {
 
     var classes = row.attr("class").split(/\s+/);
     if (classes.includes("dynamic-attachments")) {
-        console.log("attach");
-        slug = row.children(".field-slug").children("input").val().trim();
-        title = row.children(".field-title").children("input").val().trim();
+        slug = row.children(".field-slug").find("input").val().trim();
+        title = row.children(".field-title").find("input").val().trim();
         var mime_type = "";
         try {
             mime_type = row.children(".field-file").find("input").get(0).files[0].type.split("/")[0];
         } catch(e) {
             mime_type = row.children(".field-mime_type").text().trim().split("/")[0];
         }
-        if (row.children(".field-kind").children("select").val().trim() == "I" && mime_type == "image") {
+        if (row.children(".field-kind").find("select").val().trim() == "I" && mime_type == "image") {
             prefix = "!";
         }
     } else if (classes.includes("dynamic-children")) {
-        console.log("child");
         slug = row.children(".field-slug").text().trim();
         title = row.children(".field-title").text().trim();
     }
