@@ -4,12 +4,12 @@
 {% block content %}
 
 {% if publication.description %}
-{{ publication.description|markdown:"safe,smarty" }}
+{{ publication.description|markdown:"smarty" }}
 <h3>Issues</h3>
 {% endif %}
 
 {% for issue in issue_list %}{% if forloop.first %}<ul>{% endif %}
-<li><strong><a href="{% url 'newsletter:issue' issue.date %}">{{ issue.date|date:"jS F, Y" }}</a></strong>{% if issue.description %}{{ issue.description|markdown:"safe,smarty" }}{% endif %}</li>
+<li><strong><a href="{% url 'newsletter:issue' issue.date %}">{{ issue.date|date:"jS F, Y" }}</a></strong>{% if issue.description %}{{ issue.description|markdown:"smarty" }}{% endif %}</li>
 {% if forloop.last %}<ul>{% endif %}{% empty %}
 <p>There are currently no issues available for this publication.</p>
 {% endfor %}

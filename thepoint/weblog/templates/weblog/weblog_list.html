@@ -4,7 +4,7 @@
 {% for entry in weblogentry_list %}
 <h3><a href="{% url "weblog:detail" entry.created.year entry.created.month entry.slug %}">{{ entry.title|smartquote }}</a></h3>
 {% if entry.show_date or entry.author and entry.show_author %}<p class="metadata">{% if entry.author and entry.show_author %}{{ entry.author }}{% if entry.show_date %} on {% endif %}{% endif %}{% if entry.show_date %}{{ entry.published|date:"j/n/Y" }}{% endif %}</p>{% endif %}
-{% if entry.description %}{{ entry.description_attach|markdown:"safe,smarty" }}{% endif %}
+{% if entry.description %}{{ entry.description_attach|markdown:"smarty" }}{% endif %}
 {% if entry.has_body or entry.alternates %}<p class="links">[
 {% if entry.has_body %}<a href="{% url "weblog:detail" entry.created.year entry.created.month entry.slug %}">read</a>{% endif %}
 {% for attachment in entry.alternates %}

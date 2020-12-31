@@ -3,6 +3,6 @@
 {% for splash in splashes %}
 <div class="splash">
 <h3>{{ splash.title|smartquote }}</h3>
-{{ splash.content|markdown:"safe,smarty" }}
+{{ splash.content|markdown:"smarty" }}
 </div>
 {% endfor %}

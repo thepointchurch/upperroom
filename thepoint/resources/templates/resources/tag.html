@@ -25,7 +25,7 @@
 
 {% block content %}
 {% if tag.description %}
-{{ tag.description|markdown:"safe,smarty" }}
+{{ tag.description|markdown:"smarty" }}
 {% endif %}
 {% for feed in tag.feeds.all %}
 {% if feed.is_podcast %}

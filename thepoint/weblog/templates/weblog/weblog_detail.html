@@ -19,6 +19,6 @@
 format.</p>
 {% endif %}
 
-{% if object.body|length > 0 %}{{ object.body_attach|markdown:"safe,smarty,yafg" }}{% else %}{{ object.description_attach|markdown:"safe,smarty" }}{% endif %}
+{% if object.body|length > 0 %}{{ object.body_attach|markdown:"smarty,yafg" }}{% else %}{{ object.description_attach|markdown:"smarty" }}{% endif %}
 
 {% endblock content %}

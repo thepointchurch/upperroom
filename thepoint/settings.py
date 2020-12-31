@@ -32,6 +32,9 @@ ALLOWED_HOSTS = env("VHOST").split()
 
 SITE_ID = env("SITE_ID")
 
+CSRF_COOKIE_SECURE = env("CSRF_COOKIE_SECURE", default=(not DEBUG))
+SESSION_COOKIE_SECURE = env("SESSION_COOKIE_SECURE", default=(not DEBUG))
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 INSTALLED_APPS = [
     "thepoint.directory.apps.DirectoryConfig",
@@ -60,11 +63,11 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.cache.UpdateCacheMiddleware",
+    "django.middleware.security.SecurityMiddleware",
     "django.contrib.redirects.middleware.RedirectFallbackMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
-    "django.middleware.common.CommonMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.flatpages.middleware.FlatpageFallbackMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
