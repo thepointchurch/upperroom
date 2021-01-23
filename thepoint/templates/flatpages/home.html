@@ -4,7 +4,8 @@
 {% load smartquote %}
 
 {% block stylesheets %}
-<link rel="stylesheet" type="text/css" href="{% static 'style/titlepage.css' %}" />
+<link type="text/css" href="{% static 'style/titlepage.css' %}" rel="stylesheet" />
+<link type="text/css" href="{% static 'style/titlepage.css' %}" rel="preload" as="style" />
 {% endblock stylesheets %}
 
 {% block body %}

@@ -2,7 +2,8 @@
 {% load static %}
 
 {% block stylesheets %}
-<link rel="stylesheet" type="text/css" href="{% static 'style/library.css' %}" />
+<link type="text/css" href="{% static 'style/library.css' %}" rel="stylesheet" />
+<link type="text/css" href="{% static 'style/library.css' %}" rel="preload" as="style" />
 {% endblock stylesheets %}
 
 {% block title %}{{ block.super }}: Library{% endblock title %}

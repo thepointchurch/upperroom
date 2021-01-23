@@ -2,7 +2,8 @@
 {% load static %}
 
 {% block stylesheets %}
-<link rel="stylesheet" type="text/css" href="{% static 'style/article.css' %}" />
+<link type="text/css" href="{% static 'style/article.css' %}" rel="stylesheet" />
+<link type="text/css" href="{% static 'style/article.css' %}" rel="preload" as="style" />
 {% endblock stylesheets %}
 
 {% block title %}{{ block.super }}: Resources{% endblock title %}

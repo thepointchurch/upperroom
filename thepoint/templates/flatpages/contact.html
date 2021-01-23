@@ -2,7 +2,8 @@
 {% load static %}
 
 {% block stylesheets %}
-<link rel="stylesheet" type="text/css" href="{% static 'style/contact.css' %}" />
+<link type="text/css" href="{% static 'style/contact.css' %}" rel="stylesheet" />
+<link type="text/css" href="{% static 'style/contact.css' %}" rel="preload" as="style" />
 {% endblock stylesheets %}
 
 {% block content %}
