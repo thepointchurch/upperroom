@@ -7,7 +7,7 @@ from storages.backends.s3boto3 import S3Boto3Storage  # pylint: disable=import-e
 
 _STATIC_CUSTOM_DOMAIN = None
 if "." in settings.STATICFILES_BUCKET:
-    _static_custom_domain = settings.STATICFILES_BUCKET
+    _STATIC_CUSTOM_DOMAIN = settings.STATICFILES_BUCKET
 
 _MEDIA_CUSTOM_DOMAIN = None
 if "." in settings.MEDIAFILES_BUCKET:
