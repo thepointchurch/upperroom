@@ -1,3 +1,5 @@
+import uuid
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -39,6 +41,6 @@ class TestWeblogAuthenticationRequired(TestCase):
         self.assertRedirects(response, settings.LOGIN_URL + "?next=" + url)
 
     def test_authentication_required_attachment(self):
-        url = reverse("weblog:attachment", kwargs={"pk": 1})
+        url = reverse("weblog:attachment", kwargs={"pk": uuid.uuid4()})
         response = self.client.get(url)
         self.assertRedirects(response, settings.LOGIN_URL + "?next=" + url)

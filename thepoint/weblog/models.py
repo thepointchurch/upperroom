@@ -1,10 +1,13 @@
 import logging
+import uuid
 
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
+
+from ..utils.mime import guess_extension
 
 logger = logging.getLogger(__name__)
 
@@ -91,18 +94,9 @@ class WeblogEntry(models.Model):
         )
 
 
-def get_attachment_filename(instance, filename):
-    try:
-        extension = "." + filename.split(".")[-1]
-    except IndexError:
-        extension = ""
-    return "weblog/attachment/%d/%d/%s/%s%s" % (
-        instance.entry.created.year,
-        instance.entry.created.month,
-        instance.entry.slug,
-        instance.slug,
-        extension,
-    )
+def get_attachment_filename(instance, filename):  # pylint: disable=unused-argument
+    instance_uuid = str(instance.id)
+    return "weblog/attachment/" + "/".join([instance_uuid[i : i + 2] for i in range(0, 8, 2)] + [instance_uuid])
 
 
 class AttachmentAlternateManager(models.Manager):  # pylint: disable=too-few-public-methods
@@ -124,6 +118,8 @@ class Attachment(models.Model):
     )
 
     _utf_translate = str.maketrans("\u2013\u201c\u201d", '-""')
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True, verbose_name="ID")
 
     title = models.CharField(max_length=64, verbose_name=_("title"))
     slug = models.SlugField(db_index=True, verbose_name=_("slug"))
@@ -157,10 +153,7 @@ class Attachment(models.Model):
 
     @cached_property
     def extension(self):
-        try:
-            return "." + self.file.name.split(".")[-1]
-        except IndexError:
-            return None
+        return guess_extension(self.mime_type)
 
     @cached_property
     def format(self):

@@ -179,7 +179,7 @@ class AttachmentView(NeverCacheMixin, generic.DetailView):
         attachment = self.get_object()
         return attachment_response(
             attachment.file,
-            filename=(attachment.clean_title + attachment.extension),
+            filename=(attachment.clean_title + (attachment.extension or "")),
             content_type=attachment.mime_type,
         )
 

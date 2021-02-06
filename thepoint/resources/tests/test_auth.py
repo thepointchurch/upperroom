@@ -3,6 +3,7 @@ from unittest.mock import MagicMock
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files import File
+from django.core.files.storage import default_storage
 from django.test import TestCase
 from django.urls import reverse
 
@@ -50,12 +51,14 @@ class TestResourcesAuthenticationRequired(TestCase):
         url = reverse("resources:attachment", kwargs={"pk": attachment.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
+        default_storage.delete(attachment.file.name)
 
     def test_authentication_required_attachment_tagged(self):
         tagged_attachment = self.tagged_resource.attachments.create(title="Test", slug="test", file=self.mock_file)
         url = reverse("resources:attachment", kwargs={"pk": tagged_attachment.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
+        default_storage.delete(tagged_attachment.file.name)
 
     def test_authentication_required_detail(self):
         url = reverse("resources:detail", kwargs={"slug": self.resource.slug})
@@ -86,16 +89,22 @@ class TestResourcesAuthenticationNotRequired(TestCase):
         )
 
     def test_authentication_not_required_attachment(self):
-        attachment = self.resource.attachments.create(title="Test", slug="test", file=self.mock_file)
+        attachment = self.resource.attachments.create(
+            title="Test", slug="test", mime_type="text/plain", file=self.mock_file
+        )
         url = reverse("resources:attachment", kwargs={"pk": attachment.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+        default_storage.delete(attachment.file.name)
 
     def test_authentication_not_required_attachment_tagged(self):
-        tagged_attachment = self.tagged_resource.attachments.create(title="Test", slug="test", file=self.mock_file)
+        tagged_attachment = self.tagged_resource.attachments.create(
+            title="Test", slug="test", mime_type="text/plain", file=self.mock_file
+        )
         url = reverse("resources:attachment", kwargs={"pk": tagged_attachment.id})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+        default_storage.delete(tagged_attachment.file.name)
 
     def test_authentication_not_required_detail(self):
         url = reverse("resources:detail", kwargs={"slug": self.resource.slug})

@@ -38,6 +38,7 @@ RUN apt-get -y update \
         libgdk-pixbuf2.0-0 \
         libpango-1.0-0 \
         libpangocairo-1.0-0 \
+        mime-support \
         netcat-traditional \
         postgresql-client \
     && apt-get clean && rm -rf /var/lib/apt/lists/* \
