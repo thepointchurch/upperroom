@@ -43,6 +43,7 @@ RUN apt-get -y update \
         postgresql-client \
     && apt-get clean && rm -rf /var/lib/apt/lists/* \
     && useradd -md /django -s /bin/bash -u 8000 django \
+    && touch /django/.env && chown 0:8000 /django/.env && chmod 640 /django/.env \
     && mkdir -p /django/data && chown 8000:8000 /django/data
 COPY --from=compile-image /django/.venv /django/.venv
 COPY --from=font-image /usr/share/fonts/truetype/msttcorefonts /usr/local/share/fonts /usr/local/share/fonts/

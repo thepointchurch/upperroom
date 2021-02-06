@@ -17,7 +17,7 @@ env = environ.Env(
     STATICFILES_BUCKET=(str, None),
     VHOST=(str, "*"),
 )
-environ.Env.read_env()
+environ.Env.read_env(".env")
 
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent
