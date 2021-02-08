@@ -16,6 +16,7 @@ def rename_files(apps, schema_editor):
         with transaction.atomic():
             old_name = obj.file.name
             obj.file = File(obj.file)
+            obj.file.file.content_type = obj.mime_type
             try:
                 obj.save()
                 default_storage.delete(old_name)
