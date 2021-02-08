@@ -1,18 +1,18 @@
 import datetime
 import fnmatch
 import re
+import uuid
 
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from ..utils.mime import guess_extension
 
-def get_filename(instance, filename):
-    try:
-        extension = "." + filename.split(".")[-1]
-    except IndexError:
-        extension = ""
-    return "newsletter/%s/%s/%s%s" % (instance.publication.slug, instance.date.year, instance.date, extension)
+
+def get_filename(instance, filename):  # pylint: disable=unused-argument
+    instance_uuid = str(instance.id)
+    return "newsletter/" + "/".join([instance_uuid[i : i + 2] for i in range(0, 8, 2)] + [instance_uuid])
 
 
 def default_publication():
@@ -73,6 +73,7 @@ class Publication(models.Model):
 
 
 class Issue(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True, verbose_name="ID")
     date = models.DateField(default=datetime.date.today, verbose_name=_("date"))
     slug = models.SlugField(editable=False, verbose_name=_("slug"))
     file = models.FileField(upload_to=get_filename, verbose_name=_("file"))
@@ -109,10 +110,7 @@ class Issue(models.Model):
 
     @property
     def extension(self):
-        try:
-            return "." + self.file.name.split(".")[-1]
-        except IndexError:
-            return None
+        return guess_extension(self.mime_type)
 
     @property
     def is_private(self):
