@@ -4,6 +4,7 @@ import urllib.parse
 
 from django.conf import settings
 from django.contrib.syndication.views import Feed
+from django.db import DatabaseError
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.feedgenerator import Atom1Feed, Enclosure, Rss201rev2Feed
@@ -145,7 +146,10 @@ class ResourceFeedRSS(Feed):
         return item.description
 
     def item_categories(self, item):
-        return [tag.name for tag in item.tags.difference(self.object.tags.all())]
+        try:
+            return [tag.name for tag in item.tags.difference(self.object.tags.all())]
+        except DatabaseError:
+            return list(tag.name for tag in set(item.tags.all()) - set(self.object.tags.all()))
 
     def item_enclosures(self, item):
         enc = []
