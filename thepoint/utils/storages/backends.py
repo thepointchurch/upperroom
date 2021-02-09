@@ -1,7 +1,5 @@
 # pylint: disable=no-member
 
-from urllib.parse import urlsplit
-
 from django.conf import settings
 from storages.backends.s3boto3 import S3Boto3Storage  # pylint: disable=import-error
 
@@ -30,25 +28,6 @@ class S3Boto3StorageOffload(S3Boto3Storage):  # pylint: disable=abstract-method,
         offload = settings.MEDIAFILES_OFFLOAD
     except (AttributeError, NameError):
         offload = False
-
-    def url(self, name, parameters=None, expire=None, http_method=None):
-        _, _ = expire, http_method
-        # Generate the S3 offload URL but enforce our protocol and domain
-        name = self._normalize_name(self._clean_name(name))
-        params = parameters.copy() if parameters else {}
-        params["Bucket"] = self.bucket.name
-        params["Key"] = name
-        url = self.bucket.meta.client.generate_presigned_url(
-            "get_object", Params=params, ExpiresIn=self.querystring_expire
-        )
-        url = urlsplit(url)
-        if self.custom_domain:
-            domain = self.custom_domain
-            url_path = "/".join(x for x in url.path.split("/") if x != self.custom_domain)
-        else:
-            domain = url.netloc
-            url_path = url.path
-        return "%s//%s%s?%s" % (self.url_protocol, domain, url_path, url.query)
 
 
 class S3MediaStorage(S3Boto3StorageOffload):  # pylint: disable=abstract-method

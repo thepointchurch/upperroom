@@ -205,6 +205,8 @@ if env("STATICFILES_BUCKET") or env("MEDIAFILES_BUCKET"):
         "CacheControl": "max-age=86400",
     }
 
+    AWS_S3_SIGNATURE_VERSION = "s3v4"
+
 
 AWS_DEFAULT_REGION = env("AWS_DEFAULT_REGION")
 
