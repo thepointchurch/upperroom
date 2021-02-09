@@ -12,6 +12,7 @@ env = environ.Env(
     EMAIL_URL=(str, "consolemail://"),
     EMAIL_BACKEND=(str, None),
     MEDIAFILES_BUCKET=(str, None),
+    MEDIAFILES_ENCRYPTED=(bool, False),
     SITE_ID=(int, 1),
     STATIC_URL=(str, "/static/"),
     STATICFILES_BUCKET=(str, None),
@@ -196,6 +197,7 @@ if env("STATICFILES_BUCKET") or env("MEDIAFILES_BUCKET"):
     STATICFILES_STORAGE = "thepoint.utils.storages.backends.S3StaticStorage"
 
     MEDIAFILES_OFFLOAD = True
+    MEDIAFILES_ENCRYPTED = env("MEDIAFILES_ENCRYPTED")
     MEDIAFILES_BUCKET = env("MEDIAFILES_BUCKET")
     DEFAULT_FILE_STORAGE = "thepoint.utils.storages.backends.S3MediaStorage"
 

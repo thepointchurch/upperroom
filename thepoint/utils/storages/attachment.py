@@ -17,7 +17,7 @@ def attachment_response(file_obj, as_attachment=True, filename="", content_type=
 
 
 def attachment_url(url, path, absolute=False, request=None):
-    if getattr(default_storage, "offload", False):
+    if not settings.MEDIAFILES_ENCRYPTED and getattr(default_storage, "offload", False):
         url = default_storage.url(path)
         url = url.split("?", 1)[0]  # remove auth query strings, should be public
         if not url.startswith("http"):
