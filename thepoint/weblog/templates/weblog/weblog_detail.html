@@ -10,9 +10,9 @@
 
 {% if object.show_date or object.author and object.show_author %}<p class="metadata">{% if object.author and object.show_author %}{{ object.author }}{% if object.show_date %} on {% endif %}{% endif %}{% if object.show_date %}{{ object.published|date:"j/n/Y" }}{% endif %}</p>{% endif %}
 
-{% if object.alternates.count > 0 %}
+{% if object.alternates|length > 0 %}
 <p class="option">This entry is also available in
-{% regroup object.alternates.all by format as formats %}
+{% regroup object.alternates by format as formats %}
 {% for format in formats %}
 {% with a=format.list|first %}<a href="{% url 'weblog:attachment' a.id %}">{{ format.grouper }}</a>{% endwith %}{% if not forloop.last %}{% if forloop.revcounter0 == 1 %} or{% else %},{% endif %}{% endif %}
 {% endfor %}
