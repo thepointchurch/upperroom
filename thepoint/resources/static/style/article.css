@@ -93,3 +93,14 @@ div#index > p.links {
         margin-top: 0;
     }
 }
+
+@media (prefers-color-scheme: dark) {
+    p.option {
+        color: rgb(100,100,100);
+    }
+
+    p.pull {
+        background: rgb(30,30,30);
+        background: rgba(255,255,255,0.1);
+    }
+}

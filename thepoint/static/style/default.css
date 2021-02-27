@@ -517,6 +517,7 @@ div.family .family_address p {
 
 div.family .family_address dl {
     margin: 0;
+    text-align: left;
 }
 
 div.family .family_photo img {
@@ -710,5 +711,37 @@ div.splash > h3 {
 
     label[for="navbar-trigger"] {
         top: 70px;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        color: white;
+        background: black;
+    }
+
+    div#navbar ul a {
+        color: white;
+    }
+
+    div#body {
+        background: black;
+    }
+
+    p.metadata {
+        color: rgb(170,170,170);
+    }
+
+    figure > figcaption {
+        color: rgb(170,170,170);
+    }
+
+    div.family a {
+        color: white;
+    }
+
+    input, select {
+        color: white;
+        background: black;
     }
 }

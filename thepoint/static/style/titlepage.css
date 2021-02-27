@@ -41,12 +41,6 @@ div#title-body div ~ div {
     border-left: 2px solid black;
 }
 
-div#title-body div#title-bar {
-    width: 10px;
-    height: 80%;
-    background: red;
-}
-
 div#title-body h2 {
     border: 0;
     color: black;
@@ -193,5 +187,11 @@ div.splash p {
         padding: 2rem 0;
         border: 0;
         border-top: 2px solid black;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    div#title-body h2 {
+        color: white;
     }
 }
