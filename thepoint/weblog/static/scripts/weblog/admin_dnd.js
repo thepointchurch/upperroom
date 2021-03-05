@@ -2,16 +2,18 @@ function get_md(row) {
     var slug = row.children(".field-slug").find("input").val().trim();
     var title = row.children(".field-title").find("input").val().trim();
     var prefix = "";
+    var suffix = "";
     var mime_type = "";
     try {
         mime_type = row.children(".field-file").find("input").get(0).files[0].type.split("/")[0];
     } catch(e) {
-        mime_type = row.children(".field-mime_type").text().trim().split("/")[0];
+        mime_type = row.children(".field-mime_type").find(".readonly").text().trim().split("/")[0];
     }
     if (row.children(".field-kind").find("select").val().trim() == "I" && mime_type == "image") {
-        prefix = "!";
+        prefix = "\n!";
+        suffix = "\n";
     }
-    return prefix + "[" + title + "][" + slug + "]";
+    return prefix + "[" + title + "][" + slug + "]" + suffix;
 }
 
 (function($) {
@@ -38,10 +40,14 @@ function get_md(row) {
             activeClass: "dropping",
             over: function( event, ui ) {
                 this.original_value = this.value;
+                this.original_start = this.selectionStart;
+                this.original_end = this.selectionEnd;
                 $(this).insert_at_caret(get_md(ui.draggable.parent()));
             },
             out: function( event, ui ) {
                 this.value = this.original_value;
+                this.selectionStart = this.original_start;
+                this.selectionEnd = this.original_end;
             },
         });
 

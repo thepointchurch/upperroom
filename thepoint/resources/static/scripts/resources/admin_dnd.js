@@ -2,25 +2,29 @@ function get_md(row) {
     var slug = "";
     var title = "";
     var prefix = "";
+    var suffix = "";
 
-    var classes = row.attr("class").split(/\s+/);
-    if (classes.includes("dynamic-attachments")) {
-        slug = row.children(".field-slug").find("input").val().trim();
-        title = row.children(".field-title").find("input").val().trim();
+    var attachment_node = row.closest(".dynamic-attachments");
+    var children_node = row.closest(".dynamic-children");
+
+    if (attachment_node.length) {
+        slug = attachment_node.find(".field-slug").find("input").val().trim();
+        title = attachment_node.find(".field-title").find("input").val().trim();
         var mime_type = "";
         try {
-            mime_type = row.children(".field-file").find("input").get(0).files[0].type.split("/")[0];
+            mime_type = attachment_node.find(".field-file").find("input").get(0).files[0].type.split("/")[0];
         } catch(e) {
-            mime_type = row.children(".field-mime_type").text().trim().split("/")[0];
+            mime_type = attachment_node.find(".field-mime_type").find(".readonly").text().trim().split("/")[0];
         }
-        if (row.children(".field-kind").find("select").val().trim() == "I" && mime_type == "image") {
-            prefix = "!";
+        if (attachment_node.find(".field-kind").find("select").val().trim() == "I" && mime_type == "image") {
+            prefix = "\n!";
+            suffix = "\n";
         }
-    } else if (classes.includes("dynamic-children")) {
-        slug = row.children(".field-slug").text().trim();
-        title = row.children(".field-title").text().trim();
+    } else if (children_node.length) {
+        slug = children_node.children(".field-slug").text().trim();
+        title = children_node.children(".field-title").text().trim();
     }
-    return prefix + "[" + title + "][" + slug + "]";
+    return prefix + "[" + title + "][" + slug + "]" + suffix;
 }
 
 (function($) {
@@ -48,10 +52,14 @@ function get_md(row) {
             activeClass: "dropping",
             over: function( event, ui ) {
                 this.original_value = this.value;
+                this.original_start = this.selectionStart;
+                this.original_end = this.selectionEnd;
                 $(this).insert_at_caret(get_md(ui.draggable.parent()));
             },
             out: function( event, ui ) {
                 this.value = this.original_value;
+                this.selectionStart = this.original_start;
+                this.selectionEnd = this.original_end;
             },
         });
 
