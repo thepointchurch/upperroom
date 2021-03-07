@@ -126,6 +126,7 @@ class ResourceAdmin(admin.ModelAdmin):
                     "<dt>To insert inline images:</dt>"
                     "<dd><code>![alt][slug]</code></dd>"
                     "</dl>"
+                    "<p>Images should be in their own paragraph, separated by blank lines.</p>"
                     "<p>You can also drag-and-drop attachments and child resources "
                     "to insert links at the current cursor point.</p>"
                 ),
