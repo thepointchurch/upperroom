@@ -51,7 +51,7 @@ class WeekdayListFilter(admin.SimpleListFilter):
         try:
             return queryset.filter(date__week_day=int(self.value()))
         except Exception:  # pylint: disable=broad-except
-            pass
+            return None
 
 
 class MeetingAdmin(admin.ModelAdmin):

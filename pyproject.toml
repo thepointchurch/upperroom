@@ -104,6 +104,7 @@ jobs = 0
 load-plugins = [
     "pylint_django",
 ]
+django-settings-module = "thepoint.settings"
 
 [tool.pylint.format]
 max-line-length = 119
@@ -115,6 +116,7 @@ disable = [
     "missing-function-docstring",
     "bad-continuation",
     "bad-whitespace",
+    "duplicate-code",
 ]
 
 [tool.pylint.variables]
