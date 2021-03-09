@@ -161,11 +161,15 @@ blockquote {
     padding: 0 2rem;
 }
 
-blockquote p.attrib, blockquote cite {
+blockquote p.attrib, blockquote p.cite, blockquote cite {
     display: block;
     text-align: right;
     font-style: normal;
     font-size: 0.9rem;
+}
+
+blockquote p.attrib:before, blockquote p.cite:before, blockquote cite:before {
+    content: '― ';
 }
 
 code {
