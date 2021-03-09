@@ -6,9 +6,11 @@
 
 {% block heading %}{{ resource.title|smartquote }}{% if not resource.is_published %} [DRAFT]{% endif %}{% endblock heading %}
 
-{% block content %}
-
-{% if resource.author and resource.show_author %}<p id="author">By <a href="{% url 'resources:author' resource.author.id %}">{{ resource.author.fullname|smartquote }}</a></p>{% endif %}
+{% block metadata %}
+{% if resource.author and resource.show_author %}<p id="author" itemprop="author" itemscope itemtype="http://schema.org/Person">By <a href="{% url 'resources:author' resource.author.id %}"><span itemprop="name">{{ resource.author.fullname|smartquote }}</span></a></p>{% else %}<span itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="{{ object.author }}" /></span>{% endif %}
+<meta itemprop="datePublished" content="{{ object.published|date:"Y-m-d\TH:i:sO" }}" />
+<meta itemprop="dateModified" content="{{ object.modified|date:"Y-m-d\TH:i:sO" }}" />
+<div itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="{{ site.name }}" /></div>
 
 {% if resource.alternates|length > 0 %}
 <p class="option">This resource is also available in
@@ -18,7 +20,14 @@
 {% endfor %}
 format.</p>
 {% endif %}
+{% endblock metadata %}
 
+{% block content %}
 {{ resource.content|markdown:"extra,smarty,toc,yafg" }}
-
 {% endblock content %}
+
+{% block semantic %}
+<article itemscope itemprop="mainEntity" itemtype="http://schema.org/Article">
+{{ block.super }}
+</article>
+{% endblock semantic %}

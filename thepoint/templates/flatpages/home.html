@@ -11,22 +11,23 @@
 {% block body %}
 {% include "site/header.html" %}
 
-<div id="body">
 {% include "site/messages.html" %}
+
+<main itemprop="mainEntity" itemscope itemtype="http://schema.org/WebPageElement">
+<meta itemprop="name" content="{{ site.name }}" />
 
 {% if splashes_above %}{% include "splash/splash.html" with splashes=splashes_above %}{% endif %}
 
-<div id="title-body">
 {{ flatpage.content|markdown:"extra,smarty" }}
-</div>
 
 {% include "site/navbar.html" %}
 
 {% if splashes_below %}{% include "splash/splash.html" with splashes=splashes_below %}{% endif %}
 
-<blockquote cite="Matthew 5:14 ESV">
+<blockquote>
 <p>You are the light of the world. A city set on a hill cannot be hidden.</p>
+<cite>Matthew 5:14 ESV</cite>
 </blockquote>
-</div>
+</main>
 
 {% endblock body %}

@@ -1,34 +1,34 @@
-div#navbar {
+nav#navbar {
     margin: 2rem 0;
 }
 
-div#navbar ul {
+nav#navbar ul {
     font-size: 1.5rem;
 }
 
-div#navbar ul li {
+nav#navbar ul li {
     width: 25%;
     margin: 1rem 0.5rem;
     text-align: left;
 }
 
-div#navbar ul li a {
+nav#navbar ul li a {
     display: inline-flex;
     align-items: center;
 }
 
-div#navbar ul li a:before {
+nav#navbar ul li a:before {
     width: 2rem;
     height: 2rem;
     padding: 1.2rem;
     flex-shrink: 0;
 }
 
-div#title-body {
+main {
     text-align: center;
 }
 
-div#title-body div {
+main div {
     width: 30%;
     text-align: center;
     display: inline-block;
@@ -37,46 +37,46 @@ div#title-body div {
     vertical-align: middle;
 }
 
-div#title-body div ~ div {
+main div ~ div {
     border-left: 2px solid black;
 }
 
-div#title-body h2 {
+main h2 {
     border: 0;
     color: black;
     text-align: center;
     text-transform: uppercase;
 }
 
-div#title-body p {
+main p {
     text-align: center;
 }
 
-div#body blockquote {
+main blockquote {
     font-style: normal;
     max-width: 15rem;
     margin: 5rem auto 0;
 }
 
-div#body blockquote p {
+main blockquote p {
     margin: 0 0 1rem;
     text-align: center;
     font-size: 0.8rem;
     line-height: 1.3rem;
 }
 
-div#body blockquote:after {
+main blockquote cite {
     margin-top: 1rem;
     text-align: center;
     font-size: 0.8rem;
     line-height: 1.3rem;
 }
 
-div#body blockquote p.attrib {
+main blockquote p.attrib {
     margin-top: 0.5rem;
 }
 
-div#body blockquote:before {
+main blockquote:before {
     content: '\201C';
     margin: 0 auto;
     display: block;
@@ -85,12 +85,12 @@ div#body blockquote:before {
     text-align: center;
 }
 
-div.splash p {
+aside.splash p {
     text-align: center;
 }
 
 @media screen and (min-height: 760px) {
-    div#header {
+    body > div#wrapper > header {
         height: 625px;
     }
 
@@ -114,28 +114,28 @@ div.splash p {
         transform: translateY(-50%);
     }
 
-    div#header h1 {
+    body > div#wrapper > header h1 {
         text-align: center;
         letter-spacing: 0.5rem;
     }
 
-    div#header p {
+    body > div#wrapper > header p {
         text-align: center;
     }
 }
 
 @media screen and (max-width: 800px) {
-    div#header {
+    body > div#wrapper > header {
         background-position: left;
     }
 
-    div#navbar ul li {
+    nav#navbar ul li {
         width: 40%;
     }
 }
 
 @media screen and (max-width: 600px), screen and (max-height: 400px) {
-    div#header h1 {
+    body > div#wrapper > header h1 {
         letter-spacing: 0.2rem;
         padding: 1rem 2rem 0;
     }
@@ -144,7 +144,7 @@ div.splash p {
         display: none;
     }
 
-    div#navbar {
+    nav#navbar {
         display: block;
         margin-top: 0;
         border: 0;
@@ -155,19 +155,19 @@ div.splash p {
         display: block;
     }
 
-    div#navbar ul li {
+    nav#navbar ul li {
         margin: 0 0.2rem;
         font-size: 1rem;
     }
 
-    div#navbar ul li a:before {
+    nav#navbar ul li a:before {
         width: 1.5rem;
         height: 1.5rem;
     }
 }
 
 @media screen and (max-width: 600px) and (min-height: 750px) {
-    div#header {
+    body > div#wrapper > header {
         height: 75vw;
     }
 
@@ -178,12 +178,12 @@ div.splash p {
 }
 
 @media screen and (max-width: 600px) {
-    div#title-body div {
+    main div {
         width: inherit;
         padding: 0 0 2rem;
     }
 
-    div#title-body div ~ div {
+    main div ~ div {
         padding: 2rem 0;
         border: 0;
         border-top: 2px solid black;
@@ -191,7 +191,7 @@ div.splash p {
 }
 
 @media (prefers-color-scheme: dark) {
-    div#title-body h2 {
+    main h2 {
         color: white;
     }
 }

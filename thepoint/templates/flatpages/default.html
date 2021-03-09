@@ -9,3 +9,9 @@
 {% block content %}
 {{ flatpage.content|markdown:"extra,smarty" }}
 {% endblock content %}
+
+{% block semantic %}
+<main>
+{{ block.super }}
+</main>
+{% endblock semantic %}

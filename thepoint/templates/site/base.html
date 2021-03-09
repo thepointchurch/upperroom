@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html>
 {% load static %}
 {% load smartquote %}
@@ -24,24 +23,25 @@
 <link rel="license" href="{% url 'copyright' %}" />
 {% block headers %}{% endblock headers %}
 </head>
-<body>
+<body itemscope itemtype="https://schema.org/WebPage">
 <div id="wrapper">
 
 {% block body %}
 {% include "site/header.html" %}
 {% include "site/navbar.html" %}
-
-<div id="body">
 {% include "site/messages.html" %}
 
 {% cache None splashes_above request.path %}{% if splashes_above %}{% include "splash/splash.html" with splashes=splashes_above %}{% endif %}{% endcache %}
 
-<h2>{% block heading %}{% endblock heading %}</h2>
-
+{% block semantic %}
+<header>
+<h2 itemprop="name headline">{% block heading %}{% endblock heading %}</h2>
+{% block metadata %}{% endblock metadata %}
+</header>
 {% block content %}{% endblock content %}
+{% endblock semantic %}
 
 {% cache None splashes_below request.path %}{% if splashes_below %}{% include "splash/splash.html" with splashes=splashes_below %}{% endif %}{% endcache %}
-</div>
 
 {% endblock body %}
 </div>

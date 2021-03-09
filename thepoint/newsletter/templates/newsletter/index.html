@@ -9,8 +9,8 @@
 {% endif %}
 
 {% for issue in issue_list %}{% if forloop.first %}<ul>{% endif %}
-<li><strong><a href="{% url 'newsletter:issue' issue.date %}">{{ issue.date|date:"jS F, Y" }}</a></strong>{% if issue.description %}{{ issue.description|markdown:"smarty" }}{% endif %}</li>
-{% if forloop.last %}<ul>{% endif %}{% empty %}
+<li itemprop="hasPart" itemscope itemtype="https://schema.org/PublicationIssue"><strong><a href="{% url 'newsletter:issue' issue.date %}"><time itemprop="datePublished" datetime="{{ issue.date|date:"Y-m-d" }}">{{ issue.date|date:"jS F, Y" }}</time></a></strong>{% if issue.description %}{{ issue.description|markdown:"smarty" }}{% endif %}</li>
+{% if forloop.last %}</ul>{% endif %}{% empty %}
 <p>There are currently no issues available for this publication.</p>
 {% endfor %}
 
@@ -27,3 +27,13 @@ Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
 {% endif %}
 
 {% endblock content %}
+
+{% block semantic %}
+<main itemscope itemprop="mainEntity" itemtype="https://schema.org/Periodical">
+{{ block.super }}
+</main>
+{% endblock semantic %}
+
+{% block metadata %}
+<div itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="{{ site.name }}" /></div>
+{% endblock metadata %}

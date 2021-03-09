@@ -1,4 +1,4 @@
-{% extends "resources/base.html" %}
+{% extends "resources/resource_list.html" %}
 {% load markup %}
 {% load smartquote %}
 
@@ -11,5 +11,5 @@
 {% endblock heading %}
 
 {% block content %}
-{% include "resources/resource_list.html" %}
+{{ block.super }}
 {% endblock content %}

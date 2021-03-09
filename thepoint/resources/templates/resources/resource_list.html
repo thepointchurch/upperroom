@@ -1,16 +1,31 @@
+{% extends "resources/base.html" %}
 {% load markup %}
 {% load smartquote %}
-<div id="index">
+
+{% block content %}
+
+{% block instructions %}{% endblock instructions %}
+
 {% for resource in resource_list %}
-<h3><a href="{% url "resources:detail" resource.slug %}">{{ resource.title|smartquote }}</a></h3>
-{% if tag and tag.show_date or resource.show_date or resource.author and resource.show_author %}<p class="metadata">{% if resource.author and resource.show_author %}{{ resource.author }}{% if tag and tag.show_date or resource.show_date %} on {% endif %}{% endif %}{% if tag and tag.show_date or resource.show_date %}{{ resource.published|date:"j/n/Y" }}{% endif %}</p>{% endif %}
+<article itemscope itemtype="http://schema.org/Article">
+<header>
+<h3 itemprop="name headline"><a href="{% url "resources:detail" resource.slug %}" itemprop="mainEntityOfPage">{{ resource.title|smartquote }}</a></h3>
+{% if tag and tag.show_date or resource.show_date or resource.author and resource.show_author %}
+<p class="metadata">{% if resource.author and resource.show_author %}<span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ resource.author }}</span></span>{% if tag and tag.show_date or resource.show_date %} on {% endif %}{% endif %}{% if tag and tag.show_date or resource.show_date %}<time itemprop="datePublished" datetime="{{ resource.published|date:"Y-m-d\TH:i:sO" }}">{{ resource.published|date:"j/n/Y" }}</time>{% endif %}</p>
+{% endif %}{% if resource.author and not resource.show_author %}<span itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="{{ resource.author }}" /></span>
+{% endif %}{% if tag and not tag.show_date and not resource.show_date %}<meta itemprop="datePublished" content="{{ resource.published|date:"Y-m-d\TH:i:sO" }}" />
+{% endif %}
+<meta itemprop="dateModified" content="{{ resource.modified|date:"Y-m-d\TH:i:sO" }}" />
+<div itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="{{ site.name }}" /></div>
+</header>
 {% if resource.description %}{{ resource.description|markdown:"smarty" }}{% endif %}
-<p class="links">[
-{% if resource.has_body %}<a href="{% url "resources:detail" resource.slug %}">read</a>{% endif %}
+<footer><p class="links">[
+{% if resource.has_body %}<a href="{% url "resources:detail" resource.slug %}" itemprop="url">read</a>{% endif %}
 {% for attachment in resource.alternates %}
-{% if resource.has_body or not forloop.first %}| {% endif %}<a href="{% url 'resources:attachment' attachment.id %}">{{ attachment.format }}</a>
+{% if resource.has_body or not forloop.first %}| {% endif %}<a href="{% url 'resources:attachment' attachment.id %}" itemprop="url">{{ attachment.format }}</a>
 {% endfor %}
-]</p>
+]</p></footer>
+</article>
 {% empty %}
 <p>There were no resources found.</p>
 {% endfor %}
@@ -26,4 +41,10 @@ Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
 {% endif %}
 ]</p>
 {% endif %}
-</div>
+{% endblock content %}
+
+{% block semantic %}
+<main itemscope itemtype="https://schema.org/Collection" itemprop="mainEntity">
+{{ block.super }}
+</main>
+{% endblock semantic %}

@@ -23,7 +23,11 @@ p.pull {
     background: rgba(0,0,0,0.1);
 }
 
-div#body > p, div#body > blockquote, div#body > ul, div#body > ol, div#body > dl, div#body > form, div#body > table {
+article p, article blockquote, article ul, article ol, article dl, article form, article table {
+    margin: 2rem 5rem;
+}
+
+main p, main blockquote, main ul, main ol, main dl, main form, main table {
     margin: 2rem 5rem;
 }
 
@@ -31,64 +35,64 @@ table > p, table > blockquote, table > ul, table > ol, table > dl, table > form 
     margin: 1rem;
 }
 
-div#index > h3 {
+article > header > h3 {
     margin: 2rem;
     margin-bottom: inherit;
 }
 
-div#index > h3:first-child {
+article > header > h3:first-child {
     margin-top: 0;
 }
 
-div#index > h3 > a:hover {
+article > header > h3 > a:hover {
     text-decoration: none;
 }
 
-div#index > p {
+article p {
     margin: 1rem 5rem;
 }
 
-div#index > p.metadata, div#index > p.links {
+article > header > p.metadata, article > footer > p.links {
     margin-top: 0.2rem;
     margin-bottom: 0;
 }
 
-div#index > p.links {
+article > footer > p.links {
     margin-top: 0.8rem;
     margin-bottom: 0.8rem;
 }
 
 @media screen and (max-width: 640px) {
-    div#body {
+    article {
         padding: 0;
     }
 
-    div#body > h3 {
+    article > header > h3 {
         margin-left: 0.8rem;
         margin-right: 0.8rem;
     }
 
-    div#body > p, div#body > blockquote, div#body > ul, div#body > ol, div#body > dl, div#body > form, div#body > table {
+    article p, article blockquote, article ul, article ol, article dl, article form, article table {
         margin: 0.8rem;
     }
 
-    div#index > h3 {
+    article > header > h3 {
         margin-left: 0.8rem;
         margin-right: 0.8rem;
     }
 
-    div#index > p {
+    article > header > p {
         margin-left: 0.8rem;
         margin-right: 0.8rem;
     }
 }
 
 @media print {
-    div#body > p, div#body > blockquote, div#body > ul, div#body > ol, div#body > dl, div#body > form, div#body > table {
+    article p, article blockquote, article ul, article ol, article dl, article form, article table {
         margin: 16pt 0;
     }
 
-    div#body > p#author {
+    article > header > p.metadata {
         font-size: 9pt;
         margin-top: 0;
     }

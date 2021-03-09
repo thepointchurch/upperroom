@@ -1,4 +1,4 @@
-{% extends "resources/base.html" %}
+{% extends "resources/resource_list.html" %}
 {% load markup %}
 {% load smartquote %}
 
@@ -32,5 +32,5 @@
 <p>These items are available as a <a href="{% url 'resources:rss' feed.slug %}">podcast</a>.</p>
 {% endif %}
 {% endfor %}
-{% include "resources/resource_list.html" %}
+{{ block.super }}
 {% endblock content %}

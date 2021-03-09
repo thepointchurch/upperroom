@@ -13,3 +13,9 @@
 {% endfor %}
 
 {% endblock content %}
+
+{% block semantic %}
+<main itemscope itemtype="https://schema.org/Collection" itemprop="mainEntity">
+{{ block.super }}
+</main>
+{% endblock semantic %}

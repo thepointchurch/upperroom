@@ -5,3 +5,8 @@ table.book {
 table.book td {
     padding: 0 1rem;
 }
+
+table.book span[itemprop="author"]:after {
+    content: '\a';
+    white-space: pre;
+}

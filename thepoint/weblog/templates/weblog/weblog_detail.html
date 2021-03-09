@@ -6,19 +6,32 @@
 
 {% block heading %}{{ object.title|smartquote }}{% if not object.is_published %} [DRAFT]{% endif %}{% endblock heading %}
 
-{% block content %}
-
-{% if object.show_date or object.author and object.show_author %}<p class="metadata">{% if object.author and object.show_author %}{{ object.author }}{% if object.show_date %} on {% endif %}{% endif %}{% if object.show_date %}{{ object.published|date:"j/n/Y" }}{% endif %}</p>{% endif %}
-
+{% block metadata %}
+{% if object.show_date or object.author and object.show_author %}
+<p class="metadata">{% if object.author and object.show_author %}<span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ object.author }}</span></span>{% if object.show_date %} on {% endif %}{% endif %}{% if object.show_date %}<time itemprop="datePublished" datetime="{{ object.published|date:"Y-m-d\TH:i:sO" }}">{{ object.published|date:"j/n/Y" }}</time>{% endif %}</p>
+{% endif %}{% if object.author and not object.show_author %}<span itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="{{ object.author }}" /></span>
+{% endif %}{% if not object.show_date %}<meta itemprop="datePublished" content="{{ object.published|date:"Y-m-d\TH:i:sO" }}" />
+{% endif %}
+<meta itemprop="dateModified" content="{{ object.modified|date:"Y-m-d\TH:i:sO" }}" />
+<div itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="{{ site.name }}" /></div>
 {% if object.alternates|length > 0 %}
 <p class="option">This entry is also available in
 {% regroup object.alternates by format as formats %}
 {% for format in formats %}
-{% with a=format.list|first %}<a href="{% url 'weblog:attachment' a.id %}">{{ format.grouper }}</a>{% endwith %}{% if not forloop.last %}{% if forloop.revcounter0 == 1 %} or{% else %},{% endif %}{% endif %}
+{% with a=format.list|first %}<a href="{% url 'weblog:attachment' a.id %}" itemprop="url">{{ format.grouper }}</a>{% endwith %}{% if not forloop.last %}{% if forloop.revcounter0 == 1 %} or{% else %},{% endif %}{% endif %}
 {% endfor %}
 format.</p>
 {% endif %}
+{% endblock metadata %}
 
+{% block semantic %}
+<article itemscope itemprop="mainEntity" itemtype="http://schema.org/BlogPosting">
+{{ block.super }}
+</article>
+{% endblock semantic %}
+
+{% block content %}
+<div itemprop="articleBody">
 {% if object.body|length > 0 %}{{ object.body_attach|markdown:"smarty,yafg" }}{% else %}{{ object.description_attach|markdown:"smarty" }}{% endif %}
-
+</div>
 {% endblock content %}

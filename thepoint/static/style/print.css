@@ -41,7 +41,7 @@ h1, h2, h3, h4, h5, h6 {
     border: 0;
 }
 
-div#header {
+body > div#wrapper > header {
     display: none;
 }
 
@@ -121,13 +121,7 @@ img.left {
     float: left;
 }
 
-div#body {
-    width: auto;
-    margin: 0;
-    min-height: initial;
-}
-
-div#navbar, div#navbar-member, label[for="navbar-trigger"], label[for="navbar-member-trigger"] {
+nav#navbar, nav#navbar-member, label[for="navbar-trigger"], label[for="navbar-member-trigger"] {
     display: none;
 }
 
@@ -143,7 +137,7 @@ p.option {
     display: none;
 }
 
-div.messages {
+aside.messages {
     display: none;
 }
 
@@ -255,6 +249,6 @@ a.footnote-backref {
 }
 
 /***[ splash stuff ]*********************************/
-div.splash {
+aside.splash {
     display: none;
 }

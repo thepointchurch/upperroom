@@ -1,16 +1,32 @@
+{% extends "weblog/base.html" %}
 {% load markup %}
 {% load smartquote %}
-<div id="index">
+
+{% block content %}
+
+{% block instructions %}{% endblock instructions %}
+
 {% for entry in weblogentry_list %}
-<h3><a href="{% url "weblog:detail" entry.created.year entry.created.month entry.slug %}">{{ entry.title|smartquote }}</a></h3>
-{% if entry.show_date or entry.author and entry.show_author %}<p class="metadata">{% if entry.author and entry.show_author %}{{ entry.author }}{% if entry.show_date %} on {% endif %}{% endif %}{% if entry.show_date %}{{ entry.published|date:"j/n/Y" }}{% endif %}</p>{% endif %}
+<article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+<header>
+<h3 itemprop="name headline"><a href="{% url "weblog:detail" entry.created.year entry.created.month entry.slug %}" itemprop="mainEntityOfPage">{{ entry.title|smartquote }}</a></h3>
+{% if entry.show_date or entry.author and entry.show_author %}
+<p class="metadata">{% if entry.author and entry.show_author %}<span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ entry.author }}</span></span>{% if entry.show_date %} on {% endif %}{% endif %}{% if entry.show_date %}<time itemprop="datePublished" datetime="{{ entry.published|date:"Y-m-d\TH:i:sO" }}">{{ entry.published|date:"j/n/Y" }}</time>{% endif %}</p>
+{% endif %}{% if entry.author and not entry.show_author %}<span itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="{{ entry.author }}" /></span>
+{% endif %}{% if not entry.show_date %}<meta itemprop="datePublished" content="{{ entry.published|date:"Y-m-d\TH:i:sO" }}" />
+{% endif %}
+<meta itemprop="dateModified" content="{{ entry.modified|date:"Y-m-d\TH:i:sO" }}" />
+<div itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="{{ site.name }}" /></div>
+</header>
 {% if entry.description %}{{ entry.description_attach|markdown:"smarty" }}{% endif %}
-{% if entry.has_body or entry.alternates %}<p class="links">[
-{% if entry.has_body %}<a href="{% url "weblog:detail" entry.created.year entry.created.month entry.slug %}">read</a>{% endif %}
+{% if entry.has_body or entry.alternates %}<footer><p class="links">[
+{% if entry.has_body %}<a href="{% url "weblog:detail" entry.created.year entry.created.month entry.slug %}" itemprop="url">read</a>{% endif %}
 {% for attachment in entry.alternates %}
-{% if entry.has_body or not forloop.first %}| {% endif %}<a href="{% url 'weblog:attachment' attachment.id %}">{{ attachment.format }}</a>
+{% if entry.has_body or not forloop.first %}| {% endif %}<a href="{% url 'weblog:attachment' attachment.id %}" itemprop="url">{{ attachment.format }}</a>
 {% endfor %}
-]</p>{% endif %}
+]</p>
+</footer>{% endif %}
+</article>
 {% empty %}
 <p>There were no items found.</p>
 {% endfor %}
@@ -26,4 +42,10 @@ Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
 {% endif %}
 ]</p>
 {% endif %}
-</div>
+{% endblock content %}
+
+{% block semantic %}
+<main itemscope itemtype="https://schema.org/Blog" itemprop="mainEntity">
+{{ block.super }}
+</main>
+{% endblock semantic %}

@@ -1,5 +1,11 @@
-{% extends "flatpages/default.html" %}
+{% extends "site/base.html" %}
+{% load markup %}
+{% load smartquote %}
 {% load static %}
+
+{% block title %}{{ block.super }}: {{ flatpage.title|smartquote }}{% endblock title %}
+
+{% block heading %}{{ flatpage.title|smartquote }}{% endblock heading %}
 
 {% block stylesheets %}
 <link type="text/css" href="{% static 'style/contact.css' %}" rel="stylesheet" />
@@ -7,6 +13,12 @@
 {% endblock stylesheets %}
 
 {% block content %}
-<img src="{% static 'style/building.jpg' %}"/>
-{{ block.super }}
+<img itemprop="image" src="{% static 'style/building.jpg' %}"/>
+{{ flatpage.content|markdown:"extra,smarty" }}
 {% endblock content %}
+
+{% block semantic %}
+<main itemscope itemprop="mainEntity" itemtype="http://schema.org/ContactPage">
+{{ block.super }}
+</main>
+{% endblock semantic %}
