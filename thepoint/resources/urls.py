@@ -9,7 +9,8 @@ urlpatterns = [
     path("<slug:slug>", views.ResourceDetail.as_view(), name="detail"),
     path("download/<uuid:pk>", views.AttachmentView.as_view(), name="attachment"),
     path("author/<int:pk>", views.AuthorList.as_view(), name="author"),
-    path("feed/<slug:slug>/art", views.FeedArtworkView.as_view(), name="feed_artwork"),
+    path("feed/enc/<uuid:pk>.<str:extension>", views.EnclosureView.as_view(), name="enclosure"),
+    path("feed/<slug:slug>/art.<str:extension>", views.FeedArtworkView.as_view(), name="feed_artwork"),
     path("feed/<slug:slug>", feeds.ResourceFeedRSS(), name="rss"),
     path("feed/<slug:slug>/atom", feeds.ResourceFeedAtom(), name="atom"),
 ]

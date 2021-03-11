@@ -11,7 +11,6 @@ from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
 from ..utils.mime import guess_extension
-from ..utils.storages.attachment import attachment_url
 
 logger = logging.getLogger(__name__)
 
@@ -386,8 +385,8 @@ class ResourceFeed(models.Model):
     @cached_property
     def image_url(self):
         if self.artwork:
-            return attachment_url(
-                reverse("resources:feed_artwork", kwargs={"slug": self.slug}), self.artwork.file.name
+            return reverse(
+                "resources:feed_artwork", kwargs={"slug": self.slug, "extension": self.artwork.name.split(".")[-1]}
             )
         return None
 

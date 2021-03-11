@@ -5,8 +5,16 @@ from django.core.files.uploadedfile import UploadedFile
 from django.db.models.signals import post_delete, post_save, pre_delete, pre_save
 from django.dispatch import receiver
 
-from ..utils.storages import delete_s3_file, is_s3_file, is_s3_file_public, set_s3_file_acl
-from .models import Attachment, Resource, ResourceFeed, Tag
+from ..utils.storages import (
+    decrypt_s3_file,
+    delete_s3_file,
+    encrypt_s3_file,
+    is_s3_encrypted,
+    is_s3_file,
+    is_s3_file_public,
+    set_s3_file_acl,
+)
+from .models import Attachment, Resource, ResourceFeed, Tag, get_attachment_filename, get_feed_artwork_filename
 
 
 def delete_file(file_object):
@@ -33,7 +41,7 @@ def resource_post_delete(sender, instance, **kwargs):
         clear_navbar_cache()
 
 
-@receiver(post_save, sender=Resource)
+@receiver(post_save, sender=Resource)  # NOQA: C901
 def resource_post_save(sender, instance, **kwargs):
     _ = sender
     if kwargs.get("raw"):
@@ -42,6 +50,12 @@ def resource_post_save(sender, instance, **kwargs):
         if is_s3_file(attachment.file):
             was_private = getattr(instance, "was_private", None)
             if was_private is not None and was_private != instance.is_private:
+                if is_s3_encrypted(attachment.file):
+                    if not instance.is_private:
+                        decrypt_s3_file(attachment.file)
+                else:
+                    if instance.is_private:
+                        encrypt_s3_file(attachment.file)
                 if is_s3_file_public(attachment.file):
                     if instance.is_private:
                         set_s3_file_acl(attachment.file, "private")
@@ -92,6 +106,8 @@ def attachment_pre_save(sender, instance, **kwargs):
         except ObjectDoesNotExist:
             pass
         instance.update_metadata()
+        if not instance.is_private:
+            instance.file.storage.save_cleartext(get_attachment_filename(instance, instance.file.name))
 
 
 @receiver(post_save, sender=Attachment)
@@ -164,6 +180,7 @@ def feed_pre_save(sender, instance, **kwargs):
         # leave the file missing.
         if old_artwork:
             delete_file(old_artwork)
+        instance.artwork.storage.save_cleartext(get_feed_artwork_filename(instance, instance.artwork.name))
 
 
 @receiver(post_save, sender=ResourceFeed)

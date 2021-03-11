@@ -2,27 +2,20 @@ from django.conf import settings
 from django.core.files.storage import default_storage
 from django.http import FileResponse, HttpResponseRedirect
 
+from . import is_s3_encrypted, is_s3_file, is_s3_file_public
 
-def attachment_response(file_obj, as_attachment=True, filename="", content_type=None):
+
+def attachment_response(file_obj, as_attachment=True, filename="", content_type=None, signed=True):
     if getattr(default_storage, "offload", False):
         parameters = {}
         if as_attachment and filename:
             parameters["ResponseContentDisposition"] = 'attachment; filename="%s"' % filename
         if content_type:
             parameters["ResponseContentType"] = content_type
-        return HttpResponseRedirect(default_storage.url(getattr(file_obj, "name", file_obj), parameters=parameters))
+        url = default_storage.url(getattr(file_obj, "name", file_obj), parameters=parameters)
+        if not signed and is_s3_file(file_obj) and is_s3_file_public(file_obj) and not is_s3_encrypted(file_obj):
+            url = url.split("?", 1)[0]  # remove auth query strings
+        return HttpResponseRedirect(url)
     if isinstance(file_obj, str):
         file_obj = open("%s/%s" % (settings.MEDIA_ROOT, file_obj), "rb")
     return FileResponse(file_obj, as_attachment=as_attachment, filename=filename, content_type=content_type)
-
-
-def attachment_url(url, path, absolute=False, request=None):
-    if not settings.MEDIAFILES_ENCRYPTED and getattr(default_storage, "offload", False):
-        url = default_storage.url(path)
-        url = url.split("?", 1)[0]  # remove auth query strings, should be public
-        if not url.startswith("http"):
-            url = "https:" + url
-        return url
-    if absolute and request:
-        return request.build_absolute_uri(url)
-    return url

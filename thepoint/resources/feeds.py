@@ -9,7 +9,6 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.feedgenerator import Atom1Feed, Enclosure, Rss201rev2Feed
 
-from ..utils.storages.attachment import attachment_url
 from .models import Resource, ResourceFeed
 
 
@@ -154,8 +153,8 @@ class ResourceFeedRSS(Feed):
     def item_enclosures(self, item):
         enc = []
         for attachment in item.attachments.filter(mime_type__in=self.object.mime_types):
-            url = attachment_url(
-                reverse("resources:attachment", kwargs={"pk": attachment.id}), attachment.file.name, True, self.request
+            url = self.request.build_absolute_uri(
+                reverse("resources:enclosure", kwargs={"pk": attachment.id, "extension": attachment.extension[1:]})
             )
             enc.append(Enclosure(url=url, length=str(attachment.size), mime_type=attachment.mime_type))
             # Limit podcasts to only one enclosure
