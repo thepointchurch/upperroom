@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+from django.utils.translation import gettext_lazy as _
 
 from ....utils.storages import (
     decrypt_s3_file,
@@ -11,30 +12,52 @@ from ....utils.storages import (
 from ...models import Attachment, ResourceFeed
 
 
-def fix_permission(file_object, is_public):
-    if is_public:
-        if is_s3_encrypted(file_object):
-            decrypt_s3_file(file_object)
-        if not is_s3_file_public(file_object):
-            set_s3_file_acl(file_object, "public-read")
-    else:
-        if not is_s3_encrypted(file_object):
-            encrypt_s3_file(file_object)
-        if is_s3_file_public(file_object):
-            set_s3_file_acl(file_object, "private")
-
-
 class Command(BaseCommand):
     help = "Check permissions and encryption on S3 media files."
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--test",
+            action="store_true",
+            dest="test",
+            default=False,
+            help=_("Do nothing, only show what would be done"),
+        )
+
     def handle(self, *args, **options):
         for attachment in Attachment.objects.all():
-            print(attachment.title)
             if not is_s3_file(attachment.file):
                 continue
-            fix_permission(attachment.file, not attachment.is_private)
+            self.fix_permission(attachment.file, not attachment.is_private, options["test"])
         for feed in ResourceFeed.objects.all():
-            print(feed.title)
             if not is_s3_file(feed.artwork):
                 continue
-            fix_permission(feed.artwork, True)
+            self.fix_permission(feed.artwork, True, options["test"])
+
+    def fix_permission(self, file_object, is_public, dry_run=False):  # pylint: disable=too-many-branches
+        if is_public:
+            if is_s3_encrypted(file_object):
+                if dry_run:
+                    self.stdout.write(_("%s will be decrypted") % file_object.name)
+                else:
+                    decrypt_s3_file(file_object)
+                    self.stdout.write(_("%s decrypted") % file_object.name)
+            if not is_s3_file_public(file_object):
+                if dry_run:
+                    self.stdout.write(_("%s will be set public") % file_object.name)
+                else:
+                    set_s3_file_acl(file_object, "public-read")
+                    self.stdout.write(_("%s set public") % file_object.name)
+        else:
+            if not is_s3_encrypted(file_object):
+                if dry_run:
+                    self.stdout.write(_("%s will be encrypted") % file_object.name)
+                else:
+                    encrypt_s3_file(file_object)
+                    self.stdout.write(_("%s encrypted") % file_object.name)
+            if is_s3_file_public(file_object):
+                if dry_run:
+                    self.stdout.write(_("%s will be set private") % file_object.name)
+                else:
+                    set_s3_file_acl(file_object, "private")
+                    self.stdout.write(_("%s set private") % file_object.name)
