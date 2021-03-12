@@ -1,13 +1,9 @@
 {% load roster_filters %}
 {% load smartquote %}
 
-{% block instructions %}{% endblock instructions %}
-
-<table>
-<tr>
-<td>
 {% include "members/ops.html" %}
-</td><td>
+
+<section>
 <h3>Personal Data</h3>
 {% if user.person.birthday %}<p><strong>Your birthday:</strong> {{ user.person.birthday|date:'jS F' }}</p>{% endif %}
 {% if user.person.family.street and user.person.family.suburb and user.person.family.postcode %}<p><strong>Family Address:</strong><br />
@@ -20,10 +16,9 @@
 {% if user.person.family.email %}<p><strong>Family Email:</strong> <a href="mailto:{{ user.person.family.email }}">{{ user.person.family.email }}</a></p>{% endif %}
 {% if user.person.email %}<p><strong>Your Email:</strong> <a href="mailto:{{ user.person.email }}">{{ user.person.email }}</a></p>{% endif %}
 <p class="links">[ <a href="{% url 'directory:detail' user.person.family.id %}">Your Family’s Data</a> ]</p>
-</td>
-</tr>
-<tr>
-<td>
+</section>
+
+<section>
 <h3>Roster</h3>
 {% if role_list.count > 0 %}
 <p>Your roster commitments for the next two months:</p>
@@ -42,10 +37,9 @@
 {% else %}
 <p>You have no responsibilities in the next two months.</p>
 {% endif %}
-</td>
-<td>
+</section>
+
+<section>
 <h3>Directory Search</h3>
 {% include "directory/search_form.html" %}
-</td>
-</tr>
-</table>
+</section>

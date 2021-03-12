@@ -1,6 +1,8 @@
 {% extends "members/base.html" %}
 
 {% block content %}
+{% block instructions %}{% endblock instructions %}
+<div id="portal">
 {% if user.is_active %}
 {% if person %}
 {% include "members/portal.html" %}
@@ -12,4 +14,5 @@
 {% else %}
 {% include "members/generic.html" %}
 {% endif %}
+</div>
 {% endblock content %}

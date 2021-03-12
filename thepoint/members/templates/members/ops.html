@@ -1,3 +1,4 @@
+<section>
 <h3>Operations</h3>
 
 <p>Click here to perform an operation:</p>
@@ -7,3 +8,4 @@
 {% if perms.roster.add_meeting %}<li><a href="{% url 'roster:builder' %}">Roster Builder</a></li>{% endif %}
 <li><a href="{% url "members:password_change" %}">Change your password</a></li>
 </ul>
+</section>

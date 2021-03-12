@@ -600,6 +600,17 @@ aside.splash > h3 {
     border: none;
 }
 
+#portal {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+#portal > section {
+    min-width: 50%;
+}
+
 @media screen and (max-width: 600px) {
     body {
         background-size: auto;
@@ -655,6 +666,10 @@ aside.splash > h3 {
     div.family .family_photo img {
         max-width: 100%;
         margin: 0;
+    }
+
+    section.portal {
+        min-width: 100%;
     }
 }
 
