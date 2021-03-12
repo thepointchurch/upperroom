@@ -1,0 +1,15 @@
+{% extends "members/portal.html" %}
+{% load smartquote %}
+{% block portalcontent %}
+{% if person.birthday %}<p><strong>Your birthday:</strong> {{ person.birthday|date:'jS F' }}</p>{% endif %}
+{% if person.family.street and person.family.suburb and person.family.postcode %}<p><strong>Family Address:</strong><br />
+{{ person.family.street|smartquote }}<br />
+{{ person.family.suburb|smartquote }} {{ person.family.postcode }}</p>{% endif %}
+{% if person.family.phone_home %}<p><strong>Family Phone:</strong> {{ person.family.phone_home }}</p>{% endif %}
+{% if person.family.phone_mobile %}<p><strong>Family Mobile:</strong> {{ person.family.phone_mobile }}</p>{% endif %}
+{% if person.phone_mobile %}<p><strong>Your Mobile Phone:</strong> {{ person.phone_mobile }}</p>{% endif %}
+{% if person.phone_work %}<p><strong>Your Work Phone:</strong> {{ person.phone_work }}</p>{% endif %}
+{% if person.family.email %}<p><strong>Family Email:</strong> <a href="mailto:{{ person.family.email }}">{{ person.family.email }}</a></p>{% endif %}
+{% if person.email %}<p><strong>Your Email:</strong> <a href="mailto:{{ person.email }}">{{ person.email }}</a></p>{% endif %}
+<p class="links">[ <a href="{% url 'directory:detail' person.family.id %}">Your Family’s Data</a> ]</p>
+{% endblock portalcontent %}

@@ -1,45 +1,6 @@
-{% load roster_filters %}
-{% load smartquote %}
-
-{% include "members/ops.html" %}
-
-<section>
-<h3>Personal Data</h3>
-{% if user.person.birthday %}<p><strong>Your birthday:</strong> {{ user.person.birthday|date:'jS F' }}</p>{% endif %}
-{% if user.person.family.street and user.person.family.suburb and user.person.family.postcode %}<p><strong>Family Address:</strong><br />
-{{ user.person.family.street|smartquote }}<br />
-{{ user.person.family.suburb|smartquote }} {{ user.person.family.postcode }}</p>{% endif %}
-{% if user.person.family.phone_home %}<p><strong>Family Phone:</strong> {{ user.person.family.phone_home }}</p>{% endif %}
-{% if user.person.family.phone_mobile %}<p><strong>Family Mobile:</strong> {{ user.person.family.phone_mobile }}</p>{% endif %}
-{% if user.person.phone_mobile %}<p><strong>Your Mobile Phone:</strong> {{ user.person.phone_mobile }}</p>{% endif %}
-{% if user.person.phone_work %}<p><strong>Your Work Phone:</strong> {{ user.person.phone_work }}</p>{% endif %}
-{% if user.person.family.email %}<p><strong>Family Email:</strong> <a href="mailto:{{ user.person.family.email }}">{{ user.person.family.email }}</a></p>{% endif %}
-{% if user.person.email %}<p><strong>Your Email:</strong> <a href="mailto:{{ user.person.email }}">{{ user.person.email }}</a></p>{% endif %}
-<p class="links">[ <a href="{% url 'directory:detail' user.person.family.id %}">Your Family’s Data</a> ]</p>
-</section>
-
-<section>
-<h3>Roster</h3>
-{% if role_list.count > 0 %}
-<p>Your roster commitments for the next two months:</p>
-<dl>
-{% regroup role_list|dictsort:"date" by date as role_date %}
-{% for date in role_date %}
-<dt>{{ date.grouper|date:'jS F' }}</dt>
-{% for r in date.list %}
-<dd>{{ r.role|smartquote }}{% if r.location %} at {{ r.location|smartquote }}{% endif %}{% if r.description %} <cite>({{ r.description|smartquote }})</cite>{% endif %}
-{% if r.people.count > 1 %} with {% for p in r.people.all|remove_person:user.person %}{% if not forloop.first %}, {% endif %}<a href="{% url 'roster:person' p.id %}">{{ p.fullname|smartquote }}</a>{% endfor %}{% endif %}
-</dd>
-{% endfor %}
-{% endfor %}
-</dl>
-<p class="links">[ <a href="{% url 'roster:person' user.person.id %}">Your Complete Roster</a> | <a href="{% url 'roster:event' user.person.id %}">iCalendar</a> ]</p>
-{% else %}
-<p>You have no responsibilities in the next two months.</p>
-{% endif %}
-</section>
-
-<section>
-<h3>Directory Search</h3>
-{% include "directory/search_form.html" %}
+<section{% if order %} style="order: {{ order }}"{% endif %}>
+{% if title %}<h3>{{ title }}</h3>{% endif %}
+{% block portalintro %}{% endblock portalintro %}
+{% block portalcontent %}
+{% endblock portalcontent %}
 </section>

@@ -3,7 +3,6 @@
 import logging
 import platform
 import sys
-from datetime import date, timedelta
 
 from django.conf import settings
 from django.contrib import messages
@@ -18,8 +17,8 @@ from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
 from ..directory.models import Person
-from ..roster.models import Role
 from ..utils.mixin import NeverCacheMixin, VaryOnCookieMixin
+from .portals import Portal
 
 if sys.version_info >= (3, 8):
     from importlib import metadata as importlib_metadata  # pylint: disable=no-name-in-module
@@ -35,28 +34,8 @@ class IndexView(VaryOnCookieMixin, LoginRequiredMixin, generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        try:
-            context["role_list"] = (
-                Role.current_objects.filter(people__id=self.request.user.person.id)
-                .filter(meeting__date__lte=(date.today() + timedelta(days=60)))
-                .select_related("meeting", "role", "location",)
-                .prefetch_related("people", "people__family",)
-                .only(
-                    "description",
-                    "meeting__date",
-                    "role__name",
-                    "location__name",
-                    "people__name",
-                    "people__suffix",
-                    "people__surname_override",
-                    "people__family__name",
-                )
-            )
-        except Exception:  # pylint: disable=broad-except
-            pass
         context["webmaster_email"] = settings.WEBMASTER_EMAIL
-        context["search_query"] = ""
-        context["person"] = getattr(self.request.user, "person", None)
+        context["portals"] = [portal(self.request) for portal in Portal.get_portals()]
         return context
 
 
