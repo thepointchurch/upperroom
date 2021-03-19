@@ -209,6 +209,11 @@ p.metadata {
     text-align: right;
 }
 
+.helptext {
+    font-size: 0.8rem;
+    color: rgb(85,85,85);
+}
+
 sup, sub {
     vertical-align: baseline;
     position: relative;
@@ -534,6 +539,7 @@ form table tr {
 
 form table th {
     text-align: left;
+    vertical-align: top;
 }
 
 form table td {
