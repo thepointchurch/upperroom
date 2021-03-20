@@ -279,6 +279,10 @@ nav#navbar ul a:hover {
     color: rgb(170,50,0);
 }
 
+a:focus {
+    outline: 2px solid rgb(170,50,0);
+}
+
 nav#navbar ul li a:before {
     border: 0;
     margin: 0 0.5rem 0 0;
@@ -342,6 +346,12 @@ nav#navbar-member ul li a:before {
 nav#navbar-member ul a {
     color: white;
     padding-right: 0.3rem;
+}
+
+nav#navbar-member ul li a:focus {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect width='1' height='1' fill='rgb(170,50,0)' opacity='0.5'/%3E%3C/svg%3E");
+    background-size: 2000px 2000px;
+    outline: none;
 }
 
 nav#navbar-member ul li a:hover {
