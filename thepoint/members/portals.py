@@ -123,7 +123,6 @@ class HomePage(Portal):
 class AdminOperation(PortalOperation):
     order = -10
     title = _("Admin Site")
-    description = "admin"
 
     def get_context(self):
         context = super().get_context()

@@ -37,7 +37,7 @@ class EditOperation(PortalOperation):
 
     def get_context(self):
         context = super().get_context()
-        context["url"] = reverse("directory:detail", kwargs={"pk": self.request.user.person.family.id})
+        context["url"] = reverse("directory:edit")
         return context
 
     def will_show(self):
