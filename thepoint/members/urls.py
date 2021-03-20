@@ -1,3 +1,4 @@
+from csp.decorators import csp_update
 from django.contrib import auth
 from django.contrib.auth.decorators import user_passes_test
 from django.urls import path, reverse_lazy
@@ -14,10 +15,12 @@ urlpatterns = [
     path(
         "passwd",
         never_cache(
-            user_passes_test(views.not_a_guest)(
-                auth.views.PasswordChangeView.as_view(success_url=reverse_lazy("members:index"))
+            csp_update(SCRIPT_SRC="'unsafe-inline'")(
+                user_passes_test(views.not_a_guest)(
+                    auth.views.PasswordChangeView.as_view(success_url=reverse_lazy("members:index"))
+                )
             )
-        ),  # NOQA: E501 pylint: disable=line-too-long
+        ),
         name="password_change",
     ),
     path(

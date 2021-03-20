@@ -1,3 +1,4 @@
+from csp.decorators import csp_update
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.flatpages.views import flatpage
@@ -23,7 +24,12 @@ urlpatterns = [
     path("robots.txt", include("robots.urls")),
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="django.contrib.sitemaps.views.sitemap"),
     path("", vary_on_cookie(flatpage), {"url": "/"}, name="home"),
-    path("calendar", vary_on_cookie(flatpage), {"url": "/calendar/"}, name="calendar"),
+    path(
+        "calendar",
+        vary_on_cookie(csp_update(FRAME_SRC="calendar.google.com")(flatpage)),
+        {"url": "/calendar/"},
+        name="calendar",
+    ),
     path("contact", vary_on_cookie(flatpage), {"url": "/contact/"}, name="contact"),
     path("copyright", vary_on_cookie(flatpage), {"url": "/copyright/"}, name="copyright"),
 ]

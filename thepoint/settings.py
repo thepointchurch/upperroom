@@ -73,6 +73,7 @@ MIDDLEWARE = [
     "django.contrib.flatpages.middleware.FlatpageFallbackMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "csp.middleware.CSPMiddleware",
     "thepoint.resources.middleware.ResourceFallbackMiddleware",
     "django.middleware.cache.FetchFromCacheMiddleware",
 ]
@@ -191,16 +192,31 @@ CACHE_MIDDLEWARE_ALIAS = "default"
 CACHE_MIDDLEWARE_KEY_PREFIX = ""
 
 
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_IMG_SRC = ("'self'", "data:")
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "fonts.googleapis.com")
+CSP_FONT_SRC = ("'self'", "fonts.gstatic.com")
+CSP_SCRIPT_SRC = ("'self'", "cdnjs.cloudflare.com")
+
+
 if env("STATICFILES_BUCKET") or env("MEDIAFILES_BUCKET"):
     INSTALLED_APPS += ("storages",)
 
     STATICFILES_BUCKET = env("STATICFILES_BUCKET")
     STATICFILES_STORAGE = "thepoint.utils.storages.backends.S3StaticStorage"
+    if STATICFILES_BUCKET:
+        CSP_STYLE_SRC += (STATICFILES_BUCKET,)
+        CSP_IMG_SRC += (STATICFILES_BUCKET,)
 
     MEDIAFILES_OFFLOAD = True
     MEDIAFILES_ENCRYPTED = env("MEDIAFILES_ENCRYPTED")
     MEDIAFILES_BUCKET = env("MEDIAFILES_BUCKET")
     DEFAULT_FILE_STORAGE = "thepoint.utils.storages.backends.S3MediaStorage"
+    if MEDIAFILES_BUCKET:
+        if "." not in MEDIAFILES_BUCKET:
+            CSP_IMG_SRC += (MEDIAFILES_BUCKET + ".s3.amazonaws.com",)
+        else:
+            CSP_IMG_SRC += (MEDIAFILES_BUCKET,)
 
     AWS_DEFAULT_ACL = None
 
