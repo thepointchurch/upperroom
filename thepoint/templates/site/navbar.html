@@ -1,8 +1,7 @@
 {% load smartquote %}
 {% load static %}
 {% load cache %}
-<input type="checkbox" id="navbar-trigger"/><label for="navbar-trigger">Menu</label>
-<nav id="navbar" itemscope itemtype="https://schema.org/SiteNavigationElement">
+<nav id="navbar" itemscope itemtype="https://schema.org/SiteNavigationElement" aria-label="Main Menu" tabindex="0">
 {% cache None navbar_featured %}
 <ul>
 <li><a href="{% url 'home' %}" class="nav-home" itemprop="url">Home</a></li>
@@ -15,8 +14,7 @@
 {% endcache %}
 </nav>
 {% if user.is_authenticated %}
-<input type="checkbox" id="navbar-member-trigger"/><label for="navbar-member-trigger">Members’ Area</label>
-<nav id="navbar-member" itemscope itemtype="https://schema.org/SiteNavigationElement">
+<nav id="navbar-member" itemscope itemtype="https://schema.org/SiteNavigationElement" aria-label="Members’ Area" tabindex="0">
 {% cache None navbar_featured_private %}
 <ul>
 <li><a href="{% url 'members:index' %}" class="nav-members" itemprop="url">Members’ Home</a></li>
@@ -36,5 +34,5 @@
 {% cache None navbar_user request.user.username %}<p class="logon">You are logged in as {{ user.get_full_name }}</p>{% endcache %}
 </nav>
 {% else %}
-<nav itemscope itemtype="https://schema.org/SiteNavigationElement"><a href="{% url 'members:index' %}" title="Login to the Members’ area." itemprop="url"><p id="navbar-member-trigger">Member Login</p></a></nav>
+<nav id="navbar-login" itemscope itemtype="https://schema.org/SiteNavigationElement"><a href="{% url 'members:index' %}" title="Login to the Members’ area." itemprop="url">Member Login</a></nav>
 {% endif %}

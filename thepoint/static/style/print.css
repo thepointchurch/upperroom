@@ -121,7 +121,7 @@ img.left {
     float: left;
 }
 
-nav#navbar, nav#navbar-member, label[for="navbar-trigger"], label[for="navbar-member-trigger"] {
+nav#navbar, nav#navbar-member, nav#navbar-login {
     display: none;
 }
 
