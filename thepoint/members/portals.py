@@ -148,6 +148,19 @@ class PasswordOperation(PortalOperation):
         )
 
 
+class TechDetailsOperation(PortalOperation):
+    order = 9
+    title = _("Tech Details")
+
+    def get_context(self):
+        context = super().get_context()
+        context["url"] = reverse("members:tech")
+        return context
+
+    def will_show(self):
+        return self.request.user.is_active and self.request.user.is_staff
+
+
 class CreateAccountOperation(PortalOperation):
     order = 10
     title = _("Create Account")
