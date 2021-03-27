@@ -618,7 +618,8 @@ form table td p {
 }
 
 form input[type=submit], form input[type=reset] {
-    float: right;
+    display: block;
+    margin-left: auto;
 }
 
 form table.passwd {
