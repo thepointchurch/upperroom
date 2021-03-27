@@ -8,8 +8,8 @@ p.option {
 }
 
 p.intro {
-    border-top: 1px solid;
-    border-bottom: 1px solid;
+    border-top: 0.1rem solid;
+    border-bottom: 0.1rem solid;
     padding: 0.5rem;
     text-align: justify;
     margin-top: 2rem;
@@ -24,7 +24,7 @@ p.pull {
 }
 
 article p, article blockquote, article ul, article ol, article dl, article form, article table {
-    margin: 2rem 5rem;
+    margin: 0.8rem;
 }
 
 main p, main blockquote, main ul, main ol, main dl, main form, main table {
@@ -36,8 +36,7 @@ table > p, table > blockquote, table > ul, table > ol, table > dl, table > form 
 }
 
 article > header > h3 {
-    margin: 2rem;
-    margin-bottom: inherit;
+    margin: inherit 0.8rem;
 }
 
 article > header > h3:first-child {
@@ -49,7 +48,7 @@ article > header > h3 > a:hover {
 }
 
 article p {
-    margin: 1rem 5rem;
+    margin: 0.8rem;
 }
 
 article > header > p.metadata, article > footer > p.links {
@@ -62,28 +61,18 @@ article > footer > p.links {
     margin-bottom: 0.8rem;
 }
 
-@media screen and (max-width: 640px) {
-    article {
-        padding: 0;
-    }
-
+@media screen and (min-width: 36em) {
     article > header > h3 {
-        margin-left: 0.8rem;
-        margin-right: 0.8rem;
+        margin: 2rem;
+        margin-bottom: inherit;
     }
 
-    article p, article blockquote, article ul, article ol, article dl, article form, article table {
-        margin: 0.8rem;
+    article blockquote, article ul, article ol, article dl, article form, article table {
+        margin: 2rem 5rem;
     }
 
-    article > header > h3 {
-        margin-left: 0.8rem;
-        margin-right: 0.8rem;
-    }
-
-    article > header > p {
-        margin-left: 0.8rem;
-        margin-right: 0.8rem;
+    article p {
+        margin: 1rem 5rem;
     }
 }
 

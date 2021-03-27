@@ -41,7 +41,7 @@ h1, h2, h3, h4, h5, h6 {
     border: 0;
 }
 
-body > div#wrapper > header {
+body > header {
     display: none;
 }
 
@@ -121,7 +121,7 @@ img.left {
     float: left;
 }
 
-nav#navbar, nav#navbar-member, nav#navbar-login {
+nav {
     display: none;
 }
 
@@ -158,7 +158,7 @@ a.footnote {
 }
 
 ol.footnotes {
-    border-top: 1px solid;
+    border-top: 1pt solid;
 }
 
 div.family {

@@ -1,9 +1,10 @@
 img {
-    float: right;
+    float: left;
 }
 
 p {
     text-align: left;
+    clear: left;
 }
 
 blockquote {
@@ -15,8 +16,8 @@ blockquote > p {
     margin: 0;
 }
 
-@media screen and (max-width: 640px) {
-    p {
-        clear: right
+@media screen and (min-width: 36em) {
+    img {
+        float: right;
     }
 }

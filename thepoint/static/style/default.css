@@ -11,16 +11,11 @@ body {
     font-stretch: normal;
     line-height: 1.7rem;
     vertical-align: middle;
-    text-align: justify;
     text-indent: 0;
-    margin: 0;
-    padding: 0;
-}
-
-div#wrapper {
-    position: relative;
-    max-width: 1000px;
     margin: 0 auto;
+    padding: 0;
+    position: relative;
+    max-width: 64em;
 }
 
 ul, ol {
@@ -51,41 +46,50 @@ a:hover {
     text-decoration: underline;
 }
 
-body > div#wrapper > header {
+body > header {
     position: relative;
     background-image: url(lights.jpg);
     background-repeat: no-repeat;
     background-position: center;
+    background-size: 100% auto;
     background-color: black;
     font-weight: 400;
-    text-shadow: 2px 2px 2px black;
+    text-shadow: 0.1em 0.1em 0.1em black;
     color: white;
-    height: 200px;
+    height: 8em;
+    display: flex;
+    flex-flow: column;
+    padding: 1rem;
+    box-sizing: border-box;
+    justify-content: center;
 }
 
-body > div#wrapper > header h1 {
-    padding: 1rem;
+body > header:before {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    content: '';
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36em' height='36em' viewBox='0 0 200 200'%3E%3Ccircle cx='50' cy='50' r='170' stroke='white' stroke-width='2.0' fill='none'/%3E%3Ccircle cx='50' cy='50' r='166' stroke='white' stroke-width='0.5' fill='none'/%3E%3Ccircle cx='50' cy='50' r='162' stroke='white' stroke-width='0.5' fill='none'/%3E%3C/svg%3E");
+    background-position: left bottom;
+    background-repeat: no-repeat;
+}
+
+body > header h1 {
     line-height: 3rem;
     font-weight: 800;
     letter-spacing: 0.2rem;
     text-transform: uppercase;
 }
 
-body > div#wrapper > header p {
+body > header p {
     font-size: 1.8rem;
     font-weight: 300;
     text-align: left;
     font-family: Times New Roman, serif;
     border: 0;
     margin: 0;
-    padding: 0 1rem 0.4rem;
-}
-
-div#header-inner {
-    height: 100%;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200px' height='200px' viewBox='0 0 200 200'%3E%3Ccircle cx='30' cy='-100' r='150' stroke='white' stroke-width='1.5' fill='none'/%3E%3Ccircle cx='30' cy='-100' r='147' stroke='white' stroke-width='0.5' fill='none'/%3E%3Ccircle cx='30' cy='-100' r='143.5' stroke='white' stroke-width='0.5' fill='none'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-size: 750px;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -110,7 +114,7 @@ h2 {
     margin: 0.8rem;
     margin-top: 2rem;
     padding: 0;
-    border-bottom: 2px solid;
+    border-bottom: 0.1rem solid;
 }
 
 h3 {
@@ -121,7 +125,7 @@ h3 {
     padding: 0;
     margin-left: 0.8rem;
     margin-right: 0.8rem;
-    border-bottom: 1px solid;
+    border-bottom: 0.1rem solid;
     margin-bottom: 0;
 }
 
@@ -148,12 +152,11 @@ hr {
     width: 90%;
     color: rgb(170,50,0);
     border: none;
-    border-bottom: 1px solid;
+    border-bottom: 0.1rem solid;
 }
 
 p, blockquote, ul, ol, dl {
     margin: 1rem;
-    text-align: justify;
 }
 
 blockquote {
@@ -226,7 +229,7 @@ sub {
 
 img {
     margin: 0.4rem;
-    border: 1px solid black;
+    border: 0.1rem solid black;
     max-width: 100%;
 }
 
@@ -249,41 +252,81 @@ figure > figcaption {
     text-align: center;
 }
 
+a:focus {
+    outline: 0.1rem solid rgb(170,50,0);
+}
+
 nav#navbar {
+    position: relative;
+}
+
+nav#navbar:before {
+    content: attr(aria-label);
+    text-transform: lowercase;
+    cursor: pointer;
+    position: absolute;
+    line-height: 1.7em;
+    height: 1.7em;
+    top: -1.7em;
+    right: 0;
+    background: rgba(0,0,0,0.8);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath d='M6,6 L24,6 M6,15 L24,15 M6,24 L24,24' stroke-width='4' stroke-linecap='round' stroke='white'/%3E%3C/svg%3E");
+    background-position: right;
+    background-repeat: no-repeat;
+    color: white;
+    margin: 0;
+    padding: 0;
+    padding-left: 0.5em;
+    padding-right: 2em;
+    font-weight: 600;
+    white-space: nowrap;
     display: block;
-    margin: 0.3rem 0;
+}
+
+nav#navbar:hover:before,
+nav#navbar:focus-within:before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpolyline points='4 10 15 20 26 10' stroke-width='3' stroke-linecap='round' stroke='white'/%3E%3C/svg%3E");
 }
 
 nav#navbar ul {
-    background: transparent;
-    text-align: center;
+    width: 100%;
     font-weight: 600;
+    font-size: 1.5rem;
     list-style-type: none;
+    text-align: center;
     margin: 0;
     padding: 0;
+    box-shadow: 0 0.5em 0.4em -0.4em black;
+    position: absolute;
+    background: white;
+    display: none;
+
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
-nav#navbar ul li {
-    padding: 0 0.5rem;
-    display: inline-block;
+nav#navbar:hover ul,
+nav#navbar:focus-within ul {
+    display: flex;
 }
 
-nav#navbar ul a {
+nav#navbar li {
+    padding: 0.5rem;
+    display: block;
+}
+
+nav#navbar a {
     color: black;
     text-decoration: none;
     text-transform: lowercase;
     display: block;
 }
 
-nav#navbar ul a:hover {
+nav#navbar a:hover {
     color: rgb(170,50,0);
 }
 
-a:focus {
-    outline: 2px solid rgb(170,50,0);
-}
-
-nav#navbar ul li a:before {
+nav#navbar a:before {
     border: 0;
     margin: 0 0.5rem 0 0;
     padding: 0.5rem;
@@ -297,7 +340,7 @@ nav#navbar ul li a:before {
     display: inline-block;
 }
 
-nav#navbar ul li a:hover:before {
+nav#navbar a:hover:before {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Ccircle cx='15' cy='15' r='14' fill='rgb(200,140,0)'/%3E%3C/svg%3E");
 }
 
@@ -318,7 +361,7 @@ nav#navbar-member, nav#navbar-login {
     right: 0;
 }
 
-nav#navbar-member:before, nav#navbar-login {
+nav#navbar-member:before, nav#navbar-login a {
     content: attr(aria-label);
     text-transform: lowercase;
     cursor: pointer;
@@ -328,11 +371,13 @@ nav#navbar-member:before, nav#navbar-login {
     color: white;
     margin: 0;
     padding: 0;
-    padding-left: 5px;
-    padding-right: 35px;
+    padding-left: 0.5em;
+    padding-right: 2em;
     font-weight: 600;
     white-space: nowrap;
     display: block;
+    height: 1.7em;
+    line-height: 1.7em;
 }
 
 nav#navbar-member:hover:before,
@@ -362,19 +407,19 @@ nav#navbar-member:focus-within ul {
     display: inline-block;
 }
 
-nav#navbar-member ul li {
+nav#navbar-member li {
     display: block;
     text-align: left;
 }
 
-nav#navbar-member ul a {
+nav#navbar-member a {
     color: white;
     text-decoration: none;
     text-transform: lowercase;
     display: block;
 }
 
-nav#navbar-member ul li a:before {
+nav#navbar-member a:before {
     display: inline-block;
     width: 1.5rem;
     height: 1.5rem;
@@ -384,18 +429,18 @@ nav#navbar-member ul li a:before {
     vertical-align: middle;
 }
 
-nav#navbar-member ul a {
+nav#navbar-member a {
     color: white;
     padding-right: 0.3rem;
 }
 
-nav#navbar-member ul li a:focus {
+nav#navbar-member a:focus,
+nav#navbar-member a:hover {
     background: rgba(170,50,0,0.5);
-    outline: none;
 }
 
-nav#navbar-member ul li a:hover {
-    background: rgba(170,50,0,0.5);
+nav#navbar-member a:focus {
+    outline: none;
 }
 
 nav#navbar-member p.logon {
@@ -463,8 +508,8 @@ p.message {
 }
 
 p.intro {
-    border-top: 1px solid;
-    border-bottom: 1px solid;
+    border-top: 0.1rem solid;
+    border-bottom: 0.1rem solid;
     padding: 0.4rem;
     text-align: justify;
     margin: 2rem;
@@ -477,7 +522,7 @@ a.footnote {
 }
 
 ol.footnotes {
-    border-top: 1px solid;
+    border-top: 0.1rem solid;
 }
 
 table {
@@ -493,6 +538,7 @@ table td {
 div.family {
     display: flex;
     flex-wrap: wrap;
+    flex-direction: column;
     justify-content: space-between;
     width: 100%;
 }
@@ -506,7 +552,7 @@ div.family a:hover {
 }
 
 div.family h3 {
-    width: 100%;
+    flex-basis: 100%;
 }
 
 .family_people, .family_address, .family_photo {
@@ -538,9 +584,6 @@ div.family .family_address dl {
 }
 
 div.family .family_photo img {
-    max-height: 240px;
-    max-width: 320px;
-    border: 0;
     margin: 0;
 }
 
@@ -611,13 +654,13 @@ iframe {
 }
 
 iframe.calendar {
-    width: 750px;
-    min-height: 600px;
+    width: 50em;
+    min-height: 36em;
 }
 
 aside.splash {
     padding: 1rem 0;
-    border: 1px solid black;
+    border: 0.1rem solid black;
     margin: 1rem;
 }
 
@@ -635,119 +678,72 @@ aside.splash > h3 {
 }
 
 #portal > section {
-    min-width: 50%;
+    min-width: 100%;
 }
 
-@media screen and (max-width: 600px) {
-    body {
-        background-size: auto;
-        text-align: left;
+@media screen and (min-height: 25em) {
+    body > header {
+        height: 12em;
     }
 
-    div#header-inner-inner {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
+    body > header:before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36em' height='36em' viewBox='0 0 200 200'%3E%3Ccircle cx='0' cy='100' r='170' stroke='white' stroke-width='2.0' fill='none'/%3E%3Ccircle cx='0' cy='100' r='166' stroke='white' stroke-width='0.5' fill='none'/%3E%3Ccircle cx='0' cy='100' r='162' stroke='white' stroke-width='0.5' fill='none'/%3E%3C/svg%3E");
+    }
+}
+
+@media screen and (min-width: 36em) and (min-height: 25em) {
+    body > header {
+        height: 12em;
+        justify-content: flex-start;
     }
 
-    body > div#wrapper > header h1 {
-        padding: 1rem 0.5rem 0;
-        line-height: 2.5rem;
-    }
-
-    body > div#wrapper > header p {
-        font-size: 1.5rem;
+    body > header:before {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36em' height='36em' viewBox='0 0 200 200'%3E%3Ccircle cx='50' cy='25' r='170' stroke='white' stroke-width='2.0' fill='none'/%3E%3Ccircle cx='50' cy='25' r='166' stroke='white' stroke-width='0.5' fill='none'/%3E%3Ccircle cx='50' cy='25' r='162' stroke='white' stroke-width='0.5' fill='none'/%3E%3C/svg%3E");
     }
 
     nav#navbar {
-        float: none;
-        width: auto;
-        border-top: 0;
-        margin-top: 0;
+        margin: 0.3rem 0;
+    }
+
+    nav#navbar:before {
+        display: none;
     }
 
     nav#navbar ul {
-        margin: 0;
-        padding: 0;
-        font-size: 1.5rem;
+        display: flex;
+        position: relative;
+        box-shadow: none;
     }
 
-    nav#navbar ul li {
-        padding: 0.5rem;
+    nav#navbar li {
+        padding: 0 0.5rem;
+    }
+}
+
+@media screen and (min-width: 36em) {
+    body {
+        text-align: justify;
     }
 
-    nav#navbar ul + ul:before {
-        content: '⎼⎼';
+    nav#navbar ul {
         font-size: 1rem;
-        font-weight: 300;
     }
 
     p, blockquote, ul, ol, dl {
-        text-align: left;
+        text-align: justify;
+    }
+
+    #portal > section {
+        min-width: 50%;
     }
 
     div.family {
-        flex-direction: column;
+        flex-direction: row;
     }
 
     div.family .family_photo img {
-        max-width: 100%;
-        margin: 0;
-    }
-
-    section.portal {
-        min-width: 100%;
-    }
-}
-
-@media screen and (max-width: 600px), screen and (max-height: 400px) {
-    nav#navbar:before {
-        content: attr(aria-label);
-        text-transform: lowercase;
-        cursor: pointer;
-        position: absolute;
-        height: 30px;
-        top: 170px;
-        right: 0;
-        background: rgba(0,0,0,0.8);
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Crect width='30' height='30' fill='none'/%3E%3Cpath d='M6,6 L24,6 M6,15 L24,15 M6,24 L24,24' stroke-width='4' stroke-linecap='round' stroke='white'/%3E%3C/svg%3E");
-        background-position: right;
-        background-repeat: no-repeat;
-        color: white;
-        margin: 0;
-        padding: 0;
-        padding-left: 5px;
-        padding-right: 35px;
-        font-weight: 600;
-        white-space: nowrap;
-        display: block;
-    }
-
-    nav#navbar ul {
-        display: none;
-        box-shadow: 0 7px 5px -5px black;
-        position: absolute;
-        background: white;
-    }
-
-    nav#navbar:hover ul,
-    nav#navbar:focus-within ul {
-        display: inline-block;
-    }
-
-    nav#navbar:hover:before,
-    nav#navbar:focus-within:before {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Crect width='30' height='30' fill='none'/%3E%3Cpolyline points='4 10 15 20 26 10' stroke-width='3' stroke-linecap='round' stroke='white'/%3E%3C/svg%3E");
-    }
-}
-
-@media screen and (max-height: 400px) {
-    body > div#wrapper > header {
-        height: 100px;
-    }
-
-    body > div#wrapper > header h1 {
-        padding-top: 0;
+        max-height: 15em;
+        max-width: 20em;
     }
 }
 

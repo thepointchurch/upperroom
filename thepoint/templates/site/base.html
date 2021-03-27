@@ -24,7 +24,6 @@
 {% block headers %}{% endblock headers %}
 </head>
 <body itemscope itemtype="https://schema.org/WebPage">
-<div id="wrapper">
 
 {% block body %}
 {% include "site/header.html" %}
@@ -44,6 +43,5 @@
 {% cache None splashes_below request.path %}{% if splashes_below %}{% include "splash/splash.html" with splashes=splashes_below %}{% endif %}{% endcache %}
 
 {% endblock body %}
-</div>
 </body>
 </html>

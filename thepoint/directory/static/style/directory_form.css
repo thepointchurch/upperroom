@@ -14,6 +14,7 @@ form table {
     width: auto;
 }
 
-form table td, th {
-    padding: 2px;
+form table td,
+form table th {
+    padding: 0.1em;
 }
