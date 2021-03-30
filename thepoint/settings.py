@@ -15,3 +15,5 @@ WEBMASTER_EMAIL = "webmaster@thepoint.org.au"
 DIRECTORY_EMAIL = "directory@thepoint.org.au"
 ROSTER_EMAIL = "roster@thepoint.org.au"
 DEFAULT_FROM_EMAIL = WEBMASTER_EMAIL
+
+CSP_FRAME_SRC = ("'self'", "https://www.youtube-nocookie.com/embed/")
