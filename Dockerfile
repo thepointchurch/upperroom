@@ -13,17 +13,6 @@ RUN poetry build --format wheel && .venv/bin/pip install dist/*.whl
 RUN find .venv -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
 
 
-FROM debian:buster-slim as font-image
-RUN sed -i '/^deb http:\/\/deb.debian.org\/debian .* main$/ s/$/ contrib/' /etc/apt/sources.list
-RUN apt-get -y update
-RUN apt-get install -y --no-install-recommends \
-    ca-certificates \
-    netbase \
-    ttf-mscorefonts-installer
-WORKDIR /usr/local/share/fonts
-RUN wget -qO - https://github.com/mozilla/Fira/archive/4.106.tar.gz | tar -xvzf - Fira-4.106/otf --strip-components=2
-
-
 FROM python:3.9-slim AS build-image
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -46,7 +35,6 @@ RUN apt-get -y update \
     && touch /django/.env && chown 0:8000 /django/.env && chmod 640 /django/.env \
     && mkdir -p /django/data && chown 8000:8000 /django/data
 COPY --from=compile-image /django/.venv /django/.venv
-COPY --from=font-image /usr/share/fonts/truetype/msttcorefonts /usr/local/share/fonts /usr/local/share/fonts/
 COPY entrypoint.sh /entrypoint.sh
 COPY gunicorn.py /etc/gunicorn.py
 
