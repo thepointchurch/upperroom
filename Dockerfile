@@ -28,7 +28,7 @@ FROM python:3.9-slim AS build-image
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/django/.venv/bin:$PATH" \
-    DJANGO_SETTINGS_MODULE=thepoint.settings
+    DJANGO_SETTINGS_MODULE=upperroom.settings
 RUN apt-get -y update \
     && apt-get install -y --no-install-recommends \
         bzip2 \
@@ -55,7 +55,7 @@ EXPOSE 8000/tcp
 USER django:django
 WORKDIR /django
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["gunicorn", "-b", "0.0.0.0:8000", "--config", "/etc/gunicorn.py", "thepoint.wsgi"]
+CMD ["gunicorn", "-b", "0.0.0.0:8000", "--config", "/etc/gunicorn.py", "upperroom.wsgi"]
 VOLUME /django/data
 
 HEALTHCHECK --interval=5m --timeout=3s CMD curl -fsS -o /dev/null http://localhost:8000/ || exit 1
@@ -66,5 +66,5 @@ ARG build_date
 LABEL org.label-schema.schema-version="1.0"
 LABEL org.label-schema.version="$version"
 LABEL org.label-schema.build-date="$build_date"
-LABEL org.label-schema.url="https://github.com/thepointchurch/thepoint"
-LABEL org.label-schema.description="The Point Church Website"
+LABEL org.label-schema.url="https://github.com/thepointchurch/upperroom"
+LABEL org.label-schema.description="Upper Room Church Website"

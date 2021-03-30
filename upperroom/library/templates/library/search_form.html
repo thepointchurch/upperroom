@@ -1,0 +1,14 @@
+<form method="get" action="{% url 'library:search' %}">
+<input type="text" name="query" value="" size="32" />
+<select name="field">
+<option value=""></option>
+<option value="title">Title</option>
+<option value="author">Author</option>
+<option value="subtitle">Subtitle</option>
+<option value="description">Description</option>
+<option value="location">Location</option>
+<option value="type">Type</option>
+<option value="isbn">ISBN</option>
+</select>
+<input type="submit" name="type" value="Search" style="display: inline-block" />
+</form>

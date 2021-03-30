@@ -1,0 +1,11 @@
+{% extends "site/base.html" %}
+{% load static %}
+
+{% block stylesheets %}{{ block.super }}
+<link type="text/css" href="{% static 'style/article.css' %}" rel="stylesheet" />
+<link type="text/css" href="{% static 'style/article.css' %}" rel="preload" as="style" />
+{% endblock stylesheets %}
+
+{% block title %}{{ block.super }}: Resources{% endblock title %}
+
+{% block heading %}Resources{% endblock heading %}

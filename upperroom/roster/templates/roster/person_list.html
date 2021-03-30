@@ -1,0 +1,32 @@
+{% extends "roster/base.html" %}
+{% load roster_filters %}
+{% load smartquote %}
+
+{% block title %}{{ block.super }}: {{ person.fullname|smartquote }}{% endblock title %}
+
+{% block content %}
+
+<h3>{{ person.fullname|smartquote }}</h3>
+
+{% regroup role_list|dictsort:"date" by date as role_date %}
+{% for date in role_date %}
+<h4>{{ date.grouper|date:"jS F, Y" }}:</h4>
+<ul>
+{% for role in date.list %}
+<li>{{ role.role|smartquote }}{% if role.location %}
+at {{ role.location|smartquote }}{% endif %}{% if role.description %}
+<cite>({{ role.description|smartquote }})</cite>{% endif %}
+{% if role.people.count > 1 %} with {% for p in role.people.all|remove_person:person %}{% if not forloop.first %}, {% endif %}<a href="{% url 'roster:person' p.id %}">{{ p.fullname|smartquote }}</a>{% endfor %}
+{% endif %}</li>
+{% endfor %}</ul>
+{% endfor %}
+
+<p class="links">[ <a href="{% url 'roster:event' person.id %}">iCalendar</a> ]</p>
+
+{% endblock content %}
+
+{% block semantic %}
+<main>
+{{ block.super }}
+</main>
+{% endblock semantic %}

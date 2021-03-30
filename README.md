@@ -1,9 +1,9 @@
-![Release](https://github.com/thepointchurch/thepoint/workflows/Release/badge.svg)
-![Docker Image](https://github.com/thepointchurch/thepoint/workflows/Docker%20Image/badge.svg)
+![Release](https://github.com/thepointchurch/upperroom/workflows/Release/badge.svg)
+![Docker Image](https://github.com/thepointchurch/upperroom/workflows/Docker%20Image/badge.svg)
 
-# The Point Church Website #
+# Upper Room #
 
-This is a Django project for The Point Church's website.
+Upper Room is a framework for church websites.
 
 ## Development
 
@@ -14,8 +14,8 @@ To set up a development environment:
 2. Clone the `testing` repository:
 
     ```
-    git clone -branch testing https://github.com/thepointchurch/thepoint.git
-    cd thepoint
+    git clone -branch testing https://github.com/thepointchurch/upperroom.git
+    cd upperroom
     ```
 
 3. Set up the poetry environment:
@@ -30,24 +30,24 @@ To set up a development environment:
 
     ```
     export DEBUG='True'
-    export DATABASE_URL='sqlite:///thepoint.sqlite3'
+    export DATABASE_URL='sqlite:///upperroom.sqlite3'
     export SECRET_KEY='12345678'
-    export DJANGO_SETTINGS_MODULE=thepoint.settings
+    export DJANGO_SETTINGS_MODULE=upperroom.settings
     ```
 
-    or place them in a an environment file at `thepoint/.env`:
+    or place them in a an environment file at `upperroom/.env`:
 
     ```
-    cat >thepoint/.env <<DEV_ENV
+    cat >upperroom/.env <<DEV_ENV
     DEBUG='True'
-    DATABASE_URL='sqlite:///thepoint.sqlite3'
+    DATABASE_URL='sqlite:///upperroom.sqlite3'
     SECRET_KEY='12345678'
-    DJANGO_SETTINGS_MODULE=thepoint.settings
+    DJANGO_SETTINGS_MODULE=upperroom.settings
     DEV_ENV
     ```
 
 5. Start a test server:
 
     ```
-    thepoint runserver
+    upperroom runserver
     ```

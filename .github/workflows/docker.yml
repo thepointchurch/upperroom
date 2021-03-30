@@ -17,7 +17,7 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: thepoint
+  IMAGE_NAME: upperroom
 
 jobs:
   test:
@@ -47,6 +47,7 @@ jobs:
       - name: Run tests
         id: test
         env:
+          DJANGO_SETTINGS_MODULE: upperroom.settings
           SECRET_KEY: secret
           DATABASE_URL: sqlite:///test.sqlite3
         run: |

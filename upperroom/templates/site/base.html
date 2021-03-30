@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}{{ site.name }}{% endblock title %}</title>
+{% block stylesheets %}{% endblock stylesheets %}
+<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}" />
+<link rel="home" href="/" />
+<link rel="index" href="/" />
+{% block headers %}{% endblock headers %}
+</head>
+<body>
+
+{% block body %}
+
+{% block semantic %}
+<header>
+<h2>{% block heading %}{% endblock heading %}</h2>
+{% block metadata %}{% endblock metadata %}
+</header>
+{% block content %}{% endblock content %}
+{% endblock semantic %}
+
+{% endblock body %}
+</body>
+</html>

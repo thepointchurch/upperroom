@@ -34,9 +34,9 @@ def get_version(check_migrations=False):
     except GitError:
         sys.path.append(".")
 
-        import thepoint  # pylint: disable=import-outside-toplevel
+        import upperroom  # pylint: disable=import-outside-toplevel
 
-        return thepoint.__version__
+        return upperroom.__version__
 
 
 def update_version(version=None):

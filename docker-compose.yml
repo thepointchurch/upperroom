@@ -4,7 +4,7 @@ services:
     image: postgres:12-alpine
     container_name: "db_dev"
     environment:
-      POSTGRES_USER: thepoint
+      POSTGRES_USER: upperroom
       POSTGRES_PASSWORD: "12345678"
     restart: unless-stopped
     volumes:
@@ -24,12 +24,13 @@ services:
     networks:
       backend:
   django:
-    image: "thepoint:latest"
+    image: "upperroom:latest"
     container_name: "django_dev"
     environment:
+      DJANGO_SETTINGS_MODULE: upperroom.settings
       SECRET_KEY: "12345678"
       GUNICORN_CMD_ARGS: "--workers=1 --threads=2"
-      DATABASE_URL: psql://thepoint:12345678@db:5432/thepoint
+      DATABASE_URL: psql://upperroom:12345678@db:5432/upperroom
       DEBUG: "'True'"
       VHOST: "localhost docker"
     restart: unless-stopped

@@ -3,7 +3,7 @@ from itertools import chain
 from django.contrib import sitemaps
 from django.urls import reverse
 
-from .resources.models import get_featured_items
+from upperroom.resources.models import get_featured_items
 
 
 class StaticViewSitemap(sitemaps.Sitemap):
