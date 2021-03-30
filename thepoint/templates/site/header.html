@@ -1,5 +1,0 @@
-{% load markup %}
-<header itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-<h1 itemprop="name">{{ site.name }}</h1>
-{% if extended_site and extended_site.subtitle %}{{ site.extra.subtitle|markdown:"smarty" }}{% endif %}
-</header>
