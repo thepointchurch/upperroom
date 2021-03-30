@@ -5,11 +5,18 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
-from django.urls import reverse
+from django.test.utils import override_settings
+from django.urls import include, path, reverse
 
 from ..models import Family
 
+urlpatterns = [
+    path("members/", include("upperroom.members.urls", namespace="members")),
+    path("directory/", include("upperroom.directory.urls", namespace="directory")),
+]
 
+
+@override_settings(ROOT_URLCONF=__name__, DIRECTORY_EMAIL="test@thepoint.org.au")
 class TestDirectoryAuthentication(TestCase):
     def setUp(self):
         self.password = "qwerasdf"
@@ -46,6 +53,7 @@ class TestDirectoryAuthentication(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+@override_settings(ROOT_URLCONF=__name__)
 class TestDirectoryAuthenticationRequired(TestCase):
     def test_authentication_required_index(self):
         url = reverse("directory:index")

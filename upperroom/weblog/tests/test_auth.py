@@ -3,9 +3,16 @@ import uuid
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.test import TestCase
-from django.urls import reverse
+from django.test.utils import override_settings
+from django.urls import include, path, reverse
+
+urlpatterns = [
+    path("members/", include("upperroom.members.urls", namespace="members")),
+    path("weblog/", include("upperroom.weblog.urls", namespace="weblog")),
+]
 
 
+@override_settings(ROOT_URLCONF=__name__)
 class TestWeblogAuthentication(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -29,6 +36,7 @@ class TestWeblogAuthentication(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+@override_settings(ROOT_URLCONF=__name__)
 class TestWeblogAuthenticationRequired(TestCase):
     def test_authentication_required_index(self):
         url = reverse("weblog:index")

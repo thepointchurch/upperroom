@@ -1,11 +1,18 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.test import TestCase
-from django.urls import reverse
+from django.test.utils import override_settings
+from django.urls import include, path, reverse
 
 from ...directory.models import Family
 
+urlpatterns = [
+    path("members/", include("upperroom.members.urls", namespace="members")),
+    path("roster/", include("upperroom.roster.urls", namespace="roster")),
+]
 
+
+@override_settings(ROOT_URLCONF=__name__)
 class TestRosterAuthentication(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -29,6 +36,7 @@ class TestRosterAuthentication(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+@override_settings(ROOT_URLCONF=__name__)
 class TestRosterAuthenticationRequired(TestCase):
     def test_authentication_required_index(self):
         url = reverse("roster:index")
@@ -56,6 +64,7 @@ class TestRosterAuthenticationRequired(TestCase):
         self.assertRedirects(response, settings.LOGIN_URL + "?next=" + url)
 
 
+@override_settings(ROOT_URLCONF=__name__)
 class TestRosterAuthenticationNotRequired(TestCase):
     @classmethod
     def setUpTestData(cls):

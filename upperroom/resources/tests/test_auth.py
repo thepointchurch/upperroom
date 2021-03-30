@@ -5,11 +5,18 @@ from django.contrib.auth import get_user_model
 from django.core.files import File
 from django.core.files.storage import default_storage
 from django.test import TestCase
-from django.urls import reverse
+from django.test.utils import override_settings
+from django.urls import include, path, reverse
 
 from ..models import Resource, Tag
 
+urlpatterns = [
+    path("members/", include("upperroom.members.urls", namespace="members")),
+    path("resources/", include("upperroom.resources.urls", namespace="resources")),
+]
 
+
+@override_settings(ROOT_URLCONF=__name__)
 class TestResourcesAuthentication(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -33,6 +40,7 @@ class TestResourcesAuthentication(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+@override_settings(ROOT_URLCONF=__name__)
 class TestResourcesAuthenticationRequired(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -75,6 +83,7 @@ class TestResourcesAuthenticationRequired(TestCase):
         self.assertEqual(response.status_code, 404)
 
 
+@override_settings(ROOT_URLCONF=__name__)
 class TestResourcesAuthenticationNotRequired(TestCase):
     @classmethod
     def setUpTestData(cls):
