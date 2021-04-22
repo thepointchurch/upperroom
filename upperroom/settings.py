@@ -74,6 +74,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "csp.middleware.CSPMiddleware",
+    "upperroom.members.middleware.UsernameHeaderMiddleware",
     "upperroom.resources.middleware.ResourceFallbackMiddleware",
     "django.middleware.cache.FetchFromCacheMiddleware",
 ]
