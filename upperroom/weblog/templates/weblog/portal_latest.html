@@ -1,0 +1,10 @@
+{% extends "members/portal.html" %}
+{% load smartquote %}
+{% block portalcontent %}
+<ul>
+{% for entry in items %}
+<li><a href="{% url "weblog:detail" entry.created.year entry.created.month entry.slug %}">{{ entry.title|smartquote }}</a></li>
+{% endfor %}
+</ul>
+<p class="links">[ <a href="{% url "weblog:index" %}">See all news</a> ]</p>
+{% endblock portalcontent %}
