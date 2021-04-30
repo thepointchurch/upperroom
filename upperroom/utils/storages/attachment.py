@@ -17,5 +17,5 @@ def attachment_response(file_obj, as_attachment=True, filename="", content_type=
             url = url.split("?", 1)[0]  # remove auth query strings
         return HttpResponseRedirect(url)
     if isinstance(file_obj, str):
-        file_obj = open("%s/%s" % (settings.MEDIA_ROOT, file_obj), "rb")
+        file_obj = open("%s/%s" % (settings.MEDIA_ROOT, file_obj), "rb")  # pylint: disable=consider-using-with
     return FileResponse(file_obj, as_attachment=as_attachment, filename=filename, content_type=content_type)
