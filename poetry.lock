@@ -1201,7 +1201,7 @@ pgsql = ["psycopg2"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "0fa4adc2958f77fd2739b8a230765d313265020bad4c591c4b3c507a6b2c7319"
+content-hash = "a10a675a825f99c7eccc2cc55e61f8599e2e1a31546597ee9f451ab286d19a0f"
 
 [metadata.files]
 appdirs = [
