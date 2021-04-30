@@ -37,6 +37,8 @@ CSRF_COOKIE_SECURE = env("CSRF_COOKIE_SECURE", default=(not DEBUG))
 SESSION_COOKIE_SECURE = env("SESSION_COOKIE_SECURE", default=(not DEBUG))
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
 INSTALLED_APPS = [
     "upperroom.directory.apps.DirectoryConfig",
     "upperroom.extendedsites.apps.ExtendedSitesConfig",
