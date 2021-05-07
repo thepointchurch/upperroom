@@ -96,11 +96,11 @@ class ResourceForm(ModelForm):
         if self.instance.author:
             self.fields["author"].queryset = Person.objects.filter(
                 models.Q(id__exact=self.instance.author.id) | (models.Q(is_current=True) & models.Q(is_member=True))
-            )
+            ).order_by("family__name", "name")
         else:
             self.fields["author"].queryset = Person.objects.filter(
                 models.Q(is_current=True) & models.Q(is_member=True)
-            )
+            ).order_by("family__name", "name")
 
 
 class ResourceAdmin(admin.ModelAdmin):
