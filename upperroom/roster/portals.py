@@ -18,8 +18,8 @@ class Details(Portal):
             context["role_list"] = (
                 Role.current_objects.filter(people__id=self.request.user.person.id)
                 .filter(meeting__date__lte=(date.today() + timedelta(days=60)))
-                .select_related("meeting", "role", "location",)
-                .prefetch_related("people", "people__family",)
+                .select_related("meeting", "role", "location")
+                .prefetch_related("people", "people__family")
                 .only(
                     "description",
                     "meeting__date",

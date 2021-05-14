@@ -43,7 +43,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(model_name="attachment", name="uuid", field=models.UUIDField(null=True),),
+        migrations.AddField(model_name="attachment", name="uuid", field=models.UUIDField(null=True)),
         migrations.RunPython(set_uuid, migrations.RunPython.noop),
         migrations.RunPython(remove_old_primary_key),
         migrations.AlterField(
@@ -53,6 +53,6 @@ class Migration(migrations.Migration):
                 default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True, verbose_name="ID"
             ),
         ),
-        migrations.RemoveField(model_name="attachment", name="id",),
-        migrations.RenameField(model_name="attachment", old_name="uuid", new_name="id",),
+        migrations.RemoveField(model_name="attachment", name="id"),
+        migrations.RenameField(model_name="attachment", old_name="uuid", new_name="id"),
     ]

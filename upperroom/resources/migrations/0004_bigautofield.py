@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunSQL(sql="DROP VIEW IF EXISTS resources_featureditem;",),
+        migrations.RunSQL(sql="DROP VIEW IF EXISTS resources_featureditem;"),
         migrations.AlterField(
             model_name="resource",
             name="id",

@@ -37,7 +37,7 @@ class CurrentManager(models.Manager):  # pylint: disable=too-few-public-methods
 
 
 class Meeting(models.Model):
-    date = models.DateField(unique=True, default=next_empty_meeting_date, verbose_name=_("date"),)
+    date = models.DateField(unique=True, default=next_empty_meeting_date, verbose_name=_("date"))
 
     current_objects = CurrentManager()
     objects = models.Manager()
