@@ -1,0 +1,28 @@
+{% extends "search/base.html" %}
+{% load i18n %}
+{% load smartquote %}
+{% block title %}{{ block.super }}: {{ search_query }}{% endblock title %}
+{% block heading %}{{ block.super }}{% if type_name %}: {% translate type_name|capfirst|smartquote %}{% endif %}{% endblock heading %}
+{% block content %}
+
+<p>{% translate 'Searching for' %}: <code>{{ search_query }}</code></p>
+
+{% for result_type, results in search_results.items %}
+{% if not type_name %}<h2>{% translate result_type|capfirst|smartquote %}</h2>{% endif %}
+{% for result in results.page.object_list %}
+{% include results.template with item=result %}
+{% endfor %}
+<p class="links">[
+{% if results.page.has_previous %}
+<a href="{{ results.type }}?q={{ search_query }}&page={{ results.page.previous_page_number }}">{% translate 'Previous' %}</a> |
+{% endif %}
+{% blocktranslate with page_number=results.page.number page_count=results.page.paginator.num_pages %}Page {{ page_number }} of {{ page_count }}{% endblocktranslate %}
+{% if results.page.has_next %}
+| <a href="{{ results.type }}?q={{ search_query }}&page={{ results.page.next_page_number }}">{% translate 'Next' %}</a>
+{% endif %}
+]</p>
+{% empty %}
+<p>{% blocktranslate with verbose_name='items' %}No {{ verbose_name }} found matching the query{% endblocktranslate %}.</p>
+{% endfor %}
+
+{% endblock content %}

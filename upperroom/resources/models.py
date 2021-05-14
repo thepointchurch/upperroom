@@ -10,6 +10,8 @@ from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
+from ..search.managers import SearchManager
+from ..utils.func import IsNotEmpty
 from ..utils.mime import guess_extension
 
 logger = logging.getLogger(__name__)
@@ -88,6 +90,27 @@ class PublishedManager(models.Manager):  # pylint: disable=too-few-public-method
         return super().get_queryset().filter(is_published=True).exclude(published__gt=timezone.now())
 
 
+class ResourceSearchManager(SearchManager):  # pylint: disable=too-few-public-methods
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .filter(is_published=True)
+            .exclude(published__gt=timezone.now())
+            .prefetch_related(
+                models.Prefetch("attachments", queryset=Attachment.alternates.order_by(), to_attr="alternates"),
+            )
+            .only("title", "slug", "description", "published")
+            .annotate(has_body=IsNotEmpty("body"))
+        )
+
+    def get_custom_filter(self, request=None):
+        parent_filter = super().get_custom_filter(request)
+        if request is not None and request.user.is_authenticated:
+            return parent_filter
+        return parent_filter & models.Q(is_private=False)
+
+
 class Resource(FeaturedMixin, models.Model):
     title = models.CharField(max_length=64, verbose_name=_("title"))
     slug = models.SlugField(unique=True, verbose_name=_("slug"))
@@ -121,6 +144,7 @@ class Resource(FeaturedMixin, models.Model):
     objects = models.Manager()
     published_objects = PublishedManager()
     featured_objects = FeaturedManager()
+    search_objects = ResourceSearchManager(title="icontains", description="icontains", body="icontains")
 
     class Meta:
         ordering = ["-published"]

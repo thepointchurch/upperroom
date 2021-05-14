@@ -2,6 +2,7 @@ from unittest.mock import MagicMock
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.models import ContentType
 from django.core.files import File
 from django.core.files.storage import default_storage
 from django.test import TestCase
@@ -13,6 +14,7 @@ from ..models import Resource, Tag
 urlpatterns = [
     path("members/", include("upperroom.members.urls", namespace="members")),
     path("resources/", include("upperroom.resources.urls", namespace="resources")),
+    path("search/", include("upperroom.search.urls", namespace="search")),
 ]
 
 
@@ -129,3 +131,35 @@ class TestResourcesAuthenticationNotRequired(TestCase):
         url = reverse("resources:tag", kwargs={"slug": self.tag.slug})
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
+
+
+@override_settings(ROOT_URLCONF=__name__)
+class TestResourcesSearchPermissions(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.public_content = "10e4c8c9a1df"
+        cls.public_resource = Resource.objects.create(
+            title="Public Test", slug="public", description=cls.public_content, is_published=True, is_private=False
+        )
+        cls.private_content = "46f7e7f0de85"
+        cls.private_resource = Resource.objects.create(
+            title="Private Test", slug="private", description=cls.private_content, is_published=True, is_private=True
+        )
+        cls.content_type = ContentType.objects.get_for_model(Resource)
+        cls.password = "qwerasdf"
+        cls.user = get_user_model().objects.create_user(
+            username="test", email="test@thepoint.org.au", password=cls.password
+        )
+
+    def test_search_public(self):
+        url = reverse("search:type", kwargs={"type": self.content_type.id})
+        response = self.client.get(url, {"q": "test"})
+        self.assertContains(response, self.public_content, status_code=200)
+        self.assertNotContains(response, self.private_content, status_code=200)
+
+    def test_search_private(self):
+        url = reverse("search:type", kwargs={"type": self.content_type.id})
+        self.client.login(username=self.user.username, password=self.password)
+        response = self.client.get(url, {"q": "test"})
+        self.assertContains(response, self.public_content, status_code=200)
+        self.assertContains(response, self.private_content, status_code=200)

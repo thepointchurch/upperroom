@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "upperroom.weblog.apps.WeblogConfig",
     "robots",
     "upperroom.roster.apps.RosterConfig",
+    "upperroom.search.apps.SearchConfig",
     "upperroom.splash.apps.SplashConfig",
     "upperroom.utils.apps.UtilsConfig",
     "django_markwhat",

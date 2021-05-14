@@ -1,0 +1,12 @@
+{% extends "site/base.html" %}
+{% load i18n %}
+
+{% block title %}{{ block.super }}: {% translate "Search" %}{% endblock title %}
+
+{% block heading %}{% translate "Search" %}{% endblock heading %}
+
+{% block semantic %}
+<main id="search" itemtype="https://schema.org/Collection" itemprop="mainEntity">
+{{ block.super }}
+</main>
+{% endblock semantic %}

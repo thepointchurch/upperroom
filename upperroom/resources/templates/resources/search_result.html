@@ -1,0 +1,14 @@
+{% extends "search/search_result.html" %}
+{% load i18n %}
+{% load markup %}
+{% load smartquote %}
+{% block heading %}<a href="{% url "resources:detail" item.slug %}">{{ item.title|smartquote }}</a>{% endblock heading %}
+{% block content %}
+{% if item.description %}{{ item.description|markdown:"smarty" }}{% endif %}
+<p class="links">[
+{% if item.has_body %}<a href="{% url "resources:detail" item.slug %}" itemprop="url">{% translate 'read' %}</a>{% endif %}
+{% for attachment in item.alternates %}
+{% if item.has_body or not forloop.first %}| {% endif %}<a href="{% url 'resources:attachment' attachment.id %}" itemprop="url">{{ attachment.format }}</a>
+{% endfor %}
+]</p>
+{% endblock content %}

@@ -7,6 +7,8 @@ from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
+from ..search.managers import SearchManager
+from ..utils.func import IsNotEmpty
 from ..utils.mime import guess_extension
 
 logger = logging.getLogger(__name__)
@@ -15,6 +17,27 @@ logger = logging.getLogger(__name__)
 class PublishedManager(models.Manager):  # pylint: disable=too-few-public-methods
     def get_queryset(self):
         return super().get_queryset().filter(is_published=True).exclude(published__gt=timezone.now())
+
+
+class WeblogSearchManager(SearchManager):  # pylint: disable=too-few-public-methods
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .filter(is_published=True)
+            .exclude(published__gt=timezone.now())
+            .prefetch_related(
+                models.Prefetch("attachments", queryset=Attachment.alternates.order_by(), to_attr="alternates"),
+            )
+            .only("title", "slug", "description", "created")
+            .annotate(has_body=IsNotEmpty("body"))
+        )
+
+    def get_custom_filter(self, request=None):
+        parent_filter = super().get_custom_filter(request)
+        if request is not None and request.user.is_authenticated:
+            return parent_filter
+        return parent_filter & models.Q(id__in=[])
 
 
 class WeblogEntry(models.Model):
@@ -42,6 +65,7 @@ class WeblogEntry(models.Model):
 
     objects = models.Manager()
     published_objects = PublishedManager()
+    search_objects = WeblogSearchManager(title="icontains", description="icontains", body="icontains")
 
     class Meta:
         ordering = ["-published"]
