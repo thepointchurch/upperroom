@@ -1,15 +1,14 @@
 {% extends "directory/base.html" %}
-{% load static %}
-{% load smartquote %}
+{% load i18n smartquote static %}
 
 {% block stylesheets %}
 <link type="text/css" href="{% static 'style/directory_form.css' %}" rel="stylesheet" />
 <link type="text/css" href="{% static 'style/directory_form.css' %}" rel="preload" as="style" />
 {% endblock stylesheets %}
 
-{% block title %}{{ block.super }}: {{ family.name|smartquote }}: Edit{% endblock title %}
+{% block title %}{{ block.super }}: {{ family.name|smartquote }}: {% translate 'edit'|capfirst %}{% endblock title %}
 
-{% block heading %}{{ block.super }}: {{ family.name|smartquote }}: Edit{% endblock heading %}
+{% block heading %}{{ block.super }}: {{ family.name|smartquote }}: {% translate 'edit'|capfirst %}{% endblock heading %}
 
 {% block content %}
 
@@ -46,7 +45,7 @@
 </tr>
 {% endfor %}
 </table>
-<input type="submit" value="Update" />
+<input type="submit" value="{% translate 'update'|capfirst %}" />
 </form>
 
 {% endblock content %}

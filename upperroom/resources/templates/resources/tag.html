@@ -1,17 +1,16 @@
 {% extends "resources/resource_list.html" %}
-{% load markup %}
-{% load smartquote %}
+{% load i18n markup smartquote %}
 
 {% block headers %}{{ block.super }}{% for feed in tag.feeds.all %}
-<link rel="alternate" type="application/rss+xml" title="{{ feed.title|smartquote }}: {% if feed.is_podcast %}Podcast{% else %}RSS{% endif %}" href="{% url 'resources:rss' feed.slug %}" />
-<link rel="alternate" type="application/atom+xml" title="{{ feed.title|smartquote }}: Atom" href="{% url 'resources:atom' feed.slug %}" />
+<link rel="alternate" type="application/rss+xml" title="{{ feed.title|smartquote }}: {% if feed.is_podcast %}{% translate 'podcast'|capfirst %}{% else %}RSS{% endif %}" href="{% url 'resources:rss' feed.slug %}" />
+<link rel="alternate" type="application/atom+xml" title="{{ feed.title|smartquote }}: {% translate 'Atom' %}" href="{% url 'resources:atom' feed.slug %}" />
 {% endfor %}{% endblock headers %}
 
 {% block title %}
 {% if tag.is_featured %}
-{{ tag.name|smartquote }}
+{{ site.name }}: {{ tag.name|smartquote }}
 {% else %}
-{{ block.super }}: Tag: {{ tag.name|smartquote }}
+{{ block.super }}: {% translate 'tag'|capfirst %}: {{ tag.name|smartquote }}
 {% endif %}
 {% endblock title %}
 
@@ -19,7 +18,7 @@
 {% if tag.is_featured %}
 {{ tag.name|smartquote }}
 {% else %}
-{{ block.super }}: Tag: {{ tag.name|smartquote }}
+{{ block.super }}: {% translate 'tag'|capfirst %}: {{ tag.name|smartquote }}
 {% endif %}
 {% endblock heading %}
 
@@ -29,7 +28,7 @@
 {% endif %}
 {% for feed in tag.feeds.all %}
 {% if feed.is_podcast %}
-<p>These items are available as a <a href="{% url 'resources:rss' feed.slug %}">podcast</a>.</p>
+<p>{% url 'resources:rss' feed.slug as podcast_url %}{% blocktranslate %}These items are available as a <a href="{{ podcast_url }}">podcast</a>{% endblocktranslate %}.</p>
 {% endif %}
 {% endfor %}
 {{ block.super }}

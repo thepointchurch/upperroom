@@ -1,4 +1,4 @@
-{% load smartquote %}
+{% load i18n smartquote %}
 
 {% regroup anniversaries|dictsort:"anniversarydate" by anniversary|date:"F" as anniversary_by_month %}
 
@@ -11,5 +11,5 @@
     {% endfor %}
     </ul>
 {% empty %}
-    <p>No anniversaries were found.</p>
+    <p>{% translate 'No anniversaries were found.' %}</p>
 {% endfor %}

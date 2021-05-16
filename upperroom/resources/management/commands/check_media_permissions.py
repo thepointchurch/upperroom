@@ -38,26 +38,26 @@ class Command(BaseCommand):
         if is_public:
             if is_s3_encrypted(file_object):
                 if dry_run:
-                    self.stdout.write(_("%s will be decrypted") % file_object.name)
+                    self.stdout.write(_("%(file_name)s will be decrypted") % {"file_name": file_object.name})
                 else:
                     decrypt_s3_file(file_object)
-                    self.stdout.write(_("%s decrypted") % file_object.name)
+                    self.stdout.write(_("%(file_name)s decrypted") % {"file_name": file_object.name})
             if not is_s3_file_public(file_object):
                 if dry_run:
-                    self.stdout.write(_("%s will be set public") % file_object.name)
+                    self.stdout.write(_("%(file_name)s will be set public") % {"file_name": file_object.name})
                 else:
                     set_s3_file_acl(file_object, "public-read")
-                    self.stdout.write(_("%s set public") % file_object.name)
+                    self.stdout.write(_("%(file_name)s set public") % {"file_name": file_object.name})
         else:
             if not is_s3_encrypted(file_object):
                 if dry_run:
-                    self.stdout.write(_("%s will be encrypted") % file_object.name)
+                    self.stdout.write(_("%(file_name)s will be encrypted") % {"file_name": file_object.name})
                 else:
                     encrypt_s3_file(file_object)
-                    self.stdout.write(_("%s encrypted") % file_object.name)
+                    self.stdout.write(_("%(file_name)s encrypted") % {"file_name": file_object.name})
             if is_s3_file_public(file_object):
                 if dry_run:
-                    self.stdout.write(_("%s will be set private") % file_object.name)
+                    self.stdout.write(_("%(file_name)s will be set private") % {"file_name": file_object.name})
                 else:
                     set_s3_file_acl(file_object, "private")
-                    self.stdout.write(_("%s set private") % file_object.name)
+                    self.stdout.write(_("%(file_name)s set private") % {"file_name": file_object.name})

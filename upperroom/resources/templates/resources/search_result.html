@@ -1,7 +1,5 @@
 {% extends "search/search_result.html" %}
-{% load i18n %}
-{% load markup %}
-{% load smartquote %}
+{% load i18n markup smartquote %}
 {% block heading %}<a href="{% url "resources:detail" item.slug %}">{{ item.title|smartquote }}</a>{% endblock heading %}
 {% block content %}
 {% if item.description %}{{ item.description|markdown:"smarty" }}{% endif %}

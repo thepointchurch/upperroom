@@ -1,14 +1,14 @@
 {% extends "directory/base.html" %}
-{% load smartquote %}
+{% load i18n smartquote %}
 
-{% block heading %}{{ block.super }}: Birthdays{% endblock heading %}
+{% block heading %}{{ block.super }}: {% translate 'birthdays'|capfirst %}{% endblock heading %}
 
 {% block content %}
 
 {% regroup person_list|dictsort:"birthdate" by birthday|date:"F" as birthday_by_month %}
 
 {% for month in birthday_by_month %}
-    <h3>{{ month.grouper }}</h3>
+    <h3>{% translate month.grouper %}</h3>
     {% regroup month.list by birthday.day as birthday_by_month_day %}
     <ul>
     {% for day in birthday_by_month_day %}
@@ -16,7 +16,7 @@
     {% endfor %}
     </ul>
 {% empty %}
-    <p>No birthdays were found.</p>
+    <p>{% translate 'No birthdays were found.' %}</p>
 {% endfor %}
 
 {% endblock content %}

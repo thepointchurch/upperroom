@@ -21,7 +21,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         meetings = Meeting.objects.filter(date__lt=date.today())
         if options["dry_run"]:
-            self.stdout.write(_("%d meetings to be deleted") % meetings.count())
+            self.stdout.write(_("%(count)d meetings to be deleted") % {"count": meetings.count()})
         else:
             count, __ = meetings.delete()
-            self.stdout.write(_("Deleted %d meetings") % count)
+            self.stdout.write(_("Deleted %(count)d meetings") % {"count": count})

@@ -1,5 +1,6 @@
+{% load i18n %}
 {% if builder_templates %}
-<p>Choose a meeting template to create:</p>
+<p>{% translate 'Choose a meeting template to create' %}:</p>
 <form action="" method="get">
 <select name="template">
 {% for template in builder_templates %}
@@ -7,8 +8,8 @@
 {% endfor %}
 </select>
 <input type="hidden" name="by_age" value="1">
-<input type="submit" value="Create">
+<input type="submit" value="{% translate 'create'|capfirst %}">
 </form>
 {% else %}
-<p class="error">No meeting templates found. You must <a href="{% url 'admin:roster_meetingtemplate_add' %}">create a template</a> before using the Roster Builder.</p>
+<p class="error">{% url 'admin:roster_meetingtemplate_add' as create_url %}{% blocktranslate %}No meeting templates found. You must <a href="{{ create_url }}">create a template</a> before using the Roster Builder.{% endblocktranslate %}</p>
 {% endif %}

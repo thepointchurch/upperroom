@@ -1,10 +1,9 @@
 {% extends "resources/base.html" %}
-{% load markup %}
-{% load smartquote %}
+{% load i18n markup smartquote %}
 
-{% block title %}{{ block.super }}: {{ resource.title|smartquote }}{% if not resource.is_published %} [DRAFT]{% endif %}{% endblock title %}
+{% block title %}{{ block.super }}: {{ resource.title|smartquote }}{% if not resource.is_published %} [{% translate 'draft'|upper %}]{% endif %}{% endblock title %}
 
-{% block heading %}{{ resource.title|smartquote }}{% if not resource.is_published %} [DRAFT]{% endif %}{% endblock heading %}
+{% block heading %}{{ resource.title|smartquote }}{% if not resource.is_published %} [{% translate 'draft'|upper %}]{% endif %}{% endblock heading %}
 
 {% block metadata %}
 {% if resource.author and resource.show_author %}<p id="author" itemprop="author" itemscope itemtype="http://schema.org/Person">By <a href="{% url 'resources:author' resource.author.id %}"><span itemprop="name">{{ resource.author.fullname|smartquote }}</span></a></p>{% else %}<span itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="{{ object.author }}" /></span>{% endif %}
@@ -13,12 +12,12 @@
 <div itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="{{ site.name }}" /></div>
 
 {% if resource.alternates|length > 0 %}
-<p class="option">This resource is also available in
+<p class="option">{% translate 'This resource is also available in' %}
 {% regroup resource.alternates by format as formats %}
 {% for format in formats %}
-{% with a=format.list|first %}<a href="{% url 'resources:attachment' a.id %}">{{ format.grouper }}</a>{% endwith %}{% if not forloop.last %}{% if forloop.revcounter0 == 1 %} or{% else %},{% endif %}{% endif %}
+{% with a=format.list|first %}<a href="{% url 'resources:attachment' a.id %}">{{ format.grouper }}</a>{% endwith %}{% if not forloop.last %}{% if forloop.revcounter0 == 1 %} {% translate 'or' %}{% else %},{% endif %}{% endif %}
 {% endfor %}
-format.</p>
+{% translate 'format' %}.</p>
 {% endif %}
 {% endblock metadata %}
 

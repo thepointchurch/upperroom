@@ -1,22 +1,22 @@
 {% extends "members/create.html" %}
-{% load smartquote %}
+{% load i18n smartquote %}
 
 {% block content %}
 
-{% if user.person %}<p>You already have an account.</p>{% else %}
+{% if user.person %}<p>{% translate 'You already have an account.' %}</p>{% else %}
 
-<p>Create an account for {{ person.fullname|smartquote }}:</p>
+<p>{% blocktranslate with full_name=person.fullname|smartquote %}Create an account for {{ full_name }}{% endblocktranslate %}:</p>
 
 <form action="" method="post">
 {% csrf_token %}
 <table class="passwd">
 {{form}}
-<tr><td colspan="2"><input type="submit" value="Submit" /></td></tr>
+<tr><td colspan="2"><input type="submit" value="{% translate 'Submit' %}" /></td></tr>
 </table>
 </form>
 
 {% endif %}
 
-<p class="links">[ <a href="{% url "members:index" %}">Back Home</a> ]</p>
+<p class="links">[ <a href="{% url "members:index" %}">{% translate 'back home'|capfirst %}</a> ]</p>
 
 {% endblock content %}

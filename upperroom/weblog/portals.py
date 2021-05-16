@@ -7,7 +7,7 @@ from .models import WeblogEntry
 
 class Latest(Portal):
     order = -8
-    title = _("Latest News")
+    title = _("Weblog Entries")
     template_name = "weblog/portal_latest.html"
 
     def get_context(self):
@@ -20,8 +20,8 @@ class Latest(Portal):
 
 
 class WeblogHomeOperation(PortalOperation):
-    title = _("News")
-    description = _("Check the latest news.")
+    title = _("Weblog")
+    description = _("Check the latest weblog entries.")
 
     def get_context(self):
         context = super().get_context()

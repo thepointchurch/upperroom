@@ -1,6 +1,6 @@
-{% load smartquote %}
+{% load i18n smartquote %}
 <head>
-<title>{{ site_name }} Directory {{ year }}</title>
+<title>{{ site_name }} {% translate 'directory'|capfirst %} {{ year }}</title>
 <meta name="dcterms.created" content="{% now 'c' %}" />
 <meta name="dcterms.modified" content="{% now 'c' %}" />
 <style type="text/css">
@@ -67,10 +67,10 @@ div.family .img {
 <body>
 
 {% block "titlepage" %}
-<h1>{{ site_name }} Directory of Family &amp; Friends<span class="year">{{ year }}</span></h1>
+<h1>{{ site_name }} {% translate 'Directory of Family &amp; Friends' %}<span class="year">{{ year }}</span></h1>
 {% endblock "titlepage" %}
 
-<h2 style="position: absolute; left: 30cm; bottom: 0;">Families</h2>
+<h2 style="position: absolute; left: 30cm; bottom: 0;">{% translate 'families'|capfirst %}</h2>
 
 {% for family in families %}
 <div class="family" name="{{ family }}">
@@ -78,13 +78,13 @@ div.family .img {
 </div>
 {% endfor %}
 
-<h2 style="page-break-before: always">Birthdays</h2>
+<h2 style="page-break-before: always">{% translate 'birthdays'|capfirst %}</h2>
 
 {% block "birthdays" %}
 {% include "directory/birthday_list_detail.html" %}
 {% endblock "birthdays" %}
 
-<h2 style="page-break-before: always">Anniveraries</h2>
+<h2 style="page-break-before: always">{% translate 'anniveraries'|capfirst %}</h2>
 
 {% block "anniversaries" %}
 {% include "directory/anniversary_list_detail.html" %}

@@ -1,6 +1,7 @@
 {% extends "members/portal.html" %}
+{% load i18n %}
 {% block portalintro %}
-<p>Click here to perform an operation:</p>
+<p>{% translate 'click here to perform an operation'|capfirst %}:</p>
 {% endblock portalintro %}
 {% block portalcontent %}
 <ul>

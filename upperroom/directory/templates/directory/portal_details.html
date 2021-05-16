@@ -1,15 +1,15 @@
 {% extends "members/portal.html" %}
-{% load smartquote %}
+{% load i18n smartquote %}
 {% block portalcontent %}
-{% if person.birthday %}<p><strong>Your birthday:</strong> {{ person.birthday|date:'jS F' }}</p>{% endif %}
-{% if person.family.street and person.family.suburb and person.family.postcode %}<p><strong>Family Address:</strong><br />
+{% if person.birthday %}<p><strong>{% translate 'your birthday'|capfirst %}:</strong> {{ person.birthday|date:'jS F' }}</p>{% endif %}
+{% if person.family.street and person.family.suburb and person.family.postcode %}<p><strong>{% translate 'family address'|capfirst %}:</strong><br />
 {{ person.family.street|smartquote }}<br />
 {{ person.family.suburb|smartquote }} {{ person.family.postcode }}</p>{% endif %}
-{% if person.family.phone_home %}<p><strong>Family Phone:</strong> {{ person.family.phone_home }}</p>{% endif %}
-{% if person.family.phone_mobile %}<p><strong>Family Mobile:</strong> {{ person.family.phone_mobile }}</p>{% endif %}
-{% if person.phone_mobile %}<p><strong>Your Mobile Phone:</strong> {{ person.phone_mobile }}</p>{% endif %}
-{% if person.phone_work %}<p><strong>Your Work Phone:</strong> {{ person.phone_work }}</p>{% endif %}
-{% if person.family.email %}<p><strong>Family Email:</strong> <a href="mailto:{{ person.family.email }}">{{ person.family.email }}</a></p>{% endif %}
-{% if person.email %}<p><strong>Your Email:</strong> <a href="mailto:{{ person.email }}">{{ person.email }}</a></p>{% endif %}
-<p class="links">[ <a href="{% url 'directory:detail' person.family.id %}">Your Family’s Data</a> ]</p>
+{% if person.family.phone_home %}<p><strong>{% translate 'family phone'|capfirst %}:</strong> {{ person.family.phone_home }}</p>{% endif %}
+{% if person.family.phone_mobile %}<p><strong>{% translate 'family mobile'|capfirst %}:</strong> {{ person.family.phone_mobile }}</p>{% endif %}
+{% if person.phone_mobile %}<p><strong>{% translate 'your mobile phone'|capfirst %}:</strong> {{ person.phone_mobile }}</p>{% endif %}
+{% if person.phone_work %}<p><strong>{% translate 'your work phone'|capfirst %}:</strong> {{ person.phone_work }}</p>{% endif %}
+{% if person.family.email %}<p><strong>{% translate 'family email'|capfirst %}:</strong> <a href="mailto:{{ person.family.email }}">{{ person.family.email }}</a></p>{% endif %}
+{% if person.email %}<p><strong>{% translate 'your email'|capfirst %}:</strong> <a href="mailto:{{ person.email }}">{{ person.email }}</a></p>{% endif %}
+<p class="links">[ <a href="{% url 'directory:detail' person.family.id %}">{% translate 'your family’s data<'|capfirst %}/a> ]</p>
 {% endblock portalcontent %}

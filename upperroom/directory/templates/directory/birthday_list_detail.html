@@ -1,4 +1,4 @@
-{% load smartquote %}
+{% load i18n smartquote %}
 
 {% regroup birthdays|dictsort:"birthdate" by birthday|date:"F" as birthday_by_month %}
 
@@ -11,5 +11,5 @@
     {% endfor %}
     </ul>
 {% empty %}
-    <p>No birthdays were found.</p>
+    <p>{% translate 'No birthdays were found.' %}</p>
 {% endfor %}

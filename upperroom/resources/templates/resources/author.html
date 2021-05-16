@@ -1,13 +1,13 @@
 {% extends "resources/resource_list.html" %}
-{% load markup %}
-{% load smartquote %}
+{% load i18n markup smartquote %}
 
 {% block title %}
 {{ block.super }}: {{ author.fullname|smartquote }}
 {% endblock title %}
 
 {% block heading %}
-{{ block.super }} by {{ author.fullname|smartquote }}
+{{ block.super }} {% blocktranslate with author_name=author.fullname|smartquote %}by {{ author_name }}{% endblocktranslate %}
+
 {% endblock heading %}
 
 {% block content %}

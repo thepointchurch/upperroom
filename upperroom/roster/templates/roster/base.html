@@ -1,5 +1,6 @@
 {% extends "site/base.html" %}
+{% load i18n %}
 
-{% block title %}{{ block.super }}: Assembly Roster{% endblock title %}
+{% block title %}{{ block.super }}: {% translate 'Assembly Roster' %}{% endblock title %}
 
-{% block heading %}Assembly Roster{% endblock heading %}
+{% block heading %}{% translate 'Assembly Roster' %}{% endblock heading %}

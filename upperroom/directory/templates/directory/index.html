@@ -1,14 +1,15 @@
 {% extends "directory/base.html" %}
+{% load i18n %}
 
-{% block heading %}Members Directory{% endblock heading %}
+{% block heading %}{% translate 'Members Directory' %}{% endblock heading %}
 
 {% block content %}
 
 {% block instructions %}{% endblock instructions %}
 
-<h3>Addresses</h3>
+<h3>{% translate 'addresses'|capfirst %}</h3>
 
-<p>Browse entries, by surname:</p>
+<p>{% translate 'browse entries, by surname'|capfirst %}:</p>
 
 {% regroup family_list by first_letter as index_list_unsorted %}
 
@@ -16,22 +17,22 @@
 <p class="links">[ {% for letter in index_list %}{% if not forloop.first %} | {% endif %}<a href="{% url 'directory:letter' letter.grouper %}">{{ letter.grouper|upper }}</a>{% endfor %} ]</p>
 {% endwith %}
 
-<h3>Search</h3>
+<h3>{% translate 'Search' %}</h3>
 
-<p>You can search the directory by name or location:</p>
+<p>{% translate 'you can search the directory by name or location'|capfirst %}:</p>
 
 {% include "directory/search_form.html" %}
 
-<h3>Download</h3>
+<h3>{% translate 'download'|capfirst %}</h3>
 
-<p>You can download the latest copy of the directory for printing or browsing <a href="{% url 'directory:pdf' %}">here</a>.</p>
+<p>{% url 'directory:pdf' as directory_pdf %}{% blocktranslate %}You can download the latest copy of the directory for printing or browsing <a href="{{ directory_pdf }}">here</a>.{% endblocktranslate %}</p>
 
-<h3>Birthdays and Anniversaries</h3>
+<h3>{% translate 'Birthdays and Anniversaries' %}</h3>
 
-<p>You can view a list of <a href="{% url 'directory:birthdays' %}">birthdays</a> or a list of <a href="{% url 'directory:anniversaries' %}">anniversaries</a> in chronological order.</p>
+<p>{% url 'directory:birthdays' as birthday_url %}{% url 'directory:anniversaries' as anniversary_url %}{% blocktranslate %}You can view a list of <a href="{{ birthday_url}}">birthdays</a> or a list of <a href="{{ anniversary_url }}">anniversaries</a> in chronological order.{% endblocktranslate %}</p>
 
-<h3>Updates</h3>
+<h3>{% translate 'updates'|capfirst %}</h3>
 
-<p>If you would like to update your details in any way, you can do so by browsing to your family’s entry and clicking the "Edit" link.</p>
+<p>{% translate 'If you would like to update your details in any way, you can do so by browsing to your family’s entry and clicking the "Edit" link.' %}</p>
 
 {% endblock content %}

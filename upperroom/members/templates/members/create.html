@@ -1,5 +1,6 @@
 {% extends "members/base.html" %}
+{% load i18n %}
 
-{% block title %}{{ block.super }}: Create an Account{% endblock title %}
+{% block title %}{{ block.super }}: {% translate 'create an account'|capfirst %}{% endblock title %}
 
-{% block heading %}Create an Account{% endblock heading %}
+{% block heading %}{% translate 'create an account'|capfirst %}{% endblock heading %}

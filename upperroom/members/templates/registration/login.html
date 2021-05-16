@@ -1,10 +1,11 @@
 {% extends "members/base.html" %}
+{% load i18n %}
 
-{% block heading %}Member Login{% endblock heading %}
+{% block heading %}{% translate 'Member Login' %}{% endblock heading %}
 
 {% block content %}
 
-{% if form.errors %}<p class="error">Incorrect password, access denied</p>{% endif %}
+{% if form.errors %}<p class="error">{% translate 'Incorrect password, access denied' %}</p>{% endif %}
 
 <form method="post" action="{% url 'members:login' %}">
 {% csrf_token %}
@@ -18,9 +19,9 @@
 <td>{{ form.password }}</td>
 </tr>
 <tr>
-<td colspan="2"><input type="submit" name="login" value="Log In" /></td>
+<td colspan="2"><input type="submit" name="login" value="{% translate 'Log in' %}" /></td>
 </tr>
-<tr><td colspan="2"><p><a href="{% url "members:password_reset" %}">Forgotten your password?</a></p></td></tr>
+<tr><td colspan="2"><p><a href="{% url "members:password_reset" %}">{% translate 'Forgotten your password or username?' %}</a></p></td></tr>
 </table>
 <input type="hidden" name="next" value="{{ next }}" />
 </form>

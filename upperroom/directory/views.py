@@ -63,15 +63,15 @@ class SearchView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["search_type"] = self.request.GET.get("type", "By Name")
+        context["search_type"] = self.request.GET.get("type", _("By Name"))
         context["search_query"] = self.request.GET.get("query", "")
         return context
 
     def get_queryset(self):
-        search_type = self.request.GET.get("type", "By Name")
+        search_type = self.request.GET.get("type", _("By Name"))
         search_query = self.request.GET.get("query", "")
 
-        if search_type == "By Location":
+        if search_type == _("By Location"):
             return Family.current_objects.filter(
                 Q(street__icontains=search_query)
                 | Q(suburb__icontains=search_query)

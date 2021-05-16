@@ -1,14 +1,15 @@
+{% load i18n %}
 <form method="get" action="{% url 'library:search' %}">
 <input type="text" name="query" value="" size="32" />
 <select name="field">
 <option value=""></option>
-<option value="title">Title</option>
-<option value="author">Author</option>
-<option value="subtitle">Subtitle</option>
-<option value="description">Description</option>
-<option value="location">Location</option>
-<option value="type">Type</option>
-<option value="isbn">ISBN</option>
+<option value="title">{% translate 'title'|capfirst %}</option>
+<option value="author">{% translate 'author'|capfirst %}</option>
+<option value="subtitle">{% translate 'subtitle'|capfirst %}</option>
+<option value="description">{% translate 'description'|capfirst %}</option>
+<option value="location">{% translate 'location'|capfirst %}</option>
+<option value="type">{% translate 'type'|capfirst %}</option>
+<option value="isbn">{% translate 'isbn'|upper %}</option>
 </select>
-<input type="submit" name="type" value="Search" style="display: inline-block" />
+<input type="submit" name="type" value="{% translate 'Search' %}" style="display: inline-block" />
 </form>

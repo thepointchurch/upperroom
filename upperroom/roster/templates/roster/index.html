@@ -1,11 +1,12 @@
 {% extends "roster/base.html" %}
+{% load i18n %}
 
 {% block content %}
 
-<p class="links">[ Previous |
+<p class="links">[ {% translate 'previous'|capfirst %} |
 {% with next_month=meeting_list|dictsortreversed:"date"|first %}{% if next_month and next_month.date %}
-<a href="{% url 'roster:meeting_month' next_month.date|date:"Y" next_month.date|date:"n" %}">Next</a>
-{% else %} Next {% endif %}{% endwith %}
+<a href="{% url 'roster:meeting_month' next_month.date|date:"Y" next_month.date|date:"n" %}">{% translate 'next'|capfirst %}</a>
+{% else %} {% translate 'next'|capfirst %} {% endif %}{% endwith %}
 ]</p>
 
 {% for meeting in meeting_list %}

@@ -167,6 +167,8 @@ class BuilderView(NeverCacheMixin, PermissionRequiredMixin, generic.edit.CreateV
                 roles.instance = obj
                 roles.save()
         messages.success(
-            self.request, _("Added %s meeting on %s") % (self.builder_template.name, obj.date.strftime("%A %-d %B %Y"))
+            self.request,
+            _("Added %(template)s meeting on %(timestamp)s")
+            % {"template": self.builder_template.name, "timestamp": obj.date.strftime("%A %-d %B %Y")},
         )
         return super().form_valid(form)

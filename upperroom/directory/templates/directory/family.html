@@ -1,4 +1,4 @@
-{% load smartquote %}
+{% load i18n smartquote %}
 <div class="family">
 
 <h3>{{ family.name|smartquote }}</h3>
@@ -15,20 +15,20 @@
 <div class="family_address">
 {% if family.street and family.suburb and family.postcode %}{% with family.street|add:" "|add:family.suburb|add:" "|add:family.postcode as address_url %}<p><a href="https://www.google.com.au/maps/place/{{ address_url|urlencode:"" }}">{{ family.street|smartquote }}<br />
 {{ family.suburb|smartquote }} {{ family.postcode }}</a></p>{% endwith %}{% endif %}
-{% if family.phone_home %}<p>Home: <a href="tel:{{ family.phone_home_intl }}">{{ family.phone_home }}</a></p>{% endif %}
-{% if family.phone_mobile %}<p>Mobile: <a href="tel:{{ family.phone_mobile_intl }}">{{ family.phone_mobile }}</a></p>{% endif %}
-{% if family.email %}<p>Email: <a href="mailto:{{ family.email }}">{{ family.email }}</a></p>{% endif %}
+{% if family.phone_home %}<p>{% translate 'home'|capfirst %}: <a href="tel:{{ family.phone_home_intl }}">{{ family.phone_home }}</a></p>{% endif %}
+{% if family.phone_mobile %}<p>{% translate 'mobile'|capfirst %}: <a href="tel:{{ family.phone_mobile_intl }}">{{ family.phone_mobile }}</a></p>{% endif %}
+{% if family.email %}<p>{% translate 'email'|capfirst %}: <a href="mailto:{{ family.email }}">{{ family.email }}</a></p>{% endif %}
 
 <dl class="person_details">
 {% for person in family.current_members.all %}{% if person.phone_mobile or person.phone_mobile or person.phone_work or person.email %}
 <dt>{{ person.name_with_suffix|smartquote }}</dt>
-{% if person.phone_mobile %}<dd><span class="label">Mobile:</span> <a href="tel:{{ person.phone_mobile_intl }}">{{ person.phone_mobile }}</a></dd>{% endif %}
-{% if person.phone_work %}<dd><span class="label">Work:</span> <a href="tel:{{ person.phone_work_intl }}">{{ person.phone_work }}</a></dd>{% endif %}
-{% if person.email %}<dd><span class="label">Email:</span> <a href="mailto:{{ person.email }}">{{ person.email }}</a></dd>{% endif %}
+{% if person.phone_mobile %}<dd><span class="label">{% translate 'mobile'|capfirst %}:</span> <a href="tel:{{ person.phone_mobile_intl }}">{{ person.phone_mobile }}</a></dd>{% endif %}
+{% if person.phone_work %}<dd><span class="label">{% translate 'work'|capfirst %}:</span> <a href="tel:{{ person.phone_work_intl }}">{{ person.phone_work }}</a></dd>{% endif %}
+{% if person.email %}<dd><span class="label">{% translate 'email'|capfirst %}:</span> <a href="mailto:{{ person.email }}">{{ person.email }}</a></dd>{% endif %}
 {% endif %}{% endfor %}
 </dl>
 
-{% if family == user.person.family %}<p class="links">[ <a href="{% url 'directory:edit' %}">Edit</a> ]</p>{% endif %}
+{% if family == user.person.family %}<p class="links">[ <a href="{% url 'directory:edit' %}">{% translate 'edit'|capfirst %}</a> ]</p>{% endif %}
 </div>
 
 <div class="family_photo">

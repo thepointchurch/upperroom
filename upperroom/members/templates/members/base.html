@@ -1,8 +1,9 @@
 {% extends "site/base.html" %}
+{% load i18n %}
 
-{% block title %}{{ block.super }}: Members Home{% endblock title %}
+{% block title %}{{ block.super }}: {% translate 'Members Home' %}{% endblock title %}
 
-{% block heading %}Members Home{% endblock heading %}
+{% block heading %}{% translate 'Members Home' %}{% endblock heading %}
 
 {% block semantic %}
 <main>

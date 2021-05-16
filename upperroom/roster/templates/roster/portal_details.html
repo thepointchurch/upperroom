@@ -1,22 +1,21 @@
 {% extends "members/portal.html" %}
-{% load smartquote %}
-{% load roster_filters %}
+{% load i18n smartquote roster_filters %}
 {% block portalcontent %}
 {% if role_list.count > 0 %}
-<p>Your roster commitments for the next two months:</p>
+<p>{% translate 'your roster commitments for the next two months'|capfirst %}:</p>
 <dl>
 {% regroup role_list|dictsort:"date" by date as role_date %}
 {% for date in role_date %}
 <dt>{{ date.grouper|date:'jS F' }}</dt>
 {% for r in date.list %}
-<dd>{{ r.role|smartquote }}{% if r.location %} at {{ r.location|smartquote }}{% endif %}{% if r.description %} <cite>({{ r.description|smartquote }})</cite>{% endif %}
-{% if r.people.count > 1 %} with {% for p in r.people.all|remove_person:person %}{% if not forloop.first %}, {% endif %}<a href="{% url 'roster:person' p.id %}">{{ p.fullname|smartquote }}</a>{% endfor %}{% endif %}
+<dd>{{ r.role|smartquote }}{% if r.location %} {% translate 'at' %} {{ r.location|smartquote }}{% endif %}{% if r.description %} <cite>({{ r.description|smartquote }})</cite>{% endif %}
+{% if r.people.count > 1 %} {% translate 'with' %} {% for p in r.people.all|remove_person:person %}{% if not forloop.first %}, {% endif %}<a href="{% url 'roster:person' p.id %}">{{ p.fullname|smartquote }}</a>{% endfor %}{% endif %}
 </dd>
 {% endfor %}
 {% endfor %}
 </dl>
-<p class="links">[ <a href="{% url 'roster:person' person.id %}">Your Complete Roster</a> | <a href="{% url 'roster:event' person.id %}">iCalendar</a> ]</p>
+<p class="links">[ <a href="{% url 'roster:person' person.id %}">{% translate 'your complete roster'|capfirst %}</a> | <a href="{% url 'roster:event' person.id %}">{% translate 'iCalendar' %}</a> ]</p>
 {% else %}
-<p>You have no responsibilities in the next two months.</p>
+<p>{% translate 'You have no responsibilities in the next two months.' %}</p>
 {% endif %}
 {% endblock portalcontent %}

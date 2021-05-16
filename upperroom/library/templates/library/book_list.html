@@ -1,12 +1,17 @@
 {% extends "library/base.html" %}
-{% block title %}{{ block.super }}: Search{% endblock title %}
-{% block heading %}{{ block.super }}: Search{% endblock heading %}
+{% load i18n %}
+{% block title %}{{ block.super }}: {% translate 'Search' %}{% endblock title %}
+{% block heading %}{{ block.super }}: {% translate 'Search' %}{% endblock heading %}
 {% block content %}
 {% include "library/search_form.html" %}
-{% with count=book_list.count %}{% if count > 0 %}<p>Your search found {{ count }} result{{ count|pluralize }}:</p>{% endif %}{% endwith %}
+<p>{% blocktranslate count counter=book_list.count %}
+Your search found {{ counter }} result
+{% plural %}
+Your search found {{ counter }} results
+{% endblocktranslate %}:</p>
 {% for book in book_list %}
 {% include "library/book.html" %}
 {% empty %}
-<p>No results found.</p>
+<p>{% translate 'no results found'|capfirst %}.</p>
 {% endfor %}
 {% endblock content %}

@@ -1,5 +1,6 @@
+{% load i18n %}
 <form method="get" action="{% url 'directory:search' %}">
 <input type="text" name="query" value="{{search_query}}" size="32" />
-<input type="submit" name="type" value="By Name" style="display: inline-block" />
-<input type="submit" name="type" value="By Location" style="display: inline-block" />
+<input type="submit" name="type" value="{% translate 'By Name' %}" style="display: inline-block" />
+<input type="submit" name="type" value="{% translate 'By Location' %}" style="display: inline-block" />
 </form>

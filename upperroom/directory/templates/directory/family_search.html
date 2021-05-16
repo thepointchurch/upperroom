@@ -1,14 +1,15 @@
 {% extends "directory/base.html" %}
+{% load i18n %}
 
-{% block title %}{{ block.super }}: Search {{ search_type }}: {{ search_query }}{% endblock title %}
+{% block title %}{{ block.super }}: {% translate 'Search' %} {{ search_type }}: {% translate search_query %}{% endblock title %}
 
-{% block heading %}{{ block.super }}: Search{% endblock heading %}
+{% block heading %}{{ block.super }}: {% translate 'Search' %}{% endblock heading %}
 
 {% block content %}
 {% include "directory/search_form.html" %}
 {% for family in family_list %}
 {% include "directory/family.html" %}
 {% empty %}
-<p>Nothing found for query string "{{search_query}}".</p>
+<p>{% blocktranslate %}Nothing found for query string "{{search_query}}".{% endblocktranslate %}</p>
 {% endfor %}
 {% endblock content %}

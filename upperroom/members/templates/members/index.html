@@ -1,8 +1,9 @@
 {% extends "members/base.html" %}
+{% load i18n %}
 
 {% block content %}
 {% block instructions %}
-<p>Please report any problems you have to the <a href="mailto:{{ webmaster_email }}">webmaster</a>.</p>
+<p>{% blocktranslate %}Please report any problems you have to the <a href="mailto:{{ webmaster_email }}">webmaster</a>.{% endblocktranslate %}</p>
 {% endblock instructions %}
 <div id="portal">
 {% for portal in portals %}{{ portal }}{% endfor %}

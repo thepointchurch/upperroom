@@ -1,9 +1,9 @@
 {% extends "roster/base.html" %}
 {% load i18n %}
 
-{% block title %}{{ block.super }}: Builder{% endblock title %}
+{% block title %}{{ block.super }}: {% translate 'Roster Builder' %}{% endblock title %}
 
-{% block heading %}Roster Builder{% endblock heading %}
+{% block heading %}{% translate 'Roster Builder' %}{% endblock heading %}
 
 {% block content %}
 {% if builder_template %}
@@ -42,7 +42,7 @@ template. <input type="checkbox" name="by_name" value="1" title="{% translate "S
     </tr>
     {% endfor %}
 </table>
-<input type="submit" value="Add">
+<input type="submit" value="{% translate 'add'|capfirst %}">
 </form>
 {% else %}
 {% include "roster/builder_templates.html" %}

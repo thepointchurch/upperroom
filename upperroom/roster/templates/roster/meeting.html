@@ -1,4 +1,4 @@
-{% load smartquote %}
+{% load i18n smartquote %}
 <div itemscope itemtype="https://schema.org/Event">
 <h3><time itemprop="startDate name" datetime="{{ meeting.date|date:"Y-m-d" }}">{{ meeting.date|date:"jS F, Y" }}</time></h3>
 
@@ -12,7 +12,7 @@
 {% if role.guest %}{{ role.guest|smartquote }}{% endif %}
 {% endfor %}
 {% if role.description %}<cite>({{ role.description|smartquote }})</cite>{% endif %}
-{% if role.location %}at {{ role.location|smartquote }}{% endif %}
+{% if role.location %}{% translate 'at' %} {{ role.location|smartquote }}{% endif %}
 <meta itemprop="startDate" content="{{ meeting.date|date:"Y-m-d" }}{% if role.role.start_time %}T{{ role.role.start_time|date:"H:i:s" }}+1000{% endif %}" />
 <meta itemprop="location" content="{% if role.location %}{{ role.location }}{% else %}{{ site.name }}{% endif %}" />
 </p>

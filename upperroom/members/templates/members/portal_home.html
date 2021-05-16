@@ -1,4 +1,5 @@
 {% extends "members/portal_ops.html" %}
+{% load i18n %}
 {% block portalintro %}
-<p>The following resources are available for Members only. If you have any comments or suggestions for improvements or the usefulness of this resource, please contact the <a href="mailto:{{ webmaster_email }}">webmaster</a>.</p>
+<p>{% blocktranslate %}The following resources are available for Members only. If you have any comments or suggestions for improvements or the usefulness of this resource, please contact the <a href="mailto:{{ webmaster_email }}">webmaster</a>.{% endblocktranslate %}</p>
 {% endblock portalintro %}

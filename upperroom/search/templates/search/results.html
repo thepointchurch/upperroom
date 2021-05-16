@@ -1,6 +1,5 @@
 {% extends "search/base.html" %}
-{% load i18n %}
-{% load smartquote %}
+{% load i18n smartquote %}
 {% block title %}{{ block.super }}: {{ search_query }}{% endblock title %}
 {% block heading %}{{ block.super }}{% if type_name %}: {% translate type_name|capfirst|smartquote %}{% endif %}{% endblock heading %}
 {% block content %}
@@ -14,11 +13,11 @@
 {% endfor %}
 <p class="links">[
 {% if results.page.has_previous %}
-<a href="{{ results.type }}?q={{ search_query }}&page={{ results.page.previous_page_number }}">{% translate 'Previous' %}</a> |
+<a href="{{ results.type }}?q={{ search_query }}&page={{ results.page.previous_page_number }}">{% translate 'previous'|capfirst %}</a> |
 {% endif %}
 {% blocktranslate with page_number=results.page.number page_count=results.page.paginator.num_pages %}Page {{ page_number }} of {{ page_count }}{% endblocktranslate %}
 {% if results.page.has_next %}
-| <a href="{{ results.type }}?q={{ search_query }}&page={{ results.page.next_page_number }}">{% translate 'Next' %}</a>
+| <a href="{{ results.type }}?q={{ search_query }}&page={{ results.page.next_page_number }}">{% translate 'next'|capfirst %}</a>
 {% endif %}
 ]</p>
 {% empty %}

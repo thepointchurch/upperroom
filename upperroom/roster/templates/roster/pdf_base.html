@@ -1,6 +1,6 @@
-{% load smartquote %}
+{% load i18n smartquote %}
 <head>
-<title>{{ site_name }} Roster {{ year }}</title>
+<title>{{ site_name }} {% translate 'roster'|capfirst %} {{ year }}</title>
 <meta name="dcterms.created" content="{% now 'c' %}" />
 <meta name="dcterms.modified" content="{% now 'c' %}" />
 <style type="text/css">
@@ -50,7 +50,7 @@ a {
 <body>
 
 {% block "preamble" %}
-<h1>{{ site_name }} Assembly Roster <span class="year">{{ year }}</span></h1>
+<h1>{{ site_name }} {% translate 'Assembly Roster' %} <span class="year">{{ year }}</span></h1>
 {% endblock "preamble" %}
 
 {% regroup meeting_list by date.month as meeting_list_month %}
@@ -77,7 +77,7 @@ a {
                 {% endif %}{% endfor %}
             {% else %}
                 {% for role in location.list %}{% if role.print %}
-                    <p class="remote">{{ role.name|smartquote }} at {{ role.location|smartquote }}:
+                    <p class="remote">{{ role.name|smartquote }} {% translate 'at' %} {{ role.location|smartquote }}:
                     <span class="person">{% for person in role.people %}
                         {{ person.fullname|smartquote }}{% if not forloop.last %}, {% endif %}
                     {% empty %}
@@ -95,7 +95,7 @@ a {
 {% endfor %}
 
 {% block "postscript" %}
-<h1>Notes</h1>
+<h1>{% translate 'notes'|capfirst %}</h1>
 {% endblock "postscript" %}
 
 </body>

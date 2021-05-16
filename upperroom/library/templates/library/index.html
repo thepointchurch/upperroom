@@ -1,9 +1,6 @@
 {% extends "library/base.html" %}
-
+{% load i18n %}
 {% block content %}
-
-<p>Search the library:</p>
-
+<p>{% translate 'search the library'|capfirst %}:</p>
 {% include "library/search_form.html" %}
-
 {% endblock content %}

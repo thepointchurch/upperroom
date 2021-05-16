@@ -1,6 +1,5 @@
 {% extends "roster/base.html" %}
-{% load roster_filters %}
-{% load smartquote %}
+{% load i18n roster_filters smartquote %}
 
 {% block title %}{{ block.super }}: {{ person.fullname|smartquote }}{% endblock title %}
 
@@ -14,14 +13,14 @@
 <ul>
 {% for role in date.list %}
 <li>{{ role.role|smartquote }}{% if role.location %}
-at {{ role.location|smartquote }}{% endif %}{% if role.description %}
+{% translate 'at' %} {{ role.location|smartquote }}{% endif %}{% if role.description %}
 <cite>({{ role.description|smartquote }})</cite>{% endif %}
-{% if role.people.count > 1 %} with {% for p in role.people.all|remove_person:person %}{% if not forloop.first %}, {% endif %}<a href="{% url 'roster:person' p.id %}">{{ p.fullname|smartquote }}</a>{% endfor %}
+{% if role.people.count > 1 %} {% translate 'with' %} {% for p in role.people.all|remove_person:person %}{% if not forloop.first %}, {% endif %}<a href="{% url 'roster:person' p.id %}">{{ p.fullname|smartquote }}</a>{% endfor %}
 {% endif %}</li>
 {% endfor %}</ul>
 {% endfor %}
 
-<p class="links">[ <a href="{% url 'roster:event' person.id %}">iCalendar</a> ]</p>
+<p class="links">[ <a href="{% url 'roster:event' person.id %}">{% translate 'iCalendar' %}</a> ]</p>
 
 {% endblock content %}
 

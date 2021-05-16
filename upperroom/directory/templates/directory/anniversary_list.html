@@ -1,7 +1,7 @@
 {% extends "directory/base.html" %}
-{% load smartquote %}
+{% load i18n smartquote %}
 
-{% block heading %}{{ block.super }}: Anniversaries{% endblock heading %}
+{% block heading %}{{ block.super }}: {% translate 'anniversaries'|capfirst %}{% endblock heading %}
 
 {% block content %}
 
@@ -12,11 +12,11 @@
     {% regroup month.list by anniversary.day as anniversary_by_month_day %}
     <ul>
     {% for day in anniversary_by_month_day %}
-        <li><strong>{{ day.grouper }}</strong>{% for family in day.list %} {{ family.husband.name|smartquote }} &amp; {{ family.wife.name|smartquote }} {{ family.name|smartquote }} ({{ family.anniversary_age }} year{{ family.anniversary_age|pluralize }}){% if not forloop.last %},{% endif %}{% endfor %}</li>
+        <li><strong>{{ day.grouper }}</strong>{% for family in day.list %} {{ family.husband.name|smartquote }} &amp; {{ family.wife.name|smartquote }} {{ family.name|smartquote }} ({% blocktranslate count counter=family.anniversary_age %}{{ counter }} year{% plural %}{{ counter }} years{% endblocktranslate %}){% if not forloop.last %},{% endif %}{% endfor %}</li>
     {% endfor %}
     </ul>
 {% empty %}
-    <p>No anniversaries were found.</p>
+    <p>{% translate 'No anniversaries were found.' %}</p>
 {% endfor %}
 
 {% endblock content %}

@@ -1,10 +1,9 @@
 {% extends "weblog/base.html" %}
-{% load markup %}
-{% load smartquote %}
+{% load i18n markup smartquote %}
 
-{% block title %}{{ block.super }}: {{ object.title|smartquote }}{% if not object.is_published %} [DRAFT]{% endif %}{% endblock title %}
+{% block title %}{{ block.super }}: {{ object.title|smartquote }}{% if not object.is_published %} [{% translate 'draft'|upper %}]{% endif %}{% endblock title %}
 
-{% block heading %}{{ object.title|smartquote }}{% if not object.is_published %} [DRAFT]{% endif %}{% endblock heading %}
+{% block heading %}{{ object.title|smartquote }}{% if not object.is_published %} [{% translate 'draft'|upper %}]{% endif %}{% endblock heading %}
 
 {% block metadata %}
 {% if object.show_date or object.author and object.show_author %}
@@ -15,12 +14,12 @@
 <meta itemprop="dateModified" content="{{ object.modified|date:"Y-m-d\TH:i:sO" }}" />
 <div itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="{{ site.name }}" /></div>
 {% if object.alternates|length > 0 %}
-<p class="option">This entry is also available in
+<p class="option">{% translate 'This entry is also available in' %}
 {% regroup object.alternates by format as formats %}
 {% for format in formats %}
-{% with a=format.list|first %}<a href="{% url 'weblog:attachment' a.id %}" itemprop="url">{{ format.grouper }}</a>{% endwith %}{% if not forloop.last %}{% if forloop.revcounter0 == 1 %} or{% else %},{% endif %}{% endif %}
+{% with a=format.list|first %}<a href="{% url 'weblog:attachment' a.id %}" itemprop="url">{{ format.grouper }}</a>{% endwith %}{% if not forloop.last %}{% if forloop.revcounter0 == 1 %} {% translate 'or' %}{% else %},{% endif %}{% endif %}
 {% endfor %}
-format.</p>
+{% translate 'format' %}.</p>
 {% endif %}
 {% endblock metadata %}
 

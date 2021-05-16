@@ -1,4 +1,5 @@
 {% extends "directory/base.html" %}
+{% load i18n %}
 
 {% block title %}{{ block.super }}: {{ letter|upper }}{% endblock title %}
 
@@ -9,7 +10,7 @@
 {% for family in family_list %}
 {% include "directory/family.html" %}
 {% empty %}
-<p>Nothing found.</p>
+<p>{% translate 'no results found'|capfirst %}.</p>
 {% endfor %}
 
 {% endblock content %}

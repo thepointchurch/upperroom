@@ -1,6 +1,5 @@
 {% extends "weblog/base.html" %}
-{% load markup %}
-{% load smartquote %}
+{% load i18n markup smartquote %}
 
 {% block content %}
 
@@ -11,7 +10,7 @@
 <header>
 <h3 itemprop="name headline"><a href="{% url "weblog:detail" entry.created.year entry.created.month entry.slug %}" itemprop="mainEntityOfPage">{{ entry.title|smartquote }}</a></h3>
 {% if entry.show_date or entry.author and entry.show_author %}
-<p class="metadata">{% if entry.author and entry.show_author %}<span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ entry.author }}</span></span>{% if entry.show_date %} on {% endif %}{% endif %}{% if entry.show_date %}<time itemprop="datePublished" datetime="{{ entry.published|date:"Y-m-d\TH:i:sO" }}">{{ entry.published|date:"j/n/Y" }}</time>{% endif %}</p>
+<p class="metadata">{% if entry.author and entry.show_author %}<span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ entry.author }}</span></span>{% if entry.show_date %} {% translate 'on' %} {% endif %}{% endif %}{% if entry.show_date %}<time itemprop="datePublished" datetime="{{ entry.published|date:"Y-m-d\TH:i:sO" }}">{{ entry.published|date:"j/n/Y" }}</time>{% endif %}</p>
 {% endif %}{% if entry.author and not entry.show_author %}<span itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="{{ entry.author }}" /></span>
 {% endif %}{% if not entry.show_date %}<meta itemprop="datePublished" content="{{ entry.published|date:"Y-m-d\TH:i:sO" }}" />
 {% endif %}
@@ -20,7 +19,7 @@
 </header>
 {% if entry.description %}{{ entry.description_attach|markdown:"smarty" }}{% endif %}
 {% if entry.has_body or entry.alternates %}<footer><p class="links">[
-{% if entry.has_body %}<a href="{% url "weblog:detail" entry.created.year entry.created.month entry.slug %}" itemprop="url">read</a>{% endif %}
+{% if entry.has_body %}<a href="{% url "weblog:detail" entry.created.year entry.created.month entry.slug %}" itemprop="url">{% translate 'read' %}</a>{% endif %}
 {% for attachment in entry.alternates %}
 {% if entry.has_body or not forloop.first %}| {% endif %}<a href="{% url 'weblog:attachment' attachment.id %}" itemprop="url">{{ attachment.format }}</a>
 {% endfor %}
@@ -28,17 +27,17 @@
 </footer>{% endif %}
 </article>
 {% empty %}
-<p>There were no items found.</p>
+<p>{% translate 'There were no items found.' %}</p>
 {% endfor %}
 
 {% if is_paginated %}
 <p class="links">[
 {% if page_obj.has_previous %}
-<a href="?page={{ page_obj.previous_page_number }}">Previous</a> |
+<a href="?page={{ page_obj.previous_page_number }}">{% translate 'previous'|capfirst %}</a> |
 {% endif %}
-Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+{% blocktranslate with page_number=page_obj.number page_count=page_obj.paginator.num_pages %}Page {{ page_number }} of {{ page_count }}{% endblocktranslate %}
 {% if page_obj.has_next %}
-| <a href="?page={{ page_obj.next_page_number }}">Next</a>
+| <a href="?page={{ page_obj.next_page_number }}">{% translate 'next'|capfirst %}</a>
 {% endif %}
 ]</p>
 {% endif %}

@@ -1,8 +1,9 @@
 {% extends "site/base.html" %}
+{% load i18n %}
 
-{% block title %}{{ block.super }}: Directory{% endblock title %}
+{% block title %}{{ block.super }}: {% translate 'directory'|capfirst %}{% endblock title %}
 
-{% block heading %}Members Directory{% endblock heading %}
+{% block heading %}{% translate 'Members Directory' %}{% endblock heading %}
 
 {% block semantic %}
 <main>
