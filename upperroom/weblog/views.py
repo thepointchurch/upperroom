@@ -18,8 +18,16 @@ class WeblogList(VaryOnCookieMixin, LoginRequiredMixin, generic.ListView):  # py
         return (
             WeblogEntry.published_objects.select_related("author__family")
             .prefetch_related(
-                Prefetch("attachments", queryset=Attachment.alternates.order_by(), to_attr="alternates"),
-                Prefetch("attachments", queryset=Attachment.inlines.order_by(), to_attr="inlines"),
+                Prefetch(
+                    "attachments",
+                    queryset=Attachment.alternates.only("id", "entry_id", "slug", "description", "mime_type"),
+                    to_attr="alternates",
+                ),
+                Prefetch(
+                    "attachments",
+                    queryset=Attachment.inlines.only("id", "entry_id", "slug", "description"),
+                    to_attr="inlines",
+                ),
             )
             .only(
                 "title",
@@ -28,6 +36,7 @@ class WeblogList(VaryOnCookieMixin, LoginRequiredMixin, generic.ListView):  # py
                 "show_author",
                 "created",
                 "published",
+                "modified",
                 "show_date",
                 "author__name",
                 "author__suffix",
@@ -50,8 +59,16 @@ class WeblogDetail(VaryOnCookieMixin, LoginRequiredMixin, generic.DetailView):
         return (
             manager.select_related("author__family")
             .prefetch_related(
-                Prefetch("attachments", queryset=Attachment.alternates.order_by(), to_attr="alternates"),
-                Prefetch("attachments", queryset=Attachment.inlines.order_by(), to_attr="inlines"),
+                Prefetch(
+                    "attachments",
+                    queryset=Attachment.alternates.only("id", "entry_id", "slug", "description", "mime_type"),
+                    to_attr="alternates",
+                ),
+                Prefetch(
+                    "attachments",
+                    queryset=Attachment.inlines.only("id", "entry_id", "slug", "description"),
+                    to_attr="inlines",
+                ),
             )
             .only(
                 "title",
@@ -60,6 +77,7 @@ class WeblogDetail(VaryOnCookieMixin, LoginRequiredMixin, generic.DetailView):
                 "show_author",
                 "is_published",
                 "published",
+                "modified",
                 "show_date",
                 "author__name",
                 "author__suffix",
