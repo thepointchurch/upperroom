@@ -108,7 +108,7 @@ class ResourceSearchManager(SearchManager):  # pylint: disable=too-few-public-me
         parent_filter = super().get_custom_filter(request)
         if request is not None and request.user.is_authenticated:
             return parent_filter
-        return parent_filter & models.Q(is_private=False)
+        return parent_filter & models.Q(is_private=False) & ~models.Q(tags__is_private=True)
 
 
 class Resource(FeaturedMixin, models.Model):

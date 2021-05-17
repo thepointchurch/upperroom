@@ -77,7 +77,7 @@ class ResourceList(VaryOnCookieMixin, generic.ListView):
     def get_queryset(self):
         resources = Resource.published_objects.filter(parent__isnull=True).exclude(tags__is_exclusive=True)
         if not self.request.user.is_authenticated:
-            resources = resources.filter(is_private=False)
+            resources = resources.filter(is_private=False).exclude(tags__is_private=True)
         return (
             resources.select_related("author__family")
             .prefetch_related(

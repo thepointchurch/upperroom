@@ -52,8 +52,13 @@ class TestResourcesAuthenticationRequired(TestCase):
         cls.mock_file = MagicMock(spec=File)
         cls.mock_file.name = "test.txt"
         cls.tag = Tag.objects.create(name="Test", slug="test", is_private=True)
+        cls.tag_content = "c7b92ef2fb60"
         cls.tagged_resource = cls.tag.resources.create(
-            title="Test", slug="tagged", body="test", is_published=True, is_private=False
+            title="Test", slug="tagged", description=cls.tag_content, body="test", is_published=True, is_private=False
+        )
+        cls.password = "qwerasdf"
+        cls.user = get_user_model().objects.create_user(
+            username="test", email="test@thepoint.org.au", password=cls.password
         )
 
     def test_authentication_required_attachment(self):
@@ -83,6 +88,14 @@ class TestResourcesAuthenticationRequired(TestCase):
     def test_authentication_required_tag(self):
         response = self.client.get(reverse("resources:tag", kwargs={"slug": self.tag.slug}))
         self.assertEqual(response.status_code, 404)
+
+    def test_authentication_required_tag_list(self):
+        url = reverse("resources:index")
+        response = self.client.get(url)
+        self.assertNotContains(response, self.tag_content, status_code=200)
+        self.client.login(username=self.user.username, password=self.password)
+        response = self.client.get(url)
+        self.assertContains(response, self.tag_content, status_code=200)
 
 
 @override_settings(ROOT_URLCONF=__name__)
