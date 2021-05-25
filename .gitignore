@@ -3,5 +3,6 @@
 *.egg-info/
 .coverage
 .env
+*.sqlite3
 data/
 dist/
