@@ -1,6 +1,8 @@
 # pylint: disable=invalid-name
 from django.db import migrations, models
 
+from upperroom.resources.featureditem import SQL_CREATE, SQL_DROP
+
 
 class Migration(migrations.Migration):
 
@@ -9,7 +11,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunSQL(sql="DROP VIEW IF EXISTS resources_featureditem;"),
+        migrations.RunSQL(sql=SQL_DROP),
         migrations.AlterField(
             model_name="resource",
             name="id",
@@ -20,27 +22,7 @@ class Migration(migrations.Migration):
             name="id",
             field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID"),
         ),
-        migrations.RunSQL(
-            sql=[
-                "DROP VIEW IF EXISTS resources_featureditem;",
-                """CREATE VIEW resources_featureditem AS
-                   SELECT title,
-                       slug,
-                       description,
-                       priority,
-                       is_private,
-                       'R' AS type
-                   FROM resources_resource WHERE priority IS NOT NULL AND is_published
-                   UNION
-                   SELECT name AS title,
-                       slug,
-                       description,
-                       priority,
-                       is_private,
-                       'T' AS type
-                   FROM resources_tag WHERE priority IS NOT NULL;""",
-            ],
-        ),
+        migrations.RunSQL(sql=SQL_CREATE),
         migrations.AlterField(
             model_name="resourcefeed",
             name="id",
