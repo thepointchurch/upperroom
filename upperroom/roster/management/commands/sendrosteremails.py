@@ -1,3 +1,4 @@
+import logging
 from datetime import date, datetime, timedelta
 
 from django.conf import settings
@@ -10,6 +11,8 @@ from django.utils.translation import gettext_lazy as _
 from ...models import Role
 
 _ALERT_INTERVAL = 3  # days
+
+logger = logging.getLogger(__name__)
 
 
 def meeting_date():
@@ -80,3 +83,8 @@ class Command(BaseCommand):
 
         connection.send_messages(messages)
         connection.close()
+
+        if not options["test"]:
+            for message in messages:
+                for recipient in message.to:
+                    logger.info("Sent mail to <%s>: %s", recipient, message.subject)
