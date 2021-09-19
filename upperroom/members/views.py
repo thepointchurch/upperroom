@@ -122,7 +122,7 @@ class TechDetailsView(NeverCacheMixin, LoginRequiredMixin, generic.TemplateView)
     def get_context_data(self, **kwargs):
         key_map = {
             settings.SETTINGS_MODULE.split(".")[0]: 0,
-            __name__.split(".")[0]: 1,
+            __name__.split(".", maxsplit=1)[0]: 1,
             "Django": 2,
         }
 

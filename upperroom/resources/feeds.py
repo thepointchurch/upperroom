@@ -60,13 +60,13 @@ class MaybePodcastFeed(Rss201rev2Feed):
     def add_item_elements(self, handler, item):
         super().add_item_elements(handler, item)
         if self.feed["is_podcast"]:
-            handler.addQuickElement(u"itunes:title", item["title"])
-            handler.addQuickElement(u"itunes:summary", item["description"])
-            handler.addQuickElement(u"itunes:episodeType", "full")
+            handler.addQuickElement("itunes:title", item["title"])
+            handler.addQuickElement("itunes:summary", item["description"])
+            handler.addQuickElement("itunes:episodeType", "full")
             if "author" in item:
-                handler.addQuickElement(u"itunes:author", item["author"])
+                handler.addQuickElement("itunes:author", item["author"])
             if "duration" in item:
-                handler.addQuickElement(u"itunes:duration", item["duration"])
+                handler.addQuickElement("itunes:duration", item["duration"])
 
 
 class ResourceFeedRSS(Feed):

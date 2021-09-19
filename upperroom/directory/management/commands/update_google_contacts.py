@@ -33,13 +33,9 @@ class Contact:
         self.obj = None
 
     def __repr__(self):
-        return "Contact(%r, %r, %r, %r, %r, %r)" % (
-            self.id,
-            self.given_name,
-            self.surname,
-            self.suffix,
-            self.email,
-            self.groups,
+        return (
+            f"Contact({self.id!r}, {self.given_name!r}, {self.surname!r}, {self.suffix!r}, "
+            f"{self.email!r}, {self.groups}!r)"
         )
 
     def __eq__(self, other):
@@ -68,7 +64,7 @@ class GooglePeopleService:
         self.dry_run = dry_run
 
         if credentials and Path(credentials).is_file():
-            with open(credentials, "r") as creds_file:
+            with open(credentials, "r", encoding="utf-8") as creds_file:
                 creds_data = json.load(creds_file)
             creds = Credentials(creds_data["token"])
         else:
@@ -87,13 +83,13 @@ class GooglePeopleService:
                     "client_secret": creds.client_secret,
                     "scopes": creds.scopes,
                 }
-                with open(credentials, "w") as creds_file:
+                with open(credentials, "w", encoding="utf-8") as creds_file:
                     json.dump(creds_data, creds_file)
 
         self.service = build("people", "v1", credentials=creds, cache=GooglePeopleService.MemoryCache())
 
     def get_groups(self):
-        groups = dict()
+        groups = {}
 
         for group in self.service.contactGroups().list().execute().get("contactGroups", []):
             if group["groupType"] == "USER_CONTACT_GROUP":
@@ -113,7 +109,7 @@ class GooglePeopleService:
         )
 
     def get_contacts(self):  # NOQA: C901
-        contacts = dict()
+        contacts = {}
         next_page = 0
 
         while next_page is not None:
@@ -165,7 +161,7 @@ class GooglePeopleService:
 
     def create_group(self, name):
         if self.dry_run:
-            print("create_group(%r)" % name)  # must return something
+            print(f"create_group({name!r})")  # must return something
             return {"resourceName": None}
         return self.service.contactGroups().create(body={"contactGroup": {"name": name}}).execute()
 
@@ -177,7 +173,7 @@ class GooglePeopleService:
 
     def update_group_membership(self, resource_name, to_add, to_remove):
         if self.dry_run:
-            print("update_group_membership(%r, %r, %r)" % (resource_name, to_add, to_remove))
+            print(f"update_group_membership({resource_name!r}, {to_add!r}, {to_remove!r})")
         else:
             self.service.contactGroups().members().modify(
                 resourceName=resource_name,
@@ -186,7 +182,7 @@ class GooglePeopleService:
 
     def create_contact(self, contact):
         if self.dry_run:
-            print("create_contact(%r)" % contact)
+            print(f"create_contact({contact!r})")
         else:
             result = (
                 self.service.people()
@@ -209,7 +205,7 @@ class GooglePeopleService:
 
     def update_contact(self, contact):
         if self.dry_run:
-            print("update_contact(%r)" % contact)
+            print(f"update_contact({contact!r})")
         else:
             self.service.people().updateContact(
                 resourceName=contact.google_id,

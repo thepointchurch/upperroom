@@ -77,7 +77,7 @@ class Tag(FeaturedMixin, models.Model):
     def get_absolute_url(self):
         # should we search for conflicting URLs?
         if self.is_featured:
-            url = "/%s/" % self.slug
+            url = f"/{self.slug}/"
             try:
                 resolve(url)
             except Http404:
@@ -173,11 +173,11 @@ class Resource(FeaturedMixin, models.Model):
         content = self.body
         content += "\n"
         for child in self.children.all():
-            content += "\n%s" % child.markdown_link()
+            content += "\n" + child.markdown_link()
             for child_alt in child.alternates:
-                content += "\n%s" % child_alt.markdown_link()
+                content += "\n" + child_alt.markdown_link()
         for attachment in self.attachments.all():
-            content += "\n%s" % attachment.markdown_link()
+            content += "\n" + attachment.markdown_link()
         return content
 
     @cached_property
@@ -193,7 +193,7 @@ class Resource(FeaturedMixin, models.Model):
     def get_absolute_url(self):
         # should we search for conflicting URLs?
         if self.is_featured:
-            url = "/%s" % self.slug
+            url = f"/{self.slug}"
             try:
                 resolve(url)
             except Http404:
@@ -201,7 +201,7 @@ class Resource(FeaturedMixin, models.Model):
         return reverse("resources:detail", kwargs={"slug": self.slug})
 
     def markdown_link(self):
-        return "[%s]: %s" % (self.slug, reverse("resources:detail", kwargs={"slug": self.slug}))
+        return f"[{self.slug}]: {reverse('resources:detail', kwargs={'slug': self.slug})}"
 
 
 def get_attachment_filename(instance, filename):  # pylint: disable=unused-argument
@@ -274,7 +274,7 @@ class Attachment(models.Model):
 
     @cached_property
     def is_podcast_audio(self):
-        if self.mime_type.split("/")[0] != "audio":
+        if self.mime_type.split("/", maxsplit=1)[0] != "audio":
             return False
 
         for tag in self.resource.tags.all():
@@ -293,13 +293,13 @@ class Attachment(models.Model):
 
     def markdown_link(self):
         if self.description:
-            description = ' "%s"' % self.description
+            description = f' "{self.description}"'
         else:
             description = ""
-        return "[%s]: %s%s" % (self.slug, reverse("resources:attachment", kwargs={"pk": self.id}), description)
+        return f"[{self.slug}]: {reverse('resources:attachment', kwargs={'pk': self.id})}{description}"
 
     def update_metadata(self):
-        if self.mime_type.split("/")[0] == "audio":
+        if self.mime_type.split("/", maxsplit=1)[0] == "audio":
             try:
                 mg_file = mutagen.File(self.file)
                 metadata = {"length": str(int(mg_file.info.length))}
@@ -356,7 +356,7 @@ def get_feed_artwork_filename(instance, filename):
         extension = "." + filename.split(".")[-1]
     except IndexError:
         extension = ""
-    return "resource/feed/%s%s" % (instance.slug, extension)
+    return f"resource/feed/{instance.slug}{extension}"
 
 
 class ResourceFeed(models.Model):
@@ -436,14 +436,14 @@ class FeaturedItem(models.Model):
 
     def get_absolute_url(self):
         if self.type == "R":
-            url = "/%s" % self.slug
+            url = f"/{self.slug}"
             try:
                 resolve(url)
             except Http404:
                 return url
             return reverse("resources:detail", kwargs={"slug": self.slug})
         if self.type == "T":
-            url = "/%s/" % self.slug
+            url = f"/{self.slug}/"
             try:
                 resolve(url)
             except Http404:

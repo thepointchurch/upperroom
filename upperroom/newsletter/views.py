@@ -38,6 +38,6 @@ class DetailView(NeverCacheMixin, PublicationMixin, generic.DetailView):
         issue = self.get_object()
         return attachment_response(
             issue.file,
-            filename="%s %s%s" % (issue.publication.name, issue.date, issue.extension),
+            filename=f"{issue.publication.name} {issue.date}{issue.extension}",
             content_type=issue.mime_type,
         )

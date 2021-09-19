@@ -98,7 +98,7 @@ class FamilyEditView(NeverCacheMixin, PermissionRequiredMixin, generic.edit.Upda
         try:
             self.kwargs["pk"] = self.request.user.person.family.pk
         except ObjectDoesNotExist as exc:
-            raise Http404("No family for the current user (%s)." % self.request.user) from exc
+            raise Http404(f"No family for the current user ({self.request.user}).") from exc
         return super().get_queryset()
 
     def get_context_data(self, **kwargs):
@@ -182,7 +182,7 @@ class PdfView(NeverCacheMixin, PermissionRequiredMixin, generic.View):
 
     def get(self, request, *args, **kwargs):
         title = _("%(site)s Directory") % {"site": get_current_site(request).name}
-        return attachment_response(DIRECTORY_FILE_NAME, filename=("%s.pdf" % title), content_type="application/pdf")
+        return attachment_response(DIRECTORY_FILE_NAME, filename=(f"{title}.pdf"), content_type="application/pdf")
 
 
 class PrintView(NeverCacheMixin, PermissionRequiredMixin, generic.TemplateView):
@@ -229,5 +229,5 @@ class PrintView(NeverCacheMixin, PermissionRequiredMixin, generic.TemplateView):
             io.BytesIO(HTML(string=response.render().content, encoding="utf-8").write_pdf()),
             content_type="application/pdf",
             as_attachment=True,
-            filename="%s %s %s.pdf" % (context["site_name"], _("Directory"), context["year"]),
+            filename=f"{context['site_name']} {_('Directory')} {context['year']}.pdf",
         )

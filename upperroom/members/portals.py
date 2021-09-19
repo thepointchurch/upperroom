@@ -70,11 +70,10 @@ class PortalOperation(PortalBase):
 
         try:
             context = self.get_context()
-            return '<li><a href="%s">%s</a>%s</li>' % (
-                escape(context.get("url", "")),
-                escape(context.get("title", self.title)),
-                escape(context.get("description", "")),
-            )
+            url = escape(context.get("url", ""))
+            title = escape(context.get("title", self.title))
+            description = escape(context.get("description", ""))
+            return f'<li><a href="{url}">{title}</a>{description}</li>'
         except NoReverseMatch:
             return ""
 

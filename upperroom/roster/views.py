@@ -94,7 +94,7 @@ class RosterPdf(NeverCacheMixin, PermissionRequiredMixin, generic.TemplateView):
             io.BytesIO(HTML(string=response.render().content, encoding="utf-8").write_pdf()),
             content_type="application/pdf",
             as_attachment=True,
-            filename="%s %s %s.pdf" % (context["site_name"], _("Roster"), context["year"]),
+            filename=f"{context['site_name']} {_('Roster')} {context['year']}.pdf",
         )
 
 
@@ -156,7 +156,7 @@ class BuilderView(NeverCacheMixin, PermissionRequiredMixin, generic.edit.CreateV
             return {}
 
     def get_success_url(self):
-        return "%s?template=%d" % (reverse("roster:builder"), self.builder_template.id)
+        return f"{reverse('roster:builder')}?template={self.builder_template.id}"
 
     def form_valid(self, form):
         context = self.get_context_data()

@@ -13,7 +13,7 @@ class SearchManager(models.Manager):
         queryset = self.get_queryset()
         combined_filter = None
         for term, operator in self.search_fields.items():
-            query_filter = models.Q(**{"%s__%s" % (term, operator): query})
+            query_filter = models.Q(**{f"{term}__{operator}": query})
             if combined_filter:
                 combined_filter = combined_filter | query_filter
             else:

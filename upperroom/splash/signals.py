@@ -12,7 +12,8 @@ def clear_splash_cache(splash):
     except InvalidCacheBackendError:
         cache = caches["default"]
 
-    fragment_name = "splashes_%s" % {Splash.POSITION_ABOVE: "above", Splash.POSITION_BELOW: "below"}[splash.position]
+    fragment_position = {Splash.POSITION_ABOVE: "above", Splash.POSITION_BELOW: "below"}[splash.position]
+    fragment_name = f"splashes_{fragment_position}"
     cache.delete(make_template_fragment_key(fragment_name, [splash.url]))
 
 

@@ -39,16 +39,16 @@ exclude = [
 [tool.poetry.dependencies]
 python = "^3.7"
 
-argon2-cffi = "^20.1"
+argon2-cffi = "^21.1"
 bcrypt = "^3.1"
 django = "^3.2"
 django-csp = "^3.7"
-django-environ = "^0.4"
+django-environ = "^0.7"
 django-markwhat = "^1.6"
 django-robots = "^4.0"
 django-sendmail-backend = "^0.1"
 mutagen = "^1.45"
-weasyprint = "^51"
+weasyprint = "^53.0"
 yafg = "^0.3"
 importlib-metadata = { version = "^1.7", python = "<3.8" }
 
@@ -58,12 +58,12 @@ setproctitle = "^1.1"
 cryptography = { version = "^3.3", optional = true }
 django-amazon-ses = { version = "^4.0", optional = true }
 django-storages = { version = "^1.9", optional = true }
-google-api-python-client = { version = "^1.10", optional = true }
+google-api-python-client = { version = "^2.21", optional = true }
 google-auth-oauthlib = { version = "^0.4", optional = true }
-psycopg2 = { version = "^2.8", optional = true }
+psycopg2 = { version = "^2.9", optional = true }
 redis = { version = "^3.5", optional = true }
-django-redis = { version = "^4.12", optional = true }
-django-cacheops = { version = "^5.0", optional = true }
+django-redis = { version = "^5.0", optional = true }
+django-cacheops = { version = "^6.0", optional = true }
 
 [tool.poetry.extras]
 aws = [
@@ -84,14 +84,14 @@ pgsql = [
 ]
 
 [tool.poetry.dev-dependencies]
-coverage = "5.3"
-django-debug-toolbar = "^2.2"
+coverage = "^5.5"
+django-debug-toolbar = "^3.2"
 gitpython = "^3.1"
 pre-commit = "^2.6"
 pylint = "^2.5"
 pylint-django = "^2.3"
 pytest = "^6.0"
-pytest-django = "^3.9"
+pytest-django = "^4.4"
 semantic_version = "^2.8"
 tomlkit = "^<1.0"
 

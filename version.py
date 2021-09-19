@@ -28,7 +28,7 @@ def get_version(check_migrations=False):
                 sorted(repo.tags, key=lambda t: t.commit.committed_date)[-1].commit.diff().iter_change_type("A"),
             )
         ):
-            print("Migrations added, so a minor release is required: %s" % version.next_minor(), file=sys.stderr)
+            print(f"Migrations added, so a minor release is required: {version.next_minor()}", file=sys.stderr)
 
         return str(version)
     except GitError:
@@ -42,10 +42,10 @@ def get_version(check_migrations=False):
 def update_version(version=None):
     from tomlkit import dumps, loads  # pylint: disable=import-outside-toplevel
 
-    with open("pyproject.toml") as config_file:
+    with open("pyproject.toml", "r", encoding="utf-8") as config_file:
         config = loads(config_file.read())
     config["tool"]["poetry"]["version"] = version or get_version()
-    with open("pyproject.toml", "w") as config_file:
+    with open("pyproject.toml", "w", encoding="utf-8") as config_file:
         config_file.write(dumps(config))
 
     return config["tool"]["poetry"]["version"]

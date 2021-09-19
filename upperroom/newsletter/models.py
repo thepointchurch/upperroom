@@ -106,7 +106,7 @@ class Issue(models.Model):
         self.slug = str(self.date)
 
         if not self.publication.accept_mime_type(self.mime_type):
-            raise ValidationError("Files of type %s are not supported." % self.mime_type)
+            raise ValidationError(f"Files of type {self.mime_type} are not supported.")
 
     @property
     def extension(self):

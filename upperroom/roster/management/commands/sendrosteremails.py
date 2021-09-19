@@ -50,7 +50,7 @@ class Command(BaseCommand):
             try:
                 notification_date = datetime.strptime(notification_date, "%Y-%m-%d").date()
             except ValueError as exc:
-                raise CommandError("Badly formatted date: %s" % options["date"]) from exc
+                raise CommandError(f"Badly formatted date: {options['date']}") from exc
 
         role_map = _get_role_map(Role.objects.filter(meeting__date=notification_date).exclude(people__isnull=True))
 

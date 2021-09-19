@@ -41,8 +41,8 @@ def resource_post_delete(sender, instance, **kwargs):
         clear_navbar_cache()
 
 
-@receiver(post_save, sender=Resource)  # NOQA: C901
-def resource_post_save(sender, instance, **kwargs):
+@receiver(post_save, sender=Resource)
+def resource_post_save(sender, instance, **kwargs):  # NOQA: C901
     _ = sender
     if kwargs.get("raw"):
         return

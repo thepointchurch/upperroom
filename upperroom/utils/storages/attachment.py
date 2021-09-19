@@ -9,7 +9,7 @@ def attachment_response(file_obj, as_attachment=True, filename="", content_type=
     if getattr(default_storage, "offload", False):
         parameters = {}
         if as_attachment and filename:
-            parameters["ResponseContentDisposition"] = 'attachment; filename="%s"' % filename
+            parameters["ResponseContentDisposition"] = f'attachment; filename="{filename}"'
         if content_type:
             parameters["ResponseContentType"] = content_type
         url = default_storage.url(getattr(file_obj, "name", file_obj), parameters=parameters)
@@ -17,5 +17,5 @@ def attachment_response(file_obj, as_attachment=True, filename="", content_type=
             url = url.split("?", 1)[0]  # remove auth query strings
         return HttpResponseRedirect(url)
     if isinstance(file_obj, str):
-        file_obj = open("%s/%s" % (settings.MEDIA_ROOT, file_obj), "rb")  # pylint: disable=consider-using-with
+        file_obj = open(f"{settings.MEDIA_ROOT}/{file_obj}", "rb")  # pylint: disable=consider-using-with
     return FileResponse(file_obj, as_attachment=as_attachment, filename=filename, content_type=content_type)

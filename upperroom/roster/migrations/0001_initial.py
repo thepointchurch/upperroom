@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 
-import upperroom.roster as roster
+from upperroom import roster
 
 
 class Migration(migrations.Migration):

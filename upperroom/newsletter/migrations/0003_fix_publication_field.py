@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 
-import upperroom.newsletter as newsletter
+from upperroom import newsletter
 
 
 class Migration(migrations.Migration):

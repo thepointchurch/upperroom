@@ -93,7 +93,7 @@ class WeblogEntry(models.Model):
         content = self.description
         content += "\n"
         for attachment in self.attachments.all():
-            content += "\n%s" % attachment.markdown_link()
+            content += "\n" + attachment.markdown_link()
         return content
 
     @cached_property
@@ -101,7 +101,7 @@ class WeblogEntry(models.Model):
         content = self.body
         content += "\n"
         for attachment in self.attachments.all():
-            content += "\n%s" % attachment.markdown_link()
+            content += "\n" + attachment.markdown_link()
         return content
 
     def clean(self):
@@ -187,7 +187,7 @@ class Attachment(models.Model):
 
     def markdown_link(self):
         if self.description:
-            description = ' "%s"' % self.description
+            description = f' "{self.description}"'
         else:
             description = ""
-        return "[%s]: %s%s" % (self.slug, reverse("weblog:attachment", kwargs={"pk": self.id}), description)
+        return f"[{self.slug}]: {reverse('weblog:attachment', kwargs={'pk': self.id})}{description}"

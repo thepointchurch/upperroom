@@ -3,7 +3,7 @@ import django.contrib.postgres.fields.jsonb
 import django.core.validators
 from django.db import migrations, models
 
-import upperroom.resources as resources
+from upperroom import resources
 
 
 def set_published_from_created(apps, schema_editor):

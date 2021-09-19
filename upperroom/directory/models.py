@@ -21,11 +21,11 @@ class FamilyCurrentManager(models.Manager):  # pylint: disable=too-few-public-me
 
 
 def get_family_photo_filename(instance, filename):  # pylint: disable=unused-argument
-    return "directory/family/%d/photo.jpg" % instance.id
+    return f"directory/family/{instance.id}/photo.jpg"
 
 
 def get_family_thumbnail_filename(instance, filename):  # pylint: disable=unused-argument
-    return "directory/family/%d/thumbnail.jpg" % instance.id
+    return f"directory/family/{instance.id}/thumbnail.jpg"
 
 
 class Family(models.Model):
@@ -73,7 +73,7 @@ class Family(models.Model):
             people = people.filter(is_current=True)
         for member in people:
             members.append(member.name)
-        return "%s (%s)" % (self.name, ", ".join(members))
+        return f"{self.name} ({', '.join(members)})"
 
     def spouse_ids(self):
         ids = []
@@ -189,13 +189,13 @@ class Person(models.Model):
     @property
     def fullname(self):
         if self.suffix:
-            return "%s %s (%s)" % (self.name, self.surname, self.suffix)
-        return "%s %s" % (self.name, self.surname)
+            return f"{self.name} {self.surname} ({self.suffix})"
+        return f"{self.name} {self.surname}"
 
     @property
     def name_with_suffix(self):
         if self.suffix:
-            return "%s (%s)" % (self.name, self.suffix)
+            return f"{self.name} ({self.suffix})"
         return self.name
 
     @property

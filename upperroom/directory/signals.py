@@ -32,8 +32,8 @@ def notify_on_fupdate(sender, instance, **kwargs):  # pylint: disable=unused-arg
     )
 
 
-@receiver(pre_save, sender=Family)  # NOQA: C901
-def family_pre_save(sender, instance, **kwargs):  # pylint: disable=unused-argument
+@receiver(pre_save, sender=Family)
+def family_pre_save(sender, instance, **kwargs):  # NOQA: C901 pylint: disable=unused-argument
     if kwargs.get("raw"):
         return
 
