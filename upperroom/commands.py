@@ -1,19 +1,20 @@
-import os
 import sys
 
+import environ
 from django import setup
 from django.core.management import call_command
 
 
 def import_file_env():
-    for arg, value in os.environ.items():
+    environ.Env.read_env(".env")
+    for arg, value in environ.Env.ENVIRON.items():
         if arg.endswith("_FILE") and not arg.startswith("GIT_"):
             try:
                 with open(value, "r", encoding="utf-8") as argfile:
-                    os.environ[arg[:-5]] = argfile.read().strip()
+                    environ.Env.ENVIRON[arg[:-5]] = argfile.read().strip()
             except FileNotFoundError:
                 continue
-            del os.environ[arg]
+            del environ.Env.ENVIRON[arg]
 
 
 def file_env(func):

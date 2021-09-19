@@ -29,17 +29,17 @@ To set up a development environment:
 4. Export config variables:
 
     ```
-    export DEBUG='True'
+    export DEBUG=on
     export DATABASE_URL='sqlite:///upperroom.sqlite3'
     export SECRET_KEY='12345678'
     export DJANGO_SETTINGS_MODULE=upperroom.settings
     ```
 
-    or place them in a an environment file at `upperroom/.env`:
+    or place them in a an environment file:
 
     ```
-    cat >upperroom/.env <<DEV_ENV
-    DEBUG='True'
+    cat >.env <<DEV_ENV
+    DEBUG=on
     DATABASE_URL='sqlite:///upperroom.sqlite3'
     SECRET_KEY='12345678'
     DJANGO_SETTINGS_MODULE=upperroom.settings
