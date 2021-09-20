@@ -10,7 +10,10 @@ except ModuleNotFoundError:
 
 
 def is_s3_file(file_object):
-    return isinstance(file_object.file, S3Boto3StorageFile)
+    try:
+        return isinstance(file_object.file, S3Boto3StorageFile)
+    except FileNotFoundError:
+        return False
 
 
 def is_s3_file_public(file_object):
