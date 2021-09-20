@@ -108,20 +108,27 @@ def resource_pre_save(sender, instance, **kwargs):
 
 
 @receiver(m2m_changed, sender=Resource.tags.through)
-def resource_m2m_changed(sender, instance, action, pk_set, **kwargs):
+def resource_m2m_changed(sender, instance, action, reverse, pk_set, **kwargs):
     _ = sender
 
-    if action != "pre_add" or not instance.published:
+    if action != "pre_add":
         return
 
-    # Make sure we only alter brand new slugs
-    if (instance.modified - instance.created).seconds > 15:
-        return
+    if reverse:
+        resources = [Resource.objects.get(id=x) for x in pk_set]
+        pk_set = {instance.id}
+    else:
+        resources = [instance]
 
-    old_slug = instance.slug
-    prefix_slug(instance, pk_set)
-    if old_slug != instance.slug:
-        instance.save()
+    for resource in resources:
+        # Make sure we only alter brand new slugs
+        if (resource.modified - resource.created).seconds > 15:
+            continue
+
+        old_slug = resource.slug
+        prefix_slug(resource, pk_set)
+        if old_slug != resource.slug:
+            resource.save()
 
 
 @receiver(pre_save, sender=Attachment)
