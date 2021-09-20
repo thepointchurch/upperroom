@@ -2,7 +2,7 @@ from django.core.cache import InvalidCacheBackendError, caches
 from django.core.cache.utils import make_template_fragment_key
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.files.uploadedfile import UploadedFile
-from django.db.models.signals import post_delete, post_save, pre_delete, pre_save
+from django.db.models.signals import m2m_changed, post_delete, post_save, pre_delete, pre_save
 from django.dispatch import receiver
 
 from ..utils.storages import (
@@ -32,6 +32,20 @@ def clear_navbar_cache():
         cache = caches["default"]
     cache.delete(make_template_fragment_key("navbar_featured"))
     cache.delete(make_template_fragment_key("navbar_featured_private"))
+
+
+def prefix_slug(instance, tag_ids=None):
+    if tag_ids:
+        tags = [Tag.objects.get(id=pk) for pk in tag_ids]
+    else:
+        tags = Tag.objects.all()
+    for tag in tags:
+        if tag.slug_prefix:
+            prefix = tag.slug_prefix
+            if "%" in tag.slug_prefix:
+                prefix = instance.published.strftime(tag.slug_prefix)
+            if not instance.slug.startswith(prefix):
+                instance.slug = prefix + instance.slug
 
 
 @receiver(post_delete, sender=Resource)
@@ -86,6 +100,28 @@ def resource_pre_save(sender, instance, **kwargs):
         instance.was_featured = sender.objects.get(id=instance.id).is_featured
     except ObjectDoesNotExist:
         instance.was_featured = not instance.is_featured
+    try:
+        if instance.is_published and not sender.objects.get(id=instance.id).is_published:
+            prefix_slug(instance)
+    except ObjectDoesNotExist:
+        pass
+
+
+@receiver(m2m_changed, sender=Resource.tags.through)
+def resource_m2m_changed(sender, instance, action, pk_set, **kwargs):
+    _ = sender
+
+    if action != "pre_add" or not instance.published:
+        return
+
+    # Make sure we only alter brand new slugs
+    if (instance.modified - instance.created).seconds > 15:
+        return
+
+    old_slug = instance.slug
+    prefix_slug(instance, pk_set)
+    if old_slug != instance.slug:
+        instance.save()
 
 
 @receiver(pre_save, sender=Attachment)

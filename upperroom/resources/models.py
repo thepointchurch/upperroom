@@ -48,6 +48,7 @@ class Tag(FeaturedMixin, models.Model):
     )
     reverse_order = models.BooleanField(default=False, verbose_name=_("reverse order"))
     show_date = models.BooleanField(default=True, verbose_name=_("show date"))
+    slug_prefix = models.CharField(null=True, blank=True, max_length=32, verbose_name=_("slug prefix"))
 
     # Items with an exclusive tag only appear when searching for this tag.
     is_exclusive = models.BooleanField(default=False, verbose_name=_("exclusive"))

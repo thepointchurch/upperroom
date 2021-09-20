@@ -21,7 +21,14 @@ class TagAdmin(admin.ModelAdmin):
             _("Advanced"),
             {
                 "classes": ("collapse",),
-                "fields": ("resources_per_page", "reverse_order", "show_date", "is_exclusive", "is_private"),
+                "fields": (
+                    "resources_per_page",
+                    "reverse_order",
+                    "show_date",
+                    "slug_prefix",
+                    "is_exclusive",
+                    "is_private",
+                ),
             },
         ),
     )
