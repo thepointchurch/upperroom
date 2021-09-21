@@ -43,7 +43,10 @@ def prefix_slug(instance, tag_ids=None):
         if tag.slug_prefix:
             prefix = tag.slug_prefix
             if "%" in tag.slug_prefix:
-                prefix = instance.published.strftime(tag.slug_prefix)
+                if instance.published:
+                    prefix = instance.published.strftime(tag.slug_prefix)
+                else:
+                    prefix = ""
             if not instance.slug.startswith(prefix):
                 instance.slug = prefix + instance.slug
 
