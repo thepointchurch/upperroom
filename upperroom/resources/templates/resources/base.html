@@ -6,6 +6,6 @@
 <link type="text/css" href="{% static 'style/article.css' %}" rel="preload" as="style" />
 {% endblock stylesheets %}
 
-{% block title %}{{ block.super }}: {% translate 'resources'|capfirst %}{% endblock title %}
+{% block title %}{% translate 'resources'|capfirst %} | {{ block.super }}{% endblock title %}
 
 {% block heading %}{% translate 'resources'|capfirst %}{% endblock heading %}

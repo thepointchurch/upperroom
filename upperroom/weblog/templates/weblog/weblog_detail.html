@@ -1,7 +1,7 @@
 {% extends "weblog/base.html" %}
 {% load i18n markup smartquote %}
 
-{% block title %}{{ block.super }}: {{ object.title|smartquote }}{% if not object.is_published %} [{% translate 'draft'|upper %}]{% endif %}{% endblock title %}
+{% block title %}{{ object.title|smartquote }}{% if not object.is_published %} [{% translate 'draft'|upper %}]{% endif %} | {{ block.super }}{% endblock title %}
 
 {% block heading %}{{ object.title|smartquote }}{% if not object.is_published %} [{% translate 'draft'|upper %}]{% endif %}{% endblock heading %}
 

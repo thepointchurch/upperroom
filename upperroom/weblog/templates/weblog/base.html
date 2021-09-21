@@ -1,6 +1,6 @@
 {% extends "site/base.html" %}
 {% load i18n %}
 
-{% block title %}{{ block.super }}: {% translate 'weblog'|capfirst %}{% endblock title %}
+{% block title %}{% translate 'weblog'|capfirst %} | {{ block.super }}{% endblock title %}
 
 {% block heading %}{% translate 'weblog'|capfirst %}{% endblock heading %}

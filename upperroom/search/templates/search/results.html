@@ -1,6 +1,6 @@
 {% extends "search/base.html" %}
 {% load i18n smartquote %}
-{% block title %}{{ block.super }}: {{ search_query }}{% endblock title %}
+{% block title %}{{ search_query }} | {{ block.super }}{% endblock title %}
 {% block heading %}{{ block.super }}{% if type_name %}: {% translate type_name|capfirst|smartquote %}{% endif %}{% endblock heading %}
 {% block content %}
 

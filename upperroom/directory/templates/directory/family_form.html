@@ -6,7 +6,7 @@
 <link type="text/css" href="{% static 'style/directory_form.css' %}" rel="preload" as="style" />
 {% endblock stylesheets %}
 
-{% block title %}{{ block.super }}: {{ family.name|smartquote }}: {% translate 'edit'|capfirst %}{% endblock title %}
+{% block title %}{{ family.name|smartquote }}: {% translate 'edit'|capfirst %} | {{ block.super }}{% endblock title %}
 
 {% block heading %}{{ block.super }}: {{ family.name|smartquote }}: {% translate 'edit'|capfirst %}{% endblock heading %}
 

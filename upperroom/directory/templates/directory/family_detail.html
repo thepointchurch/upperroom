@@ -1,7 +1,7 @@
 {% extends "directory/base.html" %}
 {% load smartquote %}
 
-{% block title %}{{ block.super }}: {{ family.name|smartquote }}{% endblock title %}
+{% block title %}{{ family.name|smartquote }} | {{ block.super }}{% endblock title %}
 
 {% block heading %}{{ block.super }}: {{ family.name|smartquote }}{% endblock heading %}
 

@@ -2,7 +2,7 @@
 {% load i18n markup smartquote %}
 
 {% block title %}
-{{ block.super }}: {{ author.fullname|smartquote }}
+{{ author.fullname|smartquote }} | {{ block.super }}
 {% endblock title %}
 
 {% block heading %}

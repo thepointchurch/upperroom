@@ -1,6 +1,6 @@
 {% extends "site/base.html" %}
 {% load smartquote %}
 
-{% block title %}{{ block.super }}: {{ publication|smartquote }}{% endblock title %}
+{% block title %}{{ publication|smartquote }} | {{ block.super }}{% endblock title %}
 
 {% block heading %}{{ publication|smartquote }}{% endblock heading %}

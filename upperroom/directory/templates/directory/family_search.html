@@ -1,7 +1,7 @@
 {% extends "directory/base.html" %}
 {% load i18n %}
 
-{% block title %}{{ block.super }}: {% translate 'Search' %} {{ search_type }}: {% translate search_query %}{% endblock title %}
+{% block title %}{% translate 'Search' %} {{ search_type }}: {% translate search_query %} | {{ block.super }}{% endblock title %}
 
 {% block heading %}{{ block.super }}: {% translate 'Search' %}{% endblock heading %}
 

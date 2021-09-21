@@ -1,6 +1,6 @@
 {% extends "library/base.html" %}
 {% load i18n %}
-{% block title %}{{ block.super }}: {% translate 'Search' %}{% endblock title %}
+{% block title %}{% translate 'Search' %} | {{ block.super }}{% endblock title %}
 {% block heading %}{{ block.super }}: {% translate 'Search' %}{% endblock heading %}
 {% block content %}
 {% include "library/search_form.html" %}

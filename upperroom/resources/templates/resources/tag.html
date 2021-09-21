@@ -8,9 +8,9 @@
 
 {% block title %}
 {% if tag.is_featured %}
-{{ site.name }}: {{ tag.name|smartquote }}
+{{ tag.name|smartquote }} | {{ site.name }}
 {% else %}
-{{ block.super }}: {% translate 'tag'|capfirst %}: {{ tag.name|smartquote }}
+{% translate 'tag'|capfirst %}: {{ tag.name|smartquote }} | {{ block.super }}
 {% endif %}
 {% endblock title %}
 

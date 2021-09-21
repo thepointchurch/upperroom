@@ -1,7 +1,7 @@
 {% extends "resources/base.html" %}
 {% load i18n markup smartquote %}
 
-{% block title %}{{ block.super }}: {{ resource.title|smartquote }}{% if not resource.is_published %} [{% translate 'draft'|upper %}]{% endif %}{% endblock title %}
+{% block title %}{{ resource.title|smartquote }}{% if not resource.is_published %} [{% translate 'draft'|upper %}]{% endif %} | {{ block.super }}{% endblock title %}
 
 {% block heading %}{{ resource.title|smartquote }}{% if not resource.is_published %} [{% translate 'draft'|upper %}]{% endif %}{% endblock heading %}
 

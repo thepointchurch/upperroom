@@ -6,7 +6,7 @@
 <link type="text/css" href="{% static 'style/library.css' %}" rel="preload" as="style" />
 {% endblock stylesheets %}
 
-{% block title %}{{ block.super }}: {% translate 'library'|capfirst %}{% endblock title %}
+{% block title %}{% translate 'library'|capfirst %} | {{ block.super }}{% endblock title %}
 
 {% block heading %}{% translate 'library'|capfirst %}{% endblock heading %}
 

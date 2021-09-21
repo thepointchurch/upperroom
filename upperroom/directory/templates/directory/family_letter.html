@@ -1,7 +1,7 @@
 {% extends "directory/base.html" %}
 {% load i18n %}
 
-{% block title %}{{ block.super }}: {{ letter|upper }}{% endblock title %}
+{% block title %}{{ letter|upper }} | {{ block.super }}{% endblock title %}
 
 {% block heading %}{{ block.super }}: {{ letter|upper }}{% endblock heading %}
 

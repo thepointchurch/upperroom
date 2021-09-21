@@ -1,7 +1,7 @@
 {% extends "roster/base.html" %}
 {% load i18n %}
 
-{% block title %}{{ block.super }}: {{ month|date:"F Y" }}{% endblock title %}
+{% block title %}{{ month|date:"F Y" }} | {{ block.super }}{% endblock title %}
 
 {% block heading %}{{ block.super }}: {{ month|date:"F Y" }}{% endblock heading %}
 

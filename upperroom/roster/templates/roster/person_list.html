@@ -1,7 +1,7 @@
 {% extends "roster/base.html" %}
 {% load i18n roster_filters smartquote %}
 
-{% block title %}{{ block.super }}: {{ person.fullname|smartquote }}{% endblock title %}
+{% block title %}{{ person.fullname|smartquote }} | {{ block.super }}{% endblock title %}
 
 {% block content %}
 
