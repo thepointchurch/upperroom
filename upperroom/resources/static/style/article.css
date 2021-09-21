@@ -35,15 +35,15 @@ table > p, table > blockquote, table > ul, table > ol, table > dl, table > form 
     margin: 1rem;
 }
 
-article > header > h3 {
+article > header > h2 {
     margin: inherit 0.8rem;
 }
 
-article > header > h3:first-child {
+article > header > h2:first-child {
     margin-top: 0;
 }
 
-article > header > h3 > a:hover {
+article > header > h2 > a:hover {
     text-decoration: none;
 }
 
@@ -62,7 +62,7 @@ article > footer > p.links {
 }
 
 @media screen and (min-width: 36em) {
-    article > header > h3 {
+    article > header > h2 {
         margin: 2rem;
         margin-bottom: inherit;
     }

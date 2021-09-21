@@ -1,7 +1,7 @@
 {% load i18n markup smartquote %}
 {% for splash in splashes %}
 <aside class="splash">
-<h3>{{ splash.title|smartquote }}</h3>
+<h1>{{ splash.title|smartquote }}</h1>
 {{ splash.content|markdown:"smarty" }}
 </aside>
 {% endfor %}

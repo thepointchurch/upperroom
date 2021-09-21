@@ -3,7 +3,7 @@
 {% regroup anniversaries|dictsort:"anniversarydate" by anniversary|date:"F" as anniversary_by_month %}
 
 {% for month in anniversary_by_month %}
-    <h3>{{ month.grouper }}</h3>
+    <h2>{{ month.grouper }}</h2>
     {% regroup month.list by anniversary.day as anniversary_by_month_day %}
     <ul class="anniversaries">
     {% for day in anniversary_by_month_day %}

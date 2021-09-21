@@ -1,6 +1,6 @@
 {% load i18n smartquote %}
 <div itemscope itemtype="https://schema.org/Book">
-<h3 itemprop="name headline">{{ book.title }}</h3>
+<h2 itemprop="name headline">{{ book.title }}</h2>
 <table class="book">
 {% if book.subtitle %}<tr><td>{% translate 'subtitle'|capfirst %}:</td><td itemprop="alternativeHeadline">{{ book.subtitle|smartquote }}</td></tr>{% endif %}
 {% if book.author %}<tr><td>{% translate 'author'|capfirst %}:</td><td>{% for author in book.authors %}<span itemprop="author" itemscope itemtype="https://schema.org/Person"><span itemprop="name">{{ author|smartquote }}</span></span>{% endfor %}</td><tr>{% endif %}

@@ -8,7 +8,7 @@
 {% for resource in resource_list %}
 <article itemscope itemtype="http://schema.org/Article">
 <header>
-<h3 itemprop="name headline"><a href="{% url "resources:detail" resource.slug %}" itemprop="mainEntityOfPage">{{ resource.title|smartquote }}</a></h3>
+<h1 itemprop="name headline"><a href="{% url "resources:detail" resource.slug %}" itemprop="mainEntityOfPage">{{ resource.title|smartquote }}</a></h1>
 {% if tag and tag.show_date or resource.show_date or resource.author and resource.show_author %}
 <p class="metadata">{% if resource.author and resource.show_author %}<span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ resource.author }}</span></span>{% if tag and tag.show_date or resource.show_date %} {% translate 'on' %} {% endif %}{% endif %}{% if tag and tag.show_date or resource.show_date %}<time itemprop="datePublished" datetime="{{ resource.published|date:"Y-m-d\TH:i:sO" }}">{{ resource.published|date:"j/n/Y" }}</time>{% endif %}</p>
 {% endif %}{% if resource.author and not resource.show_author %}<span itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="{{ resource.author }}" /></span>

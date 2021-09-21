@@ -5,11 +5,11 @@
 
 {% block content %}
 
-<h3>{{ person.fullname|smartquote }}</h3>
+<h2>{{ person.fullname|smartquote }}</h2>
 
 {% regroup role_list|dictsort:"date" by date as role_date %}
 {% for date in role_date %}
-<h4>{{ date.grouper|date:"jS F, Y" }}:</h4>
+<h3>{{ date.grouper|date:"jS F, Y" }}:</h3>
 <ul>
 {% for role in date.list %}
 <li>{{ role.role|smartquote }}{% if role.location %}

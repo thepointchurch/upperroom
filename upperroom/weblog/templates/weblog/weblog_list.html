@@ -8,7 +8,7 @@
 {% for entry in weblogentry_list %}
 <article itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
 <header>
-<h3 itemprop="name headline"><a href="{% url "weblog:detail" entry.created.year entry.created.month entry.slug %}" itemprop="mainEntityOfPage">{{ entry.title|smartquote }}</a></h3>
+<h1 itemprop="name headline"><a href="{% url "weblog:detail" entry.created.year entry.created.month entry.slug %}" itemprop="mainEntityOfPage">{{ entry.title|smartquote }}</a></h1>
 {% if entry.show_date or entry.author and entry.show_author %}
 <p class="metadata">{% if entry.author and entry.show_author %}<span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ entry.author }}</span></span>{% if entry.show_date %} {% translate 'on' %} {% endif %}{% endif %}{% if entry.show_date %}<time itemprop="datePublished" datetime="{{ entry.published|date:"Y-m-d\TH:i:sO" }}">{{ entry.published|date:"j/n/Y" }}</time>{% endif %}</p>
 {% endif %}{% if entry.author and not entry.show_author %}<span itemprop="author" itemscope itemtype="http://schema.org/Person"><meta itemprop="name" content="{{ entry.author }}" /></span>

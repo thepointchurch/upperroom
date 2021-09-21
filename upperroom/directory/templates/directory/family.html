@@ -1,7 +1,7 @@
 {% load i18n smartquote %}
-<div class="family">
+<section class="family">
 
-<h3>{{ family.name|smartquote }}</h3>
+<h1>{{ family.name|smartquote }}</h1>
 
 <div class="family_people">
 {% for person in family.spouses.all %}
@@ -39,4 +39,4 @@
 {% endif %}
 </div>
 
-</div>
+</section>

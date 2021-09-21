@@ -7,7 +7,7 @@
 
 {% block instructions %}{% endblock instructions %}
 
-<h3>{% translate 'addresses'|capfirst %}</h3>
+<h2>{% translate 'addresses'|capfirst %}</h2>
 
 <p>{% translate 'browse entries, by surname'|capfirst %}:</p>
 
@@ -17,21 +17,21 @@
 <p class="links">[ {% for letter in index_list %}{% if not forloop.first %} | {% endif %}<a href="{% url 'directory:letter' letter.grouper %}">{{ letter.grouper|upper }}</a>{% endfor %} ]</p>
 {% endwith %}
 
-<h3>{% translate 'Search' %}</h3>
+<h2>{% translate 'Search' %}</h2>
 
 <p>{% translate 'you can search the directory by name or location'|capfirst %}:</p>
 
 {% include "directory/search_form.html" %}
 
-<h3>{% translate 'download'|capfirst %}</h3>
+<h2>{% translate 'download'|capfirst %}</h2>
 
 <p>{% url 'directory:pdf' as directory_pdf %}{% blocktranslate %}You can download the latest copy of the directory for printing or browsing <a href="{{ directory_pdf }}">here</a>.{% endblocktranslate %}</p>
 
-<h3>{% translate 'Birthdays and Anniversaries' %}</h3>
+<h2>{% translate 'Birthdays and Anniversaries' %}</h2>
 
 <p>{% url 'directory:birthdays' as birthday_url %}{% url 'directory:anniversaries' as anniversary_url %}{% blocktranslate %}You can view a list of <a href="{{ birthday_url}}">birthdays</a> or a list of <a href="{{ anniversary_url }}">anniversaries</a> in chronological order.{% endblocktranslate %}</p>
 
-<h3>{% translate 'updates'|capfirst %}</h3>
+<h2>{% translate 'updates'|capfirst %}</h2>
 
 <p>{% translate 'If you would like to update your details in any way, you can do so by browsing to your family’s entry and clicking the "Edit" link.' %}</p>
 

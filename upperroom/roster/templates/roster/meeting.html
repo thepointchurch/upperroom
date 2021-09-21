@@ -1,6 +1,6 @@
 {% load i18n smartquote %}
 <div itemscope itemtype="https://schema.org/Event">
-<h3><time itemprop="startDate name" datetime="{{ meeting.date|date:"Y-m-d" }}">{{ meeting.date|date:"jS F, Y" }}</time></h3>
+<h2><time itemprop="startDate name" datetime="{{ meeting.date|date:"Y-m-d" }}">{{ meeting.date|date:"jS F, Y" }}</time></h2>
 
 {% regroup meeting.roles.all by location as role_location %}
 {% for location in role_location %}
