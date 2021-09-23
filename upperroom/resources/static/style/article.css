@@ -23,11 +23,11 @@ p.pull {
     background: rgba(0,0,0,0.1);
 }
 
-article p, article blockquote, article ul, article ol, article dl, article form, article table {
+article > p, article > blockquote, article > ul, article > ol, article > dl, article > form, article > table {
     margin: 0.8rem;
 }
 
-main p, main blockquote, main ul, main ol, main dl, main form, main table {
+main > p, main > blockquote, main > ul, main > ol, main > dl, main > form, main > table {
     margin: 2rem 5rem;
 }
 
@@ -67,17 +67,17 @@ article > footer > p.links {
         margin-bottom: inherit;
     }
 
-    article blockquote, article ul, article ol, article dl, article form, article table {
+    article > blockquote, article > ul, article > ol, article > dl, article > form, article > table {
         margin: 2rem 5rem;
     }
 
-    article p {
+    article > p {
         margin: 1rem 5rem;
     }
 }
 
 @media print {
-    article p, article blockquote, article ul, article ol, article dl, article form, article table {
+    article > p, article > blockquote, article > ul, article > ol, article > dl, article > form, article > table {
         margin: 16pt 0;
     }
 
