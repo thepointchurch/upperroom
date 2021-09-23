@@ -195,6 +195,7 @@ CSP_IMG_SRC = ("'self'", "data:")
 CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "fonts.googleapis.com")
 CSP_FONT_SRC = ("'self'", "fonts.gstatic.com")
 CSP_SCRIPT_SRC = ("'self'", "cdnjs.cloudflare.com")
+CSP_OBJECT_SRC = ("'none'",)
 
 
 if env("STATICFILES_BUCKET") or env("MEDIAFILES_BUCKET"):
