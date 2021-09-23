@@ -1,10 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Prefetch
 from django.shortcuts import redirect
+from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
 from ..resources.views import RedirectToAttachment
 from ..utils.func import IsNotEmpty
+from ..utils.markdown import unmarkdown
 from ..utils.mixin import NeverCacheMixin, VaryOnCookieMixin
 from ..utils.storages.attachment import attachment_response
 from .models import Attachment, WeblogEntry
@@ -13,6 +15,12 @@ from .models import Attachment, WeblogEntry
 class WeblogList(VaryOnCookieMixin, LoginRequiredMixin, generic.ListView):  # pylint: disable=too-many-ancestors
     template_name = "weblog/index.html"
     paginate_by = 10
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["metadata_description"] = None
+        context["metadata_title"] = _("Weblog")
+        return context
 
     def get_queryset(self):
         return (
@@ -50,6 +58,12 @@ class WeblogList(VaryOnCookieMixin, LoginRequiredMixin, generic.ListView):  # py
 class WeblogDetail(VaryOnCookieMixin, LoginRequiredMixin, generic.DetailView):
     model = WeblogEntry
     template_name = "weblog/weblog_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["metadata_description"] = unmarkdown(self.object.description)
+        context["metadata_title"] = self.object.title
+        return context
 
     def get_queryset(self):
         if self.request.user.is_staff:

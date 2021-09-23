@@ -4,6 +4,7 @@ from pathlib import Path
 
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import Paginator
+from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
 from ..utils.mixin import NeverCacheMixin
@@ -40,4 +41,6 @@ class SearchView(NeverCacheMixin, generic.TemplateView):
                     context["type_name"] = cls._meta.verbose_name_plural
             except AttributeError:
                 continue
+        context["metadata_description"] = None
+        context["metadata_title"] = f"{_('Search')}: {context['search_query']}"
         return context

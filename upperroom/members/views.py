@@ -36,6 +36,8 @@ class IndexView(VaryOnCookieMixin, LoginRequiredMixin, generic.TemplateView):
         context = super().get_context_data(**kwargs)
         context["webmaster_email"] = settings.WEBMASTER_EMAIL
         context["portals"] = [portal(self.request) for portal in Portal.get_portals()]
+        context["metadata_description"] = None
+        context["metadata_title"] = _("Members Home")
         return context
 
 
@@ -138,4 +140,6 @@ class TechDetailsView(NeverCacheMixin, LoginRequiredMixin, generic.TemplateView)
             }
             for dist in importlib_metadata.distributions()
         ]
+        context["metadata_description"] = None
+        context["metadata_title"] = _("Tech Details")
         return context

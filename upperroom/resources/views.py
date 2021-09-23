@@ -4,10 +4,12 @@ from django.db.models import Prefetch
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
 from ..directory.models import Person
 from ..utils.func import IsNotEmpty
+from ..utils.markdown import unmarkdown
 from ..utils.mixin import NeverCacheMixin, VaryOnCookieMixin
 from ..utils.storages.attachment import attachment_response
 from .models import Attachment, Resource, ResourceFeed, Tag
@@ -68,6 +70,12 @@ class TagList(VaryOnCookieMixin, generic.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["tag"] = self.tag
+        if self.tag.description:
+            context["metadata_description"] = unmarkdown(self.tag.description)
+        if self.tag.is_exclusive:
+            context["metadata_title"] = self.tag.name
+        else:
+            context["metadata_title"] = f"{_('Resources')}: {self.tag.name}"
         return context
 
 
@@ -104,6 +112,8 @@ class ResourceList(VaryOnCookieMixin, generic.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["tag"] = None
+        context["metadata_description"] = None
+        context["metadata_title"] = _("Resources")
         return context
 
 
@@ -160,6 +170,14 @@ class ResourceDetail(VaryOnCookieMixin, generic.DetailView):
         if not obj.body and count == 1:
             raise RedirectToAttachment(obj.attachments.first())
         return obj
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.object.description:
+            context["metadata_description"] = unmarkdown(self.object.description)
+        context["metadata_title"] = self.object.title
+        context["metadata_type"] = "article"
+        return context
 
     def dispatch(self, *args, **kwargs):
         try:
@@ -247,6 +265,8 @@ class AuthorList(VaryOnCookieMixin, generic.ListView):
             id=self.kwargs.get("pk", None),
         )
         context["tag"] = None
+        context["metadata_description"] = None
+        context["metadata_title"] = f"{_('Resources')}: {context['author'].fullname}"
         return context
 
 

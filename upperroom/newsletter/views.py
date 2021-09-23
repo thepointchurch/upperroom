@@ -25,6 +25,8 @@ class IndexView(VaryOnCookieMixin, PublicationMixin, generic.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["publication"] = self.publication
+        context["metadata_description"] = self.publication.description
+        context["metadata_title"] = self.publication.name
         return context
 
 

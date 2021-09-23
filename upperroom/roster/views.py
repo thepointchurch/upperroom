@@ -25,6 +25,12 @@ class MeetingIndex(VaryOnCookieMixin, LoginRequiredMixin, generic.ListView):
     allow_future = True
     template_name = "roster/index.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["metadata_description"] = None
+        context["metadata_title"] = _("Roster")
+        return context
+
     def get_queryset(self):
         return Meeting.current_objects.all()[:5]
 
@@ -34,6 +40,12 @@ class MonthlyMeetingView(VaryOnCookieMixin, LoginRequiredMixin, generic.MonthArc
     allow_future = True
     date_field = "date"
     make_object_list = True
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["metadata_description"] = None
+        context["metadata_title"] = f"{_('Roster')}: {self.get_year()}-{self.get_month():02}"
+        return context
 
 
 class PublicPersonList(generic.ListView):
@@ -136,6 +148,9 @@ class BuilderView(NeverCacheMixin, PermissionRequiredMixin, generic.edit.CreateV
                     form_kwargs={"sort_by_age": sort_by_age},
                 )
                 data["builder_template"] = self.builder_template
+
+        data["metadata_description"] = None
+        data["metadata_title"] = _("Roster Builder")
 
         return data
 

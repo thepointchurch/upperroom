@@ -31,6 +31,8 @@ class IndexView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
         context = super().get_context_data(**kwargs)
         context["directory_email"] = settings.DIRECTORY_EMAIL
         context["search_query"] = ""
+        context["metadata_description"] = None
+        context["metadata_title"] = _("Directory")
         return context
 
 
@@ -42,6 +44,8 @@ class LetterView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["letter"] = self.kwargs["letter"]
+        context["metadata_description"] = None
+        context["metadata_title"] = f"{_('Directory')}: {self.kwargs['letter'].upper()}"
         return context
 
     def get_queryset(self):
@@ -51,6 +55,12 @@ class LetterView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
 class DetailView(VaryOnCookieMixin, PermissionRequiredMixin, generic.DetailView):
     model = Family
     permission_required = "directory.can_view"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["metadata_description"] = None
+        context["metadata_title"] = f"{_('Directory')}: {self.object.name}"
+        return context
 
     def get_queryset(self):
         return Family.current_objects.all()
@@ -65,6 +75,8 @@ class SearchView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
         context = super().get_context_data(**kwargs)
         context["search_type"] = self.request.GET.get("type", _("By Name"))
         context["search_query"] = self.request.GET.get("query", "")
+        context["metadata_description"] = None
+        context["metadata_title"] = f"{_('Directory Search')}: {context['search_query']}"
         return context
 
     def get_queryset(self):
@@ -107,6 +119,8 @@ class FamilyEditView(NeverCacheMixin, PermissionRequiredMixin, generic.edit.Upda
             context["formset"] = PersonInlineFormSet(self.request.POST, instance=self.object)
         else:
             context["formset"] = PersonInlineFormSet(instance=self.object)
+        context["metadata_description"] = None
+        context["metadata_title"] = f"{_('Directory Edit')}: {self.object.name}"
         return context
 
     def form_valid(self, form):
@@ -128,6 +142,12 @@ class BirthdayView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView)
         "name", "suffix", "surname_override", "family__name", "birthday"
     )
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["metadata_description"] = None
+        context["metadata_title"] = _("Birthdays")
+        return context
+
 
 class AnniversaryView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
     template_name = "directory/anniversary_list.html"
@@ -148,6 +168,12 @@ class AnniversaryView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListVi
             "anniversary",
         )
     )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["metadata_description"] = None
+        context["metadata_title"] = _("Anniversaries")
+        return context
 
 
 class FamilyPhotoView(NeverCacheMixin, PermissionRequiredMixin, generic.DetailView):

@@ -2,6 +2,7 @@
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
 from ..utils.mixin import NeverCacheMixin, VaryOnCookieMixin
@@ -11,10 +12,22 @@ from .models import Book
 class IndexView(VaryOnCookieMixin, LoginRequiredMixin, generic.TemplateView):
     template_name = "library/index.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["metadata_description"] = None
+        context["metadata_title"] = _("Library")
+        return context
+
 
 class SearchView(NeverCacheMixin, LoginRequiredMixin, generic.ListView):
     model = Book
     template_name = "library/book_list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["metadata_description"] = None
+        context["metadata_title"] = f"{_('Library')}: {self.request.GET.get('query', '')}"
+        return context
 
     def get_queryset(self):  # pylint: disable=too-many-return-statements
         search_field = self.request.GET.get("field", "")
