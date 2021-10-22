@@ -42,3 +42,15 @@ class EditOperation(PortalOperation):
 
     def will_show(self):
         return self.request.user.is_active and getattr(self.request.user, "person", None)
+
+
+class VcardOperation(PortalOperation):
+    title = _("Download Contacts")
+
+    def get_context(self):
+        context = super().get_context()
+        context["url"] = reverse("directory:vcard")
+        return context
+
+    def will_show(self):
+        return self.request.user.is_active and self.request.user.is_staff

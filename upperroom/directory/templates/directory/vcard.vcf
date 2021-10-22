@@ -1,0 +1,9 @@
+{% load i18n smartquote %}{% for person in person_list %}{% if person.is_current and person.is_member %}{% if person.find_email %}BEGIN:VCARD
+VERSION:3.0
+FN:{{ person.fullname }}
+N:{{person.family.name }};{{ person.name }};;;{% if person.suffix %}{{ person.suffix }}{% endif %}
+EMAIL:{{ person.find_email }}
+NOTE:directory_id: {{ person.id }}
+CATEGORIES:{% if person.is_member %}Members{% endif %}
+END:VCARD
+{% endif %}{% endif %}{% endfor %}

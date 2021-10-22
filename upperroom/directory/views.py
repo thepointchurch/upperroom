@@ -200,6 +200,16 @@ class FamilyThumbnailView(NeverCacheMixin, PermissionRequiredMixin, generic.Deta
         return Family.current_objects.select_related(None).prefetch_related(None).only("id")
 
 
+class PersonVcardList(PermissionRequiredMixin, generic.ListView):
+    model = Person
+    permission_required = "directory.can_view"
+    template_name = "directory/vcard.vcf"
+    content_type = "text/vcard"
+    queryset = Person.current_objects.exclude(birthday__isnull=True).only(
+        "name", "suffix", "surname_override", "family__name", "email", "family__email"
+    )
+
+
 DIRECTORY_FILE_NAME = "directory/directory.pdf"
 
 
