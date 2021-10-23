@@ -13,7 +13,7 @@ urlpatterns = [
     path("anniversaries", views.AnniversaryView.as_view(), name="anniversaries"),
     path("photo/<int:pk>.jpg", views.FamilyPhotoView.as_view(), name="photo"),
     path("thumbnail/<int:pk>.jpg", views.FamilyPhotoView.as_view(), name="thumbnail"),
-    path("vcard", views.PersonVcardList.as_view(), name="vcard"),
+    path("contacts.vcf", views.PersonVcardList.as_view(), name="vcard"),
     path("pdf", views.PdfView.as_view(), name="pdf"),
     path("print", views.PrintView.as_view(), name="print"),
 ]
