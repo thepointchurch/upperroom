@@ -205,7 +205,7 @@ class PersonVcardList(PermissionRequiredMixin, generic.ListView):
     permission_required = "directory.can_view"
     template_name = "directory/vcard.vcf"
     content_type = "text/vcard"
-    queryset = Person.current_objects.exclude(birthday__isnull=True).only(
+    queryset = Person.current_objects.only(
         "name", "suffix", "surname_override", "family__name", "email", "family__email"
     )
 
