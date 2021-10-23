@@ -24,7 +24,7 @@ def _get_role_map(roles):
 
     for role in roles:
         for person in role.people.all():
-            if not person.find_email():
+            if not person.find_email:
                 continue
 
             if person not in role_map.keys():
@@ -76,7 +76,7 @@ class Command(BaseCommand):
                         {"person": person, "date": notification_date, "role_list": roles}
                     ),
                     settings.ROSTER_EMAIL,
-                    [person.find_email()],
+                    [person.find_email],
                     connection=connection,
                 )
             )

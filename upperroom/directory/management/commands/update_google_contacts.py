@@ -242,7 +242,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         people = {}
         for person in Person.current_objects.filter(is_member=True):
-            email = person.find_email()
+            email = person.find_email
             if email:
                 contact = Contact(
                     str(person.id), person.name, person.surname, person.suffix if person.suffix else None, email

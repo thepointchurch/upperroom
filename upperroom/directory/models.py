@@ -222,6 +222,7 @@ class Person(models.Model):
             return True
         return False
 
+    @cached_property
     def find_email(self):
         if self.email:
             return self.email
