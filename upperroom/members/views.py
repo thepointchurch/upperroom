@@ -1,5 +1,6 @@
 # pylint: disable=too-many-ancestors
 
+import importlib.metadata
 import logging
 import platform
 import sys
@@ -19,12 +20,6 @@ from django.views import generic
 from ..directory.models import Person
 from ..utils.mixin import NeverCacheMixin, VaryOnCookieMixin
 from .portals import Portal
-
-if sys.version_info >= (3, 8):
-    from importlib import metadata as importlib_metadata  # pylint: disable=no-name-in-module
-else:
-    import importlib_metadata
-
 
 logger = logging.getLogger(__name__)
 
@@ -138,7 +133,7 @@ class TechDetailsView(NeverCacheMixin, LoginRequiredMixin, generic.TemplateView)
                 "url": dist.metadata.get("Home-page"),
                 "key": (key_map.get(dist.metadata["Name"], 99), dist.metadata["Name"]),
             }
-            for dist in importlib_metadata.distributions()
+            for dist in importlib.metadata.distributions()
         ]
         context["metadata_description"] = None
         context["metadata_title"] = _("Tech Details")
