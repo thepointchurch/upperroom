@@ -19,7 +19,9 @@ logger = logging.getLogger(__name__)
 
 class FeaturedMixin(models.Model):
     priority = models.PositiveSmallIntegerField(
-        null=True, blank=True, help_text=_("A non-empty value will feature this item " "in the main menu."),
+        null=True,
+        blank=True,
+        help_text=_("A non-empty value will feature this item " "in the main menu."),
     )
 
     class Meta:
@@ -44,7 +46,10 @@ class Tag(FeaturedMixin, models.Model):
     description = models.TextField(null=True, blank=True, verbose_name=_("description"))
 
     resources_per_page = models.PositiveSmallIntegerField(
-        default=10, null=True, blank=True, verbose_name=_("resources per page"),
+        default=10,
+        null=True,
+        blank=True,
+        verbose_name=_("resources per page"),
     )
     reverse_order = models.BooleanField(default=False, verbose_name=_("reverse order"))
     show_date = models.BooleanField(default=True, verbose_name=_("show date"))
@@ -131,7 +136,12 @@ class Resource(FeaturedMixin, models.Model):
     show_author = models.BooleanField(default=True, verbose_name=_("show author"))
 
     parent = models.ForeignKey(
-        "self", null=True, blank=True, on_delete=models.SET_NULL, related_name="children", verbose_name=_("parent"),
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="children",
+        verbose_name=_("parent"),
     )
 
     created = models.DateTimeField(auto_now_add=True, verbose_name=_("created"))
@@ -239,7 +249,10 @@ class Attachment(models.Model):
     kind = models.CharField(max_length=1, choices=KIND_CHOICES, default=KIND_INLINE, verbose_name=_("kind"))
     description = models.TextField(null=True, blank=True, verbose_name=_("description"))
     resource = models.ForeignKey(
-        Resource, on_delete=models.CASCADE, related_name="attachments", verbose_name=_("resource"),
+        Resource,
+        on_delete=models.CASCADE,
+        related_name="attachments",
+        verbose_name=_("resource"),
     )
     metadata = models.JSONField(null=True, blank=True, verbose_name=_("metadata"))
 

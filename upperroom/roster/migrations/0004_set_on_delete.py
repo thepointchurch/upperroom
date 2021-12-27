@@ -14,10 +14,12 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterModelManagers(
-            name="meeting", managers=[("current_objects", django.db.models.manager.Manager())],
+            name="meeting",
+            managers=[("current_objects", django.db.models.manager.Manager())],
         ),
         migrations.AlterModelManagers(
-            name="role", managers=[("current_objects", django.db.models.manager.Manager())],
+            name="role",
+            managers=[("current_objects", django.db.models.manager.Manager())],
         ),
         migrations.AlterField(
             model_name="role",
@@ -35,7 +37,10 @@ class Migration(migrations.Migration):
             model_name="role",
             name="role",
             field=models.ForeignKey(
-                on_delete=models.PROTECT, related_name="roles", to="roster.RoleType", verbose_name="role",
+                on_delete=models.PROTECT,
+                related_name="roles",
+                to="roster.RoleType",
+                verbose_name="role",
             ),
         ),
     ]

@@ -112,7 +112,12 @@ class RoleType(models.Model):
     include_in_print = models.BooleanField(default=True, verbose_name=_("include in printout"))
     order_by_age = models.BooleanField(default=True, verbose_name=_("order by age"))
     parent = models.ForeignKey(
-        "self", null=True, blank=True, on_delete=models.SET_NULL, related_name="children", verbose_name=_("parent"),
+        "self",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="children",
+        verbose_name=_("parent"),
     )
 
     class Meta:
@@ -155,7 +160,12 @@ class Role(models.Model):
     )
     description = models.CharField(max_length=64, null=True, blank=True, verbose_name=_("description"))
     location = models.ForeignKey(
-        Location, null=True, blank=True, on_delete=models.PROTECT, related_name="roles", verbose_name=_("location"),
+        Location,
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name="roles",
+        verbose_name=_("location"),
     )
 
     objects = models.Manager()
@@ -185,23 +195,29 @@ class Role(models.Model):
 
     @property
     def starttime(self):
-        return datetime(
-            self.meeting.date.year,
-            self.meeting.date.month,
-            self.meeting.date.day,
-            self.role.start_time.hour,
-            self.role.start_time.minute,
-        ) - timedelta(hours=10)
+        return (
+            datetime(
+                self.meeting.date.year,
+                self.meeting.date.month,
+                self.meeting.date.day,
+                self.role.start_time.hour,
+                self.role.start_time.minute,
+            )
+            - timedelta(hours=10)
+        )
 
     @property
     def endtime(self):
-        return datetime(
-            self.meeting.date.year,
-            self.meeting.date.month,
-            self.meeting.date.day,
-            self.role.end_time.hour,
-            self.role.end_time.minute,
-        ) - timedelta(hours=10)
+        return (
+            datetime(
+                self.meeting.date.year,
+                self.meeting.date.month,
+                self.meeting.date.day,
+                self.role.end_time.hour,
+                self.role.end_time.minute,
+            )
+            - timedelta(hours=10)
+        )
 
     def save(self, *args, **kwargs):  # pylint: disable=signature-differs
         self.revision += 1
@@ -213,7 +229,11 @@ class MeetingTemplate(models.Model):
     is_default = models.BooleanField(default=False, verbose_name=_("is default"))
     week_day = models.SmallIntegerField(null=True, blank=True, choices=DAYS_OF_THE_WEEK, verbose_name=_("week day"))
     roles = models.ManyToManyField(
-        RoleType, through="RoleTypeTemplateMapping", blank=True, related_name="templates", verbose_name=_("roles"),
+        RoleType,
+        through="RoleTypeTemplateMapping",
+        blank=True,
+        related_name="templates",
+        verbose_name=_("roles"),
     )
 
     class Meta:

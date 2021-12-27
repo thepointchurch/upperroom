@@ -146,7 +146,8 @@ class Migration(migrations.Migration):
             options={"ordering": ["role"], "verbose_name_plural": "roles", "verbose_name": "role"},
         ),
         migrations.AlterModelManagers(
-            name="meeting", managers=[("current_objects", django.db.models.manager.Manager())],
+            name="meeting",
+            managers=[("current_objects", django.db.models.manager.Manager())],
         ),
         migrations.AlterModelManagers(name="role", managers=[]),
         migrations.CreateModel(
@@ -210,6 +211,7 @@ class Migration(migrations.Migration):
             managers=[("current_objects", django.db.models.manager.Manager())],
         ),
         migrations.AddIndex(
-            model_name="roletype", index=models.Index(fields=["order"], name="roster_role_order_42d3b6_idx"),
+            model_name="roletype",
+            index=models.Index(fields=["order"], name="roster_role_order_42d3b6_idx"),
         ),
     ]

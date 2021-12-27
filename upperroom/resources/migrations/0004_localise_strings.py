@@ -28,7 +28,8 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.AlterModelOptions(
-            name="tag", options={"ordering": ["name"], "verbose_name": "tag", "verbose_name_plural": "tags"},
+            name="tag",
+            options={"ordering": ["name"], "verbose_name": "tag", "verbose_name_plural": "tags"},
         ),
         migrations.AlterField(
             model_name="attachment",
@@ -44,7 +45,10 @@ class Migration(migrations.Migration):
             model_name="attachment",
             name="kind",
             field=models.CharField(
-                max_length=1, choices=[("A", "Alternate"), ("I", "Inline")], default="I", verbose_name="kind",
+                max_length=1,
+                choices=[("A", "Alternate"), ("I", "Inline")],
+                default="I",
+                verbose_name="kind",
             ),
         ),
         migrations.AlterField(
@@ -56,12 +60,17 @@ class Migration(migrations.Migration):
             model_name="attachment",
             name="resource",
             field=models.ForeignKey(
-                to="resources.Resource", on_delete=models.CASCADE, related_name="attachments", verbose_name="resource",
+                to="resources.Resource",
+                on_delete=models.CASCADE,
+                related_name="attachments",
+                verbose_name="resource",
             ),
         ),
         migrations.AlterField(model_name="attachment", name="slug", field=models.SlugField(verbose_name="slug")),
         migrations.AlterField(
-            model_name="attachment", name="title", field=models.CharField(max_length=64, verbose_name="title"),
+            model_name="attachment",
+            name="title",
+            field=models.CharField(max_length=64, verbose_name="title"),
         ),
         migrations.AlterField(
             model_name="resource",
@@ -76,7 +85,9 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AlterField(
-            model_name="resource", name="body", field=models.TextField(blank=True, null=True, verbose_name="body"),
+            model_name="resource",
+            name="body",
+            field=models.TextField(blank=True, null=True, verbose_name="body"),
         ),
         migrations.AlterField(
             model_name="resource",
@@ -89,7 +100,9 @@ class Migration(migrations.Migration):
             field=models.TextField(blank=True, null=True, verbose_name="description"),
         ),
         migrations.AlterField(
-            model_name="resource", name="is_private", field=models.BooleanField(default=False, verbose_name="private"),
+            model_name="resource",
+            name="is_private",
+            field=models.BooleanField(default=False, verbose_name="private"),
         ),
         migrations.AlterField(
             model_name="resource",
@@ -97,7 +110,9 @@ class Migration(migrations.Migration):
             field=models.BooleanField(default=False, verbose_name="published"),
         ),
         migrations.AlterField(
-            model_name="resource", name="modified", field=models.DateTimeField(auto_now=True, verbose_name="modified"),
+            model_name="resource",
+            name="modified",
+            field=models.DateTimeField(auto_now=True, verbose_name="modified"),
         ),
         migrations.AlterField(
             model_name="resource",
@@ -117,20 +132,29 @@ class Migration(migrations.Migration):
             field=models.BooleanField(default=True, verbose_name="show author"),
         ),
         migrations.AlterField(
-            model_name="resource", name="show_date", field=models.BooleanField(default=True, verbose_name="show date"),
+            model_name="resource",
+            name="show_date",
+            field=models.BooleanField(default=True, verbose_name="show date"),
         ),
         migrations.AlterField(
-            model_name="resource", name="slug", field=models.SlugField(unique=True, verbose_name="slug"),
+            model_name="resource",
+            name="slug",
+            field=models.SlugField(unique=True, verbose_name="slug"),
         ),
         migrations.AlterField(
             model_name="resource",
             name="tags",
             field=models.ManyToManyField(
-                blank=True, to="resources.Tag", related_name="resources", verbose_name="tags",
+                blank=True,
+                to="resources.Tag",
+                related_name="resources",
+                verbose_name="tags",
             ),
         ),
         migrations.AlterField(
-            model_name="resource", name="title", field=models.CharField(max_length=64, verbose_name="title"),
+            model_name="resource",
+            name="title",
+            field=models.CharField(max_length=64, verbose_name="title"),
         ),
         migrations.AlterField(
             model_name="tag",
@@ -138,16 +162,23 @@ class Migration(migrations.Migration):
             field=models.TextField(blank=True, null=True, verbose_name="description"),
         ),
         migrations.AlterField(
-            model_name="tag", name="is_exclusive", field=models.BooleanField(default=False, verbose_name="exclusive"),
+            model_name="tag",
+            name="is_exclusive",
+            field=models.BooleanField(default=False, verbose_name="exclusive"),
         ),
         migrations.AlterField(
-            model_name="tag", name="name", field=models.CharField(max_length=64, verbose_name="name"),
+            model_name="tag",
+            name="name",
+            field=models.CharField(max_length=64, verbose_name="name"),
         ),
         migrations.AlterField(
             model_name="tag",
             name="resources_per_page",
             field=models.PositiveSmallIntegerField(
-                blank=True, default=10, null=True, verbose_name="resources per page",
+                blank=True,
+                default=10,
+                null=True,
+                verbose_name="resources per page",
             ),
         ),
         migrations.AlterField(
@@ -156,9 +187,13 @@ class Migration(migrations.Migration):
             field=models.BooleanField(default=False, verbose_name="reverse order"),
         ),
         migrations.AlterField(
-            model_name="tag", name="show_date", field=models.BooleanField(default=True, verbose_name="show date"),
+            model_name="tag",
+            name="show_date",
+            field=models.BooleanField(default=True, verbose_name="show date"),
         ),
         migrations.AlterField(
-            model_name="tag", name="slug", field=models.SlugField(unique=True, verbose_name="slug"),
+            model_name="tag",
+            name="slug",
+            field=models.SlugField(unique=True, verbose_name="slug"),
         ),
     ]

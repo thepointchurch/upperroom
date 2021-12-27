@@ -10,6 +10,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddIndex(
-            model_name="keyword", index=models.Index(fields=["order", "value"], name="extendedsit_order_4c95b0_idx"),
+            model_name="keyword",
+            index=models.Index(fields=["order", "value"], name="extendedsit_order_4c95b0_idx"),
         ),
     ]

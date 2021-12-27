@@ -39,7 +39,11 @@ class Publication(models.Model):
     mime_types = models.CharField(max_length=256, null=True, blank=True, verbose_name=_("MIME types"))
     is_private = models.BooleanField(default=False, verbose_name=_("private"))
     publication_day = models.CharField(
-        max_length=1, choices=DAYS_OF_WEEK, null=True, blank=True, verbose_name=_("publication day"),
+        max_length=1,
+        choices=DAYS_OF_WEEK,
+        null=True,
+        blank=True,
+        verbose_name=_("publication day"),
     )
 
     class Meta:

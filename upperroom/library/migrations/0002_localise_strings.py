@@ -13,7 +13,8 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterModelOptions(
-            name="book", options={"ordering": ["title"], "verbose_name": "book", "verbose_name_plural": "books"},
+            name="book",
+            options={"ordering": ["title"], "verbose_name": "book", "verbose_name_plural": "books"},
         ),
         migrations.AlterField(
             model_name="book",
@@ -41,7 +42,9 @@ class Migration(migrations.Migration):
             field=models.CharField(max_length=512, null=True, blank=True, verbose_name="subtitle"),
         ),
         migrations.AlterField(
-            model_name="book", name="title", field=models.CharField(max_length=256, verbose_name="title"),
+            model_name="book",
+            name="title",
+            field=models.CharField(max_length=256, verbose_name="title"),
         ),
         migrations.AlterField(
             model_name="book",

@@ -10,6 +10,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddIndex(
-            model_name="roletype", index=models.Index(fields=["order"], name="roster_role_order_42d3b6_idx"),
+            model_name="roletype",
+            index=models.Index(fields=["order"], name="roster_role_order_42d3b6_idx"),
         ),
     ]

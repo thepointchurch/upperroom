@@ -53,6 +53,7 @@ class Migration(migrations.Migration):
             options={"ordering": ["order", "value"], "verbose_name": "Keyword", "verbose_name_plural": "Keywords"},
         ),
         migrations.AddIndex(
-            model_name="keyword", index=models.Index(fields=["order", "value"], name="extendedsit_order_4c95b0_idx"),
+            model_name="keyword",
+            index=models.Index(fields=["order", "value"], name="extendedsit_order_4c95b0_idx"),
         ),
     ]

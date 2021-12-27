@@ -10,7 +10,11 @@ class ExtendedSiteManager(models.Manager):  # pylint: disable=too-few-public-met
 
 class ExtendedSite(models.Model):
     site = models.OneToOneField(
-        Site, on_delete=models.CASCADE, verbose_name=_("site"), related_name="extra", primary_key=True,
+        Site,
+        on_delete=models.CASCADE,
+        verbose_name=_("site"),
+        related_name="extra",
+        primary_key=True,
     )
 
     subtitle = models.CharField(max_length=256, null=True, blank=True, verbose_name=_("subtitle"))

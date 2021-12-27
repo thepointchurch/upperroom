@@ -14,7 +14,10 @@ class Splash(models.Model):
     content = models.TextField(null=True, blank=True, verbose_name=_("content"))
     order = models.SmallIntegerField(null=True, blank=True, verbose_name=_("order"))
     position = models.CharField(
-        max_length=1, choices=POSITION_CHOICES, default=POSITION_ABOVE, verbose_name=_("position"),
+        max_length=1,
+        choices=POSITION_CHOICES,
+        default=POSITION_ABOVE,
+        verbose_name=_("position"),
     )
     url = models.CharField(max_length=100, default="/")
     is_current = models.BooleanField(default=True, verbose_name=_("current"))

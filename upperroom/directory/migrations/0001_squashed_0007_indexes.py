@@ -128,7 +128,8 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AlterModelOptions(
-            name="family", options={"ordering": ["name"], "verbose_name": "family", "verbose_name_plural": "families"},
+            name="family",
+            options={"ordering": ["name"], "verbose_name": "family", "verbose_name_plural": "families"},
         ),
         migrations.AlterModelOptions(
             name="family",
@@ -140,16 +141,19 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.AddIndex(
-            model_name="family", index=models.Index(fields=["name"], name="directory_f_name_bfadf2_idx"),
+            model_name="family",
+            index=models.Index(fields=["name"], name="directory_f_name_bfadf2_idx"),
         ),
         migrations.AddIndex(
-            model_name="family", index=models.Index(fields=["is_current"], name="directory_f_is_curr_c02057_idx"),
+            model_name="family",
+            index=models.Index(fields=["is_current"], name="directory_f_is_curr_c02057_idx"),
         ),
         migrations.AddIndex(
             model_name="person",
             index=models.Index(fields=["order", "id", "name"], name="directory_p_order_44e645_idx"),
         ),
         migrations.AddIndex(
-            model_name="person", index=models.Index(fields=["is_current"], name="directory_p_is_curr_efb218_idx"),
+            model_name="person",
+            index=models.Index(fields=["is_current"], name="directory_p_is_curr_efb218_idx"),
         ),
     ]

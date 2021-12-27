@@ -15,9 +15,13 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name="roletype", name="end_time", field=models.TimeField(default=datetime.time(10, 0)),
+            model_name="roletype",
+            name="end_time",
+            field=models.TimeField(default=datetime.time(10, 0)),
         ),
         migrations.AddField(
-            model_name="roletype", name="start_time", field=models.TimeField(default=datetime.time(9, 30)),
+            model_name="roletype",
+            name="start_time",
+            field=models.TimeField(default=datetime.time(9, 30)),
         ),
     ]

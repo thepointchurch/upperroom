@@ -90,7 +90,8 @@ class Migration(migrations.Migration):
             index=models.Index(fields=["entry_id", "kind"], name="weblog_atta_entry_i_9e8c2b_idx"),
         ),
         migrations.AddIndex(
-            model_name="weblogentry", index=models.Index(fields=["published"], name="weblog_webl_publish_d624e8_idx"),
+            model_name="weblogentry",
+            index=models.Index(fields=["published"], name="weblog_webl_publish_d624e8_idx"),
         ),
         migrations.AddIndex(
             model_name="weblogentry",

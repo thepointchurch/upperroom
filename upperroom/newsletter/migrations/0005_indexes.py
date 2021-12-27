@@ -10,6 +10,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddIndex(
-            model_name="issue", index=models.Index(fields=["date"], name="newsletter__date_969234_idx"),
+            model_name="issue",
+            index=models.Index(fields=["date"], name="newsletter__date_969234_idx"),
         ),
     ]

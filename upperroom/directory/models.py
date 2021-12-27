@@ -16,7 +16,9 @@ class FamilyCurrentManager(models.Manager):  # pylint: disable=too-few-public-me
             .get_queryset()
             .filter(is_current=True)
             .select_related("husband", "wife")
-            .prefetch_related("members",)
+            .prefetch_related(
+                "members",
+            )
         )
 
 
@@ -39,16 +41,29 @@ class Family(models.Model):
     is_current = models.BooleanField(default=True, verbose_name=_("current"))
 
     husband = models.ForeignKey(
-        "Person", null=True, blank=True, on_delete=models.SET_NULL, related_name="+", verbose_name=_("husband"),
+        "Person",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        verbose_name=_("husband"),
     )
     wife = models.ForeignKey(
-        "Person", null=True, blank=True, on_delete=models.SET_NULL, related_name="+", verbose_name=_("wife"),
+        "Person",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        verbose_name=_("wife"),
     )
     anniversary = models.DateField(null=True, blank=True, verbose_name=_("anniversary"))
 
     photo = models.ImageField(null=True, blank=True, upload_to=get_family_photo_filename)
     photo_thumbnail = models.ImageField(
-        null=True, blank=True, editable=False, upload_to=get_family_thumbnail_filename,
+        null=True,
+        blank=True,
+        editable=False,
+        upload_to=get_family_thumbnail_filename,
     )
 
     objects = models.Manager()
@@ -154,7 +169,11 @@ class Person(models.Model):
     )
 
     user = models.OneToOneField(
-        settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL, verbose_name=_("user"),
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        verbose_name=_("user"),
     )
     family = models.ForeignKey(Family, on_delete=models.CASCADE, related_name="members", verbose_name=_("family"))
 

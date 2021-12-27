@@ -14,7 +14,8 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterModelOptions(
-            name="family", options={"ordering": ["name"], "verbose_name": "family", "verbose_name_plural": "families"},
+            name="family",
+            options={"ordering": ["name"], "verbose_name": "family", "verbose_name_plural": "families"},
         ),
         migrations.AlterModelOptions(
             name="person",
@@ -43,10 +44,14 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AlterField(
-            model_name="family", name="is_current", field=models.BooleanField(verbose_name="current", default=True),
+            model_name="family",
+            name="is_current",
+            field=models.BooleanField(verbose_name="current", default=True),
         ),
         migrations.AlterField(
-            model_name="family", name="name", field=models.CharField(verbose_name="name", max_length=30),
+            model_name="family",
+            name="name",
+            field=models.CharField(verbose_name="name", max_length=30),
         ),
         migrations.AlterField(
             model_name="family",
@@ -99,24 +104,37 @@ class Migration(migrations.Migration):
             model_name="person",
             name="family",
             field=models.ForeignKey(
-                related_name="members", verbose_name="family", to="directory.Family", on_delete=models.CASCADE,
+                related_name="members",
+                verbose_name="family",
+                to="directory.Family",
+                on_delete=models.CASCADE,
             ),
         ),
         migrations.AlterField(
             model_name="person",
             name="gender",
             field=models.CharField(
-                choices=[("M", "Male"), ("F", "Female")], verbose_name="gender", blank=True, null=True, max_length=1,
+                choices=[("M", "Male"), ("F", "Female")],
+                verbose_name="gender",
+                blank=True,
+                null=True,
+                max_length=1,
             ),
         ),
         migrations.AlterField(
-            model_name="person", name="is_current", field=models.BooleanField(verbose_name="current", default=True),
+            model_name="person",
+            name="is_current",
+            field=models.BooleanField(verbose_name="current", default=True),
         ),
         migrations.AlterField(
-            model_name="person", name="is_member", field=models.BooleanField(verbose_name="member", default=True),
+            model_name="person",
+            name="is_member",
+            field=models.BooleanField(verbose_name="member", default=True),
         ),
         migrations.AlterField(
-            model_name="person", name="name", field=models.CharField(verbose_name="name", max_length=30),
+            model_name="person",
+            name="name",
+            field=models.CharField(verbose_name="name", max_length=30),
         ),
         migrations.AlterField(
             model_name="person",
@@ -142,7 +160,11 @@ class Migration(migrations.Migration):
             model_name="person",
             name="user",
             field=models.OneToOneField(
-                blank=True, verbose_name="user", to=settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL,
+                blank=True,
+                verbose_name="user",
+                to=settings.AUTH_USER_MODEL,
+                null=True,
+                on_delete=models.SET_NULL,
             ),
         ),
     ]

@@ -10,6 +10,8 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name="tag", name="is_private", field=models.BooleanField(default=False, verbose_name="private"),
+            model_name="tag",
+            name="is_private",
+            field=models.BooleanField(default=False, verbose_name="private"),
         ),
     ]

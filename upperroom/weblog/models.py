@@ -152,7 +152,10 @@ class Attachment(models.Model):
     kind = models.CharField(max_length=1, choices=KIND_CHOICES, default=KIND_INLINE, verbose_name=_("kind"))
     description = models.TextField(null=True, blank=True, verbose_name=_("description"))
     entry = models.ForeignKey(
-        WeblogEntry, on_delete=models.CASCADE, related_name="attachments", verbose_name=_("entry"),
+        WeblogEntry,
+        on_delete=models.CASCADE,
+        related_name="attachments",
+        verbose_name=_("entry"),
     )
 
     objects = models.Manager()

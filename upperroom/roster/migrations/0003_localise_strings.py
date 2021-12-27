@@ -30,14 +30,17 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.AlterModelOptions(
-            name="role", options={"ordering": ["role"], "verbose_name": "role", "verbose_name_plural": "roles"},
+            name="role",
+            options={"ordering": ["role"], "verbose_name": "role", "verbose_name_plural": "roles"},
         ),
         migrations.AlterModelOptions(
             name="roletype",
             options={"ordering": ["order"], "verbose_name": "role type", "verbose_name_plural": "role types"},
         ),
         migrations.AlterField(
-            model_name="location", name="name", field=models.CharField(verbose_name="name", max_length=30),
+            model_name="location",
+            name="name",
+            field=models.CharField(verbose_name="name", max_length=30),
         ),
         migrations.AlterField(
             model_name="meeting",
@@ -70,28 +73,41 @@ class Migration(migrations.Migration):
             model_name="role",
             name="meeting",
             field=models.ForeignKey(
-                verbose_name="meeting", related_name="roles", to="roster.Meeting", on_delete=models.CASCADE,
+                verbose_name="meeting",
+                related_name="roles",
+                to="roster.Meeting",
+                on_delete=models.CASCADE,
             ),
         ),
         migrations.AlterField(
             model_name="role",
             name="people",
             field=models.ManyToManyField(
-                blank=True, verbose_name="people", related_name="roles", to="directory.Person",
+                blank=True,
+                verbose_name="people",
+                related_name="roles",
+                to="directory.Person",
             ),
         ),
         migrations.AlterField(
-            model_name="role", name="revision", field=models.PositiveIntegerField(verbose_name="revision", default=0),
+            model_name="role",
+            name="revision",
+            field=models.PositiveIntegerField(verbose_name="revision", default=0),
         ),
         migrations.AlterField(
             model_name="role",
             name="role",
             field=models.ForeignKey(
-                verbose_name="role", related_name="roles", to="roster.RoleType", on_delete=models.PROTECT,
+                verbose_name="role",
+                related_name="roles",
+                to="roster.RoleType",
+                on_delete=models.PROTECT,
             ),
         ),
         migrations.AlterField(
-            model_name="role", name="timestamp", field=models.DateTimeField(verbose_name="timestamp", auto_now=True),
+            model_name="role",
+            name="timestamp",
+            field=models.DateTimeField(verbose_name="timestamp", auto_now=True),
         ),
         migrations.AlterField(
             model_name="roletype",
@@ -99,7 +115,9 @@ class Migration(migrations.Migration):
             field=models.TimeField(verbose_name="end time", default=datetime.time(10, 0)),
         ),
         migrations.AlterField(
-            model_name="roletype", name="name", field=models.CharField(verbose_name="name", max_length=30),
+            model_name="roletype",
+            name="name",
+            field=models.CharField(verbose_name="name", max_length=30),
         ),
         migrations.AlterField(
             model_name="roletype",
@@ -112,6 +130,8 @@ class Migration(migrations.Migration):
             field=models.TimeField(verbose_name="start time", default=datetime.time(9, 30)),
         ),
         migrations.AlterField(
-            model_name="roletype", name="verb", field=models.CharField(verbose_name="verb", max_length=50),
+            model_name="roletype",
+            name="verb",
+            field=models.CharField(verbose_name="verb", max_length=50),
         ),
     ]

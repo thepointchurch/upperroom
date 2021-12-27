@@ -30,7 +30,9 @@ class Migration(migrations.Migration):
             options={"ordering": ["name"], "verbose_name": "publication", "verbose_name_plural": "publications"},
         ),
         migrations.AlterField(
-            model_name="issue", name="date", field=models.DateField(default=datetime.date.today, verbose_name="date"),
+            model_name="issue",
+            name="date",
+            field=models.DateField(default=datetime.date.today, verbose_name="date"),
         ),
         migrations.AlterField(
             model_name="issue",
@@ -48,7 +50,9 @@ class Migration(migrations.Migration):
             field=models.CharField(editable=False, verbose_name="MIME type", max_length=128),
         ),
         migrations.AlterField(
-            model_name="issue", name="slug", field=models.SlugField(verbose_name="slug", editable=False),
+            model_name="issue",
+            name="slug",
+            field=models.SlugField(verbose_name="slug", editable=False),
         ),
         migrations.AlterField(
             model_name="publication",
@@ -66,7 +70,9 @@ class Migration(migrations.Migration):
             field=models.CharField(verbose_name="MIME types", max_length=256, null=True, blank=True),
         ),
         migrations.AlterField(
-            model_name="publication", name="name", field=models.CharField(verbose_name="name", max_length=64),
+            model_name="publication",
+            name="name",
+            field=models.CharField(verbose_name="name", max_length=64),
         ),
         migrations.AlterField(
             model_name="publication",
@@ -88,6 +94,8 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AlterField(
-            model_name="publication", name="slug", field=models.SlugField(verbose_name="slug", unique=True),
+            model_name="publication",
+            name="slug",
+            field=models.SlugField(verbose_name="slug", unique=True),
         ),
     ]
