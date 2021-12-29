@@ -165,6 +165,9 @@ class Resource(FeaturedMixin, models.Model):
             models.Index(fields=["is_published"]),
             models.Index(fields=["is_private"]),
         ]
+        permissions = [
+            ("publish_resource", "Can publish a resource"),
+        ]
         verbose_name = _("resource")
         verbose_name_plural = _("resources")
 

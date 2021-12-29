@@ -110,12 +110,39 @@ class ResourceForm(ModelForm):
             ).order_by("family__name", "name")
 
 
+class UnpublishedResourceListFilter(admin.SimpleListFilter):
+    title = _("published")
+    parameter_name = "published"
+
+    def lookups(self, request, model_admin):
+        lookups = (("yes", _("Yes")), ("no", _("No")))
+        if request.user.has_perm("resources.publish_resource"):
+            lookups += (("pending", _("Pending")),)
+        return lookups
+
+    def queryset(self, request, queryset):
+        if self.value() == "yes":
+            return queryset.filter(is_published=True)
+        if self.value() == "no":
+            return queryset.filter(is_published=False)
+        if self.value() == "pending" and request.user.has_perm("resources.publish_resource"):
+            return queryset.filter(is_published=False, published__isnull=True)
+        return None
+
+
 class ResourceAdmin(admin.ModelAdmin):
     model = Resource
     form = ResourceForm
     inlines = [AttachmentInline]
     ordering = ("title",)
-    list_filter = ("tags", "created", "published", "modified", "is_published", "is_private")
+    list_filter = (
+        "tags",
+        "created",
+        "published",
+        "modified",
+        UnpublishedResourceListFilter,
+        "is_private",
+    )
     search_fields = ["title", "description", "body"]
     date_hierarchy = "published"
     prepopulated_fields = {"slug": ("title",)}
@@ -161,6 +188,12 @@ class ResourceAdmin(admin.ModelAdmin):
         if obj and obj.children.count() and ChildResourceInline not in inlines:
             inlines.append(ChildResourceInline)
         return inlines
+
+    def get_readonly_fields(self, request, obj=None):
+        fields = super().get_readonly_fields(request, obj)
+        if not request.user.has_perm("resources.publish_resource"):
+            fields += ("is_published",)
+        return fields
 
     def publish(self, request, queryset):  # pylint: disable=no-self-use,unused-argument
         queryset.update(is_published=True)
