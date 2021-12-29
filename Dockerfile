@@ -2,7 +2,8 @@ FROM python:3.10-slim AS compile-image
 RUN apt-get -y update && apt-get install -y --no-install-recommends \
     build-essential gcc python3-dev libpq-dev zlib1g-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
-RUN pip install poetry=="1.1.12" wheel
+RUN pip install --upgrade pip && \
+    pip install poetry=="1.1.12" wheel
 COPY . /django/
 WORKDIR /django
 ENV POETRY_VIRTUALENVS_IN_PROJECT=true \
