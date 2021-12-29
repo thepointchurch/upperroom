@@ -1,4 +1,4 @@
-FROM python:3.9-slim AS compile-image
+FROM python:3.10-slim AS compile-image
 RUN apt-get -y update && apt-get install -y --no-install-recommends \
     build-essential gcc python3-dev libpq-dev zlib1g-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -13,7 +13,7 @@ RUN poetry build --format wheel && .venv/bin/pip install dist/*.whl
 RUN find .venv -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
 
 
-FROM python:3.9-slim AS build-image
+FROM python:3.10-slim AS build-image
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/django/.venv/bin:$PATH" \
