@@ -95,6 +95,8 @@ jobs:
           BRANCH="$(git branch --show-current)"
           if [ "$BRANCH" = "master" ]; then
               echo "::set-output name=tags::$IMAGE_ID:latest,$IMAGE_ID:${{ steps.version.outputs.version }}"
+          elsif [ -z "$BRANCH" ]; then
+              echo "::set-output name=tags::$IMAGE_ID:$(git describe --tags)"
           else
               echo "::set-output name=tags::$IMAGE_ID:$BRANCH"
           fi
