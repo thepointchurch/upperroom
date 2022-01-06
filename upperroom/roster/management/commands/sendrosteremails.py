@@ -1,4 +1,3 @@
-import logging
 from datetime import date, datetime, timedelta
 
 from django.conf import settings
@@ -11,8 +10,6 @@ from django.utils.translation import gettext_lazy as _
 from ...models import Role
 
 _ALERT_INTERVAL = 3  # days
-
-logger = logging.getLogger(__name__)
 
 
 def meeting_date():
@@ -27,7 +24,7 @@ def _get_role_map(roles):
             if not person.find_email:
                 continue
 
-            if person not in role_map.keys():
+            if person not in role_map:
                 role_map[person] = []
 
             role_map[person].append(role)
@@ -87,4 +84,4 @@ class Command(BaseCommand):
         if not options["test"]:
             for message in messages:
                 for recipient in message.to:
-                    logger.info("Sent mail to <%s>: %s", recipient, message.subject)
+                    self.stdout.write(f"Sent mail to <{recipient}>: {message.subject}")
