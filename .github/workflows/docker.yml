@@ -113,3 +113,5 @@ jobs:
             "build_date=${{ steps.set_tags.outputs.build_date }}"
           push: true
           tags: ${{ steps.set_tags.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

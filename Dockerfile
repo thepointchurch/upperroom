@@ -1,5 +1,5 @@
 FROM python:3.10-slim AS compile-image
-RUN apt-get -y update && apt-get install -y --no-install-recommends \
+RUN apt-get -qy update && apt-get -qy install --no-install-recommends \
     build-essential gcc python3-dev libpq-dev zlib1g-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN pip install --upgrade pip && \
@@ -9,9 +9,9 @@ WORKDIR /django
 ENV POETRY_VIRTUALENVS_IN_PROJECT=true \
     POETRY_NO_INTERACTION=1 \
     PYTHONDONTWRITEBYTECODE=1
-RUN poetry install --no-dev --no-root -E aws -E cache -E pgsql
-RUN poetry build --format wheel && .venv/bin/pip install dist/*.whl
-RUN find .venv -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
+RUN poetry install --no-dev --no-root -E aws -E cache -E pgsql \
+    && poetry build --format wheel && .venv/bin/pip install dist/*.whl \
+    && find .venv -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
 
 
 FROM python:3.10-slim AS build-image
@@ -19,8 +19,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/django/.venv/bin:$PATH" \
     DJANGO_SETTINGS_MODULE=upperroom.settings
-RUN apt-get -y update \
-    && apt-get install -y --no-install-recommends \
+RUN apt-get -qy update \
+    && apt-get -qy install --no-install-recommends \
         bzip2 \
         curl \
         libpq5 \
@@ -35,9 +35,9 @@ RUN apt-get -y update \
     && useradd -md /django -s /bin/bash -u 8000 django \
     && touch /django/.env && chown 0:8000 /django/.env && chmod 640 /django/.env \
     && mkdir -p /django/data && chown 8000:8000 /django/data
-COPY --from=compile-image /django/.venv /django/.venv
 COPY entrypoint.sh /entrypoint.sh
 COPY gunicorn.py /etc/gunicorn.py
+COPY --from=compile-image /django/.venv /django/.venv
 
 EXPOSE 8000/tcp
 

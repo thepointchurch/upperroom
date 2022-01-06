@@ -1,4 +1,4 @@
-Dockerfile
+Dockerfile*
 .git
 .github
 .gitignore
@@ -7,3 +7,7 @@ Dockerfile
 **/tests/
 version.py
 data/
+docker-compose.yml
+nginx.conf
+.flake8
+.pre-commit-config.yaml
