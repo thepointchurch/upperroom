@@ -50,7 +50,7 @@ template. <input type="checkbox" name="by_name" value="1" title="{% translate "S
 {% endblock content %}
 
 {% block semantic %}
-<main itemscope itemtype="https://schema.org/Collection" itemprop="mainEntity">
+<main id="main" itemscope itemtype="https://schema.org/Collection" itemprop="mainEntity">
 {{ block.super }}
 </main>
 {% endblock semantic %}
