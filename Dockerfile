@@ -3,7 +3,7 @@ RUN apt-get -qy update && apt-get -qy install --no-install-recommends \
     build-essential gcc python3-dev libpq-dev zlib1g-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN pip install --upgrade pip && \
-    pip install poetry=="1.1.12" wheel
+    pip install poetry=="1.1.13" wheel
 COPY . /django/
 WORKDIR /django
 ENV POETRY_VIRTUALENVS_IN_PROJECT=true \
