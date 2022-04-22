@@ -56,10 +56,10 @@ setproctitle = "^1.2"
 cryptography = { version = "^36.0", optional = true }
 django-amazon-ses = { version = "^4.0", optional = true }
 django-storages = { version = "^1.12", optional = true }
-google-api-python-client = { version = "^2.33", optional = true }
-google-auth-oauthlib = { version = "^0.4", optional = true }
+google-api-python-client = { version = "^2.45", optional = true }
+google-auth-oauthlib = { version = "^0.5", optional = true }
 psycopg2 = { version = "^2.9", optional = true }
-redis = { version = "^4.1", optional = true }
+redis = { version = "^4.2", optional = true }
 django-redis = { version = "^5.2", optional = true }
 django-cacheops = { version = "^6.0", optional = true }
 
