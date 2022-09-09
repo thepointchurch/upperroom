@@ -1,12 +1,12 @@
-BEGIN:VCALENDAR
+{% load smartquote %}BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//{{ site.name }}//Website//EN
+PRODID:-//{{ site.name|smartquote }}//Website//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH{% regroup role_list|dictsort:"date" by date as role_date %}{% for date in role_date %}{% for role in date.list %}
 BEGIN:VEVENT
 SUMMARY:{{ role.role }}{% if role.location %}
 LOCATION:{{ role.location }}{% endif %}{% if role.description %}
-DESCRIPTION:{{ role.description }}{% endif %}
+DESCRIPTION:{{ role.description|smartquote }}{% endif %}
 DTSTART:{{ role.starttime|date:"Ymd\THis\Z" }}
 DTEND:{{ role.endtime|date:"Ymd\THis\Z" }}
 DTSTAMP:{{ role.timestamp|date:"Ymd\THis\Z" }}

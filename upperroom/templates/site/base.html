@@ -1,23 +1,23 @@
-<!DOCTYPE html>
+{% load smartquote %}<!DOCTYPE html>
 <html lang="en-AU">
 <head>
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{% block title %}{{ site.name }}{% endblock title %}</title>
+<title>{% block title %}{{ site.name|smartquote }}{% endblock title %}</title>
 {% block stylesheets %}{% endblock stylesheets %}
 <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}" />
 <link rel="home" href="/" />
 <link rel="index" href="/" />
 {% block headers %}{% endblock headers %}
-<meta property="og:site_name" content="{{ site.name }}" />
+<meta property="og:site_name" content="{{ site.name|smartquote }}" />
 <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}" />
 <meta name="twitter:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}" />
 <meta name="twitter:card" content="summary" />
 {% if metadata_type %}<meta property="og:type" content="{{ metadata_type }}" />{% endif %}
-{% if metadata_title %}<meta property="og:title" content="{{ metadata_title }}" />
-<meta name="twitter:title" content="{{ metadata_title }}" />{% endif %}
-{% if metadata_description %}<meta property="og:description" content="{{ metadata_description }}" />
-<meta name="twitter:description" content="{{ metadata_description }}" />{% endif %}
+{% if metadata_title %}<meta property="og:title" content="{{ metadata_title|smartquote }}" />
+<meta name="twitter:title" content="{{ metadata_title|smartquote }}" />{% endif %}
+{% if metadata_description %}<meta property="og:description" content="{{ metadata_description|smartquote }}" />
+<meta name="twitter:description" content="{{ metadata_description|smartquote }}" />{% endif %}
 {% if metadata_image %}<meta property="og:image" content="{{ metadata_image }}" />
 <meta name="twitter:image" content="{{ metadata_image }}" />{% endif %}
 </head>

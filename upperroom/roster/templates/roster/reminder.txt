@@ -1,8 +1,8 @@
-{% load roster_filters %}Hi {{ person.name }},
+{% load smartquote %}{% load roster_filters %}Hi {{ person.name }},
 
 This is a friendly reminder that you are rostered to serve this {{ date|date:"l, jS F" }}. You are listed to:
 {% for role in role_list %}
-  * {{ role.role.verb }}{% if role.location %} at {{ role.location }}{% endif %}{% if role.description %} ({{ role.description }}){% endif %}{% if role.people.count > 1 %} with {% for p in role.people.all|remove_person:person %}{% if not forloop.first %}, {% endif %}{{ p.fullname }}{% endfor %}{% endif %}{% endfor %}
+  * {{ role.role.verb }}{% if role.location %} at {{ role.location|smartquote }}{% endif %}{% if role.description %} ({{ role.description|smartquote }}){% endif %}{% if role.people.count > 1 %} with {% for p in role.people.all|remove_person:person %}{% if not forloop.first %}, {% endif %}{{ p.fullname }}{% endfor %}{% endif %}{% endfor %}
 
 If you are unable to fulfill this role, please make other arrangements as soon as possible.
 
