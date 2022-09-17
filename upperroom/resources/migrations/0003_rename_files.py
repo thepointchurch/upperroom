@@ -22,7 +22,10 @@ def rename_files(apps, schema_editor):
             obj.file.file.content_type = obj.mime_type
             is_private = obj.resource.is_private or any(tag.is_private for tag in obj.resource.tags.all())
             if not is_private:
-                obj.file.storage.save_cleartext(get_attachment_filename(obj, obj.file.name))
+                try:
+                    obj.file.storage.save_cleartext(get_attachment_filename(obj, obj.file.name))
+                except AttributeError:
+                    pass
             try:
                 obj.save()
                 default_storage.delete(old_name)

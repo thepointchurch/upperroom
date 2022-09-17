@@ -153,7 +153,10 @@ def attachment_pre_save(sender, instance, **kwargs):
             pass
         instance.update_metadata()
         if not instance.is_private:
-            instance.file.storage.save_cleartext(get_attachment_filename(instance, instance.file.name))
+            try:
+                instance.file.storage.save_cleartext(get_attachment_filename(instance, instance.file.name))
+            except AttributeError:
+                pass
 
 
 @receiver(post_save, sender=Attachment)
@@ -226,7 +229,10 @@ def feed_pre_save(sender, instance, **kwargs):
         # leave the file missing.
         if old_artwork:
             delete_file(old_artwork)
-        instance.artwork.storage.save_cleartext(get_feed_artwork_filename(instance, instance.artwork.name))
+        try:
+            instance.artwork.storage.save_cleartext(get_feed_artwork_filename(instance, instance.artwork.name))
+        except AttributeError:
+            pass
 
 
 @receiver(post_save, sender=ResourceFeed)

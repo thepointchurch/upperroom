@@ -40,7 +40,10 @@ def set_s3_file_acl(file_object, acl):
 
 
 def decrypt_s3_file(file_object):
-    file_object.storage.save_cleartext(file_object.file.name)
+    try:
+        file_object.storage.save_cleartext(file_object.file.name)
+    except AttributeError:
+        pass
     file_object.file.content_type = file_object.file.obj.content_type
     file_object.storage.save(file_object.file.name, file_object.file)
 
