@@ -10,15 +10,22 @@ function get_md(row) {
     if (attachment_node.length) {
         slug = attachment_node.find(".field-slug").find("input").val().trim();
         title = attachment_node.find(".field-title").find("input").val().trim();
+        var mime_type_full = "";
         var mime_type = "";
         try {
-            mime_type = attachment_node.find(".field-file").find("input").get(0).files[0].type.split("/")[0];
+            mime_type_full = attachment_node.find(".field-file").find("input").get(0).files[0].type;
         } catch(e) {
-            mime_type = attachment_node.find(".field-mime_type").find(".readonly").text().trim().split("/")[0];
+            mime_type_full = attachment_node.find(".field-mime_type").find(".readonly").text().trim();
         }
-        if (attachment_node.find(".field-kind").find("select").val().trim() == "I" && mime_type == "image") {
-            prefix = "\n!";
-            suffix = "\n";
+        mime_type = mime_type_full.split("/")[0];
+        if (attachment_node.find(".field-kind").find("select").val().trim() == "I") {
+            if (mime_type == "image") {
+                prefix = "\n!";
+                suffix = "\n";
+            } else if (mime_type == "video") {
+                prefix = "\n!";
+                suffix = mime_type_full + "\n";
+            }
         }
     } else if (children_node.length) {
         slug = children_node.children(".field-slug").text().trim();
