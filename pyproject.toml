@@ -26,6 +26,7 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
 ]
@@ -39,15 +40,15 @@ exclude = [
 python = "^3.9"
 
 argon2-cffi = "^21.3"
-bcrypt = "^3.2"
-django = "^3.2"
+bcrypt = "^4.0"
+django = "^4.1"
 django-csp = "^3.7"
-django-environ = "^0.8"
+django-environ = "^0.9"
 django-markwhat = "^1.6"
 django-robots = "^5.0"
 django-sendmail-backend = "^0.1"
 mutagen = "^1.45"
-weasyprint = "^54.0"
+weasyprint = "^57.0"
 yafg = "^0.3"
 
 gunicorn = "^20.1"
@@ -81,7 +82,7 @@ pgsql = [
     "psycopg2",
 ]
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 coverage = "^6.2"
 django-debug-toolbar = "^3.2"
 gitpython = "^3.1"
