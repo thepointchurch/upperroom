@@ -57,9 +57,12 @@ class CreateView(NeverCacheMixin, LoginRequiredMixin, generic.ListView):
 
         if query == "":
             return Person.current_objects.none()
+        search = Q()
+        for part in query.split():
+            search |= Q(name__icontains=part) | Q(surname_override__icontains=part) | Q(family__name__icontains=part)
         return (
             Person.current_objects.filter(user__isnull=True)
-            .filter(Q(name__icontains=query) | Q(surname_override__icontains=query) | Q(family__name__icontains=query))
+            .filter(search)
             .distinct()
             .only("name", "suffix", "surname_override", "family__name")
         )
