@@ -255,4 +255,5 @@ class Person(models.Model):
             self.user.first_name = self.name
             self.user.last_name = self.surname
             self.user.email = self.email or self.family.email
+            self.user.is_active = self.is_current
             self.user.save()
