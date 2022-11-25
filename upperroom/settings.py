@@ -214,6 +214,7 @@ CACHE_MIDDLEWARE_KEY_PREFIX = ""
 
 CSP_DEFAULT_SRC = ("'self'",)
 CSP_IMG_SRC = ("'self'", "data:")
+CSP_MEDIA_SRC = ("'self'", "data:")
 CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "fonts.googleapis.com")
 CSP_FONT_SRC = ("'self'", "fonts.gstatic.com")
 CSP_SCRIPT_SRC = ("'self'", "cdnjs.cloudflare.com")
@@ -238,8 +239,10 @@ if env("STATICFILES_BUCKET") or env("MEDIAFILES_BUCKET"):
     if MEDIAFILES_BUCKET:
         if "." not in MEDIAFILES_BUCKET:
             CSP_IMG_SRC += (MEDIAFILES_BUCKET + ".s3.amazonaws.com",)
+            CSP_MEDIA_SRC += (MEDIAFILES_BUCKET + ".s3.amazonaws.com",)
         else:
             CSP_IMG_SRC += (MEDIAFILES_BUCKET,)
+            CSP_MEDIA_SRC += (MEDIAFILES_BUCKET,)
 
     AWS_DEFAULT_ACL = None
 
