@@ -1,4 +1,4 @@
-FROM python:3.10-slim AS compile-image
+FROM python:3.11-slim AS compile-image
 RUN apt-get -qy update && apt-get -qy install --no-install-recommends \
     build-essential gcc python3-dev libpq-dev zlib1g-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -14,7 +14,7 @@ RUN poetry install --no-dev --no-root -E aws -E cache -E pgsql \
     && find .venv -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
 
 
-FROM python:3.10-slim AS build-image
+FROM python:3.11-slim AS build-image
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/django/.venv/bin:$PATH" \
