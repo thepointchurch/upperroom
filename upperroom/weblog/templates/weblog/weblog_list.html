@@ -1,5 +1,5 @@
 {% extends "weblog/base.html" %}
-{% load i18n markup smartquote %}
+{% load i18n markdownify smartquote %}
 
 {% block content %}
 
@@ -17,7 +17,7 @@
 <meta itemprop="dateModified" content="{{ entry.modified|date:"Y-m-d\TH:i:sO" }}" />
 <div itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="{{ site.name }}" /></div>
 </header>
-{% if entry.description %}{{ entry.description_attach|markdown:"smarty" }}{% endif %}
+{% if entry.description %}{{ entry.description_attach|markdownify }}{% endif %}
 {% if entry.has_body or entry.alternates %}<footer><p class="links">[
 {% if entry.has_body %}<a href="{% url "weblog:detail" entry.created.year entry.created.month entry.slug %}" itemprop="url">{% translate 'read' %}</a>{% endif %}
 {% for attachment in entry.alternates %}

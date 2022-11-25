@@ -1,16 +1,16 @@
 {% extends "newsletter/base.html" %}
-{% load i18n markup %}
+{% load i18n markdownify %}
 
 {% block content %}
 
 {% if publication.description %}
-{{ publication.description|markdown:"smarty" }}
+{{ publication.description|markdownify }}
 {% endif %}
 
 <h2>{% translate 'Issues' %}</h2>
 
 {% for issue in issue_list %}{% if forloop.first %}<ul>{% endif %}
-<li itemprop="hasPart" itemscope itemtype="https://schema.org/PublicationIssue"><strong><a href="{% url 'newsletter:issue' issue.date %}"><time itemprop="datePublished" datetime="{{ issue.date|date:"Y-m-d" }}">{{ issue.date|date:"jS F, Y" }}</time></a></strong>{% if issue.description %}{{ issue.description|markdown:"smarty" }}{% endif %}</li>
+<li itemprop="hasPart" itemscope itemtype="https://schema.org/PublicationIssue"><strong><a href="{% url 'newsletter:issue' issue.date %}"><time itemprop="datePublished" datetime="{{ issue.date|date:"Y-m-d" }}">{{ issue.date|date:"jS F, Y" }}</time></a></strong>{% if issue.description %}{{ issue.description|markdownify }}{% endif %}</li>
 {% if forloop.last %}</ul>{% endif %}{% empty %}
 <p>{% translate 'There are currently no issues available for this publication.' %}</p>
 {% endfor %}

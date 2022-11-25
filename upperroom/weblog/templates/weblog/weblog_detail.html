@@ -1,5 +1,5 @@
 {% extends "weblog/base.html" %}
-{% load i18n markup smartquote %}
+{% load i18n markdownify smartquote %}
 
 {% block title %}{{ object.title|smartquote }}{% if not object.is_published %} [{% translate 'draft'|upper %}]{% endif %} | {{ block.super }}{% endblock title %}
 
@@ -31,6 +31,6 @@
 
 {% block content %}
 <div itemprop="articleBody">
-{% if object.body|length > 0 %}{{ object.body_attach|markdown:"smarty,yafg,upperroom.utils.mdvid" }}{% else %}{{ object.description_attach|markdown:"smarty" }}{% endif %}
+{% if object.body|length > 0 %}{{ object.body_attach|markdownify:"full" }}{% else %}{{ object.description_attach|markdownify }}{% endif %}
 </div>
 {% endblock content %}

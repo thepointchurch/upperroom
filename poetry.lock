@@ -91,6 +91,21 @@ tests = ["pytest (>=3.2.1,!=3.3.0)"]
 typecheck = ["mypy"]
 
 [[package]]
+name = "bleach"
+version = "5.0.0"
+description = "An easy safelist-based HTML-sanitizing tool."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+six = ">=1.9.0"
+webencodings = "*"
+
+[package.extras]
+dev = ["black (==22.3.0)", "flake8 (==4.0.1)", "hashin (==0.17.0)", "mypy (==0.942)", "pip-tools (==6.5.1)", "pytest (==7.1.1)", "sphinx (==4.3.2)", "tox (==3.24.5)", "twine (==4.0.0)", "wheel (==0.37.1)"]
+
+[[package]]
 name = "boto3"
 version = "1.26.16"
 description = "The AWS SDK for Python"
@@ -344,15 +359,17 @@ docs = ["furo (>=2021.8.17b43,<2021.9.0)", "sphinx (>=3.5.0)", "sphinx-notfound-
 testing = ["coverage[toml] (>=5.0a4)", "pytest (>=4.6.11)"]
 
 [[package]]
-name = "django-markwhat"
-version = "1.6.2"
-description = "A collection of template filters that implement common markup languages."
+name = "django-markdownify"
+version = "0.9.2"
+description = "Markdown template filter for Django."
 category = "main"
 optional = false
 python-versions = "*"
 
 [package.dependencies]
+bleach = {version = ">=5.0.0", extras = ["css"]}
 Django = "*"
+markdown = "*"
 
 [[package]]
 name = "django-redis"
@@ -1309,7 +1326,7 @@ pgsql = ["psycopg2"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "83247b50aafe37b7069a2f4f883b660a42cd4445206bb6cd8618c15c2e7003c0"
+content-hash = "c9ad73359359c070a18df598fa2bfc01d7ae0229f9135cd214b0f82ca35b02f5"
 
 [metadata.files]
 argon2-cffi = [
@@ -1377,6 +1394,10 @@ bcrypt = [
     {file = "bcrypt-4.0.1-pp39-pypy39_pp73-manylinux_2_24_x86_64.whl", hash = "sha256:2b3ac11cf45161628f1f3733263e63194f22664bf4d0c0f3ab34099c02134665"},
     {file = "bcrypt-4.0.1-pp39-pypy39_pp73-manylinux_2_28_x86_64.whl", hash = "sha256:3100851841186c25f127731b9fa11909ab7b1df6fc4b9f8353f4f1fd952fbf71"},
     {file = "bcrypt-4.0.1.tar.gz", hash = "sha256:27d375903ac8261cfe4047f6709d16f7d18d39b1ec92aaf72af989552a650ebd"},
+]
+bleach = [
+    {file = "bleach-5.0.0-py3-none-any.whl", hash = "sha256:08a1fe86d253b5c88c92cc3d810fd8048a16d15762e1e5b74d502256e5926aa1"},
+    {file = "bleach-5.0.0.tar.gz", hash = "sha256:c6d6cc054bdc9c83b48b8083e236e5f00f238428666d2ce2e083eaa5fd568565"},
 ]
 boto3 = [
     {file = "boto3-1.26.16-py3-none-any.whl", hash = "sha256:4f493a2aed71cee93e626de4f67ce58dd82c0473480a0fc45b131715cd8f4f30"},
@@ -1677,9 +1698,9 @@ django-environ = [
     {file = "django-environ-0.9.0.tar.gz", hash = "sha256:bff5381533056328c9ac02f71790bd5bf1cea81b1beeb648f28b81c9e83e0a21"},
     {file = "django_environ-0.9.0-py2.py3-none-any.whl", hash = "sha256:f21a5ef8cc603da1870bbf9a09b7e5577ab5f6da451b843dbcc721a7bca6b3d9"},
 ]
-django-markwhat = [
-    {file = "django-markwhat-1.6.2.tar.gz", hash = "sha256:d16b760f36e51c1a4e6cc440eaafda599625ae4ad5a4e88c1933b573b865e17a"},
-    {file = "django_markwhat-1.6.2-py2.py3-none-any.whl", hash = "sha256:ade3b57d8620f13152642399129c7014fd7573be2dafff07f687017e5b6ecff0"},
+django-markdownify = [
+    {file = "django-markdownify-0.9.2.tar.gz", hash = "sha256:6906d75197e9fc1c5faf1b68241e4abbf0dd00a627e75bfce6ee7e54b46d737f"},
+    {file = "django_markdownify-0.9.2-py3-none-any.whl", hash = "sha256:1bc2b7e1c51c696b7c460eacb71d7fd94dadf6575897feae7ba49e155502a3ba"},
 ]
 django-redis = [
     {file = "django-redis-5.2.0.tar.gz", hash = "sha256:8a99e5582c79f894168f5865c52bd921213253b7fd64d16733ae4591564465de"},

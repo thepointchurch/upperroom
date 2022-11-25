@@ -1,5 +1,5 @@
 {% extends "resources/base.html" %}
-{% load i18n markup smartquote %}
+{% load i18n markdownify smartquote %}
 
 {% block title %}{{ resource.title|smartquote }}{% if not resource.is_published %} [{% translate 'draft'|upper %}]{% endif %} | {{ block.super }}{% endblock title %}
 
@@ -22,7 +22,7 @@
 {% endblock metadata %}
 
 {% block content %}
-{{ resource.content|markdown:"extra,smarty,toc,yafg,upperroom.utils.mdvid" }}
+{{ resource.content|markdownify:"full" }}
 {% endblock content %}
 
 {% block semantic %}

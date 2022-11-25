@@ -1,8 +1,8 @@
 {% extends "search/search_result.html" %}
-{% load i18n markup smartquote %}
+{% load i18n markdownify smartquote %}
 {% block heading %}<a href="{% url "weblog:detail" item.created.year item.created.month item.slug %}">{{ item.title|smartquote }}</a>{% endblock heading %}
 {% block content %}
-{% if item.description %}{{ item.description_attach|markdown:"smarty" }}{% endif %}
+{% if item.description %}{{ item.description_attach|markdownify }}{% endif %}
 {% if item.has_body or item.alternates %}<footer><p class="links">[
 {% if item.has_body %}<a href="{% url "weblog:detail" item.created.year item.created.month item.slug %}" itemprop="url">{% translate 'read' %}</a>{% endif %}
 {% for attachment in item.alternates %}

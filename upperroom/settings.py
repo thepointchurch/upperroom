@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     "upperroom.search.apps.SearchConfig",
     "upperroom.splash.apps.SplashConfig",
     "upperroom.utils.apps.UtilsConfig",
-    "django_markwhat",
+    "markdownify",
     "django.contrib.admin.apps.AdminConfig",
     "django.contrib.auth.apps.AuthConfig",
     "django.contrib.contenttypes.apps.ContentTypesConfig",
@@ -133,6 +133,27 @@ TEMPLATES = [
 ]
 
 FORM_RENDERER = "django.forms.renderers.DjangoDivFormRenderer"
+
+MARKDOWNIFY = {
+    "default": {
+        "BLEACH": False,
+        "MARKDOWN_EXTENSIONS": ["markdown.extensions.smarty"],
+    },
+    "extra": {
+        "BLEACH": False,
+        "MARKDOWN_EXTENSIONS": ["markdown.extensions.smarty", "markdown.extensions.extra"],
+    },
+    "full": {
+        "BLEACH": False,
+        "MARKDOWN_EXTENSIONS": [
+            "markdown.extensions.smarty",
+            "markdown.extensions.extra",
+            "markdown.extensions.toc",
+            "yafg",
+            "upperroom.utils.mdvid",
+        ],
+    },
+}
 
 PASSWORD_HASHERS = (
     "django.contrib.auth.hashers.Argon2PasswordHasher",

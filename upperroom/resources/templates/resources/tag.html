@@ -1,5 +1,5 @@
 {% extends "resources/resource_list.html" %}
-{% load i18n markup smartquote %}
+{% load i18n markdownify smartquote %}
 
 {% block headers %}{{ block.super }}{% for feed in tag.feeds.all %}
 <link rel="alternate" type="application/rss+xml" title="{{ feed.title|smartquote }}: {% if feed.is_podcast %}{% translate 'podcast'|capfirst %}{% else %}RSS{% endif %}" href="{% url 'resources:rss' feed.slug %}" />
@@ -24,7 +24,7 @@
 
 {% block content %}
 {% if tag.description %}
-{{ tag.description|markdown:"smarty" }}
+{{ tag.description|markdownify }}
 {% endif %}
 {% for feed in tag.feeds.all %}
 {% if feed.is_podcast %}

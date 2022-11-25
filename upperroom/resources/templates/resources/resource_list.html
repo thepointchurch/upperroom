@@ -1,5 +1,5 @@
 {% extends "resources/base.html" %}
-{% load i18n markup smartquote %}
+{% load i18n markdownify smartquote %}
 
 {% block content %}
 
@@ -17,7 +17,7 @@
 <meta itemprop="dateModified" content="{{ resource.modified|date:"Y-m-d\TH:i:sO" }}" />
 <div itemprop="publisher" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="{{ site.name }}" /></div>
 </header>
-{% if resource.description %}{{ resource.description|markdown:"smarty" }}{% endif %}
+{% if resource.description %}{{ resource.description|markdownify }}{% endif %}
 <footer><p class="links">[
 {% if resource.has_body %}<a href="{% url "resources:detail" resource.slug %}" itemprop="url">{% translate 'read' %}</a>{% endif %}
 {% for attachment in resource.alternates %}
