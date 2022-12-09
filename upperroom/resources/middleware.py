@@ -14,7 +14,7 @@ class ResourceFallbackMiddleware:
         response = self.process_response(request, response)
         return response
 
-    def process_response(self, request, response):  # NOQA: C901 pylint: disable=no-self-use,too-many-return-statements
+    def process_response(self, request, response):  # NOQA: C901 pylint: disable=too-many-return-statements
         if response.status_code != 404:
             return response
         try:

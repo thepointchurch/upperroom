@@ -24,7 +24,7 @@ class PortalBase:
             "title": self.title,
         }
 
-    def will_show(self):  # pylint: disable=no-self-use
+    def will_show(self):
         return True
 
     @classmethod

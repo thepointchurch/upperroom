@@ -37,7 +37,7 @@ class AttachmentInline(admin.StackedInline):
         models.TextField: {"widget": Textarea(attrs={"rows": 3, "cols": 40})},
     }
 
-    def drag_handle(self, obj):  # pylint: disable=no-self-use,unused-argument
+    def drag_handle(self, obj):  # pylint: disable=unused-argument
         return ""
 
     drag_handle.short_description = ""
@@ -111,12 +111,12 @@ class WeblogAdmin(admin.ModelAdmin):
             pass
         return get_data
 
-    def publish(self, request, queryset):  # pylint: disable=no-self-use,unused-argument
+    def publish(self, request, queryset):  # pylint: disable=unused-argument
         queryset.update(is_published=True)
 
     publish.short_description = _("Publish selected " + str(WeblogEntry._meta.verbose_name_plural))
 
-    def unpublish(self, request, queryset):  # pylint: disable=no-self-use,unused-argument
+    def unpublish(self, request, queryset):  # pylint: disable=unused-argument
         queryset.update(is_published=False)
 
     unpublish.short_description = _("Unpublish selected " + str(WeblogEntry._meta.verbose_name_plural))

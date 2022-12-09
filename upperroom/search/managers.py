@@ -6,7 +6,7 @@ class SearchManager(models.Manager):
         super().__init__()
         self.search_fields = kwargs
 
-    def get_custom_filter(self, request=None):  # pylint: disable=no-self-use
+    def get_custom_filter(self, request=None):
         return models.Q()
 
     def search(self, query):

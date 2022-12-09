@@ -66,7 +66,7 @@ class MeetingAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return self.model.objects.filter(date__gte=datetime.date.today())
 
-    def delete_past_meetings(self, request, queryset):  # pylint: disable=no-self-use,unused-argument
+    def delete_past_meetings(self, request, queryset):  # pylint: disable=unused-argument
         queryset.delete(date__lt=datetime.date.today())
 
     delete_past_meetings.short_description = _("Delete past meetings")
@@ -94,7 +94,7 @@ class PastMeetingAdmin(MeetingAdmin):
 class RoleTypeAdmin(admin.ModelAdmin):
     actions = ["empty_role_type_servers"]
 
-    def empty_role_type_servers(self, request, queryset):  # pylint: disable=no-self-use,unused-argument
+    def empty_role_type_servers(self, request, queryset):  # pylint: disable=unused-argument
         for role_type in queryset.all():
             role_type.servers.clear()
 
