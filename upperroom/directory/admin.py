@@ -46,14 +46,14 @@ class FamilyAdmin(admin.ModelAdmin):
         super().save_related(request, form, formsets, change)
         family_updated.send(sender=form.instance.__class__, instance=form.instance)
 
-    def mark_current(self, request, queryset):  # pylint: disable=no-self-use,unused-argument
+    def mark_current(self, request, queryset):  # pylint: disable=unused-argument
         for family in queryset.all():
             family.is_current = True
             family.save()
 
     mark_current.short_description = _("Mark selected families as current")
 
-    def unmark_current(self, request, queryset):  # pylint: disable=no-self-use,unused-argument
+    def unmark_current(self, request, queryset):  # pylint: disable=unused-argument
         for family in queryset.all():
             family.is_current = False
             family.save()
