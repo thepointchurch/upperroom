@@ -72,8 +72,9 @@ jobs:
         env:
           PYTHONPATH: .
         run: |
+          import pathlib
           from version import update_version
-          print('::set-output name=version::%s' % update_version())
+          pathlib.Path(os.environ["GITHUB_OUTPUT"]).write_text(f"version={update_version()}")
         shell: python
 
       - name: Set up QEMU
@@ -94,13 +95,13 @@ jobs:
           IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
           BRANCH="$(git branch --show-current)"
           if [ "$BRANCH" = "master" ]; then
-              echo "::set-output name=tags::$IMAGE_ID:latest,$IMAGE_ID:${{ steps.version.outputs.version }}"
+              echo "tags=$IMAGE_ID:latest,$IMAGE_ID:${{ steps.version.outputs.version }}" >>$GITHUB_OUTPUT
           elif [ -z "$BRANCH" ]; then
-              echo "::set-output name=tags::$IMAGE_ID:$(git describe --tags)"
+              echo "tags=$IMAGE_ID:$(git describe --tags)" >>$GITHUB_OUTPUT
           else
-              echo "::set-output name=tags::$IMAGE_ID:$BRANCH"
+              echo "tags=$IMAGE_ID:$BRANCH" >>$GITHUB_OUTPUT
           fi
-          echo "::set-output name=build_date::$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          echo "build_date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >>$GITHUB_OUTPUT
 
       - name: Build and push
         id: docker_build
