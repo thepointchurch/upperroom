@@ -1,4 +1,4 @@
-A family has been updated in the directory:
+A family has been updated in the directory by {{ actor }}:
 
 {{ family.name }}
 

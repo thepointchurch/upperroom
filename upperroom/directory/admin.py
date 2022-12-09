@@ -44,7 +44,7 @@ class FamilyAdmin(admin.ModelAdmin):
 
     def save_related(self, request, form, formsets, change):
         super().save_related(request, form, formsets, change)
-        family_updated.send(sender=form.instance.__class__, instance=form.instance)
+        family_updated.send(sender=form.instance.__class__, instance=form.instance, actor=request.user)
 
     def mark_current(self, request, queryset):  # pylint: disable=unused-argument
         for family in queryset.all():

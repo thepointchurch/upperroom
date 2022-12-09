@@ -130,7 +130,7 @@ class FamilyEditView(NeverCacheMixin, PermissionRequiredMixin, generic.edit.Upda
             self.object = form.save()  # pylint: disable=attribute-defined-outside-init
             formset.instance = self.object
             formset.save()
-            family_updated.send(sender=self.object.__class__, instance=self.object)
+            family_updated.send(sender=self.object.__class__, instance=self.object, actor=self.request.user)
             return redirect(self.get_success_url())
         return self.render_to_response(self.get_context_data(form=form))
 

@@ -22,13 +22,14 @@ family_updated = Signal()
 
 
 @receiver(family_updated)
-def notify_on_fupdate(sender, instance, **kwargs):  # pylint: disable=unused-argument
+def notify_on_fupdate(sender, instance, actor, **kwargs):  # pylint: disable=unused-argument
+    context = {"family": instance, "actor": actor.get_full_name()}
     send_mail(
         _("%(site)s Directory Update") % {"site": get_current_site(None).name},
-        get_template("directory/update_notify.txt").render({"family": instance}),
+        get_template("directory/update_notify.txt").render(context),
         settings.WEBMASTER_EMAIL,
         [settings.DIRECTORY_EMAIL],
-        html_message=get_template("directory/update_notify.html").render({"family": instance}),
+        html_message=get_template("directory/update_notify.html").render(context),
     )
 
 
