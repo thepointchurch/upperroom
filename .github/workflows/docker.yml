@@ -72,6 +72,7 @@ jobs:
         env:
           PYTHONPATH: .
         run: |
+          import os
           import pathlib
           from version import update_version
           pathlib.Path(os.environ["GITHUB_OUTPUT"]).write_text(f"version={update_version()}")
