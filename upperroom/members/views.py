@@ -59,7 +59,13 @@ class CreateView(NeverCacheMixin, LoginRequiredMixin, generic.ListView):
             return Person.current_objects.none()
         search = Q()
         for part in query.split():
-            search |= Q(name__icontains=part) | Q(surname_override__icontains=part) | Q(family__name__icontains=part)
+            search |= (
+                Q(name__icontains=part)
+                | Q(surname_override__icontains=part)
+                | Q(family__name__icontains=part)
+                | Q(email__iexact=part)
+                | Q(family__email__iexact=part)
+            )
         return (
             Person.current_objects.filter(user__isnull=True)
             .filter(search)
