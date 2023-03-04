@@ -19,7 +19,7 @@ class PersonForm(ModelForm):
             "phone_work",
             "is_current",
         ]
-        widgets = {"birthday": DateInput(attrs={"type": "date"})}
+        widgets = {"birthday": DateInput(attrs={"type": "date"}, format="%Y-%m-%d")}
 
 
 PersonInlineFormSet = inlineformset_factory(Family, Person, form=PersonForm, extra=1, can_delete=False)
@@ -39,5 +39,5 @@ FamilyForm = modelform_factory(
         "wife",
         "anniversary",
     ],
-    widgets={"anniversary": DateInput(attrs={"type": "date"})},
+    widgets={"anniversary": DateInput(attrs={"type": "date"}, format="%Y-%m-%d")},
 )
