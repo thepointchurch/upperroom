@@ -33,8 +33,8 @@ ALLOWED_HOSTS = env("VHOST").split()
 
 SITE_ID = env("SITE_ID")
 
-CSRF_COOKIE_SECURE = env("CSRF_COOKIE_SECURE", default=(not DEBUG))
-SESSION_COOKIE_SECURE = env("SESSION_COOKIE_SECURE", default=(not DEBUG))
+CSRF_COOKIE_SECURE = env("CSRF_COOKIE_SECURE", default=not DEBUG)
+SESSION_COOKIE_SECURE = env("SESSION_COOKIE_SECURE", default=not DEBUG)
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
@@ -224,8 +224,16 @@ CSP_OBJECT_SRC = ("'none'",)
 if env("STATICFILES_BUCKET") or env("MEDIAFILES_BUCKET"):
     INSTALLED_APPS += ("storages",)
 
+    STORAGES = {
+        "default": {
+            "BACKEND": "upperroom.utils.storages.backends.S3MediaStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "upperroom.utils.storages.backends.S3StaticStorage",
+        },
+    }
+
     STATICFILES_BUCKET = env("STATICFILES_BUCKET")
-    STATICFILES_STORAGE = "upperroom.utils.storages.backends.S3StaticStorage"
     if STATICFILES_BUCKET:
         CSP_IMG_SRC += (STATICFILES_BUCKET,)
         CSP_STYLE_SRC += (STATICFILES_BUCKET,)
@@ -235,7 +243,6 @@ if env("STATICFILES_BUCKET") or env("MEDIAFILES_BUCKET"):
     MEDIAFILES_OFFLOAD = True
     MEDIAFILES_ENCRYPTED = env("MEDIAFILES_ENCRYPTED")
     MEDIAFILES_BUCKET = env("MEDIAFILES_BUCKET")
-    DEFAULT_FILE_STORAGE = "upperroom.utils.storages.backends.S3MediaStorage"
     if MEDIAFILES_BUCKET:
         if "." not in MEDIAFILES_BUCKET:
             CSP_IMG_SRC += (MEDIAFILES_BUCKET + ".s3.amazonaws.com",)
