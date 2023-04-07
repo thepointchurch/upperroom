@@ -41,7 +41,7 @@ python = "^3.9"
 
 argon2-cffi = "^21.3"
 bcrypt = "^4.0"
-django = "^4.1"
+django = "~4.1.0"
 django-csp = "^3.7"
 django-environ = "^0.10"
 django-markdownify = "^0.9"
