@@ -1,56 +1,61 @@
 repos:
-- repo: local
-  hooks:
-  - id: migrations
-    name: Find missing Django migrations
-    entry: upperroom makemigrations --dry-run --check
-    language: python
-    types: [python]
-    pass_filenames: false
-    require_serial: true
-  - id: poetry-check
-    name: Validate the structure of the pyproject.toml file
-    entry: poetry check
-    language: system
-    files: pyproject.toml
-    pass_filenames: false
-- repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v3.2.0
-  hooks:
-  - id: check-ast
-- repo: https://github.com/pre-commit/mirrors-isort
-  rev: v5.4.2
-  hooks:
-  - id: isort
-- repo: https://github.com/psf/black
-  rev: 20.8b1
-  hooks:
-  - id: black
-- repo: https://gitlab.com/pycqa/flake8
-  rev: 3.8.3
-  hooks:
-  - id: flake8
-- repo: local
-  hooks:
-  - id: pylint
-    name: pylint
-    entry: pylint
-    language: system
-    types: [python]
-- repo: https://github.com/pre-commit/mirrors-csslint
-  rev: v1.0.5
-  hooks:
-  - id: csslint
-- repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v3.2.0
-  hooks:
-  - id: trailing-whitespace
-    args: [--markdown-linebreak-ext=md]
-  - id: end-of-file-fixer
-  - id: debug-statements
-  - id: fix-encoding-pragma
-    args: [--remove]
-  - id: mixed-line-ending
-  - id: detect-aws-credentials
-    args: [--allow-missing-credentials]
-  - id: detect-private-key
+  - repo: local
+    hooks:
+      - id: migrations
+        name: Find missing Django migrations
+        entry: upperroom makemigrations --dry-run --check
+        language: python
+        types: [python]
+        pass_filenames: false
+        require_serial: true
+      - id: poetry-check
+        name: Validate the structure of the pyproject.toml file
+        entry: poetry check
+        language: system
+        files: pyproject.toml
+        pass_filenames: false
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: check-ast
+  - repo: https://github.com/pre-commit/mirrors-isort
+    rev: v5.10.1
+    hooks:
+      - id: isort
+  - repo: https://github.com/psf/black
+    rev: 23.3.0
+    hooks:
+      - id: black
+  - repo: https://github.com/pycqa/flake8
+    rev: 6.0.0
+    hooks:
+      - id: flake8
+  - repo: local
+    hooks:
+      - id: pylint
+        name: pylint
+        entry: pylint
+        language: system
+        types: [python]
+  - repo: https://github.com/pre-commit/mirrors-csslint
+    rev: v1.0.5
+    hooks:
+      - id: csslint
+  - repo: https://github.com/adrienverge/yamllint.git
+    rev: v1.30.0
+    hooks:
+      - id: yamllint
+        args: [--strict]
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+      - id: end-of-file-fixer
+      - id: debug-statements
+      - id: fix-encoding-pragma
+        args: [--remove]
+      - id: mixed-line-ending
+      - id: detect-aws-credentials
+        args: [--allow-missing-credentials]
+      - id: detect-private-key
