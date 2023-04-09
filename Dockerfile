@@ -1,16 +1,13 @@
 FROM python:3.11-slim AS compile-image
-RUN apt-get -qy update && apt-get -qy install --no-install-recommends \
-    build-essential gcc python3-dev libpq-dev zlib1g-dev && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-RUN pip install --upgrade pip && \
-    pip install "poetry~=1.4" wheel
+RUN pip install --root-user-action=ignore --upgrade pip setuptools && \
+    pip install --root-user-action=ignore "poetry~=1.4" wheel
 COPY . /django/
 WORKDIR /django
 ENV POETRY_VIRTUALENVS_IN_PROJECT=true \
     POETRY_NO_INTERACTION=1 \
     PYTHONDONTWRITEBYTECODE=1
-RUN poetry install --no-dev --no-root -E aws -E cache -E pgsql \
-    && poetry build --format wheel && .venv/bin/pip install dist/*.whl \
+RUN poetry install --only main --no-root -E aws -E cache -E pgsql \
+    && poetry build --format wheel && .venv/bin/pip install --root-user-action=ignore dist/*.whl \
     && find .venv -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
 
 

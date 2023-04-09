@@ -1,6 +1,6 @@
 name: Docker Image
 
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - master
@@ -23,7 +23,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [ 3.9, '3.10', 3.11 ]
+        python-version: [3.9, '3.10', 3.11]
 
     steps:
       - uses: actions/checkout@v3
@@ -33,12 +33,14 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - run: python -m pip install poetry
+
+      - name: Install poetry
+        run: |
+          python -m pip install --upgrade pip setuptools
+          python -m pip install poetry
 
       - name: Install Dependencies
         run: |
-          sudo apt-get update -y
-          sudo apt-get install -y --no-install-recommends build-essential gcc python3-dev libpq-dev zlib1g-dev
           poetry install -E aws -E cache -E pgsql -E google
           poetry run python -c 'from version import update_version; print(update_version())'
 
@@ -104,7 +106,7 @@ jobs:
 
       - name: Build and push
         id: docker_build
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: .
           platforms: linux/amd64,linux/arm64
