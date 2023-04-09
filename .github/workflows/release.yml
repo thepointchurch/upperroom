@@ -25,7 +25,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          poetry install -E aws -E cache -E pgsql -E google
+          poetry install --with=dev -E aws -E cache -E pgsql -E google
 
       - name: Set version
         id: version
