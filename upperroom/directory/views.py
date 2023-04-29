@@ -83,19 +83,21 @@ class SearchView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
         search_type = self.request.GET.get("type", _("By Name"))
         search_query = self.request.GET.get("query", "")
 
+        if search_query == "":
+            return Family.current_objects.none()
         if search_type == _("By Location"):
             return Family.current_objects.filter(
                 Q(street__icontains=search_query)
                 | Q(suburb__icontains=search_query)
                 | Q(postcode__icontains=search_query)
             ).distinct()
-        return Family.current_objects.filter(
-            Q(name__icontains=search_query)
-            | (
-                (Q(members__name__icontains=search_query) | Q(members__surname_override__icontains=search_query))
+        search = Q()
+        for part in search_query.split():
+            search |= (
+                (Q(members__name__icontains=part) | Q(members__surname_override__icontains=part))
                 & Q(members__is_current=True)
-            )
-        ).distinct()
+            ) | Q(name__icontains=part)
+        return Family.current_objects.filter(search).distinct()
 
 
 class FamilyEditView(NeverCacheMixin, PermissionRequiredMixin, generic.edit.UpdateView):
