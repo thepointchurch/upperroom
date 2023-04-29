@@ -86,6 +86,8 @@ class CreateConfirmView(NeverCacheMixin, LoginRequiredMixin, generic.edit.Create
             Person.current_objects.select_related("family").only("name", "suffix", "surname_override", "family__name"),
             pk=self.kwargs.get(self.pk_url_kwarg, None),
         )
+        if context["person"].user:
+            raise PermissionDenied()
         return context
 
     def post(self, request, *args, **kwargs):
