@@ -17,7 +17,11 @@
 </form>
 
 {% for person in person_list %}
+{% if person.user %}
+<p>{{ person.fullname|smartquote }} (<a href="{% url "members:password_reset" %}">{% translate 'Password reset' %}</a>)</p>
+{% else %}
 <p><a href="{% url "members:create_confirm" person.id %}">{{ person.fullname|smartquote }}</a></p>
+{% endif %}
 {% empty %}
 {% if request.GET.query %}
 <p class="error">{% blocktranslate %}No available person was found matching your search terms: {{ query }}{% endblocktranslate %}</p>

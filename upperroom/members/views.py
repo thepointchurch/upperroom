@@ -67,10 +67,9 @@ class CreateView(NeverCacheMixin, LoginRequiredMixin, generic.ListView):
                 | Q(family__email__iexact=part)
             )
         return (
-            Person.current_objects.filter(user__isnull=True)
-            .filter(search)
+            Person.current_objects.filter(search)
             .distinct()
-            .only("name", "suffix", "surname_override", "family__name")
+            .only("name", "suffix", "surname_override", "family__name", "user")
         )
 
 
