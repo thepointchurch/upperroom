@@ -39,7 +39,7 @@ class SearchView(NeverCacheMixin, generic.TemplateView):
                     }
                 if content_type_id is not None:
                     context["type_name"] = cls._meta.verbose_name_plural
-            except AttributeError:
+            except (AttributeError, TypeError):
                 continue
         context["metadata_description"] = None
         context["metadata_title"] = f"{_('Search')}: {context['search_query']}"

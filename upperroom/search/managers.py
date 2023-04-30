@@ -20,4 +20,4 @@ class SearchManager(models.Manager):
                 combined_filter = query_filter
         if combined_filter:
             queryset = queryset.filter(combined_filter)
-        return queryset
+        return queryset.distinct()

@@ -1,0 +1,13 @@
+{% extends "search/search_result.html" %}
+{% load i18n markdownify smartquote %}
+{% block heading %}<a href="{% url "directory:detail" item.id %}">{{ item.name|smartquote }}</a>{% endblock heading %}
+{% block content %}
+<ul>
+{% for person in item.spouses.all %}
+<li><span class="label">{{ person.name_with_suffix|smartquote }}{% if person.surname_override %} {{ person.surname_override|smartquote }}{% endif %}</span></li>
+{% endfor %}
+{% for person in item.siblings.all %}
+<li><span class="label">{{ person.name_with_suffix|smartquote }}{% if person.surname_override %} {{ person.surname_override|smartquote }}{% endif %}</span></li>
+{% endfor %}
+</ul>
+{% endblock content %}

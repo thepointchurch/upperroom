@@ -5,14 +5,16 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
+from django.test.client import RequestFactory
 from django.test.utils import override_settings
 from django.urls import include, path, reverse
 
-from ..models import Family
+from ..models import Family, Person
 
 urlpatterns = [
     path("members/", include("upperroom.members.urls", namespace="members")),
     path("directory/", include("upperroom.directory.urls", namespace="directory")),
+    path("search/", include("upperroom.search.urls", namespace="search")),
 ]
 
 
@@ -109,3 +111,62 @@ class TestDirectoryAuthenticationRequired(TestCase):
         url = reverse("directory:print")
         response = self.client.get(url)
         self.assertRedirects(response, settings.LOGIN_URL + "?next=" + url)
+
+
+@override_settings(ROOT_URLCONF=__name__)
+class TestDirectorySearchAuthenticationRequired(TestCase):
+    def setUp(self):
+        self.family = Family.objects.create(name="Doe")
+        self.person = Person.objects.create(family=self.family, name="John")
+        self.factory = RequestFactory()
+        self.password = "qwerasdf"
+        self.user = get_user_model().objects.create_user(
+            username="test", email="test@thepoint.org.au", password=self.password
+        )
+
+    def test_family_exists(self):
+        family = Family.current_objects.filter(name=self.family.name).first()
+        self.assertEqual(family.name, self.family.name)
+
+    def test_family_search_manager_empty(self):
+        family = Family.search_objects.filter(Family.search_objects.get_custom_filter()).first()
+        self.assertIs(family, None)
+
+    def test_family_search_query_empty(self):
+        request = self.factory.get("/search/?q=doe")
+        request.user = None
+        family = Family.search_objects.filter(Family.search_objects.get_custom_filter(request)).first()
+        self.assertIs(family, None)
+
+    def test_family_search_query_no_perm(self):
+        request = self.factory.get("/search/?q=doe")
+        request.user = self.user
+        family = Family.search_objects.filter(Family.search_objects.get_custom_filter(request)).first()
+        self.assertIs(family, None)
+
+    def test_family_search_query_perm(self):
+        content_type = ContentType.objects.get_for_model(Family)
+        self.user.user_permissions.add(Permission.objects.get(content_type=content_type, codename="can_view"))
+        request = self.factory.get("/search/?q=doe")
+        request.user = self.user
+        family = Family.search_objects.filter(Family.search_objects.get_custom_filter(request)).first()
+        self.assertEqual(family, self.family)
+
+    def test_family_search_get_no_auth(self):
+        url = reverse("search:index")
+        response = self.client.get(url, {"q": self.family.name})
+        self.assertNotContains(response, f">{self.family.name}</a>")
+
+    def test_family_search_get_no_perm(self):
+        url = reverse("search:index")
+        self.client.login(username=self.user.username, password=self.password)
+        response = self.client.get(url, {"q": self.family.name})
+        self.assertNotContains(response, f">{self.family.name}</a>")
+
+    def test_family_search_get_perm(self):
+        url = reverse("search:index")
+        content_type = ContentType.objects.get_for_model(Family)
+        self.user.user_permissions.add(Permission.objects.get(content_type=content_type, codename="can_view"))
+        self.client.login(username=self.user.username, password=self.password)
+        response = self.client.get(url, {"q": self.family.name})
+        self.assertContains(response, f">{self.family.name}</a>")

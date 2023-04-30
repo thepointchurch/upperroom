@@ -8,6 +8,8 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
+from ..search.managers import SearchManager
+
 
 class FamilyCurrentManager(models.Manager):  # pylint: disable=too-few-public-methods
     def get_queryset(self):
@@ -28,6 +30,24 @@ def get_family_photo_filename(instance, filename):  # pylint: disable=unused-arg
 
 def get_family_thumbnail_filename(instance, filename):  # pylint: disable=unused-argument
     return f"directory/family/{instance.id}/thumbnail.jpg"
+
+
+class FamilySearchManager(SearchManager):  # pylint: disable=too-few-public-methods
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .filter(is_current=True)
+            .select_related("husband", "wife")
+            .prefetch_related(
+                "members",
+            )
+        )
+
+    def get_custom_filter(self, request=None):
+        if request is not None and request.user and request.user.has_perm("directory.can_view"):
+            return super().get_custom_filter(request)
+        return models.Q(pk__in=[])
 
 
 class Family(models.Model):
@@ -68,6 +88,9 @@ class Family(models.Model):
 
     objects = models.Manager()
     current_objects = FamilyCurrentManager()
+    search_objects = FamilySearchManager(
+        name="icontains", members__name="icontains", members__surname_override="icontains"
+    )
 
     class Meta:
         ordering = ["name"]
