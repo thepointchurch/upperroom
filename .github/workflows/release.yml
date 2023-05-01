@@ -31,12 +31,12 @@ jobs:
         id: version
         env:
           PYTHONPATH: .
-        run: |
-          import os
-          import pathlib
-          from version import update_version
-          pathlib.Path(os.environ["GITHUB_OUTPUT"]).write_text(f"version={update_version()}")
-        shell: poetry run python
+        run: >
+          poetry run python -c
+          'import os;
+          import pathlib;
+          from version import update_version;
+          pathlib.Path(os.environ["GITHUB_OUTPUT"]).write_text(f"version={update_version()}")'
 
       - name: Run tests
         id: test
