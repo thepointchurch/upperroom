@@ -36,7 +36,7 @@ jobs:
           import pathlib
           from version import update_version
           pathlib.Path(os.environ["GITHUB_OUTPUT"]).write_text(f"version={update_version()}")
-        shell: python
+        shell: poetry run python
 
       - name: Run tests
         id: test

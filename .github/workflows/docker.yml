@@ -41,7 +41,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          poetry install -E aws -E cache -E pgsql -E google
+          poetry install --with=dev -E aws -E cache -E pgsql -E google
           poetry run python -c 'from version import update_version; print(update_version())'
 
       - name: Run tests
