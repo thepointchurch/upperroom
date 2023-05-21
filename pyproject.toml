@@ -1,5 +1,5 @@
 [build-system]
-requires = ["poetry>=1.4"]
+requires = ["poetry>=1.5"]
 build-backend = "poetry.masonry.api"
 
 [tool.poetry]
@@ -47,7 +47,7 @@ django-environ = "~0"
 django-markdownify = "~0"
 django-robots = "^5.0"
 mutagen = "^1.46"
-weasyprint = "^58.0"
+weasyprint = "^59.0"
 yafg = "~0"
 
 gunicorn = "^20.1"
