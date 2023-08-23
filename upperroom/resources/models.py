@@ -22,7 +22,7 @@ class FeaturedMixin(models.Model):
     priority = models.PositiveSmallIntegerField(
         null=True,
         blank=True,
-        help_text=_("A non-empty value will feature this item " "in the main menu."),
+        help_text=_("A non-empty value will feature this item in the main menu."),
     )
 
     class Meta:

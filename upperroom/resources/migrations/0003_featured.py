@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("resources", "0002_show_date"),
     ]
@@ -16,14 +15,14 @@ class Migration(migrations.Migration):
             model_name="resource",
             name="priority",
             field=models.PositiveSmallIntegerField(
-                help_text="A non-empty value will feature this item " "in the main menu.", blank=True, null=True
+                help_text="A non-empty value will feature this item in the main menu.", blank=True, null=True
             ),
         ),
         migrations.AddField(
             model_name="tag",
             name="priority",
             field=models.PositiveSmallIntegerField(
-                help_text="A non-empty value will feature this item " "in the main menu.", blank=True, null=True
+                help_text="A non-empty value will feature this item in the main menu.", blank=True, null=True
             ),
         ),
         migrations.AddField(model_name="tag", name="description", field=models.TextField(null=True, blank=True)),
