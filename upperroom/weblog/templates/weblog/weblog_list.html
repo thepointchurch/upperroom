@@ -19,9 +19,9 @@
 </header>
 {% if entry.description %}{{ entry.description_attach|markdownify }}{% endif %}
 {% if entry.has_body or entry.alternates %}<footer><p class="links">[
-{% if entry.has_body %}<a href="{% url "weblog:detail" entry.created.year entry.created.month entry.slug %}" itemprop="url">{% translate 'read' %}</a>{% endif %}
+{% if entry.has_body %}<a href="{% url "weblog:detail" entry.created.year entry.created.month entry.slug %}" itemprop="url">{{ resource.anchor }}</a>{% endif %}
 {% for attachment in entry.alternates %}
-{% if entry.has_body or not forloop.first %}| {% endif %}<a href="{% url 'weblog:attachment' attachment.id %}" itemprop="url">{{ attachment.format }}</a>
+{% if entry.has_body or not forloop.first %}| {% endif %}<a href="{% url 'weblog:attachment' attachment.id %}" itemprop="url">{{ attachment.anchor }}</a>
 {% endfor %}
 ]</p>
 </footer>{% endif %}

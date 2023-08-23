@@ -19,9 +19,9 @@
 </header>
 {% if resource.description %}{{ resource.description|markdownify }}{% endif %}
 <footer><p class="links">[
-{% if resource.has_body %}<a href="{% url "resources:detail" resource.slug %}" itemprop="url">{% translate 'read' %}</a>{% endif %}
+{% if resource.has_body %}<a href="{% url "resources:detail" resource.slug %}" itemprop="url">{{ resource.anchor }}</a>{% endif %}
 {% for attachment in resource.alternates %}
-{% if resource.has_body or not forloop.first %}| {% endif %}<a href="{% url 'resources:attachment' attachment.id %}" itemprop="url">{{ attachment.format }}</a>
+{% if resource.has_body or not forloop.first %}| {% endif %}<a href="{% url 'resources:attachment' attachment.id %}" itemprop="url">{{ attachment.anchor }}</a>
 {% endfor %}
 ]</p></footer>
 </article>

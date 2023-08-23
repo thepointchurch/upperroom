@@ -12,6 +12,7 @@ from django.utils.translation import gettext_lazy as _
 
 from ..search.managers import SearchManager
 from ..utils.func import IsNotEmpty
+from ..utils.media import get_mime_anchor, is_video_embed
 from ..utils.mime import guess_extension
 
 logger = logging.getLogger(__name__)
@@ -175,6 +176,12 @@ class Resource(FeaturedMixin, models.Model):
         return self.title
 
     @cached_property
+    def anchor(self):
+        if is_video_embed(self.body):
+            return _("watch")
+        return _("read")
+
+    @cached_property
     def alternates(self):
         return self.attachments.filter(kind=Attachment.KIND_ALTERNATE)
 
@@ -274,6 +281,13 @@ class Attachment(models.Model):
 
     def __str__(self):
         return self.title
+
+    @cached_property
+    def anchor(self):
+        anchor = get_mime_anchor(self.mime_type)
+        if anchor:
+            return _(anchor)
+        return self.format
 
     @cached_property
     def clean_title(self):

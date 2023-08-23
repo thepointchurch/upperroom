@@ -4,9 +4,9 @@
 {% block content %}
 {% if item.description %}{{ item.description|markdownify }}{% endif %}
 <p class="links">[
-{% if item.has_body %}<a href="{% url "resources:detail" item.slug %}" itemprop="url">{% translate 'read' %}</a>{% endif %}
+{% if item.has_body %}<a href="{% url "resources:detail" item.slug %}" itemprop="url">{{ resource.anchor }}</a>{% endif %}
 {% for attachment in item.alternates %}
-{% if item.has_body or not forloop.first %}| {% endif %}<a href="{% url 'resources:attachment' attachment.id %}" itemprop="url">{{ attachment.format }}</a>
+{% if item.has_body or not forloop.first %}| {% endif %}<a href="{% url 'resources:attachment' attachment.id %}" itemprop="url">{{ attachment.anchor }}</a>
 {% endfor %}
 ]</p>
 {% endblock content %}
