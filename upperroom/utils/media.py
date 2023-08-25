@@ -11,7 +11,4 @@ def get_mime_anchor(mime_type):
 
 
 def is_video_embed(body):
-    video_embed = re.compile(r"<iframe [^>]+youtube[^>]+/embed/")
-    lines = [x for x in body.splitlines() if x]
-    non_embed_lines = [x for x in lines if not video_embed.search(x)]
-    return len(lines) != len(non_embed_lines)
+    return bool(re.match(r"^(<div [^>]*>)?<iframe [^>]+youtube[^>]+/embed/[^>]+></iframe>(</div>)?$", body))
