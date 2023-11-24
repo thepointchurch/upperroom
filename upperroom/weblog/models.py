@@ -117,6 +117,9 @@ class WeblogEntry(models.Model):
 
     def save(self, *args, **kwargs):  # pylint: disable=signature-differs
         self.full_clean()
+        # https://docs.djangoproject.com/en/4.2/releases/4.2/#setting-update-fields-in-model-save-may-now-be-required
+        # if update_fields is not None:
+        #     update_fields = {"published"}.union(update_fields)
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
