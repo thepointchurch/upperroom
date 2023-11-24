@@ -4,7 +4,7 @@
 {% block content %}
 {% if item.description %}{{ item.description_attach|markdownify }}{% endif %}
 {% if item.has_body or item.alternates %}<footer><p class="links">[
-{% if item.has_body %}<a href="{% url "weblog:detail" item.created.year item.created.month item.slug %}" itemprop="url">{{ resource.anchor }}</a>{% endif %}
+{% if item.has_body %}<a href="{% url "weblog:detail" item.created.year item.created.month item.slug %}" itemprop="url">{{ item.anchor }}</a>{% endif %}
 {% for attachment in item.alternates %}
 {% if item.has_body or not forloop.first %}| {% endif %}<a href="{% url 'weblog:attachment' attachment.id %}" itemprop="url">{{ attachment.anchor }}</a>
 {% endfor %}
