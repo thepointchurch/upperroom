@@ -53,8 +53,9 @@ class Meeting(models.Model):
 
     def save(self, *args, **kwargs):  # pylint: disable=signature-differs
         # Update roles when the meeting is updated
-        for role in self.roles.all():
-            role.save()
+        if self.id:
+            for role in self.roles.all():
+                role.save()
         super().save(*args, **kwargs)
 
     def merged_roles(self):
