@@ -28,7 +28,7 @@
 {% endif %}
 {% for feed in tag.feeds.all %}
 {% if feed.is_podcast %}
-<p>{% url 'resources:rss' feed.slug as podcast_url %}{% blocktranslate %}These items are available as a <a href="{{ podcast_url }}">podcast</a>{% endblocktranslate %}.</p>
+<p>{% url 'resources:rss' feed.slug as podcast_url %}{% blocktranslate %}These items are also available as a <a href="{{ podcast_url }}">podcast</a>{% endblocktranslate %}.</p>
 {% endif %}
 {% endfor %}
 {{ block.super }}
