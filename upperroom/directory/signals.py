@@ -38,27 +38,6 @@ def family_pre_save(sender, instance, **kwargs):  # NOQA: C901 pylint: disable=u
     if kwargs.get("raw"):
         return
 
-    try:
-        old_instance = sender.objects.get(id=instance.id)
-    except Family.DoesNotExist:
-        return
-    if old_instance.photo == instance.photo:
-        return
-
-    # Delete any old file so the path is clear for the new file.
-    # There is a risk that the ensuing save() will fail, which will
-    # leave the file missing.
-    try:
-        if old_instance.photo:
-            delete_file(old_instance.photo)
-    except ObjectDoesNotExist:
-        pass
-    try:
-        if old_instance.photo_thumbnail:
-            delete_file(old_instance.photo_thumbnail)
-    except ObjectDoesNotExist:
-        pass
-
     if instance.photo:
         image = Image.open(instance.photo).convert("RGB")
 
@@ -81,6 +60,27 @@ def family_pre_save(sender, instance, **kwargs):  # NOQA: C901 pylint: disable=u
         jpg.close()
     else:
         instance.photo_thumbnail = None
+
+    try:
+        old_instance = sender.objects.get(id=instance.id)
+    except Family.DoesNotExist:
+        return
+    if old_instance.photo == instance.photo:
+        return
+
+    # Delete any old file so the path is clear for the new file.
+    # There is a risk that the ensuing save() will fail, which will
+    # leave the file missing.
+    try:
+        if old_instance.photo:
+            delete_file(old_instance.photo)
+    except ObjectDoesNotExist:
+        pass
+    try:
+        if old_instance.photo_thumbnail:
+            delete_file(old_instance.photo_thumbnail)
+    except ObjectDoesNotExist:
+        pass
 
 
 @receiver(post_save, sender=get_user_model())
