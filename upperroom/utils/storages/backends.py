@@ -19,6 +19,7 @@ class S3StaticStorage(S3Boto3Storage):  # pylint: disable=abstract-method,too-fe
         defaults["querystring_auth"] = False
         defaults["secure_urls"] = False
         defaults["url_protocol"] = ""
+        defaults["use_dualstack_endpoint"] = True
         defaults["custom_domain"] = _STATIC_CUSTOM_DOMAIN
         return defaults
 
@@ -44,6 +45,7 @@ class S3MediaStorage(S3Boto3StorageOffload):  # pylint: disable=abstract-method
         defaults["default_acl"] = "private"
         defaults["secure_urls"] = False
         defaults["url_protocol"] = ""
+        defaults["use_dualstack_endpoint"] = True
         defaults["custom_domain"] = _MEDIA_CUSTOM_DOMAIN
         return defaults
 
