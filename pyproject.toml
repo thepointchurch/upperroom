@@ -12,7 +12,7 @@ license = "GPL-2.0-only"
 readme = "README.md"
 repository = "https://github.com/thepointchurch/upperroom"
 homepage = "https://github.com/thepointchurch/upperroom"
-version = "2.8.22"
+version = "2.8.23"
 
 classifiers = [
     "Development Status :: 5 - Production/Stable",
