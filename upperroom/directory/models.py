@@ -180,7 +180,7 @@ class Family(models.Model):
 
 class PersonCurrentManager(models.Manager):  # pylint: disable=too-few-public-methods
     def get_queryset(self):
-        return super().get_queryset().filter(is_current=True).select_related("family")
+        return super().get_queryset().filter(is_current=True, family__is_current=True).select_related("family")
 
 
 class Person(models.Model):

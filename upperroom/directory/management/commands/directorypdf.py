@@ -61,8 +61,8 @@ class Command(BaseCommand):
                 ),
                 "anniversaries": (
                     Family.current_objects.filter(anniversary__isnull=False)
-                    .filter(husband__isnull=False)
-                    .filter(wife__isnull=False)
+                    .filter(husband__isnull=False, husband__is_current=True)
+                    .filter(wife__isnull=False, wife__is_current=True)
                     .prefetch_related(None)
                     .only(
                         "name",
