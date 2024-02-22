@@ -26,7 +26,7 @@ RUN apt-get -qy update \
         libpango-1.0-0 \
         libpangocairo-1.0-0 \
         mime-support \
-        netcat-traditional \
+        netcat-openbsd \
         postgresql-client \
     && apt-get clean && rm -rf /var/lib/apt/lists/* \
     && useradd -md /django -s /bin/bash -u 8000 django \
