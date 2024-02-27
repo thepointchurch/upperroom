@@ -15,5 +15,7 @@ urlpatterns = [
     path("thumbnail/<int:pk>.jpg", views.FamilyPhotoView.as_view(), name="thumbnail"),
     path("contacts.vcf", views.PersonVcardList.as_view(), name="vcard"),
     path("pdf", views.PdfView.as_view(), name="pdf"),
+    path("pdf/compact", views.PdfViewCompact.as_view(), name="pdf_compact"),
     path("print", views.PrintView.as_view(), name="print"),
+    path("print/compact", views.PrintViewCompact.as_view(), name="print_compact"),
 ]

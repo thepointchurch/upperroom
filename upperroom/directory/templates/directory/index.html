@@ -25,7 +25,7 @@
 
 <h2>{% translate 'download'|capfirst %}</h2>
 
-<p>{% url 'directory:pdf' as directory_pdf %}{% blocktranslate %}You can download the latest copy of the directory for printing or browsing <a href="{{ directory_pdf }}">here</a>.{% endblocktranslate %}</p>
+<p>{% url 'directory:pdf' as directory_pdf %}{% url 'directory:pdf_compact' as directory_pdf_compact %}{% blocktranslate %}You can download the latest copy of the directory for printing or browsing <a href="{{ directory_pdf }}">here</a>.{% endblocktranslate %} {% blocktranslate %}A more compact format is available <a href="{{ directory_pdf_compact }}">here</a>.{% endblocktranslate %}</p>
 
 <h2>{% translate 'Birthdays and Anniversaries' %}</h2>
 

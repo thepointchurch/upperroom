@@ -212,21 +212,22 @@ class PersonVcardList(PermissionRequiredMixin, generic.ListView):
     )
 
 
-DIRECTORY_FILE_NAME = "directory/directory.pdf"
-
-
 class PdfView(NeverCacheMixin, PermissionRequiredMixin, generic.View):
     permission_required = "directory.can_view"
+    FILE_NAME = "directory/directory.pdf"
 
     def get(self, request, *args, **kwargs):
         title = _("%(site)s Directory") % {"site": get_current_site(request).name}
-        return attachment_response(DIRECTORY_FILE_NAME, filename=(f"{title}.pdf"), content_type="application/pdf")
+        return attachment_response(self.FILE_NAME, filename=(f"{title}.pdf"), content_type="application/pdf")
+
+
+class PdfViewCompact(PdfView):
+    FILE_NAME = "directory/directory_compact.pdf"
 
 
 class PrintView(NeverCacheMixin, PermissionRequiredMixin, generic.TemplateView):
     permission_required = "directory.add_family"
     template_name = "directory/print.html"
-    permission_required = "directory.can_view"
 
     def get_context_data(self, **kwargs):
         month = self.request.GET.get("month") or time.localtime().tm_mon
@@ -269,3 +270,21 @@ class PrintView(NeverCacheMixin, PermissionRequiredMixin, generic.TemplateView):
             as_attachment=True,
             filename=f"{context['site_name']} {_('Directory')} {context['year']}.pdf",
         )
+
+
+class PrintViewCompact(PrintView):
+    template_name = "directory/print_compact.html"
+
+    def get_context_data(self, **kwargs):
+        month = self.request.GET.get("month") or time.localtime().tm_mon
+        month = MONTHS[month]
+        year = self.request.GET.get("year") or time.localtime().tm_year
+        year = int(year)
+
+        context = super().get_context_data(**kwargs)
+        context["site_name"] = get_current_site(None).name
+        context["contact_email"] = settings.DIRECTORY_EMAIL
+        context["month"] = month
+        context["year"] = year
+        context["families"] = Family.current_objects.all()
+        return context
