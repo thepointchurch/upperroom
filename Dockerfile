@@ -1,6 +1,6 @@
 FROM python:3.11-slim AS compile-image
 RUN pip install --root-user-action=ignore --upgrade pip setuptools && \
-    pip install --root-user-action=ignore "poetry~=1.7" wheel
+    pip install --root-user-action=ignore "poetry~=1.8" wheel
 COPY . /django/
 WORKDIR /django
 ENV POETRY_VIRTUALENVS_IN_PROJECT=true \
