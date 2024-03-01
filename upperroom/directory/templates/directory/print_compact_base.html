@@ -67,7 +67,7 @@ tbody > tr:first-child > td:first-child {
 {% for person in family.current_members.all %}
 <tr>
 <td>{% if forloop.first %}{{ family.name }}{% elif person.surname_override %}{{ person.surname_override }}{% endif %}</td>
-<td>{{ person.name }}</td>
+<td>{{ person.name }}{% if person.suffix %} ({{ person.suffix }}){% endif %}</td>
 <td>{% if forloop.first and family.street and family.suburb and family.postcode %}{% with family.street|add:" "|add:family.suburb|add:" "|add:family.postcode as address_url %}<a href="https://www.google.com.au/maps/place/{{ address_url|urlencode:"" }}">{{ family.street|smartquote }} {{ family.suburb|smartquote }} {{ family.postcode }}</a>{% endwith %}{% endif %}</td>
 <td>{% if forloop.first and family.phone_home %}<a href="tel:{{ family.phone_home_intl }}">{{ family.phone_home }}</a>{% endif %}</td>
 <td>{% if person.phone_mobile %}<a href="tel:{{ person.phone_mobile_intl }}">{{ person.phone_mobile }}</a>{% endif %}</td>
