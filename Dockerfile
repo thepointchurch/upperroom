@@ -41,7 +41,7 @@ EXPOSE 8000/tcp
 USER django:django
 WORKDIR /django
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["gunicorn", "-b", "0.0.0.0:8000", "--config", "/etc/gunicorn.py", "upperroom.wsgi"]
+CMD ["gunicorn", "-b", "[::]:8000", "--config", "/etc/gunicorn.py", "upperroom.wsgi"]  # does this work when there is no IPv6???? test locally
 VOLUME /django/data
 
 HEALTHCHECK --interval=5m --timeout=3s CMD curl -fsS -o /dev/null http://localhost:8000/ || exit 1
