@@ -174,7 +174,8 @@ class Family(models.Model):
                 member.user.last_name = self.name
                 if self.email and not member.email:
                     member.user.email = self.email
-            member.is_current = self.is_current
+            if not self.is_current:
+                member.is_current = False
             member.save()
 
 
