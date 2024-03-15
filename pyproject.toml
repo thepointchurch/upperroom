@@ -92,6 +92,7 @@ pytest = "~8"
 pytest-django = "~4"
 semantic_version = "~2"
 tomlkit = "~0"
+python-lsp-server = { version = "~1", extras=["isort", "black"] }
 
 [tool.poetry.scripts]
 upperroom = 'upperroom.commands:main'
@@ -142,3 +143,7 @@ minversion = "6.0"
 addopts = "-ra -q"
 DJANGO_SETTINGS_MODULE = "upperroom.settings"
 python_files = "tests.py tests/*.py"
+
+
+[tool.pylsp-mypy]
+enabled = false
