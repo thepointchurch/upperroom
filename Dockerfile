@@ -1,4 +1,4 @@
-FROM python:3.11-slim AS compile-image
+FROM python:3.11-alpine AS compile-image
 RUN pip install --root-user-action=ignore --upgrade pip setuptools && \
     pip install --root-user-action=ignore "poetry~=1.8" wheel
 COPY . /django/
@@ -11,25 +11,23 @@ RUN poetry install --only main --no-root -E aws -E cache -E pgsql \
     && find .venv -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
 
 
-FROM python:3.11-slim AS build-image
+FROM python:3.11-alpine AS build-image
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/django/.venv/bin:$PATH" \
     DJANGO_SETTINGS_MODULE=upperroom.settings
-RUN apt-get -qy update \
-    && apt-get -qy install --no-install-recommends \
+RUN apk add --no-cache \
+        bash \
         bzip2 \
+        cairo \
         curl \
-        libpq5 \
-        libcairo2 \
-        libgdk-pixbuf2.0-0 \
-        libpango-1.0-0 \
-        libpangocairo-1.0-0 \
-        mime-support \
+        gdk-pixbuf \
         netcat-openbsd \
+        pango \
         postgresql-client \
-    && apt-get clean && rm -rf /var/lib/apt/lists/* \
-    && useradd -md /django -s /bin/bash -u 8000 django \
+        shared-mime-info \
+        tzdata \
+    && adduser -D -h /django -s /sbin/nologin -u 8000 -g "Django User" django \
     && touch /django/.env && chown 0:8000 /django/.env && chmod 640 /django/.env \
     && mkdir -p /django/data && chown 8000:8000 /django/data
 COPY entrypoint.sh /entrypoint.sh
@@ -41,7 +39,7 @@ EXPOSE 8000/tcp
 USER django:django
 WORKDIR /django
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["gunicorn", "-b", "[::]:8000", "--config", "/etc/gunicorn.py", "upperroom.wsgi"]  # does this work when there is no IPv6???? test locally
+CMD ["gunicorn", "-b", "[::]:8000", "--config", "/etc/gunicorn.py", "upperroom.wsgi"]
 VOLUME /django/data
 
 HEALTHCHECK --interval=5m --timeout=3s CMD curl -fsS -o /dev/null http://localhost:8000/ || exit 1

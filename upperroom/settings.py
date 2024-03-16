@@ -132,8 +132,6 @@ TEMPLATES = [
     },
 ]
 
-FORM_RENDERER = "django.forms.renderers.DjangoDivFormRenderer"
-
 MARKDOWNIFY = {
     "default": {
         "BLEACH": False,
@@ -158,9 +156,7 @@ MARKDOWNIFY = {
 PASSWORD_HASHERS = (
     "django.contrib.auth.hashers.Argon2PasswordHasher",
     "django.contrib.auth.hashers.PBKDF2PasswordHasher",
-    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
     "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
-    "django.contrib.auth.hashers.BCryptPasswordHasher",
 )
 
 ROBOTS_CACHE_TIMEOUT = 60 * 60 * 24

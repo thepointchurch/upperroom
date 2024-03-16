@@ -40,8 +40,8 @@ python = "^3.11"
 
 argon2-cffi = "^23.1"
 bcrypt = "^4.1"
-django = "~4.2"
-django-csp = "^3.7"
+django = "~5.0"
+django-csp = "^3.8"
 django-environ = "~0"
 django-markdownify = "~0"
 django-robots = "^6.1"
@@ -143,6 +143,7 @@ minversion = "6.0"
 addopts = "-ra -q"
 DJANGO_SETTINGS_MODULE = "upperroom.settings"
 python_files = "tests.py tests/*.py"
+filterwarnings = "ignore::DeprecationWarning:yafg"
 
 
 [tool.pylsp-mypy]

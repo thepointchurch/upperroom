@@ -9,13 +9,12 @@ from upperroom import resources
 def set_published_from_created(apps, schema_editor):
     _ = schema_editor
     Resource = apps.get_model("resources", "Resource")
-    for resource in Resource.objects.filter(is_published=True).iterator():
+    for resource in Resource.objects.filter(is_published=True).iterator(chunk_size=2000):
         resource.published = resource.created
         resource.save()
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("resources", "0006_update_ordering"),
     ]
