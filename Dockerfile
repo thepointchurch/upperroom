@@ -2,8 +2,7 @@ FROM python:3.11-alpine AS compile-image
 RUN pip install --root-user-action=ignore --upgrade pip setuptools && \
     pip install --root-user-action=ignore "poetry~=1.8" wheel
 RUN apk add --no-cache --virtual \
-        .tmp-build-deps \
-        gcc \
+        build-base \
         libffi-dev
 COPY . /django/
 WORKDIR /django
