@@ -4,7 +4,7 @@ RUN pip install --root-user-action=ignore --upgrade pip setuptools && \
 RUN apk add --no-cache --virtual \
         .tmp-build-deps \
         gcc \
-        libffi-dev \
+        libffi-dev
 COPY . /django/
 WORKDIR /django
 ENV POETRY_VIRTUALENVS_IN_PROJECT=true \
