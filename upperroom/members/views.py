@@ -135,7 +135,8 @@ class TechDetailsView(NeverCacheMixin, LoginRequiredMixin, generic.TemplateView)
 
         context = super().get_context_data(**kwargs)
         context["python_version"] = sys.version
-        context["platform"] = platform.platform()
+        uname = platform.uname()
+        context["platform"] = f"{uname.release} ({uname.version})"
         context["packages"] = [
             {
                 "name": dist.metadata["Name"],
