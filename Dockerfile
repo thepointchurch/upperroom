@@ -1,4 +1,4 @@
-FROM python:3.11-alpine AS compile-image
+FROM python:3.12-alpine AS compile-image
 RUN apk add --no-cache \
         build-base \
         libffi-dev
@@ -14,7 +14,7 @@ RUN poetry install --only main --no-root -E aws -E cache -E pgsql \
     && find .venv -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
 
 
-FROM python:3.11-alpine AS build-image
+FROM python:3.12-alpine AS build-image
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/django/.venv/bin:$PATH" \
