@@ -152,6 +152,7 @@ class Resource(FeaturedMixin, models.Model):
 
     is_published = models.BooleanField(default=False, verbose_name=_("published"))
     is_private = models.BooleanField(default=False, verbose_name=_("private"))
+    is_pinned = models.BooleanField(default=False, verbose_name=_("pinned"))
 
     objects = models.Manager()
     published_objects = PublishedManager()

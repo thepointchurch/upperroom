@@ -171,7 +171,10 @@ class ResourceAdmin(admin.ModelAdmin):
         (_("Featured"), {"classes": ("collapse",), "fields": ("priority",)}),
         (
             _("Advanced"),
-            {"classes": ("collapse",), "fields": ("is_published", "published", "is_private", "show_date", "parent")},
+            {
+                "classes": ("collapse",),
+                "fields": ("is_published", "published", "is_private", "is_pinned", "show_date", "parent"),
+            },
         ),
     )
 

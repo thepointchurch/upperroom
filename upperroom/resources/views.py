@@ -56,6 +56,7 @@ class TagList(VaryOnCookieMixin, generic.ListView):
                 "author__family__name",
             )
             .annotate(has_body=IsNotEmpty("body"))
+            .order_by("-is_pinned", "-published")
         )
         if not self.request.user.is_authenticated:
             resources = resources.filter(is_private=False)
@@ -107,6 +108,7 @@ class ResourceList(VaryOnCookieMixin, generic.ListView):
                 "author__family__name",
             )
             .annotate(has_body=IsNotEmpty("body"))
+            .order_by("-is_pinned", "-published")
         )
 
     def get_context_data(self, **kwargs):
@@ -252,6 +254,7 @@ class AuthorList(VaryOnCookieMixin, generic.ListView):
                 "author__family__name",
             )
             .annotate(has_body=IsNotEmpty("body"))
+            .order_by("-is_pinned", "-published")
         )
 
         if self.request.user.is_authenticated:
