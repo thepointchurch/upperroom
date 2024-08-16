@@ -46,7 +46,9 @@ def family_pre_save(sender, instance, **kwargs):  # NOQA: C901 pylint: disable=u
         jpg = BytesIO()
         image.save(jpg, "JPEG")
         jpg.seek(0)
-        instance.photo.save(get_family_photo_filename(instance, None), ContentFile(jpg.read()), save=False)
+        instance.photo.save(
+            name=get_family_photo_filename(instance, None), content=ContentFile(jpg.read()), save=False
+        )
         jpg.close()
 
         image.thumbnail(getattr(settings, "DIRECTORY_THUMBNAIL_MAX", (240, 240)))
@@ -55,7 +57,7 @@ def family_pre_save(sender, instance, **kwargs):  # NOQA: C901 pylint: disable=u
         image.save(jpg, "JPEG")
         jpg.seek(0)
         instance.photo_thumbnail.save(
-            get_family_thumbnail_filename(instance, None), ContentFile(jpg.read()), save=False
+            name=get_family_thumbnail_filename(instance, None), content=ContentFile(jpg.read()), save=False
         )
         jpg.close()
     else:

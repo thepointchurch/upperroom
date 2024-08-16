@@ -32,11 +32,11 @@
 {% if is_paginated %}
 <p class="links">[
 {% if page_obj.has_previous %}
-<a href="?page={{ page_obj.previous_page_number }}">{% translate 'previous'|capfirst %}</a> |
+<a href="{% querystring page=page_obj.previous_page_number %}">{% translate 'previous'|capfirst %}</a> |
 {% endif %}
 {% blocktranslate with page_number=page_obj.number page_count=page_obj.paginator.num_pages %}Page {{ page_number }} of {{ page_count }}{% endblocktranslate %}
 {% if page_obj.has_next %}
-| <a href="?page={{ page_obj.next_page_number }}">{% translate 'next'|capfirst %}</a>
+| <a href="{% querystring page=page_obj.next_page_number %}">{% translate 'next'|capfirst %}</a>
 {% endif %}
 ]</p>
 {% endif %}
