@@ -46,7 +46,13 @@ To set up a development environment:
     DEV_ENV
     ```
 
-5. Start a test server:
+5. Initialise the database:
+
+    ```
+    upperroom migrate
+    ```
+
+6. Start a test server:
 
     ```
     upperroom runserver
