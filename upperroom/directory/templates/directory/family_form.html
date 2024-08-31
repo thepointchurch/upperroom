@@ -2,6 +2,7 @@
 {% load i18n smartquote static %}
 
 {% block stylesheets %}
+{{ block.super }}
 <link type="text/css" href="{% static 'style/directory_form.css' %}" rel="stylesheet" />
 <link type="text/css" href="{% static 'style/directory_form.css' %}" rel="preload" as="style" />
 {% endblock stylesheets %}

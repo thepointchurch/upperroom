@@ -1,0 +1,32 @@
+{% load smartquote %}
+{% load static %}
+{% load cache %}
+<nav id="navbar" itemscope itemtype="https://schema.org/SiteNavigationElement" aria-label="Main Menu" tabindex="0">
+{% cache None navbar_featured %}
+<ul>
+{% block navbar_items %}
+{% for item in featured_items %}
+<li><a href="{{ item.get_absolute_url }}" class="nav-{{ item.slug }}"{% if item.description %} title="{{ item.description|smartquote }}"{% endif %} itemprop="url">{{ item.title|smartquote }}</a></li>
+{% endfor %}
+{% endblock navbar_items %}
+</ul>
+{% endcache %}
+</nav>
+{% if user.is_authenticated %}
+<nav id="navbar-member" itemscope itemtype="https://schema.org/SiteNavigationElement" aria-label="Members’ Area" tabindex="0">
+<ul>
+{% cache None navbar_featured_private %}
+{% block navbar_private_items %}
+<li><a href="{% url 'members:index' %}" class="nav-members" itemprop="url">Members’ Home</a></li>
+{% for item in featured_private_items %}
+<li><a href="{{ item.get_absolute_url }}" class="nav-{{ item.slug }}"{% if item.description %} title="{{ item.description|smartquote }}"{% endif %} itemprop="url">{{ item.title|smartquote }}</a></li>
+{% endfor %}
+{% endblock navbar_private_items %}
+{% endcache %}
+<li><form id="logout-form" method="post" action="{% url 'members:logout' %}">{% csrf_token %}<button type="submit" title="Log out of the Members’ Area.">Logout</button></form></li>
+</ul>
+<p class="logon">You are logged in as {{ user.get_full_name }}</p>
+</nav>
+{% else %}
+<nav id="navbar-login" itemscope itemtype="https://schema.org/SiteNavigationElement"><a href="{% url 'members:index' %}" title="Login to the Members’ area." itemprop="url">Member Login</a></nav>
+{% endif %}

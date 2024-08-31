@@ -1,7 +1,11 @@
-{% load smartquote %}<!DOCTYPE html>
+<!DOCTYPE html>
+{% load smartquote %}
+{% load cache %}
 <html lang="en-AU">
 <head>
 <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+{% if extended_site and extended_site.description %}<meta name="description" content="{{ extended_site.description }}" />{% endif %}
+{% if extended_site and extended_site.keywords.all %}<meta name="keywords" content="{{ extended_site.keywords.all|join:', ' }}" />{% endif %}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{% block title %}{{ site.name|smartquote }}{% endblock title %}</title>
 {% block stylesheets %}{% endblock stylesheets %}
@@ -21,19 +25,26 @@
 {% if metadata_image %}<meta property="og:image" content="{{ metadata_image }}" />
 <meta name="twitter:image" content="{{ metadata_image }}" />{% endif %}
 </head>
-<body>
+<body itemscope itemtype="https://schema.org/WebPage">
 
 <a href="#main" id="skip-nav">skip navigation</a>
 
 {% block body %}
+{% include "site/header.html" %}
+{% include "site/navbar.html" %}
+{% include "site/messages.html" %}
+
+{% cache None splashes_above request.path %}{% if splashes_above %}{% include "splash/splash.html" with splashes=splashes_above %}{% endif %}{% endcache %}
 
 {% block semantic %}
 <header>
-<h1>{% block heading %}{% endblock heading %}</h1>
+<h1 itemprop="name headline">{% block heading %}{% endblock heading %}</h1>
 {% block metadata %}{% endblock metadata %}
 </header>
 {% block content %}{% endblock content %}
 {% endblock semantic %}
+
+{% cache None splashes_below request.path %}{% if splashes_below %}{% include "splash/splash.html" with splashes=splashes_below %}{% endif %}{% endcache %}
 
 {% endblock body %}
 </body>

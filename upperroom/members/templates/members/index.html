@@ -3,7 +3,9 @@
 
 {% block content %}
 {% block instructions %}
+{% if webmaster_email %}
 <p>{% blocktranslate %}Please report any problems you have to the <a href="mailto:{{ webmaster_email }}">webmaster</a>.{% endblocktranslate %}</p>
+{% endif %}
 {% endblock instructions %}
 <div id="portal">
 {% for portal in portals %}{{ portal }}{% endfor %}

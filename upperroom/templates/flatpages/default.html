@@ -1,0 +1,17 @@
+{% extends "site/base.html" %}
+{% load markdownify %}
+{% load smartquote %}
+
+{% block title %}{{ flatpage.title|smartquote }} | {{ block.super }}{% endblock title %}
+
+{% block heading %}{{ flatpage.title|smartquote }}{% endblock heading %}
+
+{% block content %}
+{{ flatpage.content|markdownify:"extra" }}
+{% endblock content %}
+
+{% block semantic %}
+<main>
+{{ block.super }}
+</main>
+{% endblock semantic %}
