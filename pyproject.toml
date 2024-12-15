@@ -46,7 +46,7 @@ django-environ = "~0"
 django-markdownify = "~0"
 django-robots = "^6.1"
 mutagen = "^1.47"
-weasyprint = "^61.0"
+weasyprint = "^63.0"
 yafg = "~0"
 
 gunicorn = "^23.0"
