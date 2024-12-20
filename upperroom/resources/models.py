@@ -42,7 +42,7 @@ class FeaturedManager(models.Manager):  # pylint: disable=too-few-public-methods
 
 
 class Tag(FeaturedMixin, models.Model):
-    name = models.CharField(max_length=64, verbose_name=_("name"))
+    name = models.CharField(max_length=128, verbose_name=_("name"))
     slug = models.SlugField(unique=True, verbose_name=_("slug"))
     description = models.TextField(null=True, blank=True, verbose_name=_("description"))
 
@@ -119,7 +119,7 @@ class ResourceSearchManager(SearchManager):  # pylint: disable=too-few-public-me
 
 
 class Resource(FeaturedMixin, models.Model):
-    title = models.CharField(max_length=64, verbose_name=_("title"))
+    title = models.CharField(max_length=128, verbose_name=_("title"))
     slug = models.SlugField(unique=True, verbose_name=_("slug"))
     description = models.TextField(null=True, blank=True, verbose_name=_("description"))
     body = models.TextField(null=True, blank=True, verbose_name=_("body"))
@@ -253,7 +253,7 @@ class Attachment(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True, verbose_name="ID")
 
-    title = models.CharField(max_length=64, verbose_name=_("title"))
+    title = models.CharField(max_length=128, verbose_name=_("title"))
     slug = models.SlugField(db_index=True, verbose_name=_("slug"))
     file = models.FileField(upload_to=get_attachment_filename, verbose_name=_("file"))
     mime_type = models.CharField(max_length=128, editable=False, verbose_name=_("MIME type"))
@@ -392,7 +392,7 @@ def get_feed_artwork_filename(instance, filename):
 
 
 class ResourceFeed(models.Model):
-    title = models.CharField(max_length=64, verbose_name=_("title"))
+    title = models.CharField(max_length=128, verbose_name=_("title"))
     slug = models.SlugField(db_index=True, verbose_name=_("slug"))
     description = models.TextField(null=True, blank=True, verbose_name=_("description"))
     tags = models.ManyToManyField(Tag, blank=True, related_name="feeds", verbose_name=_("tags"))
@@ -416,11 +416,11 @@ class ResourceFeed(models.Model):
         verbose_name=_("categories"),
         help_text=_("A comma-separated list of category names to apply to the feed."),
     )
-    copyright = models.CharField(null=True, blank=True, max_length=128, verbose_name=_("copyright"))
+    copyright = models.CharField(null=True, blank=True, max_length=256, verbose_name=_("copyright"))
     artwork = models.FileField(null=True, blank=True, upload_to=get_feed_artwork_filename, verbose_name=_("artwork"))
     is_podcast = models.BooleanField(default=False, verbose_name=_("podcast"))
-    owner_name = models.CharField(null=True, blank=True, max_length=64, verbose_name=_("owner name"))
-    owner_email = models.CharField(null=True, blank=True, max_length=64, verbose_name=_("owner email"))
+    owner_name = models.CharField(null=True, blank=True, max_length=128, verbose_name=_("owner name"))
+    owner_email = models.CharField(null=True, blank=True, max_length=128, verbose_name=_("owner email"))
 
     class Meta:
         ordering = ["title"]
@@ -455,7 +455,7 @@ class FeaturedItem(models.Model):
         (TYPE_TAG, _("Tag")),
     )
 
-    title = models.CharField(max_length=64)
+    title = models.CharField(max_length=128)
     slug = models.SlugField(primary_key=True)
     description = models.TextField(null=True, blank=True)
     priority = models.PositiveSmallIntegerField(null=True, blank=True)

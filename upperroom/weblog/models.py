@@ -42,7 +42,7 @@ class WeblogSearchManager(SearchManager):  # pylint: disable=too-few-public-meth
 
 
 class WeblogEntry(models.Model):
-    title = models.CharField(max_length=64, verbose_name=_("title"))
+    title = models.CharField(max_length=128, verbose_name=_("title"))
     slug = models.SlugField(unique_for_month="created", verbose_name=_("slug"))
     description = models.TextField(null=True, blank=True, verbose_name=_("description"))
     body = models.TextField(null=True, blank=True, verbose_name=_("body"))
@@ -155,7 +155,7 @@ class Attachment(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True, verbose_name="ID")
 
-    title = models.CharField(max_length=64, verbose_name=_("title"))
+    title = models.CharField(max_length=128, verbose_name=_("title"))
     slug = models.SlugField(db_index=True, verbose_name=_("slug"))
     file = models.FileField(upload_to=get_attachment_filename, verbose_name=_("file"))
     mime_type = models.CharField(max_length=128, editable=False, verbose_name=_("MIME type"))

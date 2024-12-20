@@ -51,12 +51,12 @@ class FamilySearchManager(SearchManager):  # pylint: disable=too-few-public-meth
 
 
 class Family(models.Model):
-    name = models.CharField(max_length=30, verbose_name=_("name"))
+    name = models.CharField(max_length=64, verbose_name=_("name"))
     phone_home = models.CharField(max_length=15, null=True, blank=True, verbose_name=_("home phone"))
     phone_mobile = models.CharField(max_length=15, null=True, blank=True, verbose_name=_("mobile phone"))
     email = models.EmailField(null=True, blank=True, verbose_name=_("email"))
     street = models.CharField(max_length=128, null=True, blank=True, verbose_name=_("street"))
-    suburb = models.CharField(max_length=32, null=True, blank=True, verbose_name=_("suburb"))
+    suburb = models.CharField(max_length=64, null=True, blank=True, verbose_name=_("suburb"))
     postcode = models.CharField(max_length=6, null=True, blank=True, verbose_name=_("postcode"))
     is_current = models.BooleanField(default=True, verbose_name=_("current"))
 
@@ -203,9 +203,9 @@ class Person(models.Model):
 
     order = models.SmallIntegerField(null=True, blank=True, verbose_name=_("order"))
 
-    name = models.CharField(max_length=30, verbose_name=_("name"))
-    suffix = models.CharField(max_length=3, null=True, blank=True, verbose_name=_("suffix"))
-    surname_override = models.CharField(max_length=30, null=True, blank=True, verbose_name=_("surname"))
+    name = models.CharField(max_length=64, verbose_name=_("name"))
+    suffix = models.CharField(max_length=8, null=True, blank=True, verbose_name=_("suffix"))
+    surname_override = models.CharField(max_length=64, null=True, blank=True, verbose_name=_("surname"))
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, null=True, blank=True, verbose_name=_("gender"))
     birthday = models.DateField(null=True, blank=True, verbose_name=_("birthday"))
     email = models.EmailField(null=True, blank=True, verbose_name=_("email"))

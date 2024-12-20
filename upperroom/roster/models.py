@@ -86,7 +86,7 @@ class Meeting(models.Model):
 
 
 class Location(models.Model):
-    name = models.CharField(max_length=30, verbose_name=_("name"))
+    name = models.CharField(max_length=128, verbose_name=_("name"))
 
     class Meta:
         ordering = ["name"]
@@ -98,8 +98,8 @@ class Location(models.Model):
 
 
 class RoleType(models.Model):
-    name = models.CharField(max_length=30, verbose_name=_("name"))
-    verb = models.CharField(max_length=50, verbose_name=_("verb"))
+    name = models.CharField(max_length=128, verbose_name=_("name"))
+    verb = models.CharField(max_length=128, verbose_name=_("verb"))
     order = models.PositiveSmallIntegerField(default=100, verbose_name=_("order"))
     start_time = models.TimeField(default=time(9, 30), verbose_name=_("start time"))
     end_time = models.TimeField(default=time(10, 0), verbose_name=_("end time"))
@@ -151,7 +151,7 @@ class Role(models.Model):
         related_name="roles",
         verbose_name=_("people"),
     )
-    guest = models.CharField(max_length=30, null=True, blank=True, verbose_name=_("guest"))
+    guest = models.CharField(max_length=128, null=True, blank=True, verbose_name=_("guest"))
     role = models.ForeignKey(
         RoleType,
         on_delete=models.PROTECT,
@@ -159,7 +159,7 @@ class Role(models.Model):
         related_name="roles",
         verbose_name=_("role"),
     )
-    description = models.CharField(max_length=64, null=True, blank=True, verbose_name=_("description"))
+    description = models.CharField(max_length=128, null=True, blank=True, verbose_name=_("description"))
     location = models.ForeignKey(
         Location,
         null=True,
@@ -196,29 +196,23 @@ class Role(models.Model):
 
     @property
     def starttime(self):
-        return (
-            datetime(
-                self.meeting.date.year,
-                self.meeting.date.month,
-                self.meeting.date.day,
-                self.role.start_time.hour,
-                self.role.start_time.minute,
-            )
-            - timedelta(hours=10)
-        )
+        return datetime(
+            self.meeting.date.year,
+            self.meeting.date.month,
+            self.meeting.date.day,
+            self.role.start_time.hour,
+            self.role.start_time.minute,
+        ) - timedelta(hours=10)
 
     @property
     def endtime(self):
-        return (
-            datetime(
-                self.meeting.date.year,
-                self.meeting.date.month,
-                self.meeting.date.day,
-                self.role.end_time.hour,
-                self.role.end_time.minute,
-            )
-            - timedelta(hours=10)
-        )
+        return datetime(
+            self.meeting.date.year,
+            self.meeting.date.month,
+            self.meeting.date.day,
+            self.role.end_time.hour,
+            self.role.end_time.minute,
+        ) - timedelta(hours=10)
 
     def save(self, *args, **kwargs):  # pylint: disable=signature-differs
         self.revision += 1
@@ -226,7 +220,7 @@ class Role(models.Model):
 
 
 class MeetingTemplate(models.Model):
-    name = models.CharField(max_length=30, verbose_name=_("name"))
+    name = models.CharField(max_length=64, verbose_name=_("name"))
     is_default = models.BooleanField(default=False, verbose_name=_("is default"))
     week_day = models.SmallIntegerField(null=True, blank=True, choices=DAYS_OF_THE_WEEK, verbose_name=_("week day"))
     roles = models.ManyToManyField(

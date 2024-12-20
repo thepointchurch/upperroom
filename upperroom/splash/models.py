@@ -19,7 +19,7 @@ class Splash(models.Model):
         default=POSITION_ABOVE,
         verbose_name=_("position"),
     )
-    url = models.CharField(max_length=100, default="/")
+    url = models.CharField(max_length=128, default="/")
     is_current = models.BooleanField(default=True, verbose_name=_("current"))
     is_private = models.BooleanField(default=False, verbose_name=_("private"))
 
