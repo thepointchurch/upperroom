@@ -1,7 +1,7 @@
 # pylint: disable=modelform-uses-exclude
 
 from django import forms
-from django.db.models import Max, Q
+from django.db.models import F, Max, Q
 
 from .models import Meeting, Role
 
@@ -26,7 +26,7 @@ class MeetingBuilderRoleForm(forms.ModelForm):
                             | (Q(roles__role__parent__isnull=False) & Q(roles__role__parent=self.role_type.parent)),
                         )
                     )
-                    .order_by("age", "name")
+                    .order_by(F("age").asc(nulls_first=True), "name")
                 )
             else:
                 qs = self.role_type.servers.order_by("family__name", "name").select_related("family")
