@@ -97,7 +97,7 @@ class WeblogAdmin(admin.ModelAdmin):
 
     class Media:
         js = (
-            "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js",
+            "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.1/jquery-ui.min.js",
             "scripts/weblog/admin_attachment_title.js",
             "scripts/weblog/admin_dnd.js",
         )

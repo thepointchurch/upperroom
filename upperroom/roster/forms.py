@@ -12,7 +12,7 @@ class MeetingBuilderRoleForm(forms.ModelForm):
         exclude = ()
         widgets = {"role": forms.HiddenInput()}
 
-    def __init__(self, sort_by_age=True, **kwargs):
+    def __init__(self, sort_by_age=True, date=None, **kwargs):
         super().__init__(**kwargs)
         if not self.is_bound:
             self.role_type = self.initial["role"]
@@ -30,7 +30,10 @@ class MeetingBuilderRoleForm(forms.ModelForm):
                 )
             else:
                 qs = self.role_type.servers.order_by("family__name", "name").select_related("family")
-            self.fields["people"].queryset = qs
+            if date:
+                self.fields["people"].queryset = qs.exclude(exclusions__date=date)
+            else:
+                self.fields["people"].queryset = qs
 
 
 def meetingbuilderformset_factory(role_count=0):

@@ -133,6 +133,26 @@ class RoleType(models.Model):
         return self.name
 
 
+class RosterExclusion(models.Model):
+    person = models.ForeignKey(
+        "directory.Person",
+        null=False,
+        blank=False,
+        limit_choices_to={"is_current": True},
+        on_delete=models.CASCADE,
+        related_name="exclusions",
+        verbose_name=_("exclusion"),
+    )
+    date = models.DateField(verbose_name=_("date"))
+
+    class Meta:
+        verbose_name = _("exclusion date")
+        verbose_name_plural = _("exclusion dates")
+        constraints = [
+            models.UniqueConstraint(name="roster_exclusion_unique", fields=["person", "date"]),
+        ]
+
+
 class CurrentRoleManager(models.Manager):  # pylint: disable=too-few-public-methods
     def get_queryset(self):
         return super().get_queryset().filter(meeting__date__gte=date.today())

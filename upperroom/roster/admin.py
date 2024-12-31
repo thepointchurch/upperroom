@@ -7,7 +7,16 @@ from django.forms import ModelForm, ModelMultipleChoiceField
 from django.utils.translation import gettext_lazy as _
 
 from ..directory.models import Person
-from .models import DAYS_OF_THE_WEEK, Location, Meeting, MeetingTemplate, Role, RoleType, RoleTypeTemplateMapping
+from .models import (
+    DAYS_OF_THE_WEEK,
+    Location,
+    Meeting,
+    MeetingTemplate,
+    Role,
+    RoleType,
+    RoleTypeTemplateMapping,
+    RosterExclusion,
+)
 
 
 class RoleInlineForm(ModelForm):
@@ -112,8 +121,30 @@ class MeetingTemplateAdmin(admin.ModelAdmin):
     inlines = [RoleTypeMappingInline]
 
 
+class ExclusionDateInline(admin.TabularInline):
+    model = RosterExclusion
+    extra = 1
+
+
+class ExclusionAdmin(admin.ModelAdmin):
+    inlines = [ExclusionDateInline]
+    fields = [()]
+
+    def get_queryset(self, request):
+        return self.model.objects.filter(is_current=True).exclude(role_types=None)
+
+
+class ExclusionPerson(Person):
+    class Meta:
+        proxy = True
+
+        verbose_name = _("server exclusion date")
+        verbose_name_plural = _("exclusion dates")
+
+
 admin.site.register(Meeting, MeetingAdmin)
 admin.site.register(PastMeeting, PastMeetingAdmin)
 admin.site.register(Location)
+admin.site.register(ExclusionPerson, ExclusionAdmin)
 admin.site.register(RoleType, RoleTypeAdmin)
 admin.site.register(MeetingTemplate, MeetingTemplateAdmin)

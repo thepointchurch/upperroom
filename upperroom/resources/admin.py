@@ -180,7 +180,7 @@ class ResourceAdmin(admin.ModelAdmin):
 
     class Media:
         js = (
-            "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js",
+            "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.1/jquery-ui.min.js",
             "scripts/resources/admin_attachment_title.js",
             "scripts/resources/admin_dnd.js",
         )

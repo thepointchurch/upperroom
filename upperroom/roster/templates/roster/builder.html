@@ -1,9 +1,31 @@
 {% extends "roster/base.html" %}
-{% load i18n %}
+{% load i18n static %}
 
 {% block title %}{% translate 'Roster Builder' %} | {{ block.super }}{% endblock title %}
 
 {% block heading %}{% translate 'Roster Builder' %}{% endblock heading %}
+
+{% block stylesheets %}{{ block.super }}
+<link type="text/css" href="{% static 'style/builder.css' %}" rel="stylesheet" />
+<link type="text/css" href="{% static 'style/builder.css' %}" rel="preload" as="style" />
+{% endblock stylesheets %}
+
+{% block headers %}{{ block.super }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.14.1/jquery-ui.min.js" integrity="sha512-MSOo1aY+3pXCOCdGAYoBZ6YGI0aragoQsg1mKKBHXCYPIWxamwOE7Drh+N5CPgGI5SA9IEKJiPjdfqWFWmZtRA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+$(document).ready(function() {
+    $('.datepicker').datepicker({
+        dateFormat: 'yy-mm-dd',
+        onSelect: function( dateText, picker ) {
+            var url = new URL(document.location.href);
+            url.searchParams.set('date', dateText);
+            location = url;
+        },
+    });
+});
+</script>
+{% endblock headers %}
 
 {% block content %}
 {% if builder_template %}

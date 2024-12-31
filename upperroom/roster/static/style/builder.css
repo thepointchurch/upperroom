@@ -1,0 +1,40 @@
+.ui-datepicker {
+    width: 17em;
+    padding: 0.2em 0.2em 0;
+    display: none;
+    background: inherit;
+}
+
+.ui-datepicker .ui-datepicker-header {
+    position: relative;
+    padding: .2em 0;
+}
+
+.ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next {
+    position: absolute;
+}
+
+.ui-datepicker .ui-datepicker-prev {
+    left: 0.2em;
+}
+
+.ui-datepicker .ui-datepicker-next {
+    right: 0.2em;
+}
+
+.ui-datepicker .ui-datepicker-title {
+    text-align: center;
+}
+
+.ui-datepicker table {
+    border-collapse: collapse;
+}
+
+.ui-datepicker th {
+    text-align: center;
+    font-weight: bold;
+    border: 0;
+}
+.ui-datepicker td {
+    text-align: center;
+}

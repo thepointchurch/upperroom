@@ -1,5 +1,6 @@
 # pylint: disable=too-many-ancestors
 
+import datetime
 import io
 
 from django.conf import settings
@@ -7,7 +8,8 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
 from django.db import transaction
-from django.forms import TextInput, models
+from django.forms import models
+from django.forms.widgets import DateInput
 from django.http import FileResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -145,7 +147,10 @@ class BuilderView(NeverCacheMixin, PermissionRequiredMixin, generic.edit.CreateV
                             "servers__family", "parent__servers__family"
                         )
                     ],
-                    form_kwargs={"sort_by_age": sort_by_age},
+                    form_kwargs=self.get_initial()
+                    | {
+                        "sort_by_age": sort_by_age,
+                    },
                 )
                 data["builder_template"] = self.builder_template
 
@@ -156,7 +161,9 @@ class BuilderView(NeverCacheMixin, PermissionRequiredMixin, generic.edit.CreateV
 
     def get_form_class(self):
         return models.modelform_factory(
-            self.model, fields=self.fields, widgets={"date": TextInput(attrs={"title": "YYYY-MM-DD"})}
+            self.model,
+            fields=self.fields,
+            widgets={"date": DateInput(attrs={"type": "text", "class": "datepicker"})},
         )
 
     def get_form_kwargs(self):
@@ -166,7 +173,11 @@ class BuilderView(NeverCacheMixin, PermissionRequiredMixin, generic.edit.CreateV
 
     def get_initial(self):
         try:
-            return {"date": next_empty_meeting_date(self.builder_template.week_day)}
+            if date := self.request.GET.get("date"):
+                date = datetime.date.fromisoformat(date)
+            else:
+                date = next_empty_meeting_date(self.builder_template.week_day)
+            return {"date": date}
         except AttributeError:
             return {}
 
