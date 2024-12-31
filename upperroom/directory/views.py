@@ -240,7 +240,8 @@ class PrintView(NeverCacheMixin, PermissionRequiredMixin, generic.TemplateView):
         context["contact_email"] = settings.DIRECTORY_EMAIL
         context["month"] = month
         context["year"] = year
-        context["families"] = Family.current_objects.all()
+        context["families"] = Family.current_objects.filter(is_archived=False)
+        context["archived_families"] = Family.current_objects.filter(is_archived=True)
         context["birthdays"] = Person.current_objects.exclude(birthday__isnull=True).only(
             "name", "suffix", "surname_override", "family__name", "birthday"
         )

@@ -39,7 +39,7 @@ class FamilyAdmin(admin.ModelAdmin):
         (_("Contact"), {"fields": ("email", "phone_home", "phone_mobile")}),
         (_("Marriage"), {"fields": ("anniversary", "husband", "wife")}),
         (_("Photo"), {"fields": ("photo",)}),
-        (_("Advanced options"), {"classes": ("collapse",), "fields": ("is_current",)}),
+        (_("Advanced options"), {"classes": ("collapse",), "fields": ("is_current", "is_archived")}),
     )
 
     def save_related(self, request, form, formsets, change):

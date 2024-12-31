@@ -20,6 +20,14 @@
     }
 }
 
+@page archived {
+    size: landscape;
+}
+
+div.archived {
+    page: archived;
+}
+
 body {
     margin: 0;
 }
@@ -77,6 +85,13 @@ div.family .img {
 {% include "directory/print_family.html" %}
 </div>
 {% endfor %}
+
+<div class="archived">
+<h2 style="page-break-before: always">{% translate 'archived'|capfirst %}</h2>
+{% with families=archived_families %}
+{% include "directory/print_compact_table.html" %}
+{% endwith %}
+</div>
 
 <h2 style="page-break-before: always">{% translate 'birthdays'|capfirst %}</h2>
 

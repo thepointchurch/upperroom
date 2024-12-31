@@ -59,6 +59,7 @@ class Family(models.Model):
     suburb = models.CharField(max_length=64, null=True, blank=True, verbose_name=_("suburb"))
     postcode = models.CharField(max_length=6, null=True, blank=True, verbose_name=_("postcode"))
     is_current = models.BooleanField(default=True, verbose_name=_("current"))
+    is_archived = models.BooleanField(default=False, verbose_name=_("archived"))
 
     husband = models.ForeignKey(
         "Person",
