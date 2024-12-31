@@ -3,7 +3,7 @@
 {% regroup birthdays|dictsort:"birthdate" by birthday|date:"F" as birthday_by_month %}
 
 {% for month in birthday_by_month %}
-    <h2>{{ month.grouper }}</h2>
+    <h3>{{ month.grouper }}</h3>
     {% regroup month.list by birthday.day as birthday_by_month_day %}
     <ul class="birthdays">
     {% for day in birthday_by_month_day %}
