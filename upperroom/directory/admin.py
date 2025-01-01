@@ -26,12 +26,27 @@ class FamilyForm(forms.ModelForm):
         self.fields["wife"].queryset = Person.objects.filter(family__exact=self.instance.id).filter(gender__exact="F")
 
 
+class ArchivedFamilyListFilter(admin.SimpleListFilter):
+    title = _("archived")
+    parameter_name = "archived"
+
+    def lookups(self, request, model_admin):
+        return (("yes", _("Yes")), ("no", _("No")))
+
+    def queryset(self, request, queryset):
+        if self.value() == "yes":
+            return queryset.filter(is_archived=True)
+        if self.value() == "no":
+            return queryset.filter(is_archived=False)
+        return None
+
+
 class FamilyAdmin(admin.ModelAdmin):
     inlines = [PersonInline]
-    list_filter = ("is_current",)
+    list_filter = ("is_current", ArchivedFamilyListFilter)
     search_fields = ["name", "members__name"]
     form = FamilyForm
-    actions = ["action_mark_current", "action_unmark_current"]
+    actions = ["mark_current", "nmark_current", "mark_archived", "mark_unarchived"]
 
     fieldsets = (
         (None, {"fields": ("name",)}),
@@ -46,19 +61,29 @@ class FamilyAdmin(admin.ModelAdmin):
         super().save_related(request, form, formsets, change)
         family_updated.send(sender=form.instance.__class__, instance=form.instance, actor=request.user)
 
+    @admin.action(description=_("Mark selected families as current"))
     def mark_current(self, request, queryset):  # pylint: disable=unused-argument
         for family in queryset.all():
             family.is_current = True
             family.save()
 
-    mark_current.short_description = _("Mark selected families as current")
-
+    @admin.action(description=_("Mark selected families as not current"))
     def unmark_current(self, request, queryset):  # pylint: disable=unused-argument
         for family in queryset.all():
             family.is_current = False
             family.save()
 
-    unmark_current.short_description = _("Mark selected families as not current")
+    @admin.action(description=_("Archive selected families"))
+    def mark_archived(self, request, queryset):  # pylint: disable=unused-argument
+        for family in queryset.all():
+            family.is_archived = True
+            family.save()
+
+    @admin.action(description=_("Unrchive selected families"))
+    def mark_unarchived(self, request, queryset):  # pylint: disable=unused-argument
+        for family in queryset.all():
+            family.is_archived = False
+            family.save()
 
 
 class PersonAdmin(admin.ModelAdmin):

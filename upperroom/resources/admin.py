@@ -64,10 +64,9 @@ class AttachmentInline(admin.StackedInline):
     }
     classes = ("attachments",)
 
+    @admin.display(description="")
     def drag_handle(self, obj):  # pylint: disable=unused-argument
         return ""
-
-    drag_handle.short_description = ""
 
 
 class ChildResourceInline(admin.TabularInline):
@@ -91,10 +90,9 @@ class ChildResourceInline(admin.TabularInline):
     def has_delete_permission(self, request, obj=None):  # pylint: disable=unused-argument
         return False
 
+    @admin.display(description="")
     def drag_handle(self, obj):  # pylint: disable=unused-argument
         return ""
-
-    drag_handle.short_description = ""
 
 
 class ResourceForm(ModelForm):
@@ -198,25 +196,21 @@ class ResourceAdmin(admin.ModelAdmin):
             fields += ("is_published",)
         return fields
 
+    @admin.action(description=_("Publish selected resources"))
     def publish(self, request, queryset):  # pylint: disable=unused-argument
         queryset.update(is_published=True)
 
-    publish.short_description = _("Publish selected resources")
-
+    @admin.action(description=_("Unpublish selected resources"))
     def unpublish(self, request, queryset):  # pylint: disable=unused-argument
         queryset.update(is_published=False)
 
-    unpublish.short_description = _("Unpublish selected resources")
-
+    @admin.action(description=_("Mark selected resources as private"))
     def mark_private(self, request, queryset):  # pylint: disable=unused-argument
         queryset.update(is_private=True)
 
-    mark_private.short_description = _("Mark selected resources as private")
-
+    @admin.action(description=_("Mark selected resources as public"))
     def mark_public(self, request, queryset):  # pylint: disable=unused-argument
         queryset.update(is_private=False)
-
-    mark_public.short_description = _("Mark selected resources as public")
 
 
 class ResourceFeedAdmin(admin.ModelAdmin):

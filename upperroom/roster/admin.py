@@ -75,10 +75,9 @@ class MeetingAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return self.model.objects.filter(date__gte=datetime.date.today())
 
+    @admin.action(permissions=["delete"], description=_("Delete past meetings"))
     def delete_past_meetings(self, request, queryset):  # pylint: disable=unused-argument
         queryset.delete(date__lt=datetime.date.today())
-
-    delete_past_meetings.short_description = _("Delete past meetings")
 
 
 class PastMeeting(Meeting):
@@ -103,11 +102,10 @@ class PastMeetingAdmin(MeetingAdmin):
 class RoleTypeAdmin(admin.ModelAdmin):
     actions = ["empty_role_type_servers"]
 
+    @admin.action(description=_("Empty servers from role types"))
     def empty_role_type_servers(self, request, queryset):  # pylint: disable=unused-argument
         for role_type in queryset.all():
             role_type.servers.clear()
-
-    empty_role_type_servers.short_description = _("Empty servers from role types")
 
 
 class RoleTypeMappingInline(admin.TabularInline):
@@ -129,9 +127,22 @@ class ExclusionDateInline(admin.TabularInline):
 class ExclusionAdmin(admin.ModelAdmin):
     inlines = [ExclusionDateInline]
     fields = [()]
+    actions = ["delete_past_exclusions"]
 
     def get_queryset(self, request):
         return self.model.objects.filter(is_current=True).exclude(role_types=None)
+
+    @admin.action(
+        permissions=["delete"], description=_("Delete past " + str(RosterExclusion._meta.verbose_name_plural))
+    )
+    def delete_past_exclusions(self, request, queryset):
+        for person in queryset.all():
+            person.exclusions.filter(date__lt=datetime.date.today()).delete()
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        del actions["delete_selected"]
+        return actions
 
 
 class ExclusionPerson(Person):
