@@ -62,5 +62,11 @@ tbody > tr:first-child > td:first-child {
 
 {% include "directory/print_compact_table.html" %}
 
+<h2>{% translate 'archived'|capfirst %}</h2>
+
+{% with archived_families as families %}
+{% include "directory/print_compact_table.html" %}
+{% endwith %}
+
 </body>
 </html>

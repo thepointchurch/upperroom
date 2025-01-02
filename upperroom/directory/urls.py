@@ -7,6 +7,7 @@ urlpatterns = [
     path("", views.IndexView.as_view(), name="index"),
     re_path(r"^(?P<letter>[a-z])$", views.LetterView.as_view(), name="letter"),
     path("<int:pk>", views.DetailView.as_view(), name="detail"),
+    path("archived", views.ArchivedView.as_view(), name="archived"),
     path("search", views.SearchView.as_view(), name="search"),
     path("edit", views.FamilyEditView.as_view(), name="edit"),
     path("birthdays", views.BirthdayView.as_view(), name="birthdays"),

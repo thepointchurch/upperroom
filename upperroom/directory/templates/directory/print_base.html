@@ -21,7 +21,6 @@
 }
 
 @page archived {
-    size: landscape;
 }
 
 div.archived {
@@ -69,6 +68,28 @@ div.family .img {
 .siblings {
     font-style: italic;
 }
+
+table {
+    border-collapse: collapse;
+}
+
+table td {
+    border: 0.2pt solid black;
+    padding: 3pt;
+}
+
+tbody {
+    page-break-inside: avoid;
+}
+
+tbody.family {
+    bookmark-level: 2;
+    bookmark-label: attr(name);
+}
+
+tbody.family > tr:first-child > td:first-child {
+    font-weight: bold;
+}
 {% endblock "stylesheet" %}
 </style>
 </head>
@@ -89,7 +110,7 @@ div.family .img {
 <div class="archived">
 <h2 style="page-break-before: always">{% translate 'archived'|capfirst %}</h2>
 {% with families=archived_families %}
-{% include "directory/print_compact_table.html" %}
+{% include "directory/print_archived_table.html" %}
 {% endwith %}
 </div>
 

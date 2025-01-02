@@ -14,7 +14,7 @@
 {% regroup family_list by first_letter as index_list_unsorted %}
 
 {% with index_list=index_list_unsorted|dictsort:"grouper" %}
-<p class="links">[ {% for letter in index_list %}{% if not forloop.first %} | {% endif %}<a href="{% url 'directory:letter' letter.grouper %}">{{ letter.grouper|upper }}</a>{% endfor %} ]</p>
+<p class="links">[ {% for letter in index_list %}{% if not forloop.first %} | {% endif %}<a href="{% url 'directory:letter' letter.grouper %}">{{ letter.grouper|upper }}</a>{% endfor %}{% if has_archived %} | <a href="{% url 'directory:archived' %}">{% translate 'archived'|capfirst %}</a>{% endif %} ]</p>
 {% endwith %}
 
 <h2>{% translate 'Search' %}</h2>

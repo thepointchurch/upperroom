@@ -25,7 +25,7 @@ from .signals import family_updated
 class IndexView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
     template_name = "directory/index.html"
     permission_required = "directory.can_view"
-    queryset = Family.current_objects.select_related(None).prefetch_related(None).only("name")
+    queryset = Family.active_objects.select_related(None).prefetch_related(None).only("name")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -33,6 +33,7 @@ class IndexView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
         context["search_query"] = ""
         context["metadata_description"] = None
         context["metadata_title"] = _("Directory")
+        context["has_archived"] = Family.archived_objects.exists()
         return context
 
 
@@ -49,7 +50,22 @@ class LetterView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
         return context
 
     def get_queryset(self):
-        return Family.current_objects.filter(name__istartswith=self.kwargs["letter"])
+        return Family.active_objects.filter(name__istartswith=self.kwargs["letter"])
+
+
+class ArchivedView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
+    model = Family
+    template_name = "directory/family_archived.html"
+    permission_required = "directory.can_view"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["metadata_description"] = None
+        context["metadata_title"] = f"{_('Directory')}: Archived"
+        return context
+
+    def get_queryset(self):
+        return Family.archived_objects.all()
 
 
 class DetailView(VaryOnCookieMixin, PermissionRequiredMixin, generic.DetailView):
@@ -240,8 +256,8 @@ class PrintView(NeverCacheMixin, PermissionRequiredMixin, generic.TemplateView):
         context["contact_email"] = settings.DIRECTORY_EMAIL
         context["month"] = month
         context["year"] = year
-        context["families"] = Family.current_objects.filter(is_archived=False)
-        context["archived_families"] = Family.current_objects.filter(is_archived=True)
+        context["families"] = Family.active_objects.all()
+        context["archived_families"] = Family.archived_objects.all()
         context["birthdays"] = Person.current_objects.exclude(birthday__isnull=True).only(
             "name", "suffix", "surname_override", "family__name", "birthday"
         )
@@ -287,5 +303,6 @@ class PrintViewCompact(PrintView):
         context["contact_email"] = settings.DIRECTORY_EMAIL
         context["month"] = month
         context["year"] = year
-        context["families"] = Family.current_objects.all()
+        context["families"] = Family.active_objects.all()
+        context["archived_families"] = Family.archived_objects.all()
         return context

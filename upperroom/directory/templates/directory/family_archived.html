@@ -1,0 +1,16 @@
+{% extends "directory/base.html" %}
+{% load i18n %}
+
+{% block title %}Archived | {{ block.super }}{% endblock title %}
+
+{% block heading %}{{ block.super }}: Archived{% endblock heading %}
+
+{% block content %}
+
+{% for family in family_list %}
+{% include "directory/family.html" %}
+{% empty %}
+<p>{% translate 'no results found'|capfirst %}.</p>
+{% endfor %}
+
+{% endblock content %}

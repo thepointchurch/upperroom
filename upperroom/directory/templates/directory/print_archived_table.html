@@ -1,0 +1,18 @@
+{% load i18n smartquote %}
+<table>
+<thead><tr><th>Surname</th><th>First Name</th><th>Mobile Phone</th><th>Email</th><th>DOB</th></tr></thead>
+{% for family in families %}
+<tbody class="family" name="{{ family }}">
+<tr><td>{{ family.name }}</td><td colspan="4">{% if family.street and family.suburb and family.postcode %}{% with family.street|add:" "|add:family.suburb|add:" "|add:family.postcode as address_url %}<a href="https://www.google.com.au/maps/place/{{ address_url|urlencode:"" }}">{{ family.street|smartquote }} {{ family.suburb|smartquote }} {{ family.postcode }}</a>{% endwith %}{% endif %}</td></tr>
+{% for person in family.current_members.all %}
+<tr>
+<td>{% if person.surname_override %}{{ person.surname_override }}{% endif %}</td>
+<td>{{ person.name }}{% if person.suffix %} ({{ person.suffix }}){% endif %}</td>
+<td>{% if person.phone_mobile %}<a href="tel:{{ person.phone_mobile_intl }}">{{ person.phone_mobile }}</a>{% endif %}</td>
+<td>{% if person.email %}<a href="mailto:{{ person.email }}">{{ person.email }}</a>{% elif family.email %}<a href="mailto:{{ family.email }}">{{ family.email }}</a>{% endif %}</td>
+<td>{% if person.birthday %}{{ person.birthday|date:"j F" }}{% endif %}</td>
+</tr>
+{% endfor %}
+</tbody>
+{% endfor %}
+</table>

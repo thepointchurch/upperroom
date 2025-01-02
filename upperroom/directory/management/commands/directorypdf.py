@@ -57,7 +57,8 @@ class Command(BaseCommand):
             "contact_email": settings.DIRECTORY_EMAIL,
             "month": month,
             "year": year,
-            "families": Family.current_objects.all(),
+            "families": Family.active_objects.all(),
+            "archived_families": Family.archived_objects.all(),
         }
         output_file = PdfViewCompact.FILE_NAME
         template = PrintViewCompact.template_name

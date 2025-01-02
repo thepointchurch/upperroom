@@ -24,6 +24,32 @@ class FamilyCurrentManager(models.Manager):  # pylint: disable=too-few-public-me
         )
 
 
+class FamilyArchivedManager(models.Manager):  # pylint: disable=too-few-public-methods
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .filter(is_current=True, is_archived=True)
+            .select_related("husband", "wife")
+            .prefetch_related(
+                "members",
+            )
+        )
+
+
+class FamilyActiveManager(models.Manager):  # pylint: disable=too-few-public-methods
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .filter(is_current=True, is_archived=False)
+            .select_related("husband", "wife")
+            .prefetch_related(
+                "members",
+            )
+        )
+
+
 def get_family_photo_filename(instance, filename):  # pylint: disable=unused-argument
     return f"directory/family/{instance.id}/photo.jpg"
 
@@ -89,6 +115,8 @@ class Family(models.Model):
 
     objects = models.Manager()
     current_objects = FamilyCurrentManager()
+    archived_objects = FamilyArchivedManager()
+    active_objects = FamilyActiveManager()
     search_objects = FamilySearchManager(
         name="icontains", members__name="icontains", members__surname_override="icontains"
     )
