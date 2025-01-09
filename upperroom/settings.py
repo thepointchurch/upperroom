@@ -241,8 +241,12 @@ if env("STATICFILES_BUCKET") or env("MEDIAFILES_BUCKET"):
     MEDIAFILES_BUCKET = env("MEDIAFILES_BUCKET")
     if MEDIAFILES_BUCKET:
         if "." not in MEDIAFILES_BUCKET:
-            CSP_IMG_SRC += (MEDIAFILES_BUCKET + ".s3.amazonaws.com",)
-            CSP_MEDIA_SRC += (MEDIAFILES_BUCKET + ".s3.amazonaws.com",)
+            if env("AWS_USE_DUALSTACK_ENDPOINT"):
+                _S3_DOMAIN = f".s3.dualstack.{env('AWS_DEFAULT_REGION')}.amazonaws.com"
+            else:
+                _S3_DOMAIN = ".s3.amazonaws.com"
+            CSP_IMG_SRC += (MEDIAFILES_BUCKET + _S3_DOMAIN,)
+            CSP_MEDIA_SRC += (MEDIAFILES_BUCKET + _S3_DOMAIN,)
         else:
             CSP_IMG_SRC += (MEDIAFILES_BUCKET,)
             CSP_MEDIA_SRC += (MEDIAFILES_BUCKET,)
