@@ -71,7 +71,8 @@ class WeblogDetail(VaryOnCookieMixin, LoginRequiredMixin, generic.DetailView):
         else:
             manager = WeblogEntry.published_objects
         return (
-            manager.select_related("author__family")
+            manager.filter(created__year=self.kwargs.get("year"), created__month=self.kwargs.get("month"))
+            .select_related("author__family")
             .prefetch_related(
                 Prefetch(
                     "attachments",
