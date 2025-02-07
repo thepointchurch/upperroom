@@ -3,7 +3,7 @@ RUN apk add --no-cache \
         build-base \
         libffi-dev
 RUN pip install --root-user-action=ignore --upgrade pip setuptools && \
-    pip install --root-user-action=ignore "poetry~=1.8" wheel
+    pip install --root-user-action=ignore "poetry~=2.0" wheel
 COPY . /django/
 WORKDIR /django
 ENV POETRY_VIRTUALENVS_IN_PROJECT=true \

@@ -1,24 +1,18 @@
-[build-system]
-requires = ["poetry>=1.8"]
-build-backend = "poetry.masonry.api"
-
-[tool.poetry]
+[project]
 name = "upperroom"
+version = "3.2.1"
 description = "A website for Churches."
-authors = [
-    "Craig Holyoak <craig@helmsdeep.org>",
-]
 license = "GPL-2.0-only"
 readme = "README.md"
-repository = "https://github.com/thepointchurch/upperroom"
-homepage = "https://github.com/thepointchurch/upperroom"
-version = "3.2.1"
-
+requires-python = ">=3.11"
+authors = [
+    {name = "Craig Holyoak", email = "craig@helmsdeep.org"},
+]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Web Environment",
     "Framework :: Django",
-    "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.1",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
     "Operating System :: OS Independent",
@@ -29,7 +23,51 @@ classifiers = [
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
 ]
+dependencies = [
+    "argon2-cffi (>=23.1.0)",
+    "bcrypt (>=4.2.0)",
+    "django (>=5.1.0,<5.2.0)",
+    "django-csp (>=3.8)",
+    "django-environ (>=0.12.0)",
+    "django-markdownify (>=0.9.5)",
+    "django-robots (>=6.1)",
+    "mutagen (>=1.47.0)",
+    "weasyprint (>=64.0)",
+    "yafg (>=0.3)",
 
+    "gunicorn (>=23.0.0)",
+    "setproctitle (>=1.3.0)",
+]
+
+[project.urls]
+homepage = "https://github.com/thepointchurch/upperroom"
+repository = "https://github.com/thepointchurch/upperroom"
+
+[project.scripts]
+upperroom = 'upperroom.commands:main'
+upperroom-sendrosteremails = 'upperroom.commands:sendrosteremails'
+upperroom-restore-fixtures = 'upperroom.commands:restore_fixtures'
+
+[project.optional-dependencies]
+aws = [
+    "cryptography>=44.0.0",
+    "django-amazon-ses>=4.0.0",
+    "django-storages>=1.14.0",
+]
+cache = [
+    "django-cacheops>=7.1",
+    "django-redis>=5.4.0",
+]
+google = [
+    "google-api-python-client>=2.160.0",
+    "google-auth-oauthlib>=1.2.0",
+]
+pgsql = [
+    "psycopg[binary]>=3.2.0",
+]
+
+[tool.poetry]
+requires-poetry = ">=2.0"
 exclude = [
     "**/tests.py",
     "**/tests",
@@ -38,52 +76,9 @@ exclude = [
 [tool.poetry.dependencies]
 python = "^3.11"
 
-argon2-cffi = "^23.1"
-bcrypt = "^4.1"
-django = "~5.1"
-django-csp = "^3.8"
-django-environ = "~0"
-django-markdownify = "~0"
-django-robots = "^6.1"
-mutagen = "^1.47"
-weasyprint = "^63.0"
-yafg = "~0"
-
-gunicorn = "^23.0"
-setproctitle = "^1.3"
-
-cryptography = { version = "^43.0", optional = true }
-django-amazon-ses = { version = "^4.0", optional = true }
-django-storages = { version = "^1.14", optional = true }
-botocore = { version = "^1.34", optional = true }
-google-api-python-client = { version = "^2.143", optional = true }
-google-auth-oauthlib = { version = "^1.2", optional = true }
-psycopg = { version = "^3.1", optional = true, extras=["binary"] }
-redis = { version = "^5.0", optional = true }
-django-redis = { version = "^5.4", optional = true }
-django-cacheops = { version = "^7.0", optional = true }
-
-[tool.poetry.extras]
-aws = [
-    "cryptography",
-    "django-amazon-ses",
-    "django-storages",
-]
-cache = [
-    "django-cacheops",
-    "django-redis",
-]
-google = [
-    "google-api-python-client",
-    "google-auth-oauthlib",
-]
-pgsql = [
-    "psycopg",
-]
-
 [tool.poetry.group.dev.dependencies]
 coverage = "~7"
-django-debug-toolbar = "~4"
+django-debug-toolbar = "~5"
 gitpython = "~3"
 pre-commit = "~4"
 pylint = "~3"
@@ -94,10 +89,12 @@ semantic_version = "~2"
 tomlkit = "~0"
 python-lsp-server = { version = "~1", extras=["isort", "black"] }
 
-[tool.poetry.scripts]
-upperroom = 'upperroom.commands:main'
-upperroom-sendrosteremails = 'upperroom.commands:sendrosteremails'
-upperroom-restore-fixtures = 'upperroom.commands:restore_fixtures'
+[tool.poetry.requires-plugins]
+poetry-plugin-shell = ">=1.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
 
 
 [tool.pylint.master]
