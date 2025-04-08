@@ -1,6 +1,6 @@
 {% load i18n %}
 <form method="get" action="{% url 'library:search' %}">
-<input type="text" name="query" value="" size="32" />
+<input type="search" name="query" value="" size="32" />
 <select name="field">
 <option value=""></option>
 <option value="title">{% translate 'title'|capfirst %}</option>

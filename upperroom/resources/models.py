@@ -350,6 +350,8 @@ class Attachment(models.Model):
         else:
             self.metadata = {}
 
+    update_metadata.alters_data = True
+
     def update_podcast_tags_mp3(self, mediafile):
         if self.mime_type not in ["audio/mp3", "audio/mpeg"]:
             return
@@ -381,6 +383,8 @@ class Attachment(models.Model):
 
         if update_required:
             mediafile.tags.save(self.file.file.file)
+
+    update_podcast_tags_mp3.alters_data = True
 
 
 def get_feed_artwork_filename(instance, filename):

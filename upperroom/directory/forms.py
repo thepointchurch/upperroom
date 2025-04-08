@@ -1,4 +1,4 @@
-from django.forms import DateInput, ModelForm
+from django.forms import DateInput, ModelForm, TelInput
 from django.forms.models import inlineformset_factory, modelform_factory
 
 from .admin import FamilyForm as AdminFamilyForm
@@ -19,7 +19,11 @@ class PersonForm(ModelForm):
             "phone_work",
             "is_current",
         ]
-        widgets = {"birthday": DateInput(attrs={"type": "date"}, format="%Y-%m-%d")}
+        widgets = {
+            "birthday": DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
+            "phone_mobile": TelInput(),
+            "phone_work": TelInput(),
+        }
 
 
 PersonInlineFormSet = inlineformset_factory(Family, Person, form=PersonForm, extra=1, can_delete=False)
@@ -39,5 +43,9 @@ FamilyForm = modelform_factory(
         "wife",
         "anniversary",
     ],
-    widgets={"anniversary": DateInput(attrs={"type": "date"}, format="%Y-%m-%d")},
+    widgets={
+        "anniversary": DateInput(attrs={"type": "date"}, format="%Y-%m-%d"),
+        "phone_home": TelInput(),
+        "phone_mobile": TelInput(),
+    },
 )

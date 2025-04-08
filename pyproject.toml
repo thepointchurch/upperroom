@@ -25,18 +25,18 @@ classifiers = [
 ]
 dependencies = [
     "argon2-cffi (>=23.1.0)",
-    "bcrypt (>=4.2.0)",
-    "django (>=5.1.0,<5.2.0)",
+    "bcrypt (>=4.3.0)",
+    "django (>=5.2.0,<5.3.0)",
     "django-csp (>=3.8,<4.0.0)",
     "django-environ (>=0.12.0)",
     "django-markdownify (>=0.9.5)",
     "django-robots (>=6.1)",
     "mutagen (>=1.47.0)",
-    "weasyprint (>=64.0)",
+    "weasyprint (>=65.0)",
     "yafg (>=0.3)",
 
     "gunicorn (>=23.0.0)",
-    "setproctitle (>=1.3.0)",
+    "setproctitle (>=1.3.5)",
 ]
 
 [project.urls]
@@ -50,20 +50,20 @@ upperroom-restore-fixtures = 'upperroom.commands:restore_fixtures'
 
 [project.optional-dependencies]
 aws = [
-    "cryptography>=44.0.0",
-    "django-amazon-ses>=4.0.0",
-    "django-storages>=1.14.0",
+    "cryptography>=44.0.2",
+    "django-amazon-ses>=4.0.1",
+    "django-storages>=1.14.6",
 ]
 cache = [
     "django-cacheops>=7.1",
     "django-redis>=5.4.0",
 ]
 google = [
-    "google-api-python-client>=2.160.0",
-    "google-auth-oauthlib>=1.2.0",
+    "google-api-python-client>=2.166.0",
+    "google-auth-oauthlib>=1.2.1",
 ]
 pgsql = [
-    "psycopg[binary]>=3.2.0",
+    "psycopg[binary]>=3.2.6",
 ]
 
 [tool.poetry]
