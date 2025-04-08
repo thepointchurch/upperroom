@@ -15,7 +15,7 @@ urlpatterns = [
     path(
         "passwd",
         never_cache(
-            csp_update(SCRIPT_SRC="'unsafe-inline'")(
+            csp_update({"script-src": ["'unsafe-inline'"]})(
                 user_passes_test(views.not_a_guest)(
                     auth.views.PasswordChangeView.as_view(success_url=reverse_lazy("members:index"))
                 )

@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "upperroom.splash.apps.SplashConfig",
     "upperroom.utils.apps.UtilsConfig",
     "markdownify",
+    "csp",
     "django.contrib.admin.apps.AdminConfig",
     "django.contrib.auth.apps.AuthConfig",
     "django.contrib.contenttypes.apps.ContentTypesConfig",
@@ -208,13 +209,17 @@ CACHE_MIDDLEWARE_ALIAS = "default"
 CACHE_MIDDLEWARE_KEY_PREFIX = ""
 
 
-CSP_DEFAULT_SRC = ("'self'",)
-CSP_IMG_SRC = ("'self'", "data:")
-CSP_MEDIA_SRC = ("'self'", "data:")
-CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "fonts.googleapis.com")
-CSP_FONT_SRC = ("'self'", "fonts.gstatic.com")
-CSP_SCRIPT_SRC = ("'self'", "cdnjs.cloudflare.com")
-CSP_OBJECT_SRC = ("'none'",)
+CONTENT_SECURITY_POLICY = {
+    "DIRECTIVES": {
+        "default-src": ("'self'",),
+        "font-src": ("'self'", "fonts.gstatic.com"),
+        "img-src": ("'self'", "data:"),
+        "media-src": ("'self'", "data:"),
+        "object-src": ("'none'",),
+        "script-src": ("'self'", "cdnjs.cloudflare.com"),
+        "style-src": ("'self'", "'unsafe-inline'", "fonts.googleapis.com"),
+    }
+}
 
 
 if env("STATICFILES_BUCKET") or env("MEDIAFILES_BUCKET"):
@@ -231,10 +236,10 @@ if env("STATICFILES_BUCKET") or env("MEDIAFILES_BUCKET"):
 
     STATICFILES_BUCKET = env("STATICFILES_BUCKET")
     if STATICFILES_BUCKET:
-        CSP_IMG_SRC += (STATICFILES_BUCKET,)
-        CSP_STYLE_SRC += (STATICFILES_BUCKET,)
-        CSP_FONT_SRC += (STATICFILES_BUCKET,)
-        CSP_SCRIPT_SRC += (STATICFILES_BUCKET,)
+        CONTENT_SECURITY_POLICY["DIRECTIVES"]["img-src"] += (STATICFILES_BUCKET,)
+        CONTENT_SECURITY_POLICY["DIRECTIVES"]["style-src"] += (STATICFILES_BUCKET,)
+        CONTENT_SECURITY_POLICY["DIRECTIVES"]["font-src"] += (STATICFILES_BUCKET,)
+        CONTENT_SECURITY_POLICY["DIRECTIVES"]["script-src"] += (STATICFILES_BUCKET,)
 
     MEDIAFILES_OFFLOAD = True
     MEDIAFILES_ENCRYPTED = env("MEDIAFILES_ENCRYPTED")
@@ -245,11 +250,11 @@ if env("STATICFILES_BUCKET") or env("MEDIAFILES_BUCKET"):
                 _S3_DOMAIN = f".s3.dualstack.{env('AWS_DEFAULT_REGION')}.amazonaws.com"
             else:
                 _S3_DOMAIN = ".s3.amazonaws.com"
-            CSP_IMG_SRC += (MEDIAFILES_BUCKET + _S3_DOMAIN,)
-            CSP_MEDIA_SRC += (MEDIAFILES_BUCKET + _S3_DOMAIN,)
+            CONTENT_SECURITY_POLICY["DIRECTIVES"]["img-src"] += (MEDIAFILES_BUCKET + _S3_DOMAIN,)
+            CONTENT_SECURITY_POLICY["DIRECTIVES"]["media-src"] += (MEDIAFILES_BUCKET + _S3_DOMAIN,)
         else:
-            CSP_IMG_SRC += (MEDIAFILES_BUCKET,)
-            CSP_MEDIA_SRC += (MEDIAFILES_BUCKET,)
+            CONTENT_SECURITY_POLICY["DIRECTIVES"]["img-src"] += (MEDIAFILES_BUCKET,)
+            CONTENT_SECURITY_POLICY["DIRECTIVES"]["media-src"] += (MEDIAFILES_BUCKET,)
 
     AWS_DEFAULT_ACL = None
 

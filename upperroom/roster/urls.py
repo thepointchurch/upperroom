@@ -12,5 +12,5 @@ urlpatterns = [
     path("person/<int:pk>", views.PersonList.as_view(), name="person"),
     path("event/<int:pk>.ics", views.PersonEventList.as_view(), name="event"),
     path("task/<int:pk>.ics", views.PersonTaskList.as_view(), name="task"),
-    path("builder", csp_update(SCRIPT_SRC="'unsafe-inline'")(views.BuilderView.as_view()), name="builder"),
+    path("builder", csp_update({"script-src": ["'unsafe-inline'"]})(views.BuilderView.as_view()), name="builder"),
 ]
