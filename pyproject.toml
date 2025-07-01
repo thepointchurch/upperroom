@@ -1,6 +1,6 @@
 [project]
 name = "upperroom"
-version = "3.3.3"
+version = "3.3.4"
 description = "A website for Churches."
 license = "GPL-2.0-only"
 readme = "README.md"
