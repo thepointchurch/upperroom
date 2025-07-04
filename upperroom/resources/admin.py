@@ -164,6 +164,7 @@ class ResourceAdmin(admin.ModelAdmin):
                 ),
             },
         ),
+        (_("Publishing"), {"fields": ("is_published", "published")}),
         (_("Tags"), {"classes": ("collapse",), "fields": ("tags",)}),
         (_("Author"), {"classes": ("collapse",), "fields": ("author", "show_author")}),
         (_("Featured"), {"classes": ("collapse",), "fields": ("priority",)}),
@@ -171,7 +172,7 @@ class ResourceAdmin(admin.ModelAdmin):
             _("Advanced"),
             {
                 "classes": ("collapse",),
-                "fields": ("is_published", "published", "is_private", "is_pinned", "show_date", "parent"),
+                "fields": ("is_private", "is_pinned", "show_date", "parent"),
             },
         ),
     )

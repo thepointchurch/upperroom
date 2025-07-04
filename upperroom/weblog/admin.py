@@ -77,7 +77,7 @@ class WeblogAdmin(admin.ModelAdmin):
         (
             None,
             {
-                "fields": ("title", "slug", "description", "body", "is_published"),
+                "fields": ("title", "slug", "description", "body"),
                 "description": _(
                     "<dl>"
                     "<dt>To insert inline links:</dt>"
@@ -90,7 +90,7 @@ class WeblogAdmin(admin.ModelAdmin):
                 ),
             },
         ),
-        (_("Timestamps"), {"classes": ("collapse",), "fields": ("published", "created", "modified")}),
+        (_("Publishing"), {"fields": ("is_published", "published", "created", "modified")}),
         (_("Advanced"), {"classes": ("collapse",), "fields": ("show_date", "show_author", "author")}),
     )
 
