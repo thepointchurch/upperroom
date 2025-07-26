@@ -225,6 +225,26 @@ class Resource(FeaturedMixin, models.Model):
     def markdown_link(self):
         return f"[{self.slug}]: {reverse('resources:detail', kwargs={'slug': self.slug})}"
 
+    def prefix_slug(self, tag_ids, slug=None, published=None):
+        if slug is None:
+            slug = self.slug
+        if published is None:
+            published = self.published
+        for tag in (
+            Tag.objects.filter(id__in=tag_ids)
+            .filter(slug_prefix__isnull=False)
+            .order_by("-is_exclusive", "-is_private", "slug")
+        ):
+            prefix = tag.slug_prefix
+            if "%" in tag.slug_prefix:
+                if published:
+                    prefix = published.strftime(tag.slug_prefix)
+                else:
+                    prefix = ""
+            if not slug.startswith(prefix):
+                return prefix + slug
+        return None
+
 
 def get_attachment_filename(instance, filename):  # pylint: disable=unused-argument
     instance_uuid = str(instance.id)

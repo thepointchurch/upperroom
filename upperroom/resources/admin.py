@@ -1,7 +1,9 @@
 from django.contrib import admin
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.forms import ModelForm
 from django.forms.widgets import Textarea
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from ..directory.models import Person
@@ -106,6 +108,28 @@ class ResourceForm(ModelForm):
             self.fields["author"].queryset = Person.objects.filter(
                 models.Q(is_current=True) & models.Q(is_member=True)
             ).order_by("family__name", "name")
+
+    def clean(self):
+        # pubished timestamp will be set to now() if is_published is True in Resource.clean()
+        # but we need to do it here first in case a slug prefix relies on it being set
+        published = self.cleaned_data["published"]
+        if self.cleaned_data["is_published"] and published is None:
+            published = timezone.now()
+        prefix = self.instance.prefix_slug(
+            set(self.cleaned_data["tags"].filter(slug_prefix__isnull=False).values_list("id", flat=True)),
+            self.cleaned_data["slug"],
+            published,
+        )
+        if Resource.objects.filter(slug=prefix).exists():
+            self.add_error(
+                "slug",
+                _(
+                    "%(model_name)s with this %(field_label)s already exists."
+                    % {"model_name": Resource._meta.verbose_name.title(), "field_label": self.fields["slug"].label}
+                ),
+            )
+            raise ValidationError(_("Error applying defined Slug prefix"))
+        return super().clean()
 
 
 class UnpublishedResourceListFilter(admin.SimpleListFilter):

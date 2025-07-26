@@ -34,23 +34,6 @@ def clear_navbar_cache():
     cache.delete(make_template_fragment_key("navbar_featured_private"))
 
 
-def prefix_slug(instance, tag_ids=None):
-    if tag_ids:
-        tags = [Tag.objects.get(id=pk) for pk in tag_ids]
-    else:
-        tags = Tag.objects.all()
-    for tag in tags:
-        if tag.slug_prefix:
-            prefix = tag.slug_prefix
-            if "%" in tag.slug_prefix:
-                if instance.published:
-                    prefix = instance.published.strftime(tag.slug_prefix)
-                else:
-                    prefix = ""
-            if not instance.slug.startswith(prefix):
-                instance.slug = prefix + instance.slug
-
-
 @receiver(post_delete, sender=Resource)
 def resource_post_delete(sender, instance, **kwargs):
     _ = sender
@@ -105,7 +88,9 @@ def resource_pre_save(sender, instance, **kwargs):
         instance.was_featured = not instance.is_featured
     try:
         if instance.is_published and not sender.objects.get(id=instance.id).is_published:
-            prefix_slug(instance)
+            new_slug = instance.prefix_slug({t.id for t in Tag.objects.filter(resources__id=instance.id)})
+            if new_slug:
+                instance.slug = new_slug
     except ObjectDoesNotExist:
         pass
 
@@ -128,9 +113,9 @@ def resource_m2m_changed(sender, instance, action, reverse, pk_set, **kwargs):
         if (resource.modified - resource.created).seconds > 15:
             continue
 
-        old_slug = resource.slug
-        prefix_slug(resource, pk_set)
-        if old_slug != resource.slug:
+        new_slug = resource.prefix_slug(pk_set)
+        if new_slug and resource.slug != new_slug:
+            resource.slug = new_slug
             resource.save()
 
 
