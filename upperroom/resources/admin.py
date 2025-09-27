@@ -120,6 +120,7 @@ class ResourceForm(ModelForm):
             self.cleaned_data["slug"],
             published,
         )
+        self.cleaned_data["slug"] = prefix
         if Resource.objects.filter(slug=prefix).exists():
             self.add_error(
                 "slug",
