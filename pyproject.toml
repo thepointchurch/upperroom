@@ -32,6 +32,7 @@ dependencies = [
     "django-markdownify (>=0.9.5)",
     "django-robots (>=6.1)",
     "mutagen (>=1.47.0)",
+    "PyYAML (>=6.0.2)",
     "weasyprint (>=65.0)",
     "yafg (>=0.3)",
 
@@ -78,7 +79,7 @@ python = "^3.11"
 
 [tool.poetry.group.dev.dependencies]
 coverage = "~7"
-django-debug-toolbar = "~5"
+django-debug-toolbar = "~6"
 gitpython = "~3"
 pre-commit = "~4"
 pylint = "~3"
