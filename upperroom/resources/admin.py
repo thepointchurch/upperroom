@@ -120,16 +120,17 @@ class ResourceForm(ModelForm):
             self.cleaned_data["slug"],
             published,
         )
-        self.cleaned_data["slug"] = prefix
-        if Resource.objects.filter(slug=prefix).exists():
-            self.add_error(
-                "slug",
-                _(
-                    "%(model_name)s with this %(field_label)s already exists."
-                    % {"model_name": Resource._meta.verbose_name.title(), "field_label": self.fields["slug"].label}
-                ),
-            )
-            raise ValidationError(_("Error applying defined Slug prefix"))
+        if prefix:
+            self.cleaned_data["slug"] = prefix
+            if Resource.objects.filter(slug=prefix).exists():
+                self.add_error(
+                    "slug",
+                    _(
+                        "%(model_name)s with this %(field_label)s already exists."
+                        % {"model_name": Resource._meta.verbose_name.title(), "field_label": self.fields["slug"].label}
+                    ),
+                )
+                raise ValidationError(_("Error applying defined Slug prefix"))
         return super().clean()
 
 
