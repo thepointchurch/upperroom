@@ -218,7 +218,6 @@ class EnclosureView(AttachmentView):
             attachment.file,
             filename=(attachment.clean_title + (attachment.extension or "")),
             content_type=attachment.mime_type,
-            signed=False,
         )
 
 
@@ -280,4 +279,4 @@ class FeedArtworkView(NeverCacheMixin, generic.DetailView):
         feed = self.get_object()
         if not feed.artwork:
             raise Http404("This feed has no artwork")
-        return attachment_response(feed.artwork, as_attachment=False, signed=False)
+        return attachment_response(feed.artwork, as_attachment=False)

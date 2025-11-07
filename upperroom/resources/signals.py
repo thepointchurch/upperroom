@@ -5,16 +5,8 @@ from django.core.files.uploadedfile import UploadedFile
 from django.db.models.signals import m2m_changed, post_delete, post_save, pre_delete, pre_save
 from django.dispatch import receiver
 
-from ..utils.storages import (
-    decrypt_s3_file,
-    delete_s3_file,
-    encrypt_s3_file,
-    is_s3_encrypted,
-    is_s3_file,
-    is_s3_file_public,
-    set_s3_file_acl,
-)
-from .models import Attachment, Resource, ResourceFeed, Tag, get_attachment_filename, get_feed_artwork_filename
+from ..utils.storages import delete_s3_file, is_s3_file
+from .models import Attachment, Resource, ResourceFeed, Tag
 
 
 def delete_file(file_object):
@@ -46,22 +38,6 @@ def resource_post_save(sender, instance, **kwargs):  # NOQA: C901
     _ = sender
     if kwargs.get("raw"):
         return
-    for attachment in instance.attachments.all():
-        if is_s3_file(attachment.file):
-            was_private = getattr(instance, "was_private", None)
-            if was_private is not None and was_private != instance.is_private:
-                if is_s3_encrypted(attachment.file):
-                    if not instance.is_private:
-                        decrypt_s3_file(attachment.file)
-                else:
-                    if instance.is_private:
-                        encrypt_s3_file(attachment.file)
-                if is_s3_file_public(attachment.file):
-                    if instance.is_private:
-                        set_s3_file_acl(attachment.file, "private")
-                else:
-                    if not instance.is_private:
-                        set_s3_file_acl(attachment.file, "public-read")
     if getattr(instance, "was_featured", None) or instance.is_featured:
         clear_navbar_cache()
 
@@ -78,10 +54,6 @@ def resource_pre_delete(sender, instance, **kwargs):
 @receiver(pre_save, sender=Resource)
 def resource_pre_save(sender, instance, **kwargs):
     _ = sender
-    try:
-        instance.was_private = sender.objects.get(id=instance.id).is_private
-    except ObjectDoesNotExist:
-        instance.was_private = not instance.is_private
     try:
         instance.was_featured = sender.objects.get(id=instance.id).is_featured
     except ObjectDoesNotExist:
@@ -125,8 +97,6 @@ def attachment_pre_save(sender, instance, **kwargs):
     if kwargs.get("raw"):
         return
     if isinstance(instance.file.file, UploadedFile):
-        # Work to be done when a new file is uploaded
-        instance.file_new = True
         try:
             # Delete any old file so the path is clear for the new file.
             # There is a risk that the ensuing save() will fail, which will
@@ -137,20 +107,6 @@ def attachment_pre_save(sender, instance, **kwargs):
         except ObjectDoesNotExist:
             pass
         instance.update_metadata()
-        if not instance.is_private:
-            try:
-                instance.file.storage.save_cleartext(get_attachment_filename(instance, instance.file.name))
-            except AttributeError:
-                pass
-
-
-@receiver(post_save, sender=Attachment)
-def attachment_post_save(sender, instance, **kwargs):
-    _ = sender
-    if kwargs.get("raw"):
-        return
-    if getattr(instance, "file_new", False) and not instance.resource.is_private and is_s3_file(instance.file):
-        set_s3_file_acl(instance.file, "public-read")
 
 
 @receiver(post_delete, sender=Attachment)
@@ -208,27 +164,11 @@ def feed_pre_save(sender, instance, **kwargs):
 
     # New artwork was uploaded
     if instance.artwork and isinstance(instance.artwork.file, UploadedFile):
-        instance.artwork_new = True
         # Delete any old file so the path is clear for the new file.
         # There is a risk that the ensuing save() will fail, which will
         # leave the file missing.
         if old_artwork:
             delete_file(old_artwork)
-        try:
-            instance.artwork.storage.save_cleartext(get_feed_artwork_filename(instance, instance.artwork.name))
-        except AttributeError:
-            pass
-
-
-@receiver(post_save, sender=ResourceFeed)
-def feed_post_save(sender, instance, **kwargs):
-    _ = sender
-    if kwargs.get("raw"):
-        return
-    if instance.artwork and is_s3_file(instance.artwork):
-        if getattr(instance, "artwork_new", False):
-            if not is_s3_file_public(instance.artwork):
-                set_s3_file_acl(instance.artwork, "public-read")
 
 
 @receiver(post_delete, sender=ResourceFeed)

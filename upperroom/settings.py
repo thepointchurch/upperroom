@@ -12,7 +12,6 @@ env = environ.Env(
     EMAIL_URL=(str, "consolemail://"),
     EMAIL_BACKEND=(str, None),
     MEDIAFILES_BUCKET=(str, None),
-    MEDIAFILES_ENCRYPTED=(bool, False),
     SITE_ID=(int, 1),
     STATIC_URL=(str, "/static/"),
     STATICFILES_BUCKET=(str, None),
@@ -225,14 +224,23 @@ CONTENT_SECURITY_POLICY = {
 if env("STATICFILES_BUCKET") or env("MEDIAFILES_BUCKET"):
     INSTALLED_APPS += ("storages",)
 
-    STORAGES = {
-        "default": {
-            "BACKEND": "upperroom.utils.storages.backends.S3MediaStorage",
-        },
-        "staticfiles": {
-            "BACKEND": "upperroom.utils.storages.backends.S3StaticStorage",
-        },
-    }
+    STORAGES = {}
+    if env("MEDIAFILES_BUCKET"):
+        STORAGES["default"] = {
+            "BACKEND": "storages.backends.s3.S3Storage",
+            "OPTIONS": {
+                "bucket_name": env("MEDIAFILES_BUCKET"),
+            },
+        }
+    if env("STATICFILES_BUCKET"):
+        STORAGES["staticfiles"] = {
+            "BACKEND": "storages.backends.s3.S3StaticStorage",
+            "OPTIONS": {
+                "bucket_name": env("STATICFILES_BUCKET"),
+            },
+        }
+        if "." in env("STATICFILES_BUCKET"):
+            STORAGES["staticfiles"]["OPTIONS"]["custom_domain"] = env("STATICFILES_BUCKET")
 
     STATICFILES_BUCKET = env("STATICFILES_BUCKET")
     if STATICFILES_BUCKET:
@@ -241,8 +249,6 @@ if env("STATICFILES_BUCKET") or env("MEDIAFILES_BUCKET"):
         CONTENT_SECURITY_POLICY["DIRECTIVES"]["font-src"] += (STATICFILES_BUCKET,)
         CONTENT_SECURITY_POLICY["DIRECTIVES"]["script-src"] += (STATICFILES_BUCKET,)
 
-    MEDIAFILES_OFFLOAD = True
-    MEDIAFILES_ENCRYPTED = env("MEDIAFILES_ENCRYPTED")
     MEDIAFILES_BUCKET = env("MEDIAFILES_BUCKET")
     if MEDIAFILES_BUCKET:
         if "." not in MEDIAFILES_BUCKET:

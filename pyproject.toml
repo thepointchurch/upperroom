@@ -141,7 +141,10 @@ minversion = "6.0"
 addopts = "-ra -q"
 DJANGO_SETTINGS_MODULE = "upperroom.settings"
 python_files = "tests.py tests/*.py"
-filterwarnings = "ignore::DeprecationWarning:yafg"
+filterwarnings = [
+    "ignore::DeprecationWarning:yafg",
+    "ignore::SyntaxWarning:yafg",
+]
 
 
 [tool.pylsp-mypy]
