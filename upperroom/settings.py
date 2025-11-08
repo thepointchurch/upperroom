@@ -224,44 +224,6 @@ CONTENT_SECURITY_POLICY = {
 if env("STATICFILES_BUCKET") or env("MEDIAFILES_BUCKET"):
     INSTALLED_APPS += ("storages",)
 
-    STORAGES = {}
-    if env("MEDIAFILES_BUCKET"):
-        STORAGES["default"] = {
-            "BACKEND": "storages.backends.s3.S3Storage",
-            "OPTIONS": {
-                "bucket_name": env("MEDIAFILES_BUCKET"),
-            },
-        }
-    if env("STATICFILES_BUCKET"):
-        STORAGES["staticfiles"] = {
-            "BACKEND": "storages.backends.s3.S3StaticStorage",
-            "OPTIONS": {
-                "bucket_name": env("STATICFILES_BUCKET"),
-            },
-        }
-        if "." in env("STATICFILES_BUCKET"):
-            STORAGES["staticfiles"]["OPTIONS"]["custom_domain"] = env("STATICFILES_BUCKET")
-
-    STATICFILES_BUCKET = env("STATICFILES_BUCKET")
-    if STATICFILES_BUCKET:
-        CONTENT_SECURITY_POLICY["DIRECTIVES"]["img-src"] += (STATICFILES_BUCKET,)
-        CONTENT_SECURITY_POLICY["DIRECTIVES"]["style-src"] += (STATICFILES_BUCKET,)
-        CONTENT_SECURITY_POLICY["DIRECTIVES"]["font-src"] += (STATICFILES_BUCKET,)
-        CONTENT_SECURITY_POLICY["DIRECTIVES"]["script-src"] += (STATICFILES_BUCKET,)
-
-    MEDIAFILES_BUCKET = env("MEDIAFILES_BUCKET")
-    if MEDIAFILES_BUCKET:
-        if "." not in MEDIAFILES_BUCKET:
-            if env("AWS_USE_DUALSTACK_ENDPOINT"):
-                _S3_DOMAIN = f".s3.dualstack.{env('AWS_DEFAULT_REGION')}.amazonaws.com"
-            else:
-                _S3_DOMAIN = ".s3.amazonaws.com"
-            CONTENT_SECURITY_POLICY["DIRECTIVES"]["img-src"] += (MEDIAFILES_BUCKET + _S3_DOMAIN,)
-            CONTENT_SECURITY_POLICY["DIRECTIVES"]["media-src"] += (MEDIAFILES_BUCKET + _S3_DOMAIN,)
-        else:
-            CONTENT_SECURITY_POLICY["DIRECTIVES"]["img-src"] += (MEDIAFILES_BUCKET,)
-            CONTENT_SECURITY_POLICY["DIRECTIVES"]["media-src"] += (MEDIAFILES_BUCKET,)
-
     AWS_DEFAULT_ACL = None
 
     AWS_S3_OBJECT_PARAMETERS = {
@@ -269,6 +231,44 @@ if env("STATICFILES_BUCKET") or env("MEDIAFILES_BUCKET"):
     }
 
     AWS_S3_SIGNATURE_VERSION = "s3v4"
+
+    STORAGES = {}
+
+    if env("MEDIAFILES_BUCKET"):
+        MEDIAFILES_BUCKET = env("MEDIAFILES_BUCKET")
+        STORAGES["default"] = {
+            "BACKEND": "storages.backends.s3.S3Storage",
+            "OPTIONS": {
+                "bucket_name": env("MEDIAFILES_BUCKET"),
+            },
+        }
+        # requires https://github.com/jschneier/django-storages/issues/165
+        if "." in MEDIAFILES_BUCKET:
+            STORAGES["default"]["OPTIONS"]["custom_domain"] = env("MEDIAFILES_BUCKET")
+            CONTENT_SECURITY_POLICY["DIRECTIVES"]["img-src"] += (MEDIAFILES_BUCKET,)
+            CONTENT_SECURITY_POLICY["DIRECTIVES"]["media-src"] += (MEDIAFILES_BUCKET,)
+        else:
+            if env("AWS_USE_DUALSTACK_ENDPOINT"):
+                _S3_DOMAIN = f".s3.dualstack.{env('AWS_DEFAULT_REGION')}.amazonaws.com"
+            else:
+                _S3_DOMAIN = ".s3.amazonaws.com"
+            CONTENT_SECURITY_POLICY["DIRECTIVES"]["img-src"] += (MEDIAFILES_BUCKET + _S3_DOMAIN,)
+            CONTENT_SECURITY_POLICY["DIRECTIVES"]["media-src"] += (MEDIAFILES_BUCKET + _S3_DOMAIN,)
+
+    if env("STATICFILES_BUCKET"):
+        STATICFILES_BUCKET = env("STATICFILES_BUCKET")
+        STORAGES["staticfiles"] = {
+            "BACKEND": "storages.backends.s3.S3StaticStorage",
+            "OPTIONS": {
+                "bucket_name": env("STATICFILES_BUCKET"),
+            },
+        }
+        if "." in STATICFILES_BUCKET:
+            STORAGES["staticfiles"]["OPTIONS"]["custom_domain"] = env("STATICFILES_BUCKET")
+        CONTENT_SECURITY_POLICY["DIRECTIVES"]["img-src"] += (STATICFILES_BUCKET,)
+        CONTENT_SECURITY_POLICY["DIRECTIVES"]["style-src"] += (STATICFILES_BUCKET,)
+        CONTENT_SECURITY_POLICY["DIRECTIVES"]["font-src"] += (STATICFILES_BUCKET,)
+        CONTENT_SECURITY_POLICY["DIRECTIVES"]["script-src"] += (STATICFILES_BUCKET,)
 
 
 AWS_DEFAULT_REGION = env("AWS_DEFAULT_REGION")
