@@ -58,7 +58,7 @@ class Command(BaseCommand):
         if options["test"]:
             backend = "django.core.mail.backends.console.EmailBackend"
 
-        connection = mail.get_connection(backend)
+        connection = mail.get_connection(backend=backend)
         connection.open()
 
         messages = []
@@ -68,12 +68,12 @@ class Command(BaseCommand):
         for person, roles in role_map.items():
             messages.append(
                 mail.EmailMessage(
-                    _("%(site)s Roster Notification") % {"site": site_name},
-                    get_template("roster/reminder.txt").render(
+                    subject=_("%(site)s Roster Notification") % {"site": site_name},
+                    body=get_template("roster/reminder.txt").render(
                         {"person": person, "date": notification_date, "role_list": roles}
                     ),
-                    settings.ROSTER_EMAIL,
-                    [person.find_email],
+                    from_email=settings.ROSTER_EMAIL,
+                    to=[person.find_email],
                     connection=connection,
                 )
             )
