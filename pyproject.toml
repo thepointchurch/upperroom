@@ -1,6 +1,6 @@
 [project]
 name = "upperroom"
-version = "3.3.4"
+version = "3.3.5"
 description = "A website for Churches."
 license = "GPL-2.0-only"
 readme = "README.md"
@@ -88,7 +88,7 @@ pytest = "~8"
 pytest-django = "~4"
 semantic_version = "~2"
 tomlkit = "~0"
-python-lsp-server = { version = "~1", extras=["isort>=7", "black>=25.9.0"] }  # isort7 ?
+python-lsp-server = { version = "~1", extras=["isort>=7", "black>=25.9.0"] }
 
 [tool.poetry.requires-plugins]
 poetry-plugin-shell = ">=1.0.0"
