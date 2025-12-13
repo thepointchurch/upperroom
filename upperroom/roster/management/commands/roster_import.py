@@ -16,6 +16,14 @@ class DoRollback(Exception):
     pass
 
 
+class DoWarningRollback(DoRollback):
+    pass
+
+
+class DoErrorRollback(DoRollback):
+    pass
+
+
 # This loader ensures errors when there are duplicate keys in the import
 class UniqueKeyLoader(yaml.SafeLoader):  # pylint: disable=too-many-ancestors
     def construct_mapping(self, node, deep=False):
@@ -105,7 +113,7 @@ class Command(BaseCommand):
             help=_("Make changes despite warnings."),
         )
 
-    def handle(self, *args, **options):
+    def handle(self, *args, **options):  # NOQA: C901
         self._has_warnings = False  # pylint: disable=attribute-defined-outside-init
         self._has_errors = False  # pylint: disable=attribute-defined-outside-init
 
@@ -119,16 +127,24 @@ class Command(BaseCommand):
             with transaction.atomic():
                 for meeting_date, meeting_data in import_data.items():
                     self._process_meeting(meeting_date, meeting_data)
-                if options["dry_run"] or self._has_errors or (self._has_warnings and not options["force"]):
+                if options["dry_run"]:
                     raise DoRollback()
+                if self._has_errors:
+                    raise DoErrorRollback()
+                if self._has_warnings and not options["force"]:
+                    raise DoWarningRollback()
+        except DoErrorRollback:
+            self.stderr.write(
+                self.style.ERROR(_("Successfully processed import data, rolling back due to database errors"))
+            )
+        except DoWarningRollback:
+            self.stderr.write(
+                self.style.WARNING(
+                    _("Successfully processed import data, rolling back due to warnings, consider using --force")
+                )
+            )
         except DoRollback:
-            if self._has_errors:
-                style = self.style.ERROR
-            elif self._has_warnings and not options["force"]:
-                style = self.style.WARNING
-            else:
-                style = self.style.SUCCESS
-            self.stderr.write(style(_("Successfully processed import data, rolling back.")))
+            self.stderr.write(self.style.SUCCESS(_("Successfully processed import data, rolling back")))
 
     def _process_meeting(self, meeting_date, meeting_data):
         meeting = Meeting(date=meeting_date)
