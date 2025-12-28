@@ -174,7 +174,7 @@ class Role(models.Model):
     guest = models.CharField(max_length=128, null=True, blank=True, verbose_name=_("guest"))
     role = models.ForeignKey(
         RoleType,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         limit_choices_to=models.Q(children__isnull=True),
         related_name="roles",
         verbose_name=_("role"),
