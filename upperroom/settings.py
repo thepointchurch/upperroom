@@ -148,7 +148,8 @@ MARKDOWNIFY = {
             "markdown.extensions.extra",
             "markdown.extensions.toc",
             "yafg",
-            "upperroom.utils.mdvid",
+            "upperroom.utils.md.vid",
+            "upperroom.utils.md.yt",
         ],
     },
 }

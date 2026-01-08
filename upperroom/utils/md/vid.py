@@ -6,7 +6,9 @@ from markdown.extensions import Extension
 from markdown.treeprocessors import Treeprocessor
 
 
-class MdvidTreeprocessor(Treeprocessor):
+class EmbeddedVidProcessor(Treeprocessor):
+    """Find "images" that are actually videos and use the appropriate tags."""
+
     def __init__(self, md):
         super().__init__()
         self.md = md
@@ -38,10 +40,10 @@ class MdvidTreeprocessor(Treeprocessor):
             del img.attrib["alt"]
 
 
-class MdvidExtension(Extension):
+class EmbeddedVidExtension(Extension):
     def extendMarkdown(self, md):
-        md.treeprocessors.register(MdvidTreeprocessor(md), "mdvidtreeprocessor", 9)
+        md.treeprocessors.register(EmbeddedVidProcessor(md), "vidembed", 9)
 
 
 def makeExtension(**kwargs):
-    return MdvidExtension(**kwargs)
+    return EmbeddedVidExtension(**kwargs)
