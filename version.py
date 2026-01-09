@@ -44,11 +44,11 @@ def update_version(version=None):
 
     with open("pyproject.toml", "r", encoding="utf-8") as config_file:
         config = loads(config_file.read())
-    config["tool"]["poetry"]["version"] = version or get_version()
+    config["project"]["version"] = version or get_version()
     with open("pyproject.toml", "w", encoding="utf-8") as config_file:
         config_file.write(dumps(config))
 
-    return config["tool"]["poetry"]["version"]
+    return config["project"]["version"]
 
 
 if __name__ == "__main__":
