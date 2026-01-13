@@ -268,6 +268,7 @@ if env("STATICFILES_BUCKET") or env("MEDIAFILES_BUCKET"):
         SECURE_CSP["media-src"].append(STATICFILES_BUCKET)
         SECURE_CSP["font-src"].append(STATICFILES_BUCKET)
         SECURE_CSP["script-src"].append(STATICFILES_BUCKET)
+        SECURE_CSP["style-src"].append(STATICFILES_BUCKET)
 
 
 AWS_DEFAULT_REGION = env("AWS_DEFAULT_REGION")
