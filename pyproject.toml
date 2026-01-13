@@ -33,6 +33,7 @@ dependencies = [
     "mutagen (>=1.47.0)",
     "PyYAML (>=6.0.3)",
     "uWSGI (>=2.0.31)",
+    "uwsgi-tools (>=1.1.1)",
     "weasyprint (>=66.0,<67.0)",
     "yafg (>=0.3)",
 ]

@@ -46,7 +46,7 @@ ENTRYPOINT ["/entrypoint.sh"]
 CMD ["uwsgi", "--ini", "/etc/uwsgi.ini"]
 VOLUME /django/data
 
-HEALTHCHECK --interval=5m --timeout=3s CMD curl -fsS -o /dev/null http://localhost:8000/ || exit 1
+HEALTHCHECK --interval=5m --timeout=3s CMD uwsgi_curl localhost:8000 >/dev/null || exit 1
 
 ARG version
 ARG build_date
