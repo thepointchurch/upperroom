@@ -35,7 +35,7 @@ RUN apk add --no-cache \
     && touch /django/.env && chown 0:8000 /django/.env && chmod 640 /django/.env \
     && mkdir -p /django/data && chown 8000:8000 /django/data
 COPY entrypoint.sh /entrypoint.sh
-COPY gunicorn.py /etc/gunicorn.py
+COPY uwsgi.ini /etc/uwsgi.ini
 COPY --from=compile-image /django/.venv /django/.venv
 
 EXPOSE 8000/tcp
@@ -43,7 +43,7 @@ EXPOSE 8000/tcp
 USER django:django
 WORKDIR /django
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["gunicorn", "-b", "[::]:8000", "--config", "/etc/gunicorn.py", "upperroom.wsgi"]
+CMD ["uwsgi", "--ini", "/etc/uwsgi.ini"]
 VOLUME /django/data
 
 HEALTHCHECK --interval=5m --timeout=3s CMD curl -fsS -o /dev/null http://localhost:8000/ || exit 1
