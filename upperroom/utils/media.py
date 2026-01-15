@@ -11,4 +11,4 @@ def get_mime_anchor(mime_type):
 
 
 def is_video_embed(body):
-    return bool(re.match(r"^(<div [^>]*>)?<iframe [^>]+youtube[^>]+/embed/[^>]+></iframe>(</div>)?$", body))
+    return bool(re.match(r"^https?://(www\.)?(youtu\.be|youtube.com)/[^ ]+$", body))
