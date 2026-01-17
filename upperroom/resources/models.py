@@ -2,6 +2,7 @@ import logging
 import uuid
 
 import mutagen
+from django.conf import settings
 from django.core.validators import RegexValidator
 from django.db import models
 from django.http import Http404
@@ -126,6 +127,15 @@ class Resource(FeaturedMixin, models.Model):
 
     tags = models.ManyToManyField(Tag, blank=True, related_name="resources", verbose_name=_("tags"))
 
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="resources",
+        verbose_name=_("owner"),
+    )
+
     author = models.ForeignKey(
         "directory.Person",
         null=True,
@@ -169,6 +179,7 @@ class Resource(FeaturedMixin, models.Model):
         ]
         permissions = [
             ("publish_resource", "Can publish a resource"),
+            ("edit_own_resource", "Can only change a resource you own"),
         ]
         verbose_name = _("resource")
         verbose_name_plural = _("resources")
