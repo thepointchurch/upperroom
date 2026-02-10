@@ -7,6 +7,7 @@ from django.core import mail
 from django.template.loader import get_template
 from django.utils.translation import gettext_lazy as _
 
+from ..utils.tasks import send_email
 from .models import Role
 
 logger = logging.getLogger(__name__)
@@ -34,34 +35,19 @@ def send_roster_emails(notification_date=None, alert_interval=3, test=False):
 
     role_map = _get_role_map(Role.objects.filter(meeting__date=notification_date).exclude(people__isnull=True))
 
-    backend = None
-    if test:
-        backend = "django.core.mail.backends.console.EmailBackend"
-
-    connection = mail.get_connection(backend=backend)
-    connection.open()
-
-    messages = []
-
     site_name = get_current_site(None).name
 
     for person, roles in role_map.items():
-        messages.append(
-            mail.EmailMessage(
-                subject=_("%(site)s Roster Notification") % {"site": site_name},
-                body=get_template("roster/reminder.txt").render(
-                    {"person": person, "date": notification_date, "role_list": roles}
-                ),
-                from_email=settings.ROSTER_EMAIL,
-                to=[person.find_email],
-                connection=connection,
-            )
+        message = mail.EmailMessage(
+            subject=_("%(site)s Roster Notification") % {"site": site_name},
+            body=get_template("roster/reminder.txt").render(
+                {"person": person, "date": notification_date, "role_list": roles}
+            ),
+            from_email=settings.ROSTER_EMAIL,
+            to=[person.find_email],
         )
-
-    connection.send_messages(messages)
-    connection.close()
-
-    if not test:
-        for message in messages:
-            for recipient in message.to:
-                logger.info("Sent mail to <%s>: %s", recipient, message.subject)
+        if test:
+            with mail.get_connection(backend="django.core.mail.backends.console.EmailBackend") as connection:
+                connection.send_messages(message)
+        else:
+            send_email.enqueue(message)
