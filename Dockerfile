@@ -1,18 +1,16 @@
 FROM python:3.13-alpine AS compile-image
 RUN apk add --no-cache \
         build-base \
-        libffi-dev
-RUN pip install --root-user-action=ignore --upgrade pip setuptools && \
-    pip install --root-user-action=ignore "poetry~=2.3" wheel
+        linux-headers
+COPY --from=ghcr.io/astral-sh/uv:0.10.2-python3.13-alpine /usr/local/bin/uv /usr/local/bin/uvx /bin/
 COPY . /django/
 WORKDIR /django
-ENV POETRY_VIRTUALENVS_IN_PROJECT=true \
-    POETRY_NO_INTERACTION=1 \
-    PYTHONDONTWRITEBYTECODE=1
-RUN poetry install --only main --no-root -E aws -E cache -E pgsql \
-    && poetry build --format wheel && .venv/bin/pip install --root-user-action=ignore dist/*.whl \
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    UV_NO_DEV=1
+RUN uv build --wheel \
+    && uv sync --locked --extra aws --extra cache --extra pgsql \
+    && uv pip install dist/*.whl \
     && find .venv -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
-
 
 FROM python:3.13-alpine AS build-image
 ENV PYTHONDONTWRITEBYTECODE=1 \

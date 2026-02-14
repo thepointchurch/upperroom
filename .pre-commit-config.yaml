@@ -8,12 +8,15 @@ repos:
         types: [python]
         pass_filenames: false
         require_serial: true
-      - id: poetry-check
+      - id: pyproject-check
         name: Validate the structure of the pyproject.toml file
-        entry: poetry check
+        entry: uvx --from=validate-pyproject[all] validate-pyproject
         language: system
         files: pyproject.toml
-        pass_filenames: false
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.10.2
+    hooks:
+      - id: uv-lock
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:

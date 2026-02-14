@@ -9,7 +9,7 @@ Upper Room is a framework for church websites.
 
 To set up a development environment:
 
-1. [Install poetry](https://python-poetry.org/docs/#installation)
+1. [Install uv](https://docs.astral.sh/uv/getting-started/installation/)
 
 2. Clone the `testing` repository:
 
@@ -18,24 +18,14 @@ To set up a development environment:
     cd upperroom
     ```
 
-3. Set up the poetry environment:
+3. Set up the virtual environment:
 
     ```
-    poetry install -E aws -E cache -E pgsql -E google
-    poetry run pre-commit install
-    poetry shell
+    uv sync --locked --all-extras --dev
+    uv run pre-commit install
     ```
 
-4. Export config variables:
-
-    ```
-    export DEBUG=on
-    export DATABASE_URL='sqlite:///upperroom.sqlite3'
-    export SECRET_KEY='12345678'
-    export DJANGO_SETTINGS_MODULE=upperroom.settings
-    ```
-
-    or place them in a an environment file:
+4. Set config variables:
 
     ```
     cat >.env <<DEV_ENV
@@ -49,11 +39,11 @@ To set up a development environment:
 5. Initialise the database:
 
     ```
-    upperroom migrate
+    uv run --env-file .env -- upperroom migrate
     ```
 
 6. Start a test server:
 
     ```
-    upperroom runserver
+    uv run --env-file .env -- upperroom runserver
     ```

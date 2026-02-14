@@ -42,13 +42,13 @@ homepage = "https://github.com/thepointchurch/upperroom"
 repository = "https://github.com/thepointchurch/upperroom"
 
 [project.scripts]
-upperroom = 'upperroom.commands:main'
-upperroom-sendrosteremails = 'upperroom.commands:sendrosteremails'
-upperroom-restore-fixtures = 'upperroom.commands:restore_fixtures'
+upperroom = "upperroom.commands:main"
+upperroom-sendrosteremails = "upperroom.commands:sendrosteremails"
+upperroom-restore-fixtures = "upperroom.commands:restore_fixtures"
 
 [project.optional-dependencies]
 aws = [
-    "cryptography>=46.0.3",
+    "cryptography>=46.0.5",
     "django-amazon-ses>=4.0.1",
     "django-storages>=1.14.6",
 ]
@@ -57,42 +57,46 @@ cache = [
     "django-redis>=6.0.0",
 ]
 google = [
-    "google-api-python-client>=2.187.0",
-    "google-auth-oauthlib>=1.2.3",
+    "google-api-python-client>=2.190.0",
+    "google-auth-oauthlib>=1.2.4",
 ]
 pgsql = [
     "psycopg[binary]>=3.3.2",
 ]
 
-[tool.poetry]
-requires-poetry = ">=2.3"
-exclude = [
+[dependency-groups]
+dev = [
+    "black>=25.9.0",
+    "coverage>=7,<8",
+    "django-debug-toolbar>=6,<7",
+    "gitpython>=3,<4",
+    "isort>=6",
+    "pre-commit>=4,<5",
+    "pylint>=3,<4",
+    "pylint-django>=2,<3",
+    "pytest>=8,<9",
+    "pytest-django>=4,<5",
+    "python-lsp-server>=1,<2",
+    "semantic_version>=2,<3",
+    "tomlkit>=0,<1",
+]
+
+[tool.uv]
+
+[tool.uv.build-backend]
+module-root = ""
+source-exclude = [
+    "**/tests.py",
+    "**/tests",
+]
+wheel-exclude = [
     "**/tests.py",
     "**/tests",
 ]
 
-[tool.poetry.dependencies]
-python = "^3.13"
-
-[tool.poetry.group.dev.dependencies]
-coverage = "~7"
-django-debug-toolbar = "~6"
-gitpython = "~3"
-pre-commit = "~4"
-pylint = "~3"
-pylint-django = "~2"
-pytest = "~8"
-pytest-django = "~4"
-semantic_version = "~2"
-tomlkit = "~0"
-python-lsp-server = { version = "~1", extras=["isort>=7", "black>=25.9.0"] }
-
-[tool.poetry.requires-plugins]
-poetry-plugin-shell = ">=1.0.0"
-
 [build-system]
-requires = ["poetry-core>=2.3.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["uv_build>=0.10.2,<0.11.0"]
+build-backend = "uv_build"
 
 
 [tool.pylint.master]

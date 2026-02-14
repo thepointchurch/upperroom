@@ -2,6 +2,7 @@ Dockerfile*
 .git
 .github
 .gitignore
+.venv
 **/__pycache__
 **/tests.py
 **/tests/
