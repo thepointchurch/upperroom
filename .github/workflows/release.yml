@@ -22,10 +22,11 @@ jobs:
         uses: astral-sh/setup-uv@v7
         with:
           version: "0.10.2"
+          enable-cache: true
 
       - name: Install Dependencies
         run: |
-          uv sync --locked --dev --extra aws --extra cache --extra pgsql
+          uv sync --frozen --dev --extra aws --extra cache --extra pgsql
 
       - name: Set version
         id: version
