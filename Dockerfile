@@ -8,6 +8,7 @@ WORKDIR /django
 ENV PYTHONDONTWRITEBYTECODE=1 \
     UV_NO_DEV=1
 RUN uv build --wheel \
+    && uv venv --seed \
     && uv sync --frozen --extra aws --extra cache --extra pgsql \
     && uv pip install dist/*.whl \
     && find .venv -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
