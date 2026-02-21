@@ -34,7 +34,7 @@ dependencies = [
     "uWSGI (>=2.0.31)",
     "uwsgi-tools (>=1.1.1)",
     "weasyprint (>=66.0,<69.0)",
-    "yafg (>=0.3)",
+    "yafg (>=0.4)",
 ]
 
 [project.urls]
@@ -142,10 +142,6 @@ minversion = "6.0"
 addopts = "-ra -q"
 DJANGO_SETTINGS_MODULE = "upperroom.settings"
 python_files = "tests.py tests/*.py"
-filterwarnings = [
-    "ignore::DeprecationWarning:yafg",
-    "ignore::SyntaxWarning:yafg",
-]
 
 
 [tool.pylsp-mypy]

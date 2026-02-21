@@ -47,3 +47,9 @@ To set up a development environment:
     ```
     uv run --env-file .env -- upperroom runserver
     ```
+
+To update project dependencies:
+
+   ```
+   uv sync -U --all-extras --dev
+   ```
