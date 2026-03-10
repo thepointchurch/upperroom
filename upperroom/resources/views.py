@@ -144,8 +144,24 @@ class ResourceDetail(VaryOnCookieMixin, generic.DetailView):
                         Prefetch("attachments", queryset=Attachment.alternates.order_by(), to_attr="alternates")
                     ),
                 ),
-                Prefetch("attachments", queryset=Attachment.alternates.order_by(), to_attr="alternates"),
+                Prefetch(
+                    "attachments",
+                    queryset=Attachment.alternates.exclude(mime_type__startswith="audio/")
+                    .exclude(mime_type__startswith="video/")
+                    .order_by(),
+                    to_attr="alternates",
+                ),
                 Prefetch("attachments", queryset=Attachment.inlines.order_by(), to_attr="inlines"),
+                Prefetch(
+                    "attachments",
+                    queryset=Attachment.alternates.filter(mime_type__startswith="audio/").order_by(),
+                    to_attr="audio",
+                ),
+                Prefetch(
+                    "attachments",
+                    queryset=Attachment.alternates.filter(mime_type__startswith="video/").order_by(),
+                    to_attr="video",
+                ),
             )
             .only(
                 "title",

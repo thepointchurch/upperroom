@@ -76,13 +76,29 @@ class WeblogDetail(VaryOnCookieMixin, LoginRequiredMixin, generic.DetailView):
             .prefetch_related(
                 Prefetch(
                     "attachments",
-                    queryset=Attachment.alternates.only("id", "entry_id", "slug", "description", "mime_type"),
+                    queryset=Attachment.alternates.exclude(mime_type__startswith="audio/")
+                    .exclude(mime_type__startswith="video/")
+                    .only("id", "entry_id", "slug", "description", "mime_type"),
                     to_attr="alternates",
                 ),
                 Prefetch(
                     "attachments",
                     queryset=Attachment.inlines.only("id", "entry_id", "slug", "description"),
                     to_attr="inlines",
+                ),
+                Prefetch(
+                    "attachments",
+                    queryset=Attachment.alternates.filter(mime_type__startswith="audio/").only(
+                        "id", "entry_id", "slug", "description", "mime_type"
+                    ),
+                    to_attr="audio",
+                ),
+                Prefetch(
+                    "attachments",
+                    queryset=Attachment.alternates.filter(mime_type__startswith="video/").only(
+                        "id", "entry_id", "slug", "description", "mime_type"
+                    ),
+                    to_attr="video",
                 ),
             )
             .only(

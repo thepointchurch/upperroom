@@ -22,6 +22,18 @@
 {% endblock metadata %}
 
 {% block content %}
+
+{% if resource.audio|length > 0 %}
+{% for attachment in resource.audio %}
+<div class="media"><audio controls><source src="{% url 'resources:attachment' attachment.id %}" type="{{ attachment.mime_type }}"></audio></div>
+{% endfor %}
+{% endif %}
+{% if resource.video|length > 0 %}
+{% for attachment in resource.video %}
+<div class="media"><video controls><source src="{% url 'resources:attachment' attachment.id %}" type="{{ attachment.mime_type }}"></video></div>
+{% endfor %}
+{% endif %}
+
 {{ resource.content|markdownify:"full" }}
 {% endblock content %}
 

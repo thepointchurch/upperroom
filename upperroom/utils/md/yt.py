@@ -47,7 +47,7 @@ class EmbeddedYoutubeProcessor(Preprocessor):  # pylint: disable=too-few-public-
 class EmbeddedYoutubeExtension(Extension):  # pylint: disable=too-few-public-methods
     _DEFAULT_DOMAINS = ["youtube.com", "youtu.be"]
     _DEFAULT_FORMAT = (
-        '<div style="margin: 1em; text-align: center">'
+        '<div class="media">'
         '<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/{vid}?rel=0"'
         ' referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>'
     )
