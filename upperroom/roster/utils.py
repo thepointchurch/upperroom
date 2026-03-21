@@ -3,7 +3,6 @@ from datetime import date, timedelta
 
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
-from django.core import mail
 from django.template.loader import get_template
 from django.utils.translation import gettext_lazy as _
 
@@ -38,7 +37,11 @@ def send_roster_emails(notification_date=None, alert_interval=3, test=False):
     site_name = get_current_site(None).name
 
     for person, roles in role_map.items():
-        message = mail.EmailMessage(
+        if test:
+            send_email_task = send_email.using(backend="immediate")
+        else:
+            send_email_task = send_email
+        send_email_task.enqueue(
             subject=_("%(site)s Roster Notification") % {"site": site_name},
             body=get_template("roster/reminder.txt").render(
                 {"person": person, "date": notification_date, "role_list": roles}
@@ -46,8 +49,3 @@ def send_roster_emails(notification_date=None, alert_interval=3, test=False):
             from_email=settings.ROSTER_EMAIL,
             to=[person.find_email],
         )
-        if test:
-            with mail.get_connection(backend="django.core.mail.backends.console.EmailBackend") as connection:
-                connection.send_messages(message)
-        else:
-            send_email.enqueue(message)

@@ -132,6 +132,11 @@ TEMPLATES = [
     },
 ]
 
+TASKS = {
+    "default": {"BACKEND": "django.tasks.backends.immediate.ImmediateBackend"},
+    "immediate": {"BACKEND": "django.tasks.backends.immediate.ImmediateBackend"},
+}
+
 MARKDOWNIFY = {
     "default": {
         "BLEACH": False,
