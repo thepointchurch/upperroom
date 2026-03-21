@@ -414,19 +414,6 @@ wheels = [
 ]
 
 [[package]]
-name = "django-amazon-ses"
-version = "4.0.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "boto3" },
-    { name = "django" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/c9/75/942582e7017ee8a4b63a829a8c0c4623577d2d4c47be793a5643d5c6257b/django-amazon-ses-4.0.1.tar.gz", hash = "sha256:338606b0cf40e07e5cafdea65cb4d0ffa8997d7c8a1817544f352406aa095ae0", size = 10812, upload-time = "2022-04-04T23:01:54.587Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/1a/07/2d93fe1d2e24eedee073bc3467f67e604597fcc8693004ffccf2b0e28a9a/django_amazon_ses-4.0.1-py3-none-any.whl", hash = "sha256:ed01e1e87efb4439dd3747c2c45e82e29dc5139e7ba83c47619970e391078138", size = 9035, upload-time = "2022-04-04T23:01:52.575Z" },
-]
-
-[[package]]
 name = "django-cacheops"
 version = "7.2"
 source = { registry = "https://pypi.org/simple" }
@@ -496,6 +483,19 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/15/57/52bd04e1606bd9427286d53bf48c423e438dcc43754406de44e659d4edbc/django-robots-6.1.tar.gz", hash = "sha256:f86bcc3d16d7d7c2a4e37af6063cb4785f50ae16943f82248b48c9e7ac034f1d", size = 38764, upload-time = "2023-09-07T12:08:54.272Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/7d/43/44f187df1c0edea8aaafb3db48415a4a94a52bd3f676abb40d9a6b74e247/django_robots-6.1-py3-none-any.whl", hash = "sha256:07e11a1bf3ddc08290123ec3c55abb45dbbffb9b38aea0a002e9b4a87bd9abcc", size = 59304, upload-time = "2023-09-07T12:08:05.15Z" },
+]
+
+[[package]]
+name = "django-ses"
+version = "4.7.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "boto3" },
+    { name = "django" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/7f/25/25838da8e213c9f125b26a25360f0bb8ac57f07c24977451f3e7a0d63ddd/django_ses-4.7.2.tar.gz", hash = "sha256:a36f2af0e4ce060bf36053ed4c94feac1703ea3351e677c6f6421abd01433a35", size = 71828, upload-time = "2026-02-20T19:22:35.078Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/84/f2/15d4bd54bd01e68e8a116e0b66243c91cb62a3fa0d780a39d2af6654e8ae/django_ses-4.7.2-py3-none-any.whl", hash = "sha256:f3db567fb6f43c01d7d890f5c991e1ebbfa48220de0be24d497ba6332004abcb", size = 37796, upload-time = "2026-02-20T19:22:32.819Z" },
 ]
 
 [[package]]
@@ -1363,7 +1363,7 @@ dependencies = [
 [package.optional-dependencies]
 aws = [
     { name = "cryptography" },
-    { name = "django-amazon-ses" },
+    { name = "django-ses" },
     { name = "django-storages" },
 ]
 cache = [
@@ -1402,12 +1402,12 @@ requires-dist = [
     { name = "bleach", git = "https://github.com/mozilla/bleach?rev=cd47b4c" },
     { name = "cryptography", marker = "extra == 'aws'", specifier = ">=46.0.5" },
     { name = "django", specifier = ">=6.0.2,<6.1.0" },
-    { name = "django-amazon-ses", marker = "extra == 'aws'", specifier = ">=4.0.1" },
     { name = "django-cacheops", marker = "extra == 'cache'", specifier = ">=7.2" },
     { name = "django-environ", specifier = ">=0.12.0" },
     { name = "django-markdownify", specifier = ">=0.9.6" },
     { name = "django-redis", marker = "extra == 'cache'", specifier = ">=6.0.0" },
     { name = "django-robots", specifier = ">=6.1" },
+    { name = "django-ses", marker = "extra == 'aws'", specifier = ">=4.7.2" },
     { name = "django-storages", marker = "extra == 'aws'", specifier = ">=1.14.6" },
     { name = "google-api-python-client", marker = "extra == 'google'", specifier = ">=2.190.0" },
     { name = "google-auth-oauthlib", marker = "extra == 'google'", specifier = ">=1.2.4" },

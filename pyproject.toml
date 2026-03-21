@@ -50,7 +50,7 @@ upperroom-restore-fixtures = "upperroom.commands:restore_fixtures"
 [project.optional-dependencies]
 aws = [
     "cryptography>=46.0.5",
-    "django-amazon-ses>=4.0.1",
+    "django-ses>=4.7.2",
     "django-storages>=1.14.6",
 ]
 cache = [
