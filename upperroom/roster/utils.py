@@ -48,4 +48,5 @@ def send_roster_emails(notification_date=None, alert_interval=3, test=False):
             ),
             from_email=settings.ROSTER_EMAIL,
             to=[person.find_email],
+            test=test,
         )
