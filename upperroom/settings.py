@@ -278,6 +278,9 @@ if env("STATICFILES_BUCKET") or env("MEDIAFILES_BUCKET"):
 
 AWS_DEFAULT_REGION = env("AWS_DEFAULT_REGION")
 
+AWS_SES_REGION_ENDPOINT = f"email.{AWS_DEFAULT_REGION}.api.aws"
+USE_SES_V2 = True
+
 
 if DEBUG and env("DEBUG_TOOLBAR"):
     INSTALLED_APPS.append("debug_toolbar")
