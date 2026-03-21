@@ -1,5 +1,6 @@
 FROM python:3.13-alpine AS compile-image
 RUN apk add --no-cache \
+        git \
         build-base \
         linux-headers
 COPY --from=ghcr.io/astral-sh/uv:0.10.2-python3.13-alpine /usr/local/bin/uv /usr/local/bin/uvx /bin/
