@@ -4,7 +4,7 @@ version = "3.3.5"
 description = "A website for Churches."
 license = "GPL-2.0-only"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.13,<3.14"
 authors = [
     {name = "Craig Holyoak", email = "craig@helmsdeep.org"},
 ]
@@ -25,6 +25,7 @@ classifiers = [
 dependencies = [
     "argon2-cffi (>=25.1.0)",
     "bcrypt (>=5.0.0)",
+    "bleach",
     "django (>=6.0.2,<6.1.0)",
     "django-environ (>=0.12.0)",
     "django-markdownify (>=0.9.6)",
@@ -33,7 +34,7 @@ dependencies = [
     "PyYAML (>=6.0.3)",
     "uWSGI (>=2.0.31)",
     "uwsgi-tools (>=1.1.1)",
-    "weasyprint (>=66.0,<69.0)",
+    "weasyprint (>=68.0,<69.0)",
     "yafg (>=0.4)",
 ]
 
@@ -82,6 +83,9 @@ dev = [
 ]
 
 [tool.uv]
+
+[tool.uv.sources]
+bleach = { git = "https://github.com/mozilla/bleach", rev = "cd47b4c" }
 
 [tool.uv.build-backend]
 module-root = ""
