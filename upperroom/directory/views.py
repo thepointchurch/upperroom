@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.files.storage import default_storage
 from django.db.models import Q
 from django.http import FileResponse, Http404
 from django.shortcuts import redirect
@@ -234,7 +235,9 @@ class PdfView(NeverCacheMixin, PermissionRequiredMixin, generic.View):
 
     def get(self, request, *args, **kwargs):
         title = _("%(site)s Directory") % {"site": get_current_site(request).name}
-        return attachment_response(self.FILE_NAME, filename=(f"{title}.pdf"), content_type="application/pdf")
+        return attachment_response(
+            default_storage.open(self.FILE_NAME), filename=(f"{title}.pdf"), content_type="application/pdf"
+        )
 
 
 class PdfViewCompact(PdfView):
