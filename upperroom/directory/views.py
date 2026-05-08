@@ -157,8 +157,10 @@ class FamilyEditView(NeverCacheMixin, PermissionRequiredMixin, generic.edit.Upda
 class BirthdayView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
     template_name = "directory/birthday_list.html"
     permission_required = "directory.can_view"
-    queryset = Person.current_objects.exclude(birthday__isnull=True).only(
-        "name", "suffix", "surname_override", "family__name", "birthday"
+    queryset = (
+        Person.current_objects.exclude(birthday__isnull=True)
+        .filter(family__is_archived=False)
+        .only("name", "suffix", "surname_override", "family__name", "birthday")
     )
 
     def get_context_data(self, **kwargs):
@@ -172,7 +174,7 @@ class AnniversaryView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListVi
     template_name = "directory/anniversary_list.html"
     permission_required = "directory.can_view"
     queryset = (
-        Family.current_objects.filter(anniversary__isnull=False)
+        Family.active_objects.filter(anniversary__isnull=False)
         .filter(husband__isnull=False, husband__is_current=True)
         .filter(wife__isnull=False, wife__is_current=True)
         .prefetch_related(None)
@@ -261,11 +263,11 @@ class PrintView(NeverCacheMixin, PermissionRequiredMixin, generic.TemplateView):
         context["year"] = year
         context["families"] = Family.active_objects.all()
         context["archived_families"] = Family.archived_objects.all()
-        context["birthdays"] = Person.current_objects.exclude(birthday__isnull=True).only(
+        context["birthdays"] = Person.active_objects.exclude(birthday__isnull=True).only(
             "name", "suffix", "surname_override", "family__name", "birthday"
         )
         context["anniversaries"] = (
-            Family.current_objects.filter(anniversary__isnull=False)
+            Family.active_objects.filter(anniversary__isnull=False)
             .filter(husband__isnull=False)
             .filter(wife__isnull=False)
             .prefetch_related(None)
