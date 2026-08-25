@@ -110,11 +110,17 @@ class WeblogAdmin(admin.ModelAdmin):
             pass
         return get_data
 
-    @admin.action(description=_("Publish selected " + str(WeblogEntry._meta.verbose_name_plural)))
+    @admin.action(
+        description=_("Publish selected " + str(WeblogEntry._meta.verbose_name)),
+        description_plural=_("Publish selected " + str(WeblogEntry._meta.verbose_name_plural)),
+    )
     def publish(self, request, queryset):  # pylint: disable=unused-argument
         queryset.update(is_published=True)
 
-    @admin.action(description=_("Unpublish selected " + str(WeblogEntry._meta.verbose_name_plural)))
+    @admin.action(
+        description=_("Unpublish selected " + str(WeblogEntry._meta.verbose_name)),
+        description_plural=_("Unpublish selected " + str(WeblogEntry._meta.verbose_name_plural)),
+    )
     def unpublish(self, request, queryset):  # pylint: disable=unused-argument
         queryset.update(is_published=False)
 

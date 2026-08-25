@@ -1,9 +1,9 @@
-FROM python:3.13-alpine AS compile-image
+FROM python:3.14-alpine AS compile-image
 RUN apk add --no-cache \
         git \
         build-base \
         linux-headers
-COPY --from=ghcr.io/astral-sh/uv:0.10.2-python3.13-alpine /usr/local/bin/uv /usr/local/bin/uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.12.6-python3.14-alpine /usr/local/bin/uv /usr/local/bin/uvx /bin/
 COPY . /django/
 WORKDIR /django
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -14,7 +14,7 @@ RUN uv build --wheel \
     && uv pip install dist/*.whl \
     && find .venv -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
 
-FROM python:3.13-alpine AS build-image
+FROM python:3.14-alpine AS build-image
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/django/.venv/bin:$PATH" \

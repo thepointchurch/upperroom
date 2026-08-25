@@ -283,19 +283,21 @@ class ResourceAdmin(admin.ModelAdmin):
                 obj.owner = request.user
         super().save_model(request, obj, form, change)
 
-    @admin.action(description=_("Publish selected resources"))
+    @admin.action(description=_("Publish resource"), description_plural=_("Publish selected resources"))
     def publish(self, request, queryset):  # pylint: disable=unused-argument
         queryset.update(is_published=True)
 
-    @admin.action(description=_("Unpublish selected resources"))
+    @admin.action(description=_("Unpublish resource"), description_plural=_("Unpublish selected resources"))
     def unpublish(self, request, queryset):  # pylint: disable=unused-argument
         queryset.update(is_published=False)
 
-    @admin.action(description=_("Mark selected resources as private"))
+    @admin.action(
+        description=_("Mark resource as private"), description_plural=_("Mark selected resources as private")
+    )
     def mark_private(self, request, queryset):  # pylint: disable=unused-argument
         queryset.update(is_private=True)
 
-    @admin.action(description=_("Mark selected resources as public"))
+    @admin.action(description=_("Mark resource as public"), description_plural=_("Mark selected resources as public"))
     def mark_public(self, request, queryset):  # pylint: disable=unused-argument
         queryset.update(is_private=False)
 

@@ -61,25 +61,27 @@ class FamilyAdmin(admin.ModelAdmin):
         super().save_related(request, form, formsets, change)
         family_updated.send(sender=form.instance.__class__, instance=form.instance, actor=request.user)
 
-    @admin.action(description=_("Mark selected families as current"))
+    @admin.action(description=_("Mark family as current"), description_plural=_("Mark selected families as current"))
     def mark_current(self, request, queryset):  # pylint: disable=unused-argument
         for family in queryset.all():
             family.is_current = True
             family.save()
 
-    @admin.action(description=_("Mark selected families as not current"))
+    @admin.action(
+        description=_("Mark family as not current"), description_plural=_("Mark selected families as not current")
+    )
     def unmark_current(self, request, queryset):  # pylint: disable=unused-argument
         for family in queryset.all():
             family.is_current = False
             family.save()
 
-    @admin.action(description=_("Archive selected families"))
+    @admin.action(description=_("Archive family"), description_plural=_("Archive selected families"))
     def mark_archived(self, request, queryset):  # pylint: disable=unused-argument
         for family in queryset.all():
             family.is_archived = True
             family.save()
 
-    @admin.action(description=_("Unrchive selected families"))
+    @admin.action(description=_("Unrchive family"), description_plural=_("Unrchive selected families"))
     def mark_unarchived(self, request, queryset):  # pylint: disable=unused-argument
         for family in queryset.all():
             family.is_archived = False

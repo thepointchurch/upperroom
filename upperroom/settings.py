@@ -27,7 +27,14 @@ SECRET_KEY = env("SECRET_KEY")
 
 DEBUG = env("DEBUG")
 
-EMAIL_BACKEND = env.email(backend=env("EMAIL_BACKEND"))["EMAIL_BACKEND"]
+MAILERS = {
+    "default": {
+        "BACKEND": env.email(backend=env("EMAIL_BACKEND"))["EMAIL_BACKEND"],
+    },
+    "console": {
+        "BACKEND": "django.core.mail.backends.console.EmailBackend",
+    },
+}
 
 ALLOWED_HOSTS = env("VHOST").split()
 
