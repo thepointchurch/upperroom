@@ -101,7 +101,7 @@ jobs:
           elif [ -z "$BRANCH" ]; then
               echo "tags=$IMAGE_ID:$(git describe --tags)" >>$GITHUB_OUTPUT
           else
-              echo "tags=$IMAGE_ID:$BRANCH,$IMAGE_ID:${BRANCH}_$(git describe --tags)" >>$GITHUB_OUTPUT
+              echo "tags=$IMAGE_ID:$BRANCH" >>$GITHUB_OUTPUT
           fi
           echo "build_date=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >>$GITHUB_OUTPUT
 
