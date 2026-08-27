@@ -263,7 +263,7 @@ class PrintView(NeverCacheMixin, PermissionRequiredMixin, generic.TemplateView):
         context["year"] = year
         context["families"] = Family.active_objects.all()
         context["archived_families"] = Family.archived_objects.all()
-        context["birthdays"] = Person.active_objects.exclude(birthday__isnull=True).only(
+        context["birthdays"] = Person.current_objects.exclude(birthday__isnull=True).only(
             "name", "suffix", "surname_override", "family__name", "birthday"
         )
         context["anniversaries"] = (
