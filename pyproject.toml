@@ -86,9 +86,6 @@ dev = [
 
 [tool.uv]
 
-#[tool.uv.sources]
-#bleach = { git = "https://github.com/mozilla/bleach", rev = "cd47b4c" }
-
 [tool.uv.build-backend]
 module-root = ""
 source-exclude = [
