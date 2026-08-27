@@ -12,12 +12,13 @@ from .models import Family, Person
 from .views import PdfView, PdfViewCompact, PrintView, PrintViewCompact
 
 
-def generate_pdf(compact=False, output=None, year=None, month=None):
+def generate_pdf(compact=False, output=None, year=None, month=None, draft=False):
     render_options = {
         "site_name": get_current_site(None).name,
         "contact_email": settings.DIRECTORY_EMAIL,
         "month": MONTHS[month or date.today().month],
         "year": year or date.today().year,
+        "draft": draft,
         "families": Family.active_objects.all(),
         "archived_families": Family.archived_objects.all(),
     }

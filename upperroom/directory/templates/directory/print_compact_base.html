@@ -24,6 +24,13 @@ body {
     margin: 0;
 }
 
+body.draft {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><text text-anchor="middle" x="0" y="45" textLength="100%" lengthAdjust="spacingAndGlyphs" font-size="20pt" fill="black" fill-opacity="20%" transform="rotate(-45)">DRAFT</text></svg>');
+    background-position-x: 0;
+    background-position-y: 0;
+    background-size: 100% 100vh;
+}
+
 h1 {
     margin-top: 0;
     bookmark-level: none;
@@ -56,7 +63,7 @@ tbody > tr:first-child > td:first-child {
 {% endblock "stylesheet" %}
 </style>
 </head>
-<body>
+<body{% if draft %} class="draft"{% endif %}>
 
 <h1>{{ site_name|smartquote }} {% translate 'directory'|capfirst %}</h1>
 

@@ -30,6 +30,9 @@ class Command(BaseCommand):
         parser.add_argument(
             "--compact", action="store_true", dest="compact", default=False, help=_("Generate the compact format")
         )
+        parser.add_argument(
+            "--draft", action="store_true", dest="draft", default=False, help=_("Flag output as a draft")
+        )
 
     def handle(self, *args, **options):
-        return generate_pdf(options["compact"], options["output"], options["year"], options["month"])
+        return generate_pdf(options["compact"], options["output"], options["year"], options["month"], options["draft"])

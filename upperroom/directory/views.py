@@ -282,6 +282,7 @@ class PrintView(NeverCacheMixin, PermissionRequiredMixin, generic.TemplateView):
                 "anniversary",
             )
         )
+        context["draft"] = self.request.GET.get("draft", False)
         return context
 
     def render_to_response(self, context, **response_kwargs):

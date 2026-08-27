@@ -30,17 +30,22 @@ class Command(BaseCommand):
             help=_("The week day to generate the roster for"),
         )
         parser.add_argument("-o", "--output", dest="output", help=_("File to write the PDF to"))
+        parser.add_argument(
+            "--draft", action="store_true", dest="draft", default=False, help=_("Flag output as a draft")
+        )
 
     def handle(self, *args, **options):
         year = options["year"]
         week_day = options["week_day"]
         output = options["output"]
+        draft = options["draft"]
 
         html = get_template("roster/pdf.html").render(
             {
                 "site_name": get_current_site(None).name,
                 "contact_email": settings.ROSTER_EMAIL,
                 "year": year,
+                "draft": draft,
                 "meeting_list": Meeting.objects.all().filter(date__year=year, date__week_day=week_day),
             }
         )
