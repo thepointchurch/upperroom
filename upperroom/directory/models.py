@@ -1,5 +1,6 @@
 import base64
 import re
+import uuid
 from datetime import date
 
 from django.conf import settings
@@ -51,11 +52,15 @@ class FamilyActiveManager(models.Manager):  # pylint: disable=too-few-public-met
 
 
 def get_family_photo_filename(instance, filename):  # pylint: disable=unused-argument
-    return f"directory/family/{instance.id}/photo.jpg"
+    instance_uuid = str(instance.uuid)
+    uuid_path = "/".join([instance_uuid[i : i + 2] for i in range(0, 8, 2)] + [instance_uuid])
+    return f"directory/family/{uuid_path}/photo.jpg"
 
 
 def get_family_thumbnail_filename(instance, filename):  # pylint: disable=unused-argument
-    return f"directory/family/{instance.id}/thumbnail.jpg"
+    instance_uuid = str(instance.uuid)
+    uuid_path = "/".join([instance_uuid[i : i + 2] for i in range(0, 8, 2)] + [instance_uuid])
+    return f"directory/family/{uuid_path}/thumbnail.jpg"
 
 
 class FamilySearchManager(SearchManager):  # pylint: disable=too-few-public-methods
@@ -77,6 +82,8 @@ class FamilySearchManager(SearchManager):  # pylint: disable=too-few-public-meth
 
 
 class Family(models.Model):
+    id = models.BigAutoField(primary_key=True, serialize=False, verbose_name="ID")
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, verbose_name="UUID")
     name = models.CharField(max_length=64, verbose_name=_("name"))
     phone_home = models.CharField(max_length=15, null=True, blank=True, verbose_name=_("home phone"))
     phone_mobile = models.CharField(max_length=15, null=True, blank=True, verbose_name=_("mobile phone"))
@@ -220,6 +227,9 @@ class Person(models.Model):
         (GENDER_MALE, _("Male")),
         (GENDER_FEMALE, _("Female")),
     )
+
+    id = models.BigAutoField(primary_key=True, serialize=False, verbose_name="ID")
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, verbose_name="UUID")
 
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,

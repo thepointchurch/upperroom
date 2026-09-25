@@ -43,6 +43,8 @@ class FeaturedManager(models.Manager):  # pylint: disable=too-few-public-methods
 
 
 class Tag(FeaturedMixin, models.Model):
+    id = models.BigAutoField(primary_key=True, serialize=False, verbose_name="ID")
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, verbose_name="UUID")
     name = models.CharField(max_length=128, verbose_name=_("name"))
     slug = models.SlugField(unique=True, verbose_name=_("slug"))
     description = models.TextField(null=True, blank=True, verbose_name=_("description"))
@@ -120,6 +122,8 @@ class ResourceSearchManager(SearchManager):  # pylint: disable=too-few-public-me
 
 
 class Resource(FeaturedMixin, models.Model):
+    id = models.BigAutoField(primary_key=True, serialize=False, verbose_name="ID")
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, verbose_name="UUID")
     title = models.CharField(max_length=128, verbose_name=_("title"))
     slug = models.SlugField(unique=True, verbose_name=_("slug"))
     description = models.TextField(null=True, blank=True, verbose_name=_("description"))
@@ -427,6 +431,8 @@ def get_feed_artwork_filename(instance, filename):
 
 
 class ResourceFeed(models.Model):
+    id = models.BigAutoField(primary_key=True, serialize=False, verbose_name="ID")
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, verbose_name="UUID")
     title = models.CharField(max_length=128, verbose_name=_("title"))
     slug = models.SlugField(db_index=True, verbose_name=_("slug"))
     description = models.TextField(null=True, blank=True, verbose_name=_("description"))
