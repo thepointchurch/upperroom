@@ -4,6 +4,8 @@ import uuid
 
 from django.db import migrations, models
 
+from upperroom.resources.featureditem import SQL_CREATE, SQL_DROP
+
 
 def set_resource_uuid(apps, schema_editor):
     """set the Resource uuid column"""
@@ -42,6 +44,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.RunSQL(sql=SQL_DROP),
         migrations.AlterField(
             model_name="resource",
             name="id",
@@ -90,4 +93,5 @@ class Migration(migrations.Migration):
             name="uuid",
             field=models.UUIDField(default=uuid.uuid4, editable=False, unique=True, verbose_name="UUID"),
         ),
+        migrations.RunSQL(sql=SQL_CREATE),
     ]
