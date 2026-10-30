@@ -5,6 +5,7 @@ import mutagen
 from django.conf import settings
 from django.core.validators import RegexValidator
 from django.db import models
+from django.db.models.functions import Concat
 from django.http import Http404
 from django.urls import resolve, reverse
 from django.utils import timezone
@@ -121,6 +122,50 @@ class ResourceSearchManager(SearchManager):  # pylint: disable=too-few-public-me
         return parent_filter & models.Q(is_private=False) & ~models.Q(tags__is_private=True)
 
 
+class AuthorSearchManager(SearchManager):  # pylint: disable=too-few-public-methods
+    verbose_name_plural = _("authored resources")
+
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .filter(is_published=True, show_author=True, parent__isnull=True)
+            .exclude(published__gt=timezone.now())
+            .select_related("author__family")
+            .prefetch_related(
+                models.Prefetch("attachments", queryset=Attachment.alternates.order_by(), to_attr="alternates"),
+            )
+            .only(
+                "title",
+                "slug",
+                "description",
+                "published",
+                "modified",
+                "show_author",
+                "author__name",
+                "author__surname_override",
+                "author__family__name",
+            )
+            .alias(
+                author_name=Concat(
+                    "author__name",
+                    models.Value(" "),
+                    models.Case(
+                        models.When(author__surname_override__isnull=True, then="author__family__name"),
+                        default="author__surname_override",
+                    ),
+                )
+            )
+            .annotate(has_body=IsNotEmpty("body"))
+        )
+
+    def get_custom_filter(self, request=None):
+        parent_filter = super().get_custom_filter(request)
+        if request is not None and request.user.is_authenticated:
+            return parent_filter
+        return parent_filter & models.Q(is_private=False) & ~models.Q(tags__is_private=True)
+
+
 class Resource(FeaturedMixin, models.Model):
     id = models.BigAutoField(primary_key=True, serialize=False, verbose_name="ID")
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, verbose_name="UUID")
@@ -172,6 +217,7 @@ class Resource(FeaturedMixin, models.Model):
     published_objects = PublishedManager()
     featured_objects = FeaturedManager()
     search_objects = ResourceSearchManager(title="icontains", description="icontains", body="icontains")
+    search_author_objects = AuthorSearchManager(author_name="icontains")
 
     class Meta:
         ordering = ["-published"]

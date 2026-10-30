@@ -5,6 +5,7 @@ from datetime import date
 
 from django.conf import settings
 from django.db import models
+from django.db.models.functions import Concat
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
@@ -70,8 +71,16 @@ class FamilySearchManager(SearchManager):  # pylint: disable=too-few-public-meth
             .get_queryset()
             .filter(is_current=True)
             .select_related("husband", "wife")
-            .prefetch_related(
-                "members",
+            .prefetch_related("members")
+            .alias(
+                members__full_name=Concat(
+                    "members__name",
+                    models.Value(" "),
+                    models.Case(
+                        models.When(members__surname_override__isnull=True, then="name"),
+                        default="members__surname_override",
+                    ),
+                )
             )
         )
 
@@ -125,7 +134,10 @@ class Family(models.Model):
     archived_objects = FamilyArchivedManager()
     active_objects = FamilyActiveManager()
     search_objects = FamilySearchManager(
-        name="icontains", members__name="icontains", members__surname_override="icontains"
+        name="icontains",
+        members__name="icontains",
+        members__surname_override="icontains",
+        members__full_name="icontains",
     )
 
     class Meta:

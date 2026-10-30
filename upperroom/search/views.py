@@ -1,5 +1,6 @@
 # pylint: disable=too-many-ancestors
 
+import inspect
 from pathlib import Path
 
 from django.contrib.contenttypes.models import ContentType
@@ -8,6 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views import generic
 
 from ..utils.mixin import NeverCacheMixin
+from .managers import SearchManager
 
 
 class SearchView(NeverCacheMixin, generic.TemplateView):
@@ -24,23 +26,22 @@ class SearchView(NeverCacheMixin, generic.TemplateView):
             cls = content_type.model_class()
             if content_type_id is not None and int(content_type_id) != content_type.id:
                 continue
-            try:
-                paginator = Paginator(
-                    cls.search_objects.search(context["search_query"]).filter(
-                        cls.search_objects.get_custom_filter(self.request)
-                    ),
-                    5,
-                ).page(page or 1)
-                if paginator.object_list:
-                    context["search_results"][cls._meta.verbose_name_plural] = {
-                        "page": paginator,
-                        "template": Path(cls._meta.app_config.path).name + "/search_result.html",
-                        "type": content_type.id,
-                    }
-                if content_type_id is not None:
-                    context["type_name"] = cls._meta.verbose_name_plural
-            except (AttributeError, TypeError):
-                continue
+            for __, searcher in inspect.getmembers(cls, lambda x: isinstance(x, SearchManager)):
+                try:
+                    paginator = Paginator(
+                        searcher.search(context["search_query"]).filter(searcher.get_custom_filter(self.request)),
+                        5,
+                    ).page(page or 1)
+                    if paginator.object_list:
+                        context["search_results"][searcher.verbose_name_plural or cls._meta.verbose_name_plural] = {
+                            "page": paginator,
+                            "template": Path(cls._meta.app_config.path).name + "/search_result.html",
+                            "type": content_type.id,
+                        }
+                    if content_type_id is not None:
+                        context["type_name"] = cls._meta.verbose_name_plural
+                except TypeError:
+                    continue
         context["metadata_description"] = None
         context["metadata_title"] = f"{_('Search')}: {context['search_query']}"
         return context
