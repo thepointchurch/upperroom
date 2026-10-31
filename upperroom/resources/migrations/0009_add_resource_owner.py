@@ -16,7 +16,6 @@ def set_owner_from_author(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("resources", "0008_expand_field_limits"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),

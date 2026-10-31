@@ -38,7 +38,6 @@ def set_tag_uuid(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("resources", "0009_add_resource_owner"),
     ]

@@ -1,6 +1,5 @@
 # pylint: disable=invalid-name
 
-from __future__ import unicode_literals
 
 from django.db import migrations, models
 
@@ -8,7 +7,6 @@ from upperroom import resources
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("directory", "0001_initial"),
     ]
@@ -85,5 +83,5 @@ class Migration(migrations.Migration):
             name="resource",
             field=models.ForeignKey(related_name="attachments", to="resources.Resource", on_delete=models.CASCADE),
         ),
-        migrations.AlterUniqueTogether(name="attachment", unique_together=set([("resource", "slug")])),
+        migrations.AlterUniqueTogether(name="attachment", unique_together={("resource", "slug")}),
     ]

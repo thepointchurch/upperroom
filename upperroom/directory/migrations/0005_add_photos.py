@@ -5,7 +5,6 @@ import upperroom.directory.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("directory", "0004_surname_override"),
     ]

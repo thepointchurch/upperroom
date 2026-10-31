@@ -1,6 +1,5 @@
 # pylint: disable=invalid-name
 
-from __future__ import unicode_literals
 
 from django.db import migrations, models
 
@@ -8,7 +7,6 @@ from upperroom import roster
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("directory", "0001_initial"),
     ]

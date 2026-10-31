@@ -206,7 +206,7 @@ class Family(models.Model):
 
     @property
     def first_letter(self):
-        return self.name[0].lower()
+        return self.name[0].lower()  # ty: ignore[not-subscriptable]
 
     @cached_property
     def photo_base64(self):
@@ -312,9 +312,7 @@ class Person(models.Model):
 
     @cached_property
     def has_roster(self):
-        if self.roles.count() > 0:
-            return True
-        return False
+        return self.roles.count() > 0
 
     @cached_property
     def find_email(self):

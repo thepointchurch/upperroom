@@ -26,7 +26,6 @@ def set_person_uuid(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("directory", "0004_family_is_archived"),
     ]

@@ -8,7 +8,6 @@ import upperroom.directory.models
 
 
 class Migration(migrations.Migration):
-
     replaces = [
         ("directory", "0001_initial"),
         ("directory", "0002_localise_strings"),

@@ -5,7 +5,6 @@ from upperroom.resources.featureditem import SQL_CREATE, SQL_DROP
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("resources", "0004_bigautofield"),
     ]

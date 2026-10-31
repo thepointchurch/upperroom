@@ -1,12 +1,10 @@
 # pylint: disable=invalid-name
 
-from __future__ import unicode_literals
 
 from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("resources", "0005_set_on_delete"),
     ]

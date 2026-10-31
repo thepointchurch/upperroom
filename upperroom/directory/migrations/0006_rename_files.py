@@ -27,7 +27,6 @@ def rename_files(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("directory", "0005_add_uuid_fields"),
     ]

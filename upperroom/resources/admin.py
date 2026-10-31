@@ -102,9 +102,7 @@ def _user_can_edit_own_only(user):
         return False
     if user.is_superuser:
         return False
-    if not user.has_perm("resources.edit_own_resource"):
-        return False
-    return True
+    return user.has_perm("resources.edit_own_resource")
 
 
 class ResourceForm(ModelForm):
@@ -136,7 +134,7 @@ class ResourceForm(ModelForm):
                 self.add_error(
                     "slug",
                     _(
-                        "%(model_name)s with this %(field_label)s already exists."
+                        "%(model_name)s with this %(field_label)s already exists."  # noqa: UP031,INT003
                         % {
                             "model_name": Resource._meta.verbose_name.title(),
                             "field_label": self.fields["slug"].label,
@@ -278,9 +276,8 @@ class ResourceAdmin(admin.ModelAdmin):
         return fields
 
     def save_model(self, request, obj, form, change):
-        if not change and request.user:
-            if not obj.owner or _user_can_edit_own_only(request.user):
-                obj.owner = request.user
+        if not change and request.user and (not obj.owner or _user_can_edit_own_only(request.user)):
+            obj.owner = request.user
         super().save_model(request, obj, form, change)
 
     @admin.action(description=_("Publish resource"), description_plural=_("Publish selected resources"))

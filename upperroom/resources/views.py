@@ -185,7 +185,7 @@ class ResourceDetail(VaryOnCookieMixin, generic.DetailView):
         except Http404 as exc:
             if super().get_object(Resource.published_objects, **kwargs):
                 raise PermissionDenied from exc
-            raise exc
+            raise
         if not self.request.user.is_authenticated and any(x.is_private for x in obj.tags.all()):
             raise Http404("Access Denied")
         try:
@@ -207,10 +207,10 @@ class ResourceDetail(VaryOnCookieMixin, generic.DetailView):
     def dispatch(self, *args, **kwargs):
         try:
             return super().dispatch(*args, **kwargs)
-        except PermissionDenied as exc:
+        except PermissionDenied:
             if not self.request.user.is_authenticated:
                 return redirect_to_login(self.request.path)
-            raise exc
+            raise
         except RedirectToAttachment as exc:
             return redirect("resources:attachment", pk=exc.attachment.id)
 

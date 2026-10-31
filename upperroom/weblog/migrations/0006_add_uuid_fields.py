@@ -16,7 +16,6 @@ def set_uuid(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("weblog", "0005_expand_field_limits"),
     ]

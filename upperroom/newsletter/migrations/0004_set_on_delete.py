@@ -1,5 +1,4 @@
 # pylint: disable=invalid-name
-from __future__ import unicode_literals
 
 from django.db import migrations, models
 
@@ -7,7 +6,6 @@ from upperroom import newsletter
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("newsletter", "0003_fix_publication_field"),
     ]

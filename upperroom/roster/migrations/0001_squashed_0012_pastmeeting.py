@@ -10,7 +10,6 @@ import upperroom.roster.models
 
 
 class Migration(migrations.Migration):
-
     replaces = [
         ("roster", "0001_initial"),
         ("roster", "0002_roletype_add_times"),

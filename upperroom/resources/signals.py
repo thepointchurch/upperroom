@@ -163,7 +163,7 @@ def feed_pre_save(sender, instance, **kwargs):
         delete_file(old_artwork)
 
     # New artwork was uploaded
-    if instance.artwork and isinstance(instance.artwork.file, UploadedFile):
+    if instance.artwork and isinstance(instance.artwork.file, UploadedFile):  # noqa: SIM102
         # Delete any old file so the path is clear for the new file.
         # There is a risk that the ensuing save() will fail, which will
         # leave the file missing.

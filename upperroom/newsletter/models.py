@@ -18,7 +18,7 @@ def get_filename(instance, filename):  # pylint: disable=unused-argument
 def default_publication():
     try:
         return Publication.objects.first().pk
-    except Exception:  # pylint: disable=broad-except
+    except Exception:  # pylint: disable=broad-except # noqa: BLE001
         return None
 
 

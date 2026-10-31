@@ -7,7 +7,6 @@ import upperroom.weblog.models
 
 
 class Migration(migrations.Migration):
-
     replaces = [("weblog", "0001_initial"), ("weblog", "0002_indexes"), ("weblog", "0003_attachment_description")]
 
     initial = True

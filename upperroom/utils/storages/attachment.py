@@ -15,5 +15,5 @@ def attachment_response(file_obj, as_attachment=True, filename="", content_type=
         url = default_storage.url(getattr(file_obj, "name", file_obj), parameters=parameters)
         return HttpResponseRedirect(url)
     if isinstance(file_obj, str):
-        file_obj = open(f"{settings.MEDIA_ROOT}/{file_obj}", "rb")  # pylint: disable=consider-using-with
+        file_obj = open(f"{settings.MEDIA_ROOT}/{file_obj}", "rb")  # pylint: disable=R1732 # noqa: SIM115
     return FileResponse(file_obj, as_attachment=as_attachment, filename=filename, content_type=content_type)

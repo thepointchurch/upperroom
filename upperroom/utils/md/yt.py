@@ -34,9 +34,8 @@ class EmbeddedYoutubeProcessor(Preprocessor):  # pylint: disable=too-few-public-
         previous_line = ""
         # use the sliding window to make sure the lines before and after are empty
         for line, next_line in sliding_window(lines, 2):
-            if (previous_line, next_line) == ("", ""):
-                if match := self.re.match(line):
-                    line = self.format.format(vid=match.group(1))
+            if (previous_line, next_line) == ("", "") and (match := self.re.match(line)):
+                line = self.format.format(vid=match.group(1))
             new_lines.append(line)
 
             previous_line = line

@@ -9,7 +9,6 @@ import upperroom.newsletter.models
 
 
 class Migration(migrations.Migration):
-
     replaces = [
         ("newsletter", "0001_initial"),
         ("newsletter", "0002_localise_strings"),

@@ -6,7 +6,6 @@ import upperroom.weblog.models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
