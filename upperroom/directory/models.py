@@ -1,9 +1,11 @@
 import base64
 import re
+import uuid
 from datetime import date
 
 from django.conf import settings
 from django.db import models
+from django.db.models.functions import Concat
 from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
@@ -51,11 +53,15 @@ class FamilyActiveManager(models.Manager):  # pylint: disable=too-few-public-met
 
 
 def get_family_photo_filename(instance, filename):  # pylint: disable=unused-argument
-    return f"directory/family/{instance.id}/photo.jpg"
+    instance_uuid = str(instance.uuid)
+    uuid_path = "/".join([instance_uuid[i : i + 2] for i in range(0, 8, 2)] + [instance_uuid])
+    return f"directory/family/{uuid_path}/photo.jpg"
 
 
 def get_family_thumbnail_filename(instance, filename):  # pylint: disable=unused-argument
-    return f"directory/family/{instance.id}/thumbnail.jpg"
+    instance_uuid = str(instance.uuid)
+    uuid_path = "/".join([instance_uuid[i : i + 2] for i in range(0, 8, 2)] + [instance_uuid])
+    return f"directory/family/{uuid_path}/thumbnail.jpg"
 
 
 class FamilySearchManager(SearchManager):  # pylint: disable=too-few-public-methods
@@ -65,8 +71,16 @@ class FamilySearchManager(SearchManager):  # pylint: disable=too-few-public-meth
             .get_queryset()
             .filter(is_current=True)
             .select_related("husband", "wife")
-            .prefetch_related(
-                "members",
+            .prefetch_related("members")
+            .alias(
+                members__full_name=Concat(
+                    "members__name",
+                    models.Value(" "),
+                    models.Case(
+                        models.When(members__surname_override__isnull=True, then="name"),
+                        default="members__surname_override",
+                    ),
+                )
             )
         )
 
@@ -77,6 +91,8 @@ class FamilySearchManager(SearchManager):  # pylint: disable=too-few-public-meth
 
 
 class Family(models.Model):
+    id = models.BigAutoField(primary_key=True, serialize=False, verbose_name="ID")
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, verbose_name="UUID")
     name = models.CharField(max_length=64, verbose_name=_("name"))
     phone_home = models.CharField(max_length=15, null=True, blank=True, verbose_name=_("home phone"))
     phone_mobile = models.CharField(max_length=15, null=True, blank=True, verbose_name=_("mobile phone"))
@@ -118,7 +134,10 @@ class Family(models.Model):
     archived_objects = FamilyArchivedManager()
     active_objects = FamilyActiveManager()
     search_objects = FamilySearchManager(
-        name="icontains", members__name="icontains", members__surname_override="icontains"
+        name="icontains",
+        members__name="icontains",
+        members__surname_override="icontains",
+        members__full_name="icontains",
     )
 
     class Meta:
@@ -187,7 +206,7 @@ class Family(models.Model):
 
     @property
     def first_letter(self):
-        return self.name[0].lower()
+        return self.name[0].lower()  # ty: ignore[not-subscriptable]
 
     @cached_property
     def photo_base64(self):
@@ -220,6 +239,9 @@ class Person(models.Model):
         (GENDER_MALE, _("Male")),
         (GENDER_FEMALE, _("Female")),
     )
+
+    id = models.BigAutoField(primary_key=True, serialize=False, verbose_name="ID")
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, verbose_name="UUID")
 
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
@@ -290,9 +312,7 @@ class Person(models.Model):
 
     @cached_property
     def has_roster(self):
-        if self.roles.count() > 0:
-            return True
-        return False
+        return self.roles.count() > 0
 
     @cached_property
     def find_email(self):

@@ -21,7 +21,7 @@ def next_empty_meeting_date(weekday=None):
     try:
         max_date = Meeting.objects.filter(date__week_day=weekday).latest().date
         return max_date + timedelta(7)
-    except Exception:  # pylint: disable=broad-except
+    except Exception:  # pylint: disable=broad-except # noqa: BLE001
         max_date = date.today()
         return max_date + timedelta((6 - max_date.weekday()) % 6)
 
@@ -174,7 +174,7 @@ class Role(models.Model):
     guest = models.CharField(max_length=128, null=True, blank=True, verbose_name=_("guest"))
     role = models.ForeignKey(
         RoleType,
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         limit_choices_to=models.Q(children__isnull=True),
         related_name="roles",
         verbose_name=_("role"),
@@ -206,9 +206,7 @@ class Role(models.Model):
 
     @property
     def is_guest(self):
-        if self.guest:
-            return True
-        return False
+        return bool(self.guest)
 
     @property
     def date(self):

@@ -1,6 +1,5 @@
 # pylint: disable=invalid-name
 
-from __future__ import unicode_literals
 
 import datetime
 
@@ -10,7 +9,6 @@ from upperroom import roster
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("roster", "0002_roletype_add_times"),
     ]

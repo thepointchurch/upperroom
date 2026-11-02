@@ -1,5 +1,7 @@
 # pylint: disable=too-many-ancestors
 
+from django.contrib.auth.views import redirect_to_login
+from django.core.exceptions import PermissionDenied
 from django.db.models import Prefetch
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
@@ -144,8 +146,24 @@ class ResourceDetail(VaryOnCookieMixin, generic.DetailView):
                         Prefetch("attachments", queryset=Attachment.alternates.order_by(), to_attr="alternates")
                     ),
                 ),
-                Prefetch("attachments", queryset=Attachment.alternates.order_by(), to_attr="alternates"),
+                Prefetch(
+                    "attachments",
+                    queryset=Attachment.alternates.exclude(mime_type__startswith="audio/")
+                    .exclude(mime_type__startswith="video/")
+                    .order_by(),
+                    to_attr="alternates",
+                ),
                 Prefetch("attachments", queryset=Attachment.inlines.order_by(), to_attr="inlines"),
+                Prefetch(
+                    "attachments",
+                    queryset=Attachment.alternates.filter(mime_type__startswith="audio/").order_by(),
+                    to_attr="audio",
+                ),
+                Prefetch(
+                    "attachments",
+                    queryset=Attachment.alternates.filter(mime_type__startswith="video/").order_by(),
+                    to_attr="video",
+                ),
             )
             .only(
                 "title",
@@ -162,7 +180,12 @@ class ResourceDetail(VaryOnCookieMixin, generic.DetailView):
         )
 
     def get_object(self, **kwargs):  # pylint: disable=arguments-differ
-        obj = super().get_object(**kwargs)
+        try:
+            obj = super().get_object(**kwargs)
+        except Http404 as exc:
+            if super().get_object(Resource.published_objects, **kwargs):
+                raise PermissionDenied from exc
+            raise
         if not self.request.user.is_authenticated and any(x.is_private for x in obj.tags.all()):
             raise Http404("Access Denied")
         try:
@@ -184,6 +207,10 @@ class ResourceDetail(VaryOnCookieMixin, generic.DetailView):
     def dispatch(self, *args, **kwargs):
         try:
             return super().dispatch(*args, **kwargs)
+        except PermissionDenied:
+            if not self.request.user.is_authenticated:
+                return redirect_to_login(self.request.path)
+            raise
         except RedirectToAttachment as exc:
             return redirect("resources:attachment", pk=exc.attachment.id)
 
@@ -218,7 +245,6 @@ class EnclosureView(AttachmentView):
             attachment.file,
             filename=(attachment.clean_title + (attachment.extension or "")),
             content_type=attachment.mime_type,
-            signed=False,
         )
 
 
@@ -280,4 +306,4 @@ class FeedArtworkView(NeverCacheMixin, generic.DetailView):
         feed = self.get_object()
         if not feed.artwork:
             raise Http404("This feed has no artwork")
-        return attachment_response(feed.artwork, as_attachment=False, signed=False)
+        return attachment_response(feed.artwork, as_attachment=False)

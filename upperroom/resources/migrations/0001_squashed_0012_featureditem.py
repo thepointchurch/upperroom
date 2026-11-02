@@ -10,7 +10,6 @@ from upperroom.resources.featureditem import SQL_CREATE, SQL_DROP
 
 
 class Migration(migrations.Migration):
-
     replaces = [
         ("resources", "0001_initial"),
         ("resources", "0002_show_date"),

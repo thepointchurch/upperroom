@@ -17,7 +17,7 @@ logger.setLevel(logging.WARNING)
 
 
 class Contact:
-    def __init__(self, contact_id, given_name, surname, suffix=None, email=None, groups=None):
+    def __init__(self, contact_id, given_name, surname, suffix=None, email=None, groups=None):  # pylint: disable=too-many-positional-arguments
         self.id = contact_id  # pylint: disable=invalid-name
         self.given_name = given_name
         self.surname = surname
@@ -257,7 +257,7 @@ class Command(BaseCommand):
         contacts = service.get_contacts()
         google_contacts = set(contacts.values())
 
-        for contact in sorted(list(directory_contacts.difference(google_contacts)), key=lambda x: x.id):
+        for contact in sorted(directory_contacts.difference(google_contacts), key=lambda x: x.id):
             service.create_contact(contact)
 
         for contact in directory_contacts.intersection(google_contacts):

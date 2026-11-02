@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import environ
+from django.utils.csp import CSP
 
 env = environ.Env(
     AWS_DEFAULT_REGION=(str, None),
@@ -12,7 +13,6 @@ env = environ.Env(
     EMAIL_URL=(str, "consolemail://"),
     EMAIL_BACKEND=(str, None),
     MEDIAFILES_BUCKET=(str, None),
-    MEDIAFILES_ENCRYPTED=(bool, False),
     SITE_ID=(int, 1),
     STATIC_URL=(str, "/static/"),
     STATICFILES_BUCKET=(str, None),
@@ -27,7 +27,14 @@ SECRET_KEY = env("SECRET_KEY")
 
 DEBUG = env("DEBUG")
 
-EMAIL_BACKEND = env.email(backend=env("EMAIL_BACKEND"))["EMAIL_BACKEND"]
+MAILERS = {
+    "default": {
+        "BACKEND": env.email(backend=env("EMAIL_BACKEND"))["EMAIL_BACKEND"],
+    },
+    "console": {
+        "BACKEND": "django.core.mail.backends.console.EmailBackend",
+    },
+}
 
 ALLOWED_HOSTS = env("VHOST").split()
 
@@ -53,7 +60,6 @@ INSTALLED_APPS = [
     "upperroom.splash.apps.SplashConfig",
     "upperroom.utils.apps.UtilsConfig",
     "markdownify",
-    "csp",
     "django.contrib.admin.apps.AdminConfig",
     "django.contrib.auth.apps.AuthConfig",
     "django.contrib.contenttypes.apps.ContentTypesConfig",
@@ -77,7 +83,7 @@ MIDDLEWARE = [
     "django.contrib.flatpages.middleware.FlatpageFallbackMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "csp.middleware.CSPMiddleware",
+    "django.middleware.csp.ContentSecurityPolicyMiddleware",
     "upperroom.members.middleware.UsernameHeaderMiddleware",
     "upperroom.resources.middleware.ResourceFallbackMiddleware",
     "django.middleware.cache.FetchFromCacheMiddleware",
@@ -133,6 +139,11 @@ TEMPLATES = [
     },
 ]
 
+TASKS = {
+    "default": {"BACKEND": "django.tasks.backends.immediate.ImmediateBackend"},
+    "immediate": {"BACKEND": "django.tasks.backends.immediate.ImmediateBackend"},
+}
+
 MARKDOWNIFY = {
     "default": {
         "BLEACH": False,
@@ -149,7 +160,8 @@ MARKDOWNIFY = {
             "markdown.extensions.extra",
             "markdown.extensions.toc",
             "yafg",
-            "upperroom.utils.mdvid",
+            "upperroom.utils.md.media",
+            "upperroom.utils.md.yt",
         ],
     },
 }
@@ -209,52 +221,19 @@ CACHE_MIDDLEWARE_ALIAS = "default"
 CACHE_MIDDLEWARE_KEY_PREFIX = ""
 
 
-CONTENT_SECURITY_POLICY = {
-    "DIRECTIVES": {
-        "default-src": ("'self'",),
-        "font-src": ("'self'", "fonts.gstatic.com"),
-        "img-src": ("'self'", "data:"),
-        "media-src": ("'self'", "data:"),
-        "object-src": ("'none'",),
-        "script-src": ("'self'", "cdnjs.cloudflare.com"),
-        "style-src": ("'self'", "'unsafe-inline'", "fonts.googleapis.com"),
-    }
+SECURE_CSP = {
+    "default-src": [CSP.SELF],
+    "font-src": [CSP.SELF, "fonts.gstatic.com"],
+    "img-src": [CSP.SELF, "data:"],
+    "media-src": [CSP.SELF, "data:"],
+    "object-src": [CSP.NONE],
+    "script-src": [CSP.SELF, "cdnjs.cloudflare.com"],
+    "style-src": [CSP.SELF, CSP.UNSAFE_INLINE, "fonts.googleapis.com"],
 }
 
 
 if env("STATICFILES_BUCKET") or env("MEDIAFILES_BUCKET"):
     INSTALLED_APPS += ("storages",)
-
-    STORAGES = {
-        "default": {
-            "BACKEND": "upperroom.utils.storages.backends.S3MediaStorage",
-        },
-        "staticfiles": {
-            "BACKEND": "upperroom.utils.storages.backends.S3StaticStorage",
-        },
-    }
-
-    STATICFILES_BUCKET = env("STATICFILES_BUCKET")
-    if STATICFILES_BUCKET:
-        CONTENT_SECURITY_POLICY["DIRECTIVES"]["img-src"] += (STATICFILES_BUCKET,)
-        CONTENT_SECURITY_POLICY["DIRECTIVES"]["style-src"] += (STATICFILES_BUCKET,)
-        CONTENT_SECURITY_POLICY["DIRECTIVES"]["font-src"] += (STATICFILES_BUCKET,)
-        CONTENT_SECURITY_POLICY["DIRECTIVES"]["script-src"] += (STATICFILES_BUCKET,)
-
-    MEDIAFILES_OFFLOAD = True
-    MEDIAFILES_ENCRYPTED = env("MEDIAFILES_ENCRYPTED")
-    MEDIAFILES_BUCKET = env("MEDIAFILES_BUCKET")
-    if MEDIAFILES_BUCKET:
-        if "." not in MEDIAFILES_BUCKET:
-            if env("AWS_USE_DUALSTACK_ENDPOINT"):
-                _S3_DOMAIN = f".s3.dualstack.{env('AWS_DEFAULT_REGION')}.amazonaws.com"
-            else:
-                _S3_DOMAIN = ".s3.amazonaws.com"
-            CONTENT_SECURITY_POLICY["DIRECTIVES"]["img-src"] += (MEDIAFILES_BUCKET + _S3_DOMAIN,)
-            CONTENT_SECURITY_POLICY["DIRECTIVES"]["media-src"] += (MEDIAFILES_BUCKET + _S3_DOMAIN,)
-        else:
-            CONTENT_SECURITY_POLICY["DIRECTIVES"]["img-src"] += (MEDIAFILES_BUCKET,)
-            CONTENT_SECURITY_POLICY["DIRECTIVES"]["media-src"] += (MEDIAFILES_BUCKET,)
 
     AWS_DEFAULT_ACL = None
 
@@ -264,8 +243,50 @@ if env("STATICFILES_BUCKET") or env("MEDIAFILES_BUCKET"):
 
     AWS_S3_SIGNATURE_VERSION = "s3v4"
 
+    STORAGES = {}
+
+    if env("MEDIAFILES_BUCKET"):
+        MEDIAFILES_BUCKET = env("MEDIAFILES_BUCKET")
+        STORAGES["default"] = {
+            "BACKEND": "storages.backends.s3.S3Storage",
+            "OPTIONS": {
+                "bucket_name": env("MEDIAFILES_BUCKET"),
+            },
+        }
+        # requires https://github.com/jschneier/django-storages/issues/165
+        if "." in MEDIAFILES_BUCKET:
+            STORAGES["default"]["OPTIONS"]["custom_domain"] = env("MEDIAFILES_BUCKET")
+            SECURE_CSP["img-src"].append(MEDIAFILES_BUCKET)
+            SECURE_CSP["media-src"].append(MEDIAFILES_BUCKET)
+        else:
+            if env("AWS_USE_DUALSTACK_ENDPOINT"):
+                _S3_DOMAIN = f".s3.dualstack.{env('AWS_DEFAULT_REGION')}.amazonaws.com"
+            else:
+                _S3_DOMAIN = ".s3.amazonaws.com"
+            SECURE_CSP["img-src"].append(MEDIAFILES_BUCKET + _S3_DOMAIN)
+            SECURE_CSP["media-src"].append(MEDIAFILES_BUCKET + _S3_DOMAIN)
+
+    if env("STATICFILES_BUCKET"):
+        STATICFILES_BUCKET = env("STATICFILES_BUCKET")
+        STORAGES["staticfiles"] = {
+            "BACKEND": "storages.backends.s3.S3StaticStorage",
+            "OPTIONS": {
+                "bucket_name": env("STATICFILES_BUCKET"),
+            },
+        }
+        if "." in STATICFILES_BUCKET:
+            STORAGES["staticfiles"]["OPTIONS"]["custom_domain"] = env("STATICFILES_BUCKET")
+        SECURE_CSP["img-src"].append(STATICFILES_BUCKET)
+        SECURE_CSP["media-src"].append(STATICFILES_BUCKET)
+        SECURE_CSP["font-src"].append(STATICFILES_BUCKET)
+        SECURE_CSP["script-src"].append(STATICFILES_BUCKET)
+        SECURE_CSP["style-src"].append(STATICFILES_BUCKET)
+
 
 AWS_DEFAULT_REGION = env("AWS_DEFAULT_REGION")
+
+AWS_SES_REGION_ENDPOINT = f"email.{AWS_DEFAULT_REGION}.api.aws"
+USE_SES_V2 = True
 
 
 if DEBUG and env("DEBUG_TOOLBAR"):

@@ -95,6 +95,7 @@ class RosterPdf(NeverCacheMixin, PermissionRequiredMixin, generic.TemplateView):
         context["site_name"] = get_current_site(None).name
         context["contact_email"] = settings.ROSTER_EMAIL
         context["year"] = year
+        context["draft"] = self.request.GET.get("draft", False)
         context["meeting_list"] = (
             Meeting.objects.all()
             .filter(date__year=year, date__week_day=week_day)

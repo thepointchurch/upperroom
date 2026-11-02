@@ -12,8 +12,6 @@ def attachment_pre_save(sender, instance, **kwargs):
     if kwargs.get("raw"):
         return
     if isinstance(instance.file.file, UploadedFile):
-        # Work to be done when a new file is uploaded
-        instance.file_new = True
         try:
             # Delete any old file so the path is clear for the new file.
             # There is a risk that the ensuing save() will fail, which will

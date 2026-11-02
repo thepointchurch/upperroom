@@ -59,7 +59,7 @@ class WeekdayListFilter(admin.SimpleListFilter):
     def queryset(self, request, queryset):
         try:
             return queryset.filter(date__week_day=int(self.value()))
-        except Exception:  # pylint: disable=broad-except
+        except Exception:  # pylint: disable=broad-except # noqa: BLE001
             return None
 
 
@@ -139,8 +139,8 @@ class ExclusionAdmin(admin.ModelAdmin):
         for person in queryset.all():
             person.exclusions.filter(date__lt=datetime.date.today()).delete()
 
-    def get_actions(self, request):
-        actions = super().get_actions(request)
+    def get_actions(self, request, action_location=admin.ActionLocation.CHANGE_LIST):
+        actions = super().get_actions(request, action_location)
         del actions["delete_selected"]
         return actions
 

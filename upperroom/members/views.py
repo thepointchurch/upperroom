@@ -123,6 +123,18 @@ class CreateConfirmView(NeverCacheMixin, LoginRequiredMixin, generic.edit.Create
         return result
 
 
+def _get_package_url(metadata):
+    if url := metadata.get("Home-page"):
+        return url
+    if url := metadata.get("Project-URL"):
+        try:
+            _, url = url.split(", ", 2)
+            return url
+        except ValueError:
+            pass
+    return None
+
+
 class TechDetailsView(NeverCacheMixin, LoginRequiredMixin, generic.TemplateView):
     template_name = "members/tech_details.html"
 
@@ -141,7 +153,7 @@ class TechDetailsView(NeverCacheMixin, LoginRequiredMixin, generic.TemplateView)
             {
                 "name": dist.metadata["Name"],
                 "version": dist.version,
-                "url": dist.metadata.get("Home-page"),
+                "url": _get_package_url(dist.metadata),
                 "key": (key_map.get(dist.metadata["Name"], 99), dist.metadata["Name"]),
             }
             for dist in importlib.metadata.distributions()

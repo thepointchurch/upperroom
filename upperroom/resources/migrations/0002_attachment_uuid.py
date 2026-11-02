@@ -25,7 +25,7 @@ def remove_old_primary_key(apps, schema_editor):
             key_constraint = constraint_name
             break
     else:
-        raise Exception("Missing primary key constraint")
+        raise Exception("Missing primary key constraint")  # pylint: disable=broad-exception-raised # noqa: TRY002
     quote_name = connection.ops.quote_name
     try:
         schema_editor.execute(
@@ -37,7 +37,6 @@ def remove_old_primary_key(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("resources", "0001_squashed_0012_featureditem"),
     ]

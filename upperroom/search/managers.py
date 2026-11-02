@@ -2,6 +2,8 @@ from django.db import models
 
 
 class SearchManager(models.Manager):
+    verbose_name_plural = None
+
     def __init__(self, **kwargs):
         super().__init__()
         self.search_fields = kwargs

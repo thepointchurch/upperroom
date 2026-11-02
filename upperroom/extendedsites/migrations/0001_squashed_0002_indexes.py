@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     replaces = [("extendedsites", "0001_initial"), ("extendedsites", "0002_indexes")]
 
     initial = True

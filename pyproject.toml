@@ -1,10 +1,10 @@
 [project]
 name = "upperroom"
-version = "3.3.5"
+version = "3.4.0"
 description = "A website for Churches."
 license = "GPL-2.0-only"
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.13,<3.15"
 authors = [
     {name = "Craig Holyoak", email = "craig@helmsdeep.org"},
 ]
@@ -12,32 +12,31 @@ classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Web Environment",
     "Framework :: Django",
-    "Framework :: Django :: 5.2",
+    "Framework :: Django :: 6.0",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Internet :: WWW/HTTP",
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
 ]
 dependencies = [
     "argon2-cffi (>=25.1.0)",
     "bcrypt (>=5.0.0)",
-    "bleach[css] (>=6.2.0)",
-    "django (>=5.2.0,<5.3.0)",
-    "django-csp (>=4.0)",
-    "django-environ (>=0.12.0)",
-    "django-markdownify (>=0.9.6)",
-    "django-robots (>=6.1)",
-    "mutagen (>=1.47.0)",
-    "weasyprint (>=66.0,<69.0)",
+    "bleach (>=6.4.0)",
+    "django (>=6.1,<6.2.0)",
+    "django-environ (>=0.14.0)",
+    "django-markdownify (>=0.9.7)",
+    "django-robots (>=7.0)",
+    "mutagen (>=1.48.0)",
+    "PyYAML (>=6.0.3)",
+    "uWSGI (>=2.0.31)",
+    "uwsgi-tools (>=1.1.1)",
+    "weasyprint (>=70.0)",
     "yafg (>=0.4)",
-
-    "gunicorn (>=23.0.0)",
-    "setproctitle (>=1.3.7)",
 ]
 
 [project.urls]
@@ -45,57 +44,60 @@ homepage = "https://github.com/thepointchurch/upperroom"
 repository = "https://github.com/thepointchurch/upperroom"
 
 [project.scripts]
-upperroom = 'upperroom.commands:main'
-upperroom-sendrosteremails = 'upperroom.commands:sendrosteremails'
-upperroom-restore-fixtures = 'upperroom.commands:restore_fixtures'
+upperroom = "upperroom.commands:main"
+upperroom-sendrosteremails = "upperroom.commands:sendrosteremails"
+upperroom-restore-fixtures = "upperroom.commands:restore_fixtures"
 
 [project.optional-dependencies]
 aws = [
-    "cryptography>=46.0.5",
-    "django-amazon-ses>=4.0.1",
+    "cryptography>=50.0.2",
+    "django-ses>=4.9.0",
     "django-storages>=1.14.6",
 ]
 cache = [
     "django-cacheops>=7.2",
-    "django-redis>=6.0.0",
+    "django-redis>=7.0.0",
 ]
 google = [
-    "google-api-python-client>=2.190.0",
-    "google-auth-oauthlib>=1.2.4",
+    "google-api-python-client>=2.201.0",
+    "google-auth-oauthlib>=1.5.0",
 ]
 pgsql = [
-    "psycopg[binary]>=3.3.2",
+    "psycopg[binary]>=3.3.6",
 ]
 
-[tool.poetry]
-requires-poetry = ">=2.2"
-exclude = [
+[dependency-groups]
+dev = [
+    "coverage>=7,<8",
+    "django-debug-toolbar>=8,<9",
+    "gitpython>=3,<4",
+    "pre-commit>=4,<5",
+    "pylint>=4,<5",
+    "pylint-django>=2.8,<3",
+    "pytest>=9,<10",
+    "pytest-django>=4,<5",
+    "ruff>=0.17.3",
+    "semantic_version>=2,<3",
+    "tomlkit>=0,<1",
+    "ty>=0.0.95",
+]
+
+[tool.uv]
+
+[tool.uv.build-backend]
+module-root = ""
+source-exclude = [
+    "**/tests.py",
+    "**/tests",
+]
+wheel-exclude = [
     "**/tests.py",
     "**/tests",
 ]
 
-[tool.poetry.dependencies]
-python = "^3.11"
-
-[tool.poetry.group.dev.dependencies]
-coverage = "~7"
-django-debug-toolbar = "~6"
-gitpython = "~3"
-pre-commit = "~4"
-pylint = "~4"
-pylint-django = "~2"
-pytest = "~9"
-pytest-django = "~4"
-semantic_version = "~2"
-tomlkit = "~0"
-python-lsp-server = { version = "~1", extras=["isort>=7", "black>=25.9.0"] }
-
-[tool.poetry.requires-plugins]
-poetry-plugin-shell = ">=1.0.0"
-
 [build-system]
-requires = ["poetry-core>=2.2.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["uv_build>=0.13.6,<0.14.0"]
+build-backend = "uv_build"
 
 
 [tool.pylint.master]
@@ -120,32 +122,32 @@ disable = [
 ignored-argument-names = "kwargs|args"
 
 
-[tool.isort]
-combine_as_imports = true
-include_trailing_comma = true
-known_first_party = "upperroom"
-line_length = 119
-multi_line_output = 3
-force_grid_wrap = 0
-use_parentheses = true
-ensure_newline_before_comments = true
-
-
-[tool.black]
-line-length = 119
-include = '\.pyi?$'
-
-
 [tool.pytest.ini_options]
 minversion = "6.0"
 addopts = "-ra -q"
 DJANGO_SETTINGS_MODULE = "upperroom.settings"
 python_files = "tests.py tests/*.py"
-filterwarnings = [
-    "ignore::DeprecationWarning:yafg",
-    "ignore::SyntaxWarning:yafg",
-]
 
 
 [tool.pylsp-mypy]
 enabled = false
+
+
+[tool.ruff]
+line-length = 119
+
+[tool.ruff.lint]
+ignore = [
+    "RUF012",
+    "RUF100",
+]
+
+
+[tool.ty.rules]
+invalid-argument-type = "ignore"
+invalid-assignment = "ignore"
+invalid-method-override = "ignore"
+no-matching-overload = "ignore"
+possibly-missing-submodule = "ignore"
+unresolved-attribute = "ignore"
+unsupported-operator = "ignore"

@@ -31,7 +31,7 @@ class Details(Portal):
                     "people__family__name",
                 )
             )
-        except Exception:  # pylint: disable=broad-except
+        except Exception:  # pylint: disable=broad-except # noqa: BLE001
             context["role_list"] = []
         context["person"] = getattr(self.request.user, "person", None)
         return context

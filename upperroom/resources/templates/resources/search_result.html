@@ -2,6 +2,11 @@
 {% load i18n markdownify smartquote %}
 {% block heading %}<a href="{% url "resources:detail" item.slug %}">{{ item.title|smartquote }}</a>{% endblock heading %}
 {% block content %}
+
+{% if item.show_date or item.author and item.show_author %}
+<p class="metadata">{% if item.author and item.show_author %}<span itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">{{ item.author }}</span></span>{% if item.show_date and item.published %} {% translate 'on' %} {% endif %}{% endif %}{% if item.show_date and item.published %}<time itemprop="datePublished" datetime="{{ item.published|date:"Y-m-d\TH:i:sO" }}">{{ item.published|date:"j/n/Y" }}</time>{% endif %}</p>
+{% endif %}
+
 {% if item.description %}{{ item.description|markdownify }}{% endif %}
 <p class="links">[
 {% if item.has_body %}<a href="{% url "resources:detail" item.slug %}" itemprop="url">{{ item.anchor }}</a>{% endif %}

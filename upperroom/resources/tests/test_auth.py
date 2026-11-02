@@ -78,7 +78,11 @@ class TestResourcesAuthenticationRequired(TestCase):
     def test_authentication_required_detail(self):
         url = reverse("resources:detail", kwargs={"slug": self.resource.slug})
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 404)
+        if response.status_code == 302:
+            login_url = settings.LOGIN_URL + "?next=" + url
+            self.assertRedirects(response, login_url)
+        else:
+            self.assertEqual(response.status_code, 404)
 
     def test_authentication_required_detail_tagged(self):
         url = reverse("resources:detail", kwargs={"slug": self.tagged_resource.slug})

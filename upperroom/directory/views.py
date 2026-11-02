@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.files.storage import default_storage
 from django.db.models import Q
 from django.http import FileResponse, Http404
 from django.shortcuts import redirect
@@ -156,8 +157,10 @@ class FamilyEditView(NeverCacheMixin, PermissionRequiredMixin, generic.edit.Upda
 class BirthdayView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListView):
     template_name = "directory/birthday_list.html"
     permission_required = "directory.can_view"
-    queryset = Person.current_objects.exclude(birthday__isnull=True).only(
-        "name", "suffix", "surname_override", "family__name", "birthday"
+    queryset = (
+        Person.current_objects.exclude(birthday__isnull=True)
+        .filter(family__is_archived=False)
+        .only("name", "suffix", "surname_override", "family__name", "birthday")
     )
 
     def get_context_data(self, **kwargs):
@@ -171,7 +174,7 @@ class AnniversaryView(VaryOnCookieMixin, PermissionRequiredMixin, generic.ListVi
     template_name = "directory/anniversary_list.html"
     permission_required = "directory.can_view"
     queryset = (
-        Family.current_objects.filter(anniversary__isnull=False)
+        Family.active_objects.filter(anniversary__isnull=False)
         .filter(husband__isnull=False, husband__is_current=True)
         .filter(wife__isnull=False, wife__is_current=True)
         .prefetch_related(None)
@@ -234,7 +237,9 @@ class PdfView(NeverCacheMixin, PermissionRequiredMixin, generic.View):
 
     def get(self, request, *args, **kwargs):
         title = _("%(site)s Directory") % {"site": get_current_site(request).name}
-        return attachment_response(self.FILE_NAME, filename=(f"{title}.pdf"), content_type="application/pdf")
+        return attachment_response(
+            default_storage.open(self.FILE_NAME), filename=(f"{title}.pdf"), content_type="application/pdf"
+        )
 
 
 class PdfViewCompact(PdfView):
@@ -262,7 +267,7 @@ class PrintView(NeverCacheMixin, PermissionRequiredMixin, generic.TemplateView):
             "name", "suffix", "surname_override", "family__name", "birthday"
         )
         context["anniversaries"] = (
-            Family.current_objects.filter(anniversary__isnull=False)
+            Family.active_objects.filter(anniversary__isnull=False)
             .filter(husband__isnull=False)
             .filter(wife__isnull=False)
             .prefetch_related(None)
@@ -277,6 +282,7 @@ class PrintView(NeverCacheMixin, PermissionRequiredMixin, generic.TemplateView):
                 "anniversary",
             )
         )
+        context["draft"] = self.request.GET.get("draft", False)
         return context
 
     def render_to_response(self, context, **response_kwargs):

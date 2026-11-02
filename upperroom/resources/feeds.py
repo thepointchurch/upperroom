@@ -33,9 +33,7 @@ class MaybePodcastFeed(Rss201rev2Feed):
                 handler.endElement("itunes:category")
             handler.addQuickElement("itunes:explicit", "no")
             handler.startElement("itunes:owner", {})
-            handler.addQuickElement(
-                "itunes:email", self.feed["owner_email"] if "owner_email" in self.feed else settings.WEBMASTER_EMAIL
-            )
+            handler.addQuickElement("itunes:email", self.feed.get("owner_email", settings.WEBMASTER_EMAIL))
             if "owner_name" in self.feed:
                 handler.addQuickElement("itunes:name", self.feed["owner_name"])
             handler.endElement("itunes:owner")
@@ -146,7 +144,7 @@ class ResourceFeedRSS(Feed):
         try:
             return [tag.name for tag in item.tags.difference(self.object.tags.all())]
         except DatabaseError:
-            return list(tag.name for tag in set(item.tags.all()) - set(self.object.tags.all()))
+            return [tag.name for tag in set(item.tags.all()) - set(self.object.tags.all())]
 
     def item_enclosures(self, item):
         enc = []

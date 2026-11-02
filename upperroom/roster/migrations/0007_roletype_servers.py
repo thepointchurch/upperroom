@@ -3,7 +3,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("directory", "0004_surname_override"),
         ("roster", "0006_roletype_parent"),

@@ -3,38 +3,38 @@ repos:
     hooks:
       - id: migrations
         name: Find missing Django migrations
-        entry: upperroom makemigrations --dry-run --check
+        entry: uv run upperroom makemigrations --dry-run --check
         language: python
         types: [python]
         pass_filenames: false
         require_serial: true
-      - id: poetry-check
+      - id: pyproject-check
         name: Validate the structure of the pyproject.toml file
-        entry: poetry check
+        entry: uvx --from=validate-pyproject[all] validate-pyproject
         language: system
         files: pyproject.toml
-        pass_filenames: false
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.10.2
+    hooks:
+      - id: uv-lock
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.17.3
+    hooks:
+      - id: ruff-check
+      - id: ruff-format
+  - repo: https://github.com/astral-sh/ty-pre-commit
+    rev: v0.0.95
+    hooks:
+      - id: ty
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
       - id: check-ast
-  - repo: https://github.com/pre-commit/mirrors-isort
-    rev: v5.10.1
-    hooks:
-      - id: isort
-  - repo: https://github.com/psf/black
-    rev: 24.10.0
-    hooks:
-      - id: black
-  - repo: https://github.com/pycqa/flake8
-    rev: 7.1.1
-    hooks:
-      - id: flake8
   - repo: local
     hooks:
       - id: pylint
         name: pylint
-        entry: pylint
+        entry: uv run pylint
         language: system
         types: [python]
   - repo: https://github.com/pre-commit/mirrors-csslint

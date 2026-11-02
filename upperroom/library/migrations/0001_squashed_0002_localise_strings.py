@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     replaces = [("library", "0001_initial"), ("library", "0002_localise_strings")]
 
     initial = True

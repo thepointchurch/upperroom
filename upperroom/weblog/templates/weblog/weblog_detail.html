@@ -31,6 +31,18 @@
 
 {% block content %}
 <div itemprop="articleBody">
-{% if object.body|length > 0 %}{{ object.body_attach|markdownify:"full" }}{% else %}{{ object.description_attach|markdownify }}{% endif %}
+{% if object.body|length > 0 %}
+{% if object.audio|length > 0 %}
+{% for attachment in object.audio %}
+<div class="media"><audio controls><source src="{% url 'weblog:attachment' attachment.id %}" type="{{ attachment.mime_type }}"></audio></div>
+{% endfor %}
+{% endif %}
+{% if object.video|length > 0 %}
+{% for attachment in object.video %}
+<div class="media"><video controls><source src="{% url 'weblog:attachment' attachment.id %}" type="{{ attachment.mime_type }}"></video></div>
+{% endfor %}
+{% endif %}
+{{ object.body_attach|markdownify:"full" }}
+{% else %}{{ object.description_attach|markdownify }}{% endif %}
 </div>
 {% endblock content %}

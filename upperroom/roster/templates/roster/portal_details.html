@@ -14,8 +14,8 @@
 {% endfor %}
 {% endfor %}
 </dl>
-<p class="links">[ <a href="{% url 'roster:person' person.id %}">{% translate 'your complete roster'|capfirst %}</a> | <a href="{% url 'roster:event' person.id %}">{% translate 'iCalendar' %}</a> ]</p>
 {% else %}
 <p>{% translate 'You have no responsibilities in the next two months.' %}</p>
 {% endif %}
+<p class="links">[ <a href="{% url 'roster:person' person.id %}">{% translate 'your complete roster'|capfirst %}</a> | <a href="{% url 'roster:event' person.id %}">{% translate 'iCalendar' %}</a> ]</p>
 {% endblock portalcontent %}

@@ -1,7 +1,9 @@
-from django.contrib import admin
+from django.contrib import admin, auth
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.forms import ModelForm
 from django.forms.widgets import Textarea
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from ..directory.models import Person
@@ -95,6 +97,14 @@ class ChildResourceInline(admin.TabularInline):
         return ""
 
 
+def _user_can_edit_own_only(user):
+    if not user:
+        return False
+    if user.is_superuser:
+        return False
+    return user.has_perm("resources.edit_own_resource")
+
+
 class ResourceForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -106,6 +116,33 @@ class ResourceForm(ModelForm):
             self.fields["author"].queryset = Person.objects.filter(
                 models.Q(is_current=True) & models.Q(is_member=True)
             ).order_by("family__name", "name")
+
+    def clean(self):
+        # pubished timestamp will be set to now() if is_published is True in Resource.clean()
+        # but we need to do it here first in case a slug prefix relies on it being set
+        published = self.cleaned_data["published"]
+        if self.cleaned_data.get("is_published") and published is None:
+            published = timezone.now()
+        prefix = self.instance.prefix_slug(
+            set(self.cleaned_data["tags"].filter(slug_prefix__isnull=False).values_list("id", flat=True)),
+            self.cleaned_data["slug"],
+            published,
+        )
+        if prefix:
+            self.cleaned_data["slug"] = prefix
+            if Resource.objects.filter(slug=prefix).exists():
+                self.add_error(
+                    "slug",
+                    _(
+                        "%(model_name)s with this %(field_label)s already exists."  # noqa: UP031,INT003
+                        % {
+                            "model_name": Resource._meta.verbose_name.title(),
+                            "field_label": self.fields["slug"].label,
+                        }
+                    ),
+                )
+                raise ValidationError(_("Error applying defined Slug prefix"))
+        return super().clean()
 
 
 class UnpublishedResourceListFilter(admin.SimpleListFilter):
@@ -128,19 +165,44 @@ class UnpublishedResourceListFilter(admin.SimpleListFilter):
         return None
 
 
+class OwnedResourceListFilter(admin.SimpleListFilter):
+    title = _("ownership")
+    parameter_name = "owner"
+
+    def lookups(self, request, model_admin):
+        lookups = [("self", _("Self"))]
+        if request.user.is_superuser:
+            lookups += [
+                (user.id, user.get_full_name())
+                for user in auth.get_user_model()
+                .objects.filter(resources__isnull=False)
+                .distinct()
+                .only("last_name", "first_name")
+                .order_by("last_name", "first_name", "username")
+            ]
+        return lookups
+
+    def queryset(self, request, queryset):
+        if self.value() == "self" and request.user:
+            return queryset.filter(owner=request.user)
+        if self.value():
+            return queryset.filter(owner=self.value())
+        return None
+
+
 class ResourceAdmin(admin.ModelAdmin):
     model = Resource
     form = ResourceForm
     inlines = [AttachmentInline]
     ordering = ("title",)
-    list_filter = (
+    list_filter = [
         "tags",
         "created",
         "published",
         "modified",
         UnpublishedResourceListFilter,
         "is_private",
-    )
+    ]
     search_fields = ["title", "description", "body"]
     date_hierarchy = "published"
     prepopulated_fields = {"slug": ("title",)}
@@ -164,6 +226,7 @@ class ResourceAdmin(admin.ModelAdmin):
                 ),
             },
         ),
+        (_("Publishing"), {"fields": ("is_published", "published")}),
         (_("Tags"), {"classes": ("collapse",), "fields": ("tags",)}),
         (_("Author"), {"classes": ("collapse",), "fields": ("author", "show_author")}),
         (_("Featured"), {"classes": ("collapse",), "fields": ("priority",)}),
@@ -171,7 +234,7 @@ class ResourceAdmin(admin.ModelAdmin):
             _("Advanced"),
             {
                 "classes": ("collapse",),
-                "fields": ("is_published", "published", "is_private", "is_pinned", "show_date", "parent"),
+                "fields": ("owner", "is_private", "is_pinned", "show_date", "parent"),
             },
         ),
     )
@@ -190,25 +253,48 @@ class ResourceAdmin(admin.ModelAdmin):
             inlines.append(ChildResourceInline)
         return inlines
 
+    def get_list_filter(self, request):
+        filter_list = super().get_list_filter(request)
+        if not _user_can_edit_own_only(request.user):
+            return filter_list + [OwnedResourceListFilter]
+        return filter_list
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        if not _user_can_edit_own_only(request.user):
+            return queryset
+        if request.user:
+            return queryset.filter(owner=request.user)
+        return queryset.none()
+
     def get_readonly_fields(self, request, obj=None):
         fields = super().get_readonly_fields(request, obj)
         if not request.user.has_perm("resources.publish_resource"):
             fields += ("is_published",)
+        if not request.user or not request.user.is_superuser:
+            fields += ("owner",)
         return fields
 
-    @admin.action(description=_("Publish selected resources"))
+    def save_model(self, request, obj, form, change):
+        if not change and request.user and (not obj.owner or _user_can_edit_own_only(request.user)):
+            obj.owner = request.user
+        super().save_model(request, obj, form, change)
+
+    @admin.action(description=_("Publish resource"), description_plural=_("Publish selected resources"))
     def publish(self, request, queryset):  # pylint: disable=unused-argument
         queryset.update(is_published=True)
 
-    @admin.action(description=_("Unpublish selected resources"))
+    @admin.action(description=_("Unpublish resource"), description_plural=_("Unpublish selected resources"))
     def unpublish(self, request, queryset):  # pylint: disable=unused-argument
         queryset.update(is_published=False)
 
-    @admin.action(description=_("Mark selected resources as private"))
+    @admin.action(
+        description=_("Mark resource as private"), description_plural=_("Mark selected resources as private")
+    )
     def mark_private(self, request, queryset):  # pylint: disable=unused-argument
         queryset.update(is_private=True)
 
-    @admin.action(description=_("Mark selected resources as public"))
+    @admin.action(description=_("Mark resource as public"), description_plural=_("Mark selected resources as public"))
     def mark_public(self, request, queryset):  # pylint: disable=unused-argument
         queryset.update(is_private=False)
 

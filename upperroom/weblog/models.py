@@ -42,6 +42,8 @@ class WeblogSearchManager(SearchManager):  # pylint: disable=too-few-public-meth
 
 
 class WeblogEntry(models.Model):
+    id = models.BigAutoField(primary_key=True, serialize=False, verbose_name="ID")
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, verbose_name="UUID")
     title = models.CharField(max_length=128, verbose_name=_("title"))
     slug = models.SlugField(unique_for_month="created", verbose_name=_("slug"))
     description = models.TextField(null=True, blank=True, verbose_name=_("description"))

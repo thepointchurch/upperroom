@@ -28,7 +28,7 @@ def file_env(func):
 @file_env
 def sendrosteremails():
     setup()
-    call_command("sendrosteremails")
+    call_command("sendrosteremails", *sys.argv[1:])
 
 
 @file_env

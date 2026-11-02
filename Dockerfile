@@ -1,20 +1,20 @@
-FROM python:3.12-alpine AS compile-image
+FROM python:3.14-alpine AS compile-image
 RUN apk add --no-cache \
+        git \
         build-base \
-        libffi-dev
-RUN pip install --root-user-action=ignore --upgrade pip setuptools && \
-    pip install --root-user-action=ignore "poetry~=2.2" wheel
+        linux-headers
+COPY --from=ghcr.io/astral-sh/uv:0.13.6-python3.14-alpine /usr/local/bin/uv /usr/local/bin/uvx /bin/
 COPY . /django/
 WORKDIR /django
-ENV POETRY_VIRTUALENVS_IN_PROJECT=true \
-    POETRY_NO_INTERACTION=1 \
-    PYTHONDONTWRITEBYTECODE=1
-RUN poetry install --only main --no-root -E aws -E cache -E pgsql \
-    && poetry build --format wheel && .venv/bin/pip install --root-user-action=ignore dist/*.whl \
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    UV_NO_DEV=1
+RUN uv build --wheel \
+    && uv venv --seed \
+    && uv sync --frozen --extra aws --extra cache --extra pgsql \
+    && uv pip install dist/*.whl \
     && find .venv -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
 
-
-FROM python:3.12-alpine AS build-image
+FROM python:3.14-alpine AS build-image
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PATH="/django/.venv/bin:$PATH" \
@@ -35,7 +35,7 @@ RUN apk add --no-cache \
     && touch /django/.env && chown 0:8000 /django/.env && chmod 640 /django/.env \
     && mkdir -p /django/data && chown 8000:8000 /django/data
 COPY entrypoint.sh /entrypoint.sh
-COPY gunicorn.py /etc/gunicorn.py
+COPY uwsgi.ini /etc/uwsgi.ini
 COPY --from=compile-image /django/.venv /django/.venv
 
 EXPOSE 8000/tcp
@@ -43,10 +43,10 @@ EXPOSE 8000/tcp
 USER django:django
 WORKDIR /django
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["gunicorn", "-b", "[::]:8000", "--config", "/etc/gunicorn.py", "upperroom.wsgi"]
+CMD ["uwsgi", "--ini", "/etc/uwsgi.ini"]
 VOLUME /django/data
 
-HEALTHCHECK --interval=5m --timeout=3s CMD curl -fsS -o /dev/null http://localhost:8000/ || exit 1
+HEALTHCHECK --interval=5m --timeout=3s CMD uwsgi_curl localhost:8000 >/dev/null || exit 1
 
 ARG version
 ARG build_date

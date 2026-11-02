@@ -29,13 +29,14 @@ services:
     environment:
       DJANGO_SETTINGS_MODULE: upperroom.settings
       SECRET_KEY: "12345678"
-      GUNICORN_CMD_ARGS: "--workers=1 --threads=2"
+      UWSGI_PROCESSES: 1
+      UWSGI_THREADS: 2
       DATABASE_URL: psql://upperroom:12345678@db:5432/upperroom
       DEBUG: "'True'"
       VHOST: "localhost docker"
     restart: unless-stopped
     volumes:
-      - "/data/django_dev5:/django/data"
+      - "/data/django_dev:/django/data"
     cap_drop:
       - ALL
     depends_on:
